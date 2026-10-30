@@ -28,6 +28,9 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…1200_storage.sql` | Buckets und Policies auf `storage.objects` |
 | `…1300_partner_matching.sql` | `match_service_partners`, `offer_service_order`, `respond_service_order` |
 | `…1400_foreign_key_indexes.sql` | Indizes auf den übrigen Fremdschlüsseln (`created_by`, `updated_by` …) |
+| `…1500_app_sync.sql` | `app_data` (komplette App-Daten), Übernahme von Häusern, Buchungen und Aufgaben, `ensure_my_organization` |
+| `…1600_app_files.sql` | Fotos/Dokumente aus Storage in `documents`/`photos`, `my_cloud_usage` (Speicheranzeige) |
+| `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |
 | `tests/rls_test.sql` | 84 automatische Prüfungen der Rechte je Rolle |
 
@@ -64,6 +67,40 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `service_partner` | nur Aufträge, Aufgaben und Kontrollen des eigenen Betriebs (`service_partner_users`) und die betroffenen Häuser; keine Gästedaten | Aufträge annehmen, ablehnen, terminieren und abschließen; Kontrollen durchführen; Angebote und Rechnungen einreichen; eigenes Profil, Leistungen und Gebiete pflegen |
 | `cleaner` | nur eigene Aufgaben (`service_tasks.assigned_user_id`) und das Haus dazu; keine Gästedaten | Aufgabe starten und abschließen, Fotos hochladen |
 | Super-Admin (`users.is_super_admin`) | alle Organisationen (interne Husora-Verwaltung) | alles; setzbar nur per service_role |
+
+## Husora-Projekt in Supabase
+
+| | |
+|---|---|
+| Projekt | „husora26's Project“, Ref `ggsoygxmcsmrsrbmplrz`, Region eu-west-2 (London), PostgreSQL 17 |
+| API-URL | `https://ggsoygxmcsmrsrbmplrz.supabase.co` |
+| Stand | alle 16 Migrationen eingespielt, ohne Testdaten |
+
+Die App ist mit diesem Projekt vorkonfiguriert. Hinterlegt ist nur der öffentliche Publishable Key, den Schutz übernimmt RLS.
+
+### Cloud-Speicher in der App
+
+Unter **Einstellungen → Daten & App → Cloud-Speicher (Supabase)** gehen Sie so vor:
+
+1. **Neues Konto erstellen** bzw. **Anmelden**. Beim ersten Anmelden legt `ensure_my_organization()` eine eigene Organisation an und macht Sie zu deren Admin.
+2. **Alles hochladen**:
+   - Alle App-Bereiche (`stugliv-…`) landen 1:1 in `public.app_data`.
+   - Fotos und PDFs kommen als echte Dateien in Supabase Storage:
+     - Fotos nach `husora-property-photos/organization/{org}/property/{haus}/photos/…`
+     - PDFs nach `husora-documents/…/documents/…`
+   - In der Datenbank stehen dann nur noch Verweise.
+   - Ferienhäuser, Buchungen, Aufgaben, Dokumente und Hausfotos erscheinen zusätzlich in den Fachtabellen. Sie sind dort über `app_ref` zugeordnet.
+3. **Automatisch synchronisieren** lädt jede Änderung nach wenigen Sekunden hoch. Wurde auf einem anderen Gerät etwas geändert, pausiert der Upload, bis die Cloud-Daten geladen sind.
+4. **Aus der Cloud laden** holt alle Daten samt Dateien auf ein anderes Gerät.
+
+Die Karte zeigt außerdem den belegten und freien Speicher:
+- auf dem Gerät
+- in der Datenbank (Free-Plan 500 MB)
+- in Storage (Free-Plan 1 GB)
+
+Die Grenzen lassen sich über `organizations.settings -> 'storage_limits'` anpassen, z. B. `{"database_mb": 8192, "files_mb": 102400}` für den Pro-Plan.
+
+**Einmalig im Dashboard einstellen:** Unter **Authentication → URL Configuration** die Site URL `https://husora26.github.io/markdown/` eintragen und unter „Redirect URLs“ ebenfalls hinzufügen. Dann führen die Bestätigungslinks in den Registrierungs-Mails direkt zur App.
 
 ---
 

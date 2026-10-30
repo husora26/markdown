@@ -14691,8 +14691,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     const CLOUD_ORDER = ['stugliv-properties', 'stugliv-bookings', 'stugliv-tasks'];
     const CLOUD_BATCH_CHARS = 900 * 1024;
     const CLOUD_STAFF_ROLES = ['admin', 'property_manager', 'service_manager'];
+    // Husora-Projekt in Supabase. Der öffentliche Schlüssel (publishable) darf in der App stehen –
+    // alle Daten schützt Row Level Security. Der geheime Schlüssel gehört nie hierher.
+    const CLOUD_DEFAULT = { url: 'https://ggsoygxmcsmrsrbmplrz.supabase.co', key: 'sb_publishable_WFT_U9J4uvAgPHZHdvhjIw_uX08VjS4' };
     let cloud = { url: '', key: '', session: null, org: null, autoSync: true, lastSyncAt: '', deviceId: '', files: [], propertyMap: {} };
-    try { cloud = { ...cloud, ...(JSON.parse(localStorage.getItem(CLOUD_STORE) || '{}') || {}) }; } catch (error) { /* noch nicht eingerichtet */ }
+    try {
+      const stored = JSON.parse(localStorage.getItem(CLOUD_STORE) || 'null');
+      cloud = { ...cloud, ...(stored && typeof stored === 'object' ? stored : CLOUD_DEFAULT) };
+    } catch (error) { cloud = { ...cloud, ...CLOUD_DEFAULT }; }
     if (!cloud.deviceId) cloud.deviceId = (window.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now().toString(16)}-${Math.random().toString(16).slice(2, 14)}`).slice(0, 36);
     const cloudState = { busy: '', error: '', notice: '', summary: null, usage: null, remoteNewer: false, draftEmail: cloud.session?.email || '' };
     const cloudFiles = new Set(Array.isArray(cloud.files) ? cloud.files : []);
@@ -14801,7 +14807,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     async function cloudSignUp(email, password) {
       if (String(password).length < 8) throw new Error('Das Passwort muss mindestens 8 Zeichen lang sein.');
-      const data = await cloudFetch('/auth/v1/signup', { method: 'POST', body: { email: email.trim(), password, data: { first_name: profileData?.name || '', language: 'de' } }, auth: false });
+      const redirect = encodeURIComponent(location.origin + location.pathname);
+      const data = await cloudFetch(`/auth/v1/signup?redirect_to=${redirect}`, { method: 'POST', body: { email: email.trim(), password, data: { first_name: profileData?.name || '', language: 'de' } }, auth: false });
       if (data?.access_token) {
         cloudSetSession(data);
         await cloudLoadOrg();
@@ -15126,8 +15133,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (!cloudConnected()) {
         return `<section class="card settings-card cloud-card" id="settings-cloud">${head}
           <form class="cloud-form" data-cloud-form="connect" autocomplete="off">
-            <label><span class="form-label">Projekt-URL</span><input class="form-control" name="url" type="url" inputmode="url" spellcheck="false" placeholder="https://abcd1234.supabase.co" required></label>
-            <label><span class="form-label">Öffentlicher Schlüssel (anon / publishable)</span><input class="form-control" name="key" type="text" spellcheck="false" autocapitalize="off" placeholder="eyJhbGciOi… oder sb_publishable_…" required></label>
+            <label><span class="form-label">Projekt-URL</span><input class="form-control" name="url" type="url" inputmode="url" spellcheck="false" placeholder="https://abcd1234.supabase.co" value="${escapeHtml(CLOUD_DEFAULT.url)}" required></label>
+            <label><span class="form-label">Öffentlicher Schlüssel (anon / publishable)</span><input class="form-control" name="key" type="text" spellcheck="false" autocapitalize="off" placeholder="eyJhbGciOi… oder sb_publishable_…" value="${escapeHtml(CLOUD_DEFAULT.key)}" required></label>
             <div class="settings-actions"><button type="submit" class="primary-btn" ${cloudState.busy ? 'disabled' : ''}>${icon('cloud')} ${busy('connect') ? 'Verbinde …' : 'Mit Supabase verbinden'}</button></div>
           </form>${messages}
           <p class="settings-hint">Beides findest du im Supabase-Dashboard unter <strong>Project Settings → API</strong>. Den geheimen „service_role“-Schlüssel niemals hier eintragen. Vorher einmal die Husora-Datenbank einspielen: Datei <strong>supabase/husora_komplett.sql</strong> aus dem Repository im <strong>SQL Editor</strong> des Projekts ausführen.</p>
