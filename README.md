@@ -28,5 +28,6 @@ Unter [`supabase/`](supabase/README.md) liegt die komplette PostgreSQL-Datenbank
 - Storage-Buckets
 - Automatisierung, Partner-Ranking und Webhooks
 - Seed-Daten und ein RLS-Test
+- Partner-Portal: Zugang für Servicepartner mit Aufträgen, Kontrollen, Fotos, Rechnungen und Mitarbeitern
 
 Installation, Konfiguration und Tests beschreibt [`supabase/README.md`](supabase/README.md).

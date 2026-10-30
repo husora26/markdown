@@ -2251,6 +2251,195 @@
     .cloud-usage { display: grid; gap: 10px; margin-top: 12px; }
     .storage-meter-top b { color: var(--green); font-weight: 700; }
     .storage-meter small.meter-detail { color: var(--muted); }
+    /* Rollenwahl im Onboarding */
+    .ob-role-title { margin: 18px 0 8px; font-size: 15px; }
+    .ob-roles { display: grid; gap: 8px; }
+    .ob-roles button { display: flex; gap: 12px; align-items: center; width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); color: var(--ink); text-align: left; cursor: pointer; }
+    .ob-roles button:hover, .ob-roles button:focus-visible { border-color: var(--green); background: var(--green-soft); }
+    .ob-roles svg { flex: 0 0 auto; width: 22px; height: 22px; color: var(--green); }
+    .ob-roles strong { display: block; font-size: 14px; }
+    .ob-roles small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+    /* Partner-Portal */
+    body.pp-active { overflow: hidden; }
+    .pp { position: fixed; inset: 0; z-index: 900; display: flex; flex-direction: column; background: var(--canvas); color: var(--ink); }
+    .pp[hidden] { display: none; }
+    .pp-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) 16px 10px; border-bottom: 1px solid var(--line); background: var(--green-dark); color: #fff; }
+    .pp-brand { display: flex; gap: 10px; align-items: center; min-width: 0; }
+    .pp-brand > div { min-width: 0; }
+    .pp-brand strong { display: block; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pp-brand small { display: block; font-size: 12px; opacity: .78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pp-logo { display: grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: rgba(255, 255, 255, .14); }
+    .pp-logo svg { width: 18px; height: 18px; }
+    .pp-top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+    .pp-icon-btn, .pp-switch { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border: 1px solid rgba(255, 255, 255, .28); border-radius: 18px; background: transparent; color: #fff; font-size: 12.5px; font-weight: 650; cursor: pointer; }
+    .pp-icon-btn svg, .pp-switch svg { width: 16px; height: 16px; }
+    .pp-main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 16px 24px; }
+    .pp-main > * { max-width: 760px; margin-left: auto; margin-right: auto; }
+    .pp-nav { display: flex; gap: 2px; overflow-x: auto; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); scrollbar-width: none; }
+    .pp-nav::-webkit-scrollbar { display: none; }
+    .pp-nav button { position: relative; display: flex; flex: 1 0 74px; flex-direction: column; align-items: center; gap: 3px; min-height: 52px; padding: 6px 4px; border: 0; border-radius: 11px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 650; cursor: pointer; }
+    .pp-nav button svg { width: 21px; height: 21px; }
+    .pp-nav button.active { color: var(--green); background: var(--green-soft); }
+    .pp-dot { position: absolute; top: 3px; right: 16px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--red); color: #fff; font-size: 10.5px; line-height: 17px; }
+    .pp-hero { margin: 18px auto 16px; text-align: center; }
+    .pp-hero svg { width: 42px; height: 42px; color: var(--green); }
+    .pp-hero h1 { margin: 8px 0 6px; font-size: 22px; }
+    .pp-hero p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+    .pp-hero.small { text-align: left; }
+    .pp-card { margin-bottom: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); box-shadow: var(--shadow); }
+    .pp-card h3, .pp-subform h3 { margin: 0 0 10px; font-size: 15px; }
+    .pp-form label { display: block; }
+    .pp-form label + label { margin-top: 10px; }
+    .pp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .pp-grid label + label { margin-top: 0; }
+    .pp-grid .full { grid-column: 1 / -1; }
+    .pp-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 8px; }
+    @media (max-width: 420px) { .pp-grid { grid-template-columns: 1fr; } .pp-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .pp-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .pp-actions .primary-btn, .pp-actions .secondary-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; flex: 1 1 auto; }
+    .pp-actions .big { min-height: 52px; font-size: 15px; }
+    .pp-actions svg { width: 16px; height: 16px; }
+    .pp-actions.sticky { position: sticky; bottom: 0; padding: 10px 0; background: var(--canvas); }
+    .pp-file { cursor: pointer; }
+    .pp-hint { margin: 10px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.55; }
+    .pp-muted { margin: 4px 0; color: var(--muted); font-size: 13px; }
+    .pp-msg { display: flex; gap: 8px; align-items: flex-start; margin: 0 auto 12px; padding: 10px 12px; border-radius: 11px; background: var(--green-soft); color: var(--green); font-size: 13px; line-height: 1.5; }
+    .pp-msg.error { background: var(--red-soft); color: var(--red); }
+    .pp-msg svg { flex: 0 0 auto; width: 17px; height: 17px; margin-top: 1px; }
+    .pp-welcome h1 { margin: 2px 0 2px; font-size: 22px; }
+    .pp-welcome p { margin: 0 0 12px; color: var(--muted); font-size: 12.5px; }
+    .pp-page-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .pp-page-head h1 { margin: 0; font-size: 21px; }
+    .pp-page-head .primary-btn { display: inline-flex; align-items: center; gap: 5px; min-height: 40px; }
+    .pp-page-head svg { width: 15px; height: 15px; }
+    .pp-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
+    @media (max-width: 560px) { .pp-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .pp-tile { display: flex; flex-direction: column; gap: 2px; padding: 12px; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); color: var(--ink); text-align: left; cursor: pointer; }
+    .pp-tile b { font-size: 22px; line-height: 1.1; }
+    .pp-tile span { color: var(--muted); font-size: 12px; line-height: 1.3; }
+    .pp-tile.amber { border-color: #e7cfa6; background: var(--amber-soft); }
+    .pp-tile.red { border-color: #ebc3bd; background: var(--red-soft); }
+    .pp-section { margin: 0 auto 16px; }
+    .pp-section-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 8px; }
+    .pp-section-head h2 { margin: 0; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .pp-list { display: grid; gap: 8px; }
+    .pp-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); color: var(--ink); text-align: left; cursor: pointer; }
+    .pp-item.static { cursor: default; }
+    .pp-item > svg { flex: 0 0 auto; width: 16px; height: 16px; color: var(--muted); }
+    .pp-item-icon { display: grid; place-items: center; flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px; background: var(--green-soft); color: var(--green); }
+    .pp-item-icon svg { width: 18px; height: 18px; }
+    .pp-item-main { flex: 1; min-width: 0; }
+    .pp-item-main strong { display: block; font-size: 14px; overflow-wrap: anywhere; }
+    .pp-item-main small { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+    .pp-item-main small svg { width: 12px; height: 12px; }
+    .pp-red { color: var(--red); }
+    .pp-badge { flex: 0 0 auto; padding: 4px 9px; border-radius: 12px; font-size: 11.5px; font-weight: 700; white-space: nowrap; background: var(--green-soft); color: var(--green); }
+    .pp-badge.amber { background: var(--amber-soft); color: #87622b; }
+    .pp-badge.red { background: var(--red-soft); color: var(--red); }
+    .pp-badge.blue { background: #e4ecf5; color: #2f557c; }
+    .pp-badge.done { background: var(--green); color: #fff; }
+    .pp-badge.muted { background: #eeeae1; color: var(--muted); }
+    .pp-filters { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 12px; scrollbar-width: none; }
+    .pp-filters button { flex: 0 0 auto; min-height: 36px; padding: 0 14px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 650; cursor: pointer; }
+    .pp-filters button b { margin-left: 4px; color: var(--muted); }
+    .pp-filters button.active { border-color: var(--green); background: var(--green); color: #fff; }
+    .pp-filters button.active b { color: rgba(255, 255, 255, .8); }
+    .pp-back { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 10px; padding: 6px 0; border: 0; background: none; color: var(--green); font-size: 14px; font-weight: 650; cursor: pointer; }
+    .pp-back svg { width: 16px; height: 16px; transform: rotate(180deg); }
+    .pp-detail-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .pp-detail-head h1 { margin: 2px 0 0; font-size: 21px; overflow-wrap: anywhere; }
+    .pp-eyebrow { display: block; color: var(--muted); font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .pp-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 420px) { .pp-facts { grid-template-columns: 1fr; } }
+    .pp-facts span { display: block; color: var(--muted); font-size: 11.5px; font-weight: 700; }
+    .pp-facts strong { display: block; margin-top: 2px; font-size: 14px; overflow-wrap: anywhere; }
+    .pp-facts small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+    .pp-facts select { margin-top: 4px; }
+    .pp-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; color: var(--green); font-size: 13px; font-weight: 650; }
+    .pp-link svg { width: 14px; height: 14px; }
+    .pp-text { margin: 4px 0 0; font-size: 14px; line-height: 1.55; white-space: pre-wrap; }
+    .pp-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; }
+    .pp-photo { aspect-ratio: 1; padding: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #eeeae1; cursor: zoom-in; }
+    .pp-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .pp-doc { display: flex; align-items: center; gap: 8px; width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); color: var(--ink); text-align: left; cursor: pointer; }
+    .pp-doc svg { flex: 0 0 auto; width: 18px; height: 18px; color: var(--green); }
+    .pp-doc span { flex: 1; min-width: 0; font-size: 13.5px; overflow-wrap: anywhere; }
+    .pp-doc span small { display: block; color: var(--muted); font-size: 12px; }
+    .pp-doc > small { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .pp-inline { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .pp-inline .form-control { flex: 1; min-width: 0; }
+    .pp-inline .pp-cost { flex: 0 0 110px; }
+    .pp-thread { display: grid; gap: 8px; margin-bottom: 8px; }
+    .pp-bubble { max-width: 86%; padding: 9px 12px; border-radius: 14px 14px 14px 4px; background: var(--paper); border: 1px solid var(--line); }
+    .pp-bubble.me { justify-self: end; border-radius: 14px 14px 4px 14px; background: var(--green-soft); border-color: #cfdccd; }
+    .pp-bubble p { margin: 0; font-size: 14px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .pp-bubble small { display: block; margin-top: 3px; color: var(--muted); font-size: 11.5px; }
+    .pp-send { display: flex; gap: 8px; }
+    .pp-send .form-control { flex: 1; min-width: 0; }
+    .pp-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+    .pp-row span { flex: 1; }
+    .pp-amount { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .pp-amount b { font-size: 14px; }
+    .pp-subform { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+    .pp-progress { height: 8px; margin: 2px 0 6px; overflow: hidden; border-radius: 5px; background: #e8e6df; }
+    .pp-progress span { display: block; height: 100%; border-radius: inherit; background: var(--green); transition: width .2s; }
+    .pp-check-item { padding: 12px; margin-bottom: 8px; border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 12px; background: var(--paper); }
+    .pp-check-item.ok { border-left-color: var(--green); }
+    .pp-check-item.warning { border-left-color: var(--amber); }
+    .pp-check-item.defect { border-left-color: var(--red); background: #fffaf9; }
+    .pp-check-title { display: flex; justify-content: space-between; gap: 8px; }
+    .pp-check-title strong { font-size: 14px; }
+    .pp-check-title small { color: var(--muted); font-size: 12px; }
+    .pp-check-btns { display: grid; grid-template-columns: 1fr 1fr 1fr .7fr; gap: 6px; margin-top: 9px; }
+    .pp-check { min-height: 44px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: 13px; font-weight: 700; cursor: pointer; }
+    .pp-check:disabled { cursor: default; opacity: .7; }
+    .pp-check.ok.on { border-color: var(--green); background: var(--green); color: #fff; }
+    .pp-check.warning.on { border-color: var(--amber); background: var(--amber); color: #fff; }
+    .pp-check.defect.on { border-color: var(--red); background: var(--red); color: #fff; }
+    .pp-check.not_applicable.on { border-color: var(--muted); background: var(--muted); color: #fff; }
+    .pp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pp-chip { display: inline-flex; }
+    .pp-chip input { position: absolute; opacity: 0; pointer-events: none; }
+    .pp-chip span { padding: 8px 12px; border: 1px solid var(--line); border-radius: 18px; background: #fff; font-size: 13px; cursor: pointer; }
+    .pp-chip input:checked + span { border-color: var(--green); background: var(--green); color: #fff; }
+    .pp-chip input:focus-visible + span { outline: 2px solid var(--green); outline-offset: 2px; }
+    .pp-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; text-transform: uppercase; }
+    .pp-empty { padding: 28px 16px; text-align: center; color: var(--muted); }
+    .pp-empty svg { width: 30px; height: 30px; }
+    .pp-empty strong { display: block; margin: 6px 0 4px; color: var(--ink); font-size: 15px; }
+    .pp-empty p { margin: 0; font-size: 13px; line-height: 1.5; }
+    .pp-tip { display: flex; gap: 12px; align-items: flex-start; }
+    .pp-tip > svg { flex: 0 0 auto; width: 22px; height: 22px; color: var(--green); }
+    .pp-tip p { margin: 3px 0 8px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .pp-prop { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+    .pp-prop strong { display: block; font-size: 14px; }
+    .pp-prop small { color: var(--muted); font-size: 12.5px; }
+    .pp-prop-stats { display: flex; gap: 10px; color: var(--muted); font-size: 12.5px; }
+    .pp-service { padding: 12px 14px; }
+    .pp-service.on { border-color: #cfdccd; }
+    .pp-service-head { display: flex !important; gap: 10px; align-items: center; cursor: pointer; }
+    .pp-service-head input { width: 20px; height: 20px; accent-color: var(--green); }
+    .pp-role { max-width: 150px; }
+    .pp-invite { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+    .pp-invite small { display: block; color: var(--muted); font-size: 12.5px; }
+    .pp-invite code, .owner-code code { padding: 6px 10px; border-radius: 8px; background: var(--green-soft); color: var(--green); font-size: 14px; font-weight: 700; letter-spacing: .05em; }
+    .pp-skel { display: grid; gap: 10px; }
+    .pp-skel i { display: block; height: 64px; border-radius: 13px; background: linear-gradient(90deg, #ece8de, #f5f2ea, #ece8de); background-size: 200% 100%; animation: pp-shine 1.2s infinite; }
+    @keyframes pp-shine { to { background-position: -200% 0; } }
+    .pp-spin { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255, 255, 255, .4); border-top-color: #fff; border-radius: 50%; animation: pp-rot .8s linear infinite; }
+    @keyframes pp-rot { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .pp-skel i, .pp-spin { animation: none; } }
+    /* Hausbesitzer: Servicepartner einladen */
+    .owner-partners, .owner-orders { display: grid; gap: 8px; margin-bottom: 10px; }
+    .owner-partner, .owner-order { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; }
+    .owner-partner > div, .owner-order > div { min-width: 0; }
+    .owner-partner strong, .owner-order strong { display: block; font-size: 13.5px; }
+    .owner-partner small, .owner-order small { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+    .owner-code { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 11px; background: var(--green-soft); }
+    .owner-code small { flex-basis: 100%; color: var(--muted); font-size: 12px; }
+    .owner-inline { display: flex; flex-wrap: wrap; gap: 8px; }
+    .owner-inline .form-control { flex: 1 1 160px; min-width: 0; }
+    .owner-inline .primary-btn { min-height: 44px; }
     .settings-hint { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
     .settings-danger { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
     .settings-danger strong { display: block; font-size: 13px; }
@@ -3054,6 +3243,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3591,6 +3781,31 @@ html.dark .storage-meter.full .storage-bar i { background: var(--red-solid); }
 html.dark .backup-status.stale { color: #dcc3a2; }
 html.dark .cloud-account { background: #25231a; }
 html.dark .cloud-status.warn { color: #dcc3a2; }
+html.dark .pp-top { background: var(--green-solid-dark); }
+html.dark .pp-logo { background: rgba(255, 255, 255, 0.02); }
+html.dark .pp-icon-btn, html.dark .pp-switch { border: 1px solid rgba(255, 255, 255, 0.05); }
+html.dark .pp-dot { background: var(--red-solid); }
+html.dark .pp-tile.amber { border-color: #5d503a; }
+html.dark .pp-tile.red { border-color: #563c38; }
+html.dark .pp-badge.amber { color: #dcc7a6; }
+html.dark .pp-badge.blue { background: #1e262e; color: #acc3da; }
+html.dark .pp-badge.done { background: var(--green-solid); }
+html.dark .pp-badge.muted { background: #2e2b24; }
+html.dark .pp-filters button.active { background: var(--green-solid); }
+html.dark .pp-photo { background: #2e2b24; }
+html.dark .pp-bubble.me { border-color: #434c42; }
+html.dark .pp-progress { background: #2e2d28; }
+html.dark .pp-progress span { background: var(--green-solid); }
+html.dark .pp-check-item.defect { background: #2b1510; }
+html.dark .pp-check { background: #1c1c1c; }
+html.dark .pp-check.ok.on { background: var(--green-solid); }
+html.dark .pp-check.defect.on { background: var(--red-solid); }
+html.dark .pp-chip span { background: #1c1c1c; }
+html.dark .pp-chip input:checked + span { background: var(--green-solid); }
+html.dark .pp-service.on { border-color: #434c42; }
+html.dark .pp-service-head input { accent-color: var(--green-solid); }
+html.dark .pp-skel i { background: linear-gradient(90deg, #2f2d25, #2a271f, #2f2d25); }
+html.dark .pp-spin { border: 2px solid rgba(255, 255, 255, 0.07); border-top-color: #383838; }
 html.dark .settings-danger .danger { border-color: #553d3a; }
 html.dark .settings-links button { background: #1c1c1c; color: var(--ink, #dae2dc); }
 html.dark .settings-links button:hover { background: #26251e; }
@@ -12482,7 +12697,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const groups = [
         ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
         ['settings-look', 'Darstellung & Erinnerungen', 'Hell oder dunkel, Schriftgröße, Sprache der Aufträge und was dir die Glocke meldet.', settingsCardBuilders.filter((build) => build !== backupCardHtml && build !== appInfoCardHtml)],
-        ['settings-data', 'Daten & App', 'Cloud-Speicher, Datensicherung und Informationen zur App.', [cloudCardHtml, backupCardHtml, appInfoCardHtml]]
+        ['settings-data', 'Daten & App', 'Cloud-Speicher, Servicepartner, Datensicherung und Informationen zur App.', [cloudCardHtml, ownerPartnerCardHtml, backupCardHtml, appInfoCardHtml]]
       ];
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Startseite, Darstellung, Erinnerungen und Datensicherung.</p></div></div>
         <nav class="settings-jump" aria-label="Bereiche der Einstellungen">${groups.map(([id, title]) => `<button type="button" data-settings-jump="${id}">${title}</button>`).join('')}</nav>
@@ -13073,7 +13288,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const steps = [
         () => `<div class="ob-hero">${icon('home')}</div><h2 id="onboarding-title">Willkommen bei Husora</h2><p class="ob-lead">Dein Ferienhaus in Schweden – organisiert, kontrolliert und gut betreut, auch wenn du nicht vor Ort bist.</p>
           <ul class="ob-points"><li>${icon('inspection')}<span><strong>Hauskontrolle</strong> mit Kontrollplan für deinen Servicepartner</span></li><li>${icon('users')}<span><strong>Servicepartner</strong> in der Nähe finden und beauftragen</span></li><li>${icon('alert')}<span><strong>Mängel & Reparaturen</strong> mit fertigem Auftrag per E-Mail</span></li><li>${icon('cost')}<span><strong>Kosten, Verträge und Fristen</strong> im Blick</span></li></ul>
-          <div class="ob-actions"><button type="button" class="secondary-btn" data-ob-demo>Erst die Demo ansehen</button><button type="button" class="primary-btn" data-ob-next>Jetzt einrichten</button></div>`,
+          <h3 class="ob-role-title">Wie möchtest du Husora nutzen?</h3>
+          <div class="ob-roles"><button type="button" data-ob-role="owner">${icon('home')}<span><strong>Hausbesitzer</strong><small>Eigenes Ferienhaus verwalten und Servicepartner beauftragen</small></span></button><button type="button" data-ob-role="partner">${icon('users')}<span><strong>Servicepartner</strong><small>Aufträge annehmen, Häuser kontrollieren, Rechnungen stellen</small></span></button><button type="button" data-ob-role="both">${icon('check')}<span><strong>Beide Rollen</strong><small>Eigenes Haus und Servicebetrieb – jederzeit umschaltbar</small></span></button></div>
+          <div class="ob-actions"><button type="button" class="secondary-btn" data-ob-demo>Erst die Demo ansehen</button></div>`,
         () => `<h2 id="onboarding-title">Wie heißt du?</h2><p class="ob-lead">Dein Name steht als Absender in Aufträgen an Servicepartner.</p>
           <label><span class="form-label">Dein Name</span><input class="form-control" data-ob="name" maxlength="80" autocomplete="name" value="${escapeHtml(onboardingDraft.name)}" placeholder="Vor- und Nachname"></label>
           <label style="margin-top:12px;display:block"><span class="form-label">E-Mail (optional)</span><input class="form-control" data-ob="email" type="email" maxlength="120" autocomplete="email" value="${escapeHtml(onboardingDraft.email)}" placeholder="du@beispiel.de"></label>
@@ -13235,6 +13452,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (supportButton) { openSupportMail(supportButton.dataset.supportMail); return; }
       const onboardingStart = target.closest('[data-onboarding-start]');
       if (onboardingStart) { document.getElementById('main-menu')?.classList.remove('open'); openOnboarding(onboardingStart.dataset.onboardingStart === '1' ? 1 : 0); return; }
+      const obRole = target.closest('[data-ob-role]');
+      if (obRole) {
+        // Die Wahl legt nur den Einstieg fest – beide Ansichten bleiben jederzeit erreichbar
+        const role = obRole.dataset.obRole;
+        ppSetMode(role);
+        if (role === 'partner') { onboardingState = { status: 'done', role: 'partner', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); closeOnboarding(); ppOpen('dashboard'); return; }
+        onboardingStep = 1; renderOnboarding(); return;
+      }
       if (target.closest('[data-ob-next]')) { readOnboardingInputs(); onboardingStep = Math.min(2, onboardingStep + 1); renderOnboarding(); return; }
       if (target.closest('[data-ob-back]')) { readOnboardingInputs(); onboardingStep = Math.max(0, onboardingStep - 1); renderOnboarding(); return; }
       if (target.closest('[data-ob-finish]')) { finishOnboarding(); return; }
@@ -15238,6 +15463,798 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       sessionStorage.removeItem('husora-cloud-loaded');
       setTimeout(() => showToast(`${loaded} aus der Cloud geladen.`), 300);
     }
+    // ===== Partner-Portal (Zugang als Servicepartner) =====
+    // Arbeitet direkt mit Supabase (Aufträge, Kontrollen, Kunden …). Die zuletzt geladenen
+    // Daten werden auf dem Gerät zwischengespeichert, damit das Portal offline lesbar bleibt.
+    // Rechte prüft ausschließlich die Datenbank (RLS) – das Portal blendet nur passend ein und aus.
+    const PP_MODE_KEY = 'husora-mode';
+    const PP_CACHE_KEY = 'husora-partner-cache';
+    const PP_LEAD_ROLES = ['admin', 'dispatcher', 'service_manager', 'property_manager'];
+    const PP_ROLE_LABELS = { admin: 'Inhaber / Admin', dispatcher: 'Disposition', service_manager: 'Disposition', property_manager: 'Verwaltung', accounting: 'Buchhaltung', technician: 'Techniker', inspector: 'Kontrolleur', viewer: 'Nur lesen', owner: 'Eigentümer', cleaner: 'Reinigung', service_partner: 'Partner' };
+    const PP_ORDER_STATUS = { draft: ['Entwurf', 'muted'], offered: ['Neue Anfrage', 'amber'], accepted: ['Angenommen', 'green'], scheduled: ['Terminiert', 'green'], in_progress: ['In Arbeit', 'blue'], completed: ['Erledigt', 'done'], rejected: ['Abgelehnt', 'red'], cancelled: ['Storniert', 'muted'] };
+    const PP_INSPECTION_STATUS = { scheduled: ['Geplant', 'amber'], in_progress: ['Läuft', 'blue'], completed: ['Abgeschlossen', 'done'], cancelled: ['Abgesagt', 'muted'] };
+    const PP_INVOICE_STATUS = { draft: ['Entwurf', 'muted'], received: ['Eingereicht', 'amber'], approved: ['Freigegeben', 'green'], paid: ['Bezahlt', 'done'], overdue: ['Überfällig', 'red'], cancelled: ['Storniert', 'muted'] };
+    const PP_QUOTE_STATUS = { requested: ['Angefragt', 'amber'], received: ['Eingereicht', 'amber'], approved: ['Angenommen', 'done'], rejected: ['Abgelehnt', 'red'], expired: ['Abgelaufen', 'muted'] };
+    const PP_NAV = [['dashboard', 'Start', 'home'], ['orders', 'Aufträge', 'task'], ['customers', 'Kunden & Objekte', 'property'], ['calendar', 'Kalender', 'calendar'], ['inspections', 'Kontrollen', 'inspection'], ['messages', 'Nachrichten', 'note'], ['documents', 'Dokumente', 'document'], ['more', 'Mehr', 'menu']];
+    const pp = { open: false, view: 'dashboard', detail: null, filter: 'active', busy: '', error: '', notice: '', ctx: null, data: null, loadedAt: '', thumbs: {}, form: null };
+    try { const cached = JSON.parse(localStorage.getItem(PP_CACHE_KEY) || 'null'); if (cached?.ctx) Object.assign(pp, { ctx: cached.ctx, data: cached.data, loadedAt: cached.loadedAt }); } catch (error) { /* kein Cache */ }
+    const ppMode = () => { try { return localStorage.getItem(PP_MODE_KEY) || ''; } catch (error) { return ''; } };
+    const ppSetMode = (mode) => { try { localStorage.setItem(PP_MODE_KEY, mode); } catch (error) { /* optional */ } };
+    const ppOrg = () => pp.ctx?.organization || null;
+    const ppRole = () => pp.ctx?.role || '';
+    const ppIsLead = () => PP_LEAD_ROLES.includes(ppRole());
+    const ppIsAdmin = () => ppRole() === 'admin';
+    const ppMe = () => pp.ctx?.user_id || '';
+    const ppD = (key) => (pp.data && pp.data[key]) || [];
+    const ppDate = (value) => (value ? new Date(value).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) : '');
+    const ppTime = (value) => (value ? new Date(value).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '');
+    const ppDateTime = (value) => (value ? `${ppDate(value)} · ${ppTime(value)}` : 'ohne Termin');
+    const ppMoney = (value, currency) => (value === null || value === undefined || value === '' ? '–' : `${Number(value).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${currency || ppOrg()?.currency || ''}`.trim());
+    const ppBadge = (map, status) => { const [label, tone] = map[status] || [status, 'muted']; return `<span class="pp-badge ${tone}">${escapeHtml(label)}</span>`; };
+    const ppLocalInput = (value) => { if (!value) return ''; const d = new Date(value); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 16); };
+    const ppCustomerName = (orgId) => (orgId === ppOrg()?.id ? 'Eigener Kunde' : (pp.ctx?.links || []).find((link) => link.organization_id === orgId)?.organization_name || 'Kunde');
+    const ppOwnCustomer = (property) => (property?.owner_customer_id ? ppD('customers').find((c) => c.id === property.owner_customer_id) : null);
+    const ppCustomerLabel = (c) => c ? (c.company_name || [c.first_name, c.last_name].filter(Boolean).join(' ')) : '';
+    const ppAddress = (p) => (p ? [[p.street, p.house_number].filter(Boolean).join(' '), [p.postal_code, p.city].filter(Boolean).join(' ')].filter(Boolean).join(', ') : '');
+    const ppMemberName = (userId) => { const m = ppD('members').find((x) => x.user_id === userId); return m?.user ? ([m.user.first_name, m.user.last_name].filter(Boolean).join(' ') || m.user.email) : ''; };
+    const ppOpenOrders = () => ppD('orders').filter((o) => ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status));
+    const ppToday = () => localDateKey(new Date());
+    const ppDayKey = (value) => (value ? localDateKey(new Date(value)) : '');
+
+    function ppEnsureRoot() {
+      let root = document.getElementById('partner-portal');
+      if (!root) {
+        root = document.createElement('div');
+        root.id = 'partner-portal';
+        root.className = 'pp';
+        root.hidden = true;
+        root.setAttribute('role', 'application');
+        root.setAttribute('aria-label', 'Husora Partner-Portal');
+        document.body.appendChild(root);
+      }
+      return root;
+    }
+    function ppOpen(view) {
+      pp.open = true;
+      if (view) pp.view = view;
+      ppSetMode(ppMode() === 'both' ? 'both' : 'partner');
+      ppEnsureRoot().hidden = false;
+      document.body.classList.add('pp-active');
+      ppRender();
+      if (cloudSignedIn()) ppLoad();
+    }
+    function ppClose() {
+      pp.open = false;
+      const root = document.getElementById('partner-portal');
+      if (root) root.hidden = true;
+      document.body.classList.remove('pp-active');
+      if (ppMode() === 'partner') ppSetMode('both');
+      render();
+    }
+    function ppSaveCache() {
+      try { localStorage.setItem(PP_CACHE_KEY, JSON.stringify({ ctx: pp.ctx, data: pp.data, loadedAt: pp.loadedAt })); } catch (error) { /* Speicher voll: nur ohne Offline-Kopie */ }
+    }
+    const ppQ = (path) => cloudFetch(`/rest/v1/${path}`);
+    async function ppLoad() {
+      if (!cloudSignedIn() || pp.busy === 'load') return;
+      pp.busy = 'load';
+      pp.error = '';
+      ppRender();
+      try {
+        pp.ctx = await cloudFetch('/rest/v1/rpc/partner_context', { method: 'POST', body: {} });
+        const org = ppOrg();
+        if (org) {
+          const self = pp.ctx.self_partner_id;
+          const propSel = 'id,name,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id';
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites] = await Promise.all([
+            ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
+            ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
+            ppQ('quotes?select=*&order=created_at.desc&limit=200'),
+            ppQ('invoices?select=*&order=created_at.desc&limit=300'),
+            ppQ('messages?select=*&order=created_at.desc&limit=400'),
+            ppQ('customers?select=*&order=company_name.asc.nullslast,last_name.asc.nullslast'),
+            ppQ(`properties?select=${propSel}&order=name.asc&limit=1000`),
+            ppQ(`organization_members?organization_id=eq.${org.id}&select=id,role,status,user_id,user:users!organization_members_user_id_fkey(first_name,last_name,email)`),
+            self ? ppQ(`service_partner_services?service_partner_id=eq.${self}&select=*`) : [],
+            ppQ('service_types?select=id,code,name,organization_id&active=eq.true&order=name.asc'),
+            ppQ(`inspection_templates?organization_id=eq.${org.id}&active=eq.true&select=id,name,description,items:inspection_template_items(count)&order=name.asc`),
+            ppQ('photos?select=id,organization_id,property_id,service_order_id,inspection_id,storage_bucket,storage_path,caption,created_at&order=created_at.desc&limit=300'),
+            ppQ('documents?select=id,organization_id,property_id,service_order_id,file_name,file_type,file_size,storage_bucket,storage_path,document_type,created_at&order=created_at.desc&limit=300'),
+            ppIsAdmin() ? ppQ(`organization_invites?organization_id=eq.${org.id}&accepted_at=is.null&select=*&order=created_at.desc`) : []
+          ]);
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites };
+        } else {
+          pp.data = null;
+        }
+        pp.loadedAt = new Date().toISOString();
+        ppSaveCache();
+      } catch (error) {
+        pp.error = error instanceof TypeError ? 'Offline – angezeigt wird der zuletzt geladene Stand.' : error.message;
+      } finally {
+        pp.busy = '';
+        ppRender();
+      }
+    }
+    async function ppRun(label, task, { reload = true, notice = '' } = {}) {
+      if (pp.busy) return;
+      pp.busy = label;
+      pp.error = '';
+      pp.notice = '';
+      ppRender();
+      let failure = '';
+      try {
+        await task();
+        pp.notice = notice;
+        if (notice) showToast(notice);
+      } catch (error) {
+        failure = error instanceof TypeError ? 'Keine Verbindung – bitte später erneut versuchen.' : error.message;
+        console.error('Partner-Portal:', label, error);
+      } finally {
+        pp.busy = '';
+        if (reload) await ppLoad();
+        if (failure) pp.error = failure;
+        ppRender();
+      }
+    }
+    const ppPatch = (table, id, body) => cloudFetch(`/rest/v1/${table}?id=eq.${id}`, { method: 'PATCH', body, headers: { Prefer: 'return=minimal' } });
+    const ppInsert = (table, body) => cloudFetch(`/rest/v1/${table}`, { method: 'POST', body, headers: { Prefer: 'return=representation' } });
+    const ppRpc = (name, body) => cloudFetch(`/rest/v1/rpc/${name}`, { method: 'POST', body });
+
+    // ----- Dateien -----
+    async function ppUploadFile(file, order, kind) {
+      const isImage = file.type.startsWith('image/');
+      const dataUrl = isImage ? await compressPropertyPhoto(file, 1800, 0.82) : await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
+      const mime = isImage ? 'image/jpeg' : (file.type || 'application/pdf');
+      const id = window.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      const ext = isImage ? 'jpg' : (CLOUD_EXT[mime] || 'pdf');
+      const base = `organization/${order.organization_id}/property/${order.property_id}`;
+      if (isImage) {
+        const path = `${base}/photos/${id}.${ext}`;
+        await cloudPutFile('husora-property-photos', path, dataUrl, mime);
+        await ppInsert('photos', { organization_id: order.organization_id, property_id: order.property_id, service_order_id: kind === 'inspection' ? null : order.id, inspection_id: kind === 'inspection' ? order.inspection_id : null, storage_bucket: 'husora-property-photos', storage_path: path, caption: file.name, taken_at: new Date().toISOString() });
+      } else {
+        if (!CLOUD_DOC_TYPES.includes(mime)) throw new Error(`„${file.name}“: Dateityp wird nicht unterstützt (PDF, Bild, Word, Excel).`);
+        const path = `${base}/documents/${id}.${ext}`;
+        await cloudPutFile('husora-documents', path, dataUrl, mime);
+        await ppInsert('documents', { organization_id: order.organization_id, property_id: order.property_id, service_order_id: kind === 'inspection' ? null : order.id, inspection_id: kind === 'inspection' ? order.inspection_id : null, file_name: file.name, file_type: mime, file_size: file.size, storage_bucket: 'husora-documents', storage_path: path, document_type: /rechnung|invoice|faktura/i.test(file.name) ? 'invoice' : /angebot|offert|quote/i.test(file.name) ? 'quote' : /protokoll|bericht|report/i.test(file.name) ? 'inspection_report' : 'other' });
+      }
+    }
+    async function ppThumb(photo) {
+      if (pp.thumbs[photo.id]) return;
+      pp.thumbs[photo.id] = 'loading';
+      try {
+        pp.thumbs[photo.id] = await cloudGetFile(`${CLOUD_FILE_PREFIX}${photo.storage_bucket}/${photo.storage_path}`);
+      } catch (error) {
+        pp.thumbs[photo.id] = 'error';
+      }
+      document.querySelectorAll(`[data-pp-thumb="${photo.id}"]`).forEach((img) => { if (pp.thumbs[photo.id].startsWith('data:')) img.src = pp.thumbs[photo.id]; });
+    }
+    async function ppOpenFile(bucket, path, name) {
+      const dataUrl = await cloudGetFile(`${CLOUD_FILE_PREFIX}${bucket}/${path}`);
+      const blob = await (await fetch(dataUrl)).blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.target = '_blank'; link.rel = 'noopener'; link.download = name || '';
+      document.body.appendChild(link); link.click();
+      setTimeout(() => { URL.revokeObjectURL(url); link.remove(); }, 4000);
+    }
+
+    // ----- Rahmen -----
+    function ppRender() {
+      if (!pp.open) return;
+      const root = ppEnsureRoot();
+      const scroll = root.querySelector('.pp-main')?.scrollTop || 0;
+      const org = ppOrg();
+      const signedIn = cloudSignedIn();
+      const head = `<header class="pp-top"><div class="pp-brand"><span class="pp-logo">${icon('users')}</span><div><strong>${escapeHtml(org?.name || 'Husora für Servicepartner')}</strong><small>${org ? `${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())} · ${escapeHtml(cloud.session?.email || '')}` : 'Partner-Portal'}</small></div></div>
+        <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button>` : ''}<button type="button" class="pp-switch" data-pp-action="close">${icon('home')}<span>Hausbesitzer</span></button></div></header>`;
+      let body;
+      if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal benötigt die Verbindung zu Supabase. Richte sie unter Einstellungen → Daten & App ein.');
+      else if (!signedIn) body = ppLoginHtml();
+      else if (!pp.ctx && pp.busy === 'load') body = ppSkeleton();
+      else if (!org) body = ppOnboardingHtml();
+      else body = ppViewHtml();
+      const messages = `${pp.error ? `<p class="pp-msg error" role="alert">${icon('alert')}<span>${escapeHtml(pp.error)}</span></p>` : ''}`;
+      const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${PP_NAV.map(([id, label, ic]) => `<button type="button" class="${pp.view === id ? 'active' : ''}" data-pp-view="${id}" aria-current="${pp.view === id ? 'page' : 'false'}">${icon(ic)}<span>${label}</span>${id === 'orders' && ppD('orders').some((o) => o.status === 'offered') ? `<b class="pp-dot">${ppD('orders').filter((o) => o.status === 'offered').length}</b>` : ''}</button>`).join('')}</nav>` : '';
+      root.innerHTML = `${head}<main class="pp-main" id="pp-main">${messages}${body}</main>${nav}`;
+      const main = root.querySelector('.pp-main');
+      if (main && pp.keepScroll) main.scrollTop = scroll;
+      pp.keepScroll = false;
+      root.querySelectorAll('[data-pp-thumb]').forEach((img) => { const photo = ppD('photos').find((p) => p.id === img.dataset.ppThumb); if (photo) { if (pp.thumbs[photo.id]?.startsWith?.('data:')) img.src = pp.thumbs[photo.id]; else ppThumb(photo); } });
+    }
+    const ppEmpty = (title, text, action = '') => `<div class="pp-empty">${icon('help')}<strong>${escapeHtml(title)}</strong><p>${escapeHtml(text)}</p>${action}</div>`;
+    const ppSkeleton = () => `<div class="pp-skel"><i></i><i></i><i></i></div>`;
+    const ppSection = (title, inner, extra = '') => `<section class="pp-section"><div class="pp-section-head"><h2>${title}</h2>${extra}</div>${inner}</section>`;
+    const ppBusy = (label) => pp.busy === label;
+    const ppDisabled = () => (pp.busy ? 'disabled' : '');
+
+    function ppLoginHtml() {
+      return `<div class="pp-hero">${icon('users')}<h1>Husora für Servicepartner</h1><p>Aufträge deiner Kunden annehmen, Hauskontrollen durchführen, Fotos und Rechnungen direkt beim Kunden ablegen.</p></div>
+        <form class="pp-card pp-form" data-pp-form="login">
+          <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" autocomplete="username" required value="${escapeHtml(cloudState.draftEmail || '')}"></label>
+          <label><span class="form-label">Passwort</span><input class="form-control" name="password" type="password" autocomplete="current-password" minlength="8" required></label>
+          <div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('login') ? 'Melde an …' : 'Anmelden'}</button><button class="secondary-btn" type="button" data-pp-action="signup" ${ppDisabled()}>${ppBusy('signup') ? 'Erstelle …' : 'Neues Konto'}</button></div>
+          ${pp.notice ? `<p class="pp-msg">${icon('check')}<span>${escapeHtml(pp.notice)}</span></p>` : ''}
+        </form>
+        <p class="pp-hint">Du nutzt Husora mit demselben Konto auch als Hausbesitzer? Melde dich einfach mit diesem Konto an – beide Rollen sind möglich.</p>`;
+    }
+    function ppOnboardingHtml() {
+      const types = ppD('types').length ? ppD('types') : [];
+      return `<div class="pp-hero small"><h1>Servicebetrieb einrichten</h1><p>Lege deinen Betrieb an oder tritt mit einem Einladungscode dem Team eines Betriebs bei.</p></div>
+        <form class="pp-card pp-form" data-pp-form="join"><h3>Ich wurde als Mitarbeiter eingeladen</h3>
+          <label><span class="form-label">Einladungscode</span><input class="form-control pp-code" name="code" placeholder="TEAM-XXXX-XXXX" autocapitalize="characters" required></label>
+          <div class="pp-actions"><button class="secondary-btn" type="submit" ${ppDisabled()}>Team beitreten</button></div></form>
+        <form class="pp-card pp-form" data-pp-form="company"><h3>Neuen Betrieb anlegen</h3>
+          <div class="pp-grid">
+            <label class="full"><span class="form-label">Firmenname *</span><input class="form-control" name="name" required maxlength="120"></label>
+            <label><span class="form-label">Rechtsform</span><input class="form-control" name="legal_form" placeholder="AB, GmbH, Einzelfirma …" maxlength="40"></label>
+            <label><span class="form-label">Ansprechpartner</span><input class="form-control" name="contact_name" maxlength="80" value="${escapeHtml(profileData?.name && profileData.name !== 'Max Mustermann' ? profileData.name : '')}"></label>
+            <label class="full"><span class="form-label">Straße und Hausnummer</span><input class="form-control" name="street" maxlength="120"></label>
+            <label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12"></label>
+            <label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80"></label>
+            <label><span class="form-label">Land</span><select class="form-control" name="country">${[['SE', 'Schweden'], ['DE', 'Deutschland'], ['NO', 'Norwegen'], ['DK', 'Dänemark'], ['FI', 'Finnland'], ['AT', 'Österreich']].map(([c, l]) => `<option value="${c}">${l}</option>`).join('')}</select></label>
+            <label><span class="form-label">Währung</span><select class="form-control" name="currency">${['SEK', 'EUR', 'NOK', 'DKK'].map((c) => `<option>${c}</option>`).join('')}</select></label>
+            <label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" maxlength="40"></label>
+            <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120" value="${escapeHtml(cloud.session?.email || '')}"></label>
+            <label><span class="form-label">Webseite</span><input class="form-control" name="website" type="url" maxlength="160" placeholder="https://"></label>
+            <label><span class="form-label">Notfall-Telefon</span><input class="form-control" name="emergency_phone" type="tel" maxlength="40"></label>
+            <label><span class="form-label">USt-IdNr. / Momsnr.</span><input class="form-control" name="vat_id" maxlength="30"></label>
+            <label><span class="form-label">Handelsregister / Org.-Nr.</span><input class="form-control" name="registration_number" maxlength="40"></label>
+            <label><span class="form-label">Einsatzradius (km)</span><input class="form-control" name="service_radius_km" type="number" min="0" max="1000" value="50"></label>
+          </div>
+          <span class="form-label" style="margin-top:12px;display:block">Angebotene Leistungen</span>
+          <div class="pp-chips">${(types.length ? types : PP_DEFAULT_TYPES).map((t) => `<label class="pp-chip"><input type="checkbox" name="services" value="${escapeHtml(t.code)}" ${['inspection', 'holiday_home_inspection'].includes(t.code) ? 'checked' : ''}><span>${escapeHtml(t.name)}</span></label>`).join('')}</div>
+          <p class="pp-hint">Bankverbindung, Rechnungsadresse und Öffnungszeiten ergänzt du später unter Mehr → Firma. Fünf Kontrollvorlagen (Standard, Ferienhaus, Übergabe, Winter, Technik) werden automatisch angelegt.</p>
+          <div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('company') ? 'Lege an …' : 'Betrieb anlegen'}</button></div></form>`;
+    }
+    const PP_DEFAULT_TYPES = [['inspection', 'Hauskontrolle'], ['holiday_home_inspection', 'Ferienhauskontrolle'], ['cleaning', 'Reinigung'], ['gardening', 'Gartenpflege'], ['snow_removal', 'Winterdienst'], ['repair', 'Reparatur'], ['plumbing', 'Sanitär'], ['heating', 'Heizung'], ['electrician', 'Elektro'], ['roofing', 'Dach'], ['facade', 'Fassade'], ['windows', 'Fenster'], ['key_service', 'Schlüsselservice'], ['general_maintenance', 'Technische Wartung']].map(([code, name]) => ({ code, name }));
+
+    function ppViewHtml() {
+      if (pp.detail?.type === 'order') return ppOrderDetailHtml(pp.detail.id);
+      if (pp.detail?.type === 'inspection') return ppInspectionDetailHtml(pp.detail.id);
+      if (pp.detail?.type === 'customer') return ppCustomerDetailHtml(pp.detail.id);
+      return ({ dashboard: ppDashboardHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
+    }
+    function ppOrderCard(o) {
+      return `<button type="button" class="pp-item" data-pp-open="order:${o.id}"><span class="pp-item-main"><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.property?.name || 'Objekt')} · ${escapeHtml(ppCustomerName(o.organization_id))}</small><small>${icon('calendar')} ${escapeHtml(ppDateTime(o.scheduled_at))}${o.assigned_user_id ? ` · ${escapeHtml(ppMemberName(o.assigned_user_id) || 'zugewiesen')}` : ''}</small></span>${ppBadge(PP_ORDER_STATUS, o.status)}</button>`;
+    }
+    function ppDashboardHtml() {
+      const today = ppToday();
+      const open = ppOpenOrders();
+      const offered = ppD('orders').filter((o) => o.status === 'offered');
+      const todayItems = [...ppD('orders').filter((o) => ppDayKey(o.scheduled_at) === today && !['completed', 'cancelled', 'rejected'].includes(o.status)), ...ppD('inspections').filter((i) => ppDayKey(i.scheduled_at) === today && i.status !== 'cancelled')];
+      const upcoming = ppD('inspections').filter((i) => ['scheduled', 'in_progress'].includes(i.status));
+      const urgent = ppD('inspections').flatMap((i) => (i.items || []).filter((item) => item.status === 'defect').map((item) => ({ ...item, inspection: i })));
+      const unpaid = ppD('invoices').filter((i) => ['received', 'approved', 'overdue'].includes(i.status));
+      const quotes = ppD('quotes').filter((q) => ['requested', 'received'].includes(q.status));
+      const unread = ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe());
+      const tile = (label, value, view, tone = '') => `<button type="button" class="pp-tile ${tone}" data-pp-view="${view}"><b>${value}</b><span>${label}</span></button>`;
+      const first = ppD('members').find((m) => m.user_id === ppMe())?.user?.first_name || ppOrg()?.contact_name?.split(/\s+/)[0] || '';
+      return `<div class="pp-welcome"><h1>Hallo${first ? `, ${escapeHtml(first)}` : ''}!</h1><p>${pp.loadedAt ? `Stand ${escapeHtml(fmtDateTime(pp.loadedAt))}` : ''}</p></div>
+        <div class="pp-tiles">${tile('Offene Aufträge', open.length, 'orders')}${tile('Neue Anfragen', offered.length, 'orders', offered.length ? 'amber' : '')}${tile('Heute', todayItems.length, 'calendar')}${tile('Kontrollen', upcoming.length, 'inspections')}${tile('Dringende Mängel', urgent.length, 'inspections', urgent.length ? 'red' : '')}${tile('Unbezahlte Rechnungen', unpaid.length, 'finance')}${tile('Offene Angebote', quotes.length, 'finance')}${tile('Nachrichten', unread.length, 'messages', unread.length ? 'amber' : '')}</div>
+        ${offered.length ? ppSection('Neue Anfragen', `<div class="pp-list">${offered.map(ppOrderCard).join('')}</div>`) : ''}
+        ${ppSection('Heute', todayItems.length ? `<div class="pp-list">${todayItems.map((x) => (x.order_number ? ppOrderCard(x) : ppInspectionCard(x))).join('')}</div>` : '<p class="pp-muted">Heute stehen keine Termine an.</p>')}
+        ${urgent.length ? ppSection('Dringende Mängel', `<div class="pp-list">${urgent.slice(0, 6).map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.inspection.property?.name || '')}${item.notes ? ` · ${escapeHtml(item.notes)}` : ''}</small></span><span class="pp-badge red">Mangel</span></button>`).join('')}</div>`) : ''}
+        ${ppSection('Letzte Aktivität', `<div class="pp-list">${ppD('orders').slice().sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)).slice(0, 5).map(ppOrderCard).join('') || '<p class="pp-muted">Noch keine Aufträge. Sobald ein Kunde dich beauftragt, erscheint der Auftrag hier.</p>'}</div>`)}
+        ${!(pp.ctx?.links || []).length ? `<div class="pp-card pp-tip">${icon('users')}<div><strong>Kunden verbinden</strong><p>Hausbesitzer laden dich in ihrer Husora-App unter Einstellungen → Servicepartner ein. Den Code gibst du unter „Kunden & Objekte“ ein.</p><button type="button" class="secondary-btn" data-pp-view="customers">Code eingeben</button></div></div>` : ''}`;
+    }
+    function ppOrdersHtml() {
+      const filters = [['new', 'Neu', (o) => o.status === 'offered'], ['active', 'Aktiv', (o) => ['accepted', 'scheduled', 'in_progress'].includes(o.status)], ['done', 'Erledigt', (o) => o.status === 'completed'], ['all', 'Alle', () => true]];
+      const [, , fn] = filters.find(([id]) => id === pp.filter) || filters[1];
+      const list = ppD('orders').filter(fn);
+      return `<div class="pp-page-head"><h1>Aufträge</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-order">${icon('plus')} Auftrag</button>` : ''}</div>
+        <div class="pp-filters">${filters.map(([id, label, f]) => `<button type="button" class="${pp.filter === id ? 'active' : ''}" data-pp-filter="${id}">${label} <b>${ppD('orders').filter(f).length}</b></button>`).join('')}</div>
+        ${pp.form === 'new-order' ? ppNewOrderForm() : ''}
+        <div class="pp-list">${list.map(ppOrderCard).join('') || ppEmpty('Keine Aufträge', pp.filter === 'new' ? 'Keine neuen Anfragen.' : 'In dieser Ansicht gibt es keine Aufträge.')}</div>`;
+    }
+    function ppNewOrderForm(propertyId = '') {
+      const own = ppD('properties').filter((p) => p.organization_id === ppOrg().id);
+      if (!own.length) return `<div class="pp-card">${ppEmpty('Noch kein eigenes Objekt', 'Lege zuerst unter „Kunden & Objekte“ einen Kunden und sein Haus an. Aufträge von Hausbesitzern mit Husora kommen automatisch.')}</div>`;
+      return `<form class="pp-card pp-form" data-pp-form="new-order"><h3>Neuer Auftrag für eigenen Kunden</h3><div class="pp-grid">
+        <label class="full"><span class="form-label">Objekt</span><select class="form-control" name="property_id">${own.map((p) => `<option value="${p.id}" ${p.id === propertyId ? 'selected' : ''}>${escapeHtml(p.name)}${ppOwnCustomer(p) ? ` – ${escapeHtml(ppCustomerLabel(ppOwnCustomer(p)))}` : ''}</option>`).join('')}</select></label>
+        <label class="full"><span class="form-label">Titel *</span><input class="form-control" name="title" required maxlength="120"></label>
+        <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="3"></textarea></label>
+        <label><span class="form-label">Termin</span><input class="form-control" name="scheduled_at" type="datetime-local"></label>
+        <label><span class="form-label">Preis (${escapeHtml(ppOrg().currency)})</span><input class="form-control" name="estimated_cost" type="number" min="0" step="0.01"></label>
+        </div><div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>Auftrag anlegen</button></div></form>`;
+    }
+    function ppOrderDetailHtml(id) {
+      const o = ppD('orders').find((x) => x.id === id);
+      if (!o) return `${ppBack()}${ppEmpty('Auftrag nicht gefunden', 'Er wurde gelöscht oder ist nicht mehr für dich freigegeben.')}`;
+      const p = o.property;
+      const thread = ppD('messages').filter((m) => m.service_order_id === o.id).slice().reverse();
+      const photos = ppD('photos').filter((x) => x.service_order_id === o.id);
+      const docs = ppD('documents').filter((x) => x.service_order_id === o.id);
+      const invoices = ppD('invoices').filter((x) => x.service_order_id === o.id);
+      const quotes = ppD('quotes').filter((x) => x.service_order_id === o.id);
+      const lead = ppIsLead() || o.organization_id === ppOrg().id;
+      const members = ppD('members').filter((m) => m.status === 'active');
+      const maps = p?.latitude && p?.longitude ? `https://www.google.com/maps/dir/?api=1&destination=${p.latitude},${p.longitude}` : ppAddress(p) ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ppAddress(p))}` : '';
+      let actions = '';
+      if (o.status === 'offered') actions = `<div class="pp-card pp-form"><h3>Anfrage beantworten</h3><label><span class="form-label">Termin (optional)</span><input class="form-control" type="datetime-local" data-pp-field="accept-date" value="${ppLocalInput(o.scheduled_at)}"></label><label><span class="form-label">Nachricht an den Kunden</span><input class="form-control" data-pp-field="accept-note" placeholder="z. B. Wir kommen am Vormittag."></label><div class="pp-actions"><button type="button" class="secondary-btn danger" data-pp-action="reject" data-id="${o.id}" ${ppDisabled()}>Ablehnen</button><button type="button" class="primary-btn" data-pp-action="accept" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Annehmen</button></div></div>`;
+      else if (['accepted', 'scheduled'].includes(o.status)) actions = `<div class="pp-card pp-form"><h3>Termin & Start</h3><label><span class="form-label">Termin</span><input class="form-control" type="datetime-local" data-pp-field="sched" value="${ppLocalInput(o.scheduled_at)}"></label><div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="schedule" data-id="${o.id}" ${ppDisabled()}>Termin speichern</button><button type="button" class="primary-btn" data-pp-action="start" data-id="${o.id}" ${ppDisabled()}>Auftrag starten</button></div></div>`;
+      else if (o.status === 'in_progress') actions = `<div class="pp-card pp-form"><h3>Auftrag abschließen</h3><label><span class="form-label">Ist-Kosten (${escapeHtml(o.currency)})</span><input class="form-control" type="number" min="0" step="0.01" data-pp-field="actual" value="${o.actual_cost ?? o.estimated_cost ?? ''}"></label><label><span class="form-label">Abschlussnotiz</span><input class="form-control" data-pp-field="done-note" placeholder="Was wurde erledigt?"></label><div class="pp-actions"><button type="button" class="primary-btn big" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Erledigt</button></div></div>`;
+      return `${ppBack()}
+        <div class="pp-detail-head"><div><span class="pp-eyebrow">${escapeHtml(o.order_number)} · ${escapeHtml(ppCustomerName(o.organization_id))}</span><h1>${escapeHtml(o.title)}</h1></div>${ppBadge(PP_ORDER_STATUS, o.status)}</div>
+        <div class="pp-card pp-facts">
+          <div><span>Objekt</span><strong>${escapeHtml(p?.name || '–')}</strong><small>${escapeHtml(ppAddress(p) || p?.region || '')}</small>${maps ? `<a class="pp-link" href="${maps}" target="_blank" rel="noopener">${icon('map')} Navigation</a>` : ''}</div>
+          <div><span>Termin</span><strong>${escapeHtml(ppDateTime(o.scheduled_at))}</strong></div>
+          <div><span>Preis</span><strong>${escapeHtml(ppMoney(o.actual_cost ?? o.estimated_cost, o.currency))}</strong>${o.actual_cost != null ? '<small>Ist-Kosten</small>' : '<small>geschätzt</small>'}</div>
+          <div><span>Mitarbeiter</span>${lead && !['completed', 'cancelled', 'rejected'].includes(o.status) ? `<select class="form-control" data-pp-assign="${o.id}"><option value="">– nicht zugewiesen –</option>${members.map((m) => `<option value="${m.user_id}" ${m.user_id === o.assigned_user_id ? 'selected' : ''}>${escapeHtml(ppMemberName(m.user_id) || m.user_id)} (${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)})</option>`).join('')}</select>` : `<strong>${escapeHtml(ppMemberName(o.assigned_user_id) || '–')}</strong>`}</div>
+        </div>
+        ${o.description ? `<div class="pp-card"><span class="pp-eyebrow">Beschreibung</span><p class="pp-text">${escapeHtml(o.description)}</p></div>` : ''}
+        ${o.response_note ? `<div class="pp-card"><span class="pp-eyebrow">Deine Antwort</span><p class="pp-text">${escapeHtml(o.response_note)}</p></div>` : ''}
+        ${actions}
+        ${ppSection('Fotos & Dokumente', `<div class="pp-gallery">${photos.map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(ph.caption || 'Foto')}"><img data-pp-thumb="${ph.id}" alt="${escapeHtml(ph.caption || 'Foto')}"></button>`).join('')}</div>
+          ${docs.map((d) => `<button type="button" class="pp-doc" data-pp-file="${d.storage_bucket}|${d.storage_path}|${escapeHtml(d.file_name)}">${icon('document')}<span>${escapeHtml(d.file_name)}</span><small>${escapeHtml(formatBytes(d.file_size || 0))}</small></button>`).join('')}
+          <div class="pp-actions"><label class="primary-btn pp-file">${icon('plus')} Foto aufnehmen<input type="file" accept="image/*" capture="environment" multiple hidden data-pp-upload="order:${o.id}"></label><label class="secondary-btn pp-file">Dokument<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" multiple hidden data-pp-upload="order:${o.id}"></label></div>`)}
+        ${ppSection('Kontrolle', `${ppD('inspections').filter((i) => i.property_id === o.property_id && i.status !== 'cancelled').slice(0, 3).map(ppInspectionCard).join('')}
+          ${ppD('templates').length ? `<div class="pp-inline"><select class="form-control" data-pp-field="tpl">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-action="start-inspection" data-property="${o.property_id}" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}`)}
+        ${ppSection('Nachrichten', `<div class="pp-thread">${thread.map((m) => `<div class="pp-bubble ${m.sender_user_id === ppMe() ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(m.sender_user_id === ppMe() ? 'Du' : ppMemberName(m.sender_user_id) || 'Kunde')} · ${escapeHtml(fmtDateTime(m.created_at))}</small></div>`).join('') || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
+          <form class="pp-send" data-pp-form="message" data-order="${o.id}" data-org="${o.organization_id}"><input class="form-control" name="message" placeholder="Nachricht an den Kunden …" maxlength="2000" required><button class="primary-btn" type="submit" aria-label="Senden" ${ppDisabled()}>Senden</button></form>`)}
+        ${['accepted', 'scheduled', 'in_progress', 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
+          ${pp.form === `finance:${o.id}` ? ppFinanceForm(o) : `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="quote">Angebot</button><button type="button" class="primary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice">Rechnung erstellen</button></div>`}`) : ''}`;
+    }
+    function ppFinanceForm(o) {
+      const kind = pp.formKind || 'invoice';
+      const vat = o.currency === 'SEK' || ppOrg().country === 'SE' ? 25 : 19;
+      const net = o.actual_cost ?? o.estimated_cost ?? '';
+      const number = `${kind === 'invoice' ? 'R' : 'A'}-${new Date().getFullYear()}-${String((kind === 'invoice' ? ppD('invoices') : ppD('quotes')).length + 1).padStart(4, '0')}`;
+      return `<form class="pp-form pp-subform" data-pp-form="finance" data-order="${o.id}" data-kind="${kind}"><h3>${kind === 'invoice' ? 'Rechnung' : 'Angebot'} an ${escapeHtml(ppCustomerName(o.organization_id))}</h3><div class="pp-grid">
+        <label><span class="form-label">Nummer</span><input class="form-control" name="number" value="${escapeHtml(number)}" required maxlength="40"></label>
+        <label><span class="form-label">Netto (${escapeHtml(o.currency)})</span><input class="form-control" name="net" type="number" min="0" step="0.01" value="${net !== '' ? (Number(net) / (1 + vat / 100)).toFixed(2) : ''}" required></label>
+        <label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}" required></label>
+        ${kind === 'invoice' ? `<label><span class="form-label">Rechnungsdatum</span><input class="form-control" name="date" type="date" value="${ppToday()}"></label><label><span class="form-label">Fällig am</span><input class="form-control" name="due" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label>` : `<label><span class="form-label">Gültig bis</span><input class="form-control" name="valid" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label><label class="full"><span class="form-label">Leistung</span><input class="form-control" name="description" value="${escapeHtml(o.title)}"></label>`}
+        </div><p class="pp-hint">Brutto wird automatisch berechnet. Die Rechnung erscheint beim Kunden zur Freigabe; das PDF kannst du unter „Dokument“ anhängen.</p>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>${kind === 'invoice' ? 'Rechnung einreichen' : 'Angebot senden'}</button></div></form>`;
+    }
+    const ppBack = () => `<button type="button" class="pp-back" data-pp-action="back">${icon('arrow')}<span>Zurück</span></button>`;
+    function ppInspectionCard(i) {
+      const items = i.items || [];
+      const checked = items.filter((x) => x.status !== 'not_checked').length;
+      const defects = items.filter((x) => x.status === 'defect').length;
+      return `<button type="button" class="pp-item" data-pp-open="inspection:${i.id}"><span class="pp-item-main"><strong>${escapeHtml((i.notes || 'Hauskontrolle').replace(/^Vorlage: /, ''))}</strong><small>${escapeHtml(i.property?.name || '')} · ${escapeHtml(ppCustomerName(i.organization_id))}</small><small>${icon('calendar')} ${escapeHtml(ppDateTime(i.scheduled_at))} · ${checked}/${items.length} geprüft${defects ? ` · <b class="pp-red">${defects} Mangel</b>` : ''}</small></span>${ppBadge(PP_INSPECTION_STATUS, i.status)}</button>`;
+    }
+    function ppInspectionsHtml() {
+      const active = ppD('inspections').filter((i) => ['scheduled', 'in_progress'].includes(i.status));
+      const done = ppD('inspections').filter((i) => i.status === 'completed');
+      const props = ppD('properties');
+      return `<div class="pp-page-head"><h1>Kontrollen</h1></div>
+        <form class="pp-card pp-form pp-compact" data-pp-form="inspection-start"><h3>Neue Kontrolle</h3><div class="pp-grid">
+          <label><span class="form-label">Objekt</span><select class="form-control" name="property_id">${props.map((p) => `<option value="${p.id}">${escapeHtml(p.name)} – ${escapeHtml(ppCustomerName(p.organization_id) === 'Eigener Kunde' ? ppCustomerLabel(ppOwnCustomer(p)) || 'eigenes Objekt' : ppCustomerName(p.organization_id))}</option>`).join('')}</select></label>
+          <label><span class="form-label">Vorlage</span><select class="form-control" name="template_id">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)} (${t.items?.[0]?.count ?? 0})</option>`).join('')}</select></label>
+        </div><div class="pp-actions"><button class="primary-btn" type="submit" ${props.length && ppD('templates').length ? '' : 'disabled'} ${ppDisabled()}>Kontrolle anlegen</button></div>${props.length ? '' : '<p class="pp-hint">Objekte erscheinen, sobald ein Kunde dich beauftragt oder du einen eigenen Kunden anlegst.</p>'}</form>
+        ${ppSection('Offen', `<div class="pp-list">${active.map(ppInspectionCard).join('') || '<p class="pp-muted">Keine offenen Kontrollen.</p>'}</div>`)}
+        ${ppSection('Abgeschlossen', `<div class="pp-list">${done.slice(0, 20).map(ppInspectionCard).join('') || '<p class="pp-muted">Noch keine abgeschlossenen Kontrollen.</p>'}</div>`)}`;
+    }
+    function ppInspectionDetailHtml(id) {
+      const i = ppD('inspections').find((x) => x.id === id);
+      if (!i) return `${ppBack()}${ppEmpty('Kontrolle nicht gefunden', 'Sie ist nicht mehr für dich freigegeben.')}`;
+      const items = (i.items || []).slice();
+      const editable = ['scheduled', 'in_progress'].includes(i.status);
+      const groups = {};
+      items.forEach((item) => { (groups[item.category || 'Allgemein'] = groups[item.category || 'Allgemein'] || []).push(item); });
+      const checked = items.filter((x) => x.status !== 'not_checked').length;
+      const defects = items.filter((x) => x.status === 'defect');
+      const warnings = items.filter((x) => x.status === 'warning');
+      const photos = ppD('photos').filter((x) => x.inspection_id === i.id);
+      const btn = (item, status, label) => `<button type="button" class="pp-check ${status} ${item.status === status ? 'on' : ''}" data-pp-check="${item.id}" data-status="${status}" ${editable ? '' : 'disabled'} aria-pressed="${item.status === status}">${label}</button>`;
+      return `${ppBack()}
+        <div class="pp-detail-head"><div><span class="pp-eyebrow">${escapeHtml(ppCustomerName(i.organization_id))} · ${escapeHtml(ppDateTime(i.scheduled_at))}</span><h1>${escapeHtml(i.property?.name || 'Kontrolle')}</h1><small class="pp-muted">${escapeHtml((i.notes || '').replace(/^Vorlage: /, 'Vorlage: '))}</small></div>${ppBadge(PP_INSPECTION_STATUS, i.status)}</div>
+        <div class="pp-progress"><span style="width:${items.length ? Math.round(checked / items.length * 100) : 0}%"></span></div><p class="pp-muted">${checked} von ${items.length} Punkten geprüft${defects.length ? ` · ${defects.length} Mängel` : ''}${warnings.length ? ` · ${warnings.length} Hinweise` : ''}</p>
+        ${i.status === 'scheduled' ? `<div class="pp-actions"><button type="button" class="primary-btn big" data-pp-action="inspection-status" data-id="${i.id}" data-status="in_progress" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}
+        ${Object.entries(groups).map(([category, list]) => `<section class="pp-section"><div class="pp-section-head"><h2>${escapeHtml(category)}</h2></div>${list.map((item) => `<div class="pp-check-item ${item.status}"><div class="pp-check-title"><strong>${escapeHtml(item.name)}</strong>${item.checked_at ? `<small>${escapeHtml(ppTime(item.checked_at))}</small>` : ''}</div>
+          <div class="pp-check-btns">${btn(item, 'ok', 'OK')}${btn(item, 'warning', 'Hinweis')}${btn(item, 'defect', 'Mangel')}${btn(item, 'not_applicable', 'n. v.')}</div>
+          ${['warning', 'defect'].includes(item.status) || item.notes ? `<div class="pp-inline"><input class="form-control" data-pp-note="${item.id}" placeholder="Beschreibung des Mangels …" value="${escapeHtml(item.notes || '')}" ${editable ? '' : 'disabled'}>${item.status === 'defect' ? `<input class="form-control pp-cost" type="number" min="0" step="1" data-pp-cost="${item.id}" placeholder="Kosten ca." value="${item.estimated_cost ?? ''}" ${editable ? '' : 'disabled'}>` : ''}</div>` : ''}</div>`).join('')}</section>`).join('')}
+        ${ppSection('Fotos', `<div class="pp-gallery">${photos.map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|Foto"><img data-pp-thumb="${ph.id}" alt="Foto"></button>`).join('')}</div>${editable ? `<div class="pp-actions"><label class="secondary-btn pp-file">${icon('plus')} Foto aufnehmen<input type="file" accept="image/*" capture="environment" multiple hidden data-pp-upload="inspection:${i.id}"></label></div>` : ''}`)}
+        ${editable ? `<div class="pp-card pp-form"><h3>Abschluss</h3><label><span class="form-label">Zusammenfassung für den Kunden</span><textarea class="form-control" rows="3" data-pp-field="summary">${escapeHtml(i.notes || '')}</textarea></label>
+          <div class="pp-actions"><button type="button" class="primary-btn big" data-pp-action="inspection-complete" data-id="${i.id}" ${checked < items.length ? 'data-incomplete="1"' : ''} ${ppDisabled()}>${icon('check')} Kontrolle abschließen</button></div>
+          <p class="pp-hint">Mängel werden beim Abschluss automatisch als Reparatur an den Kunden gemeldet. Den Bericht siehst du unter „Dokumente“.</p></div>` : `${defects.length && i.organization_id === ppOrg().id && ppIsLead() ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="defects-to-orders" data-id="${i.id}" ${ppDisabled()}>Mängel als Aufträge anlegen</button></div>` : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="inspection-report" data-id="${i.id}">${icon('document')} Prüfbericht (PDF)</button></div>`}`;
+    }
+    function ppCustomersHtml() {
+      const customers = ppD('customers');
+      const linked = customers.filter((c) => c.linked_organization_id);
+      const own = customers.filter((c) => !c.linked_organization_id);
+      const propsOf = (c) => ppD('properties').filter((p) => (c.linked_organization_id ? p.organization_id === c.linked_organization_id : p.owner_customer_id === c.id));
+      const card = (c) => `<button type="button" class="pp-item" data-pp-open="customer:${c.id}"><span class="pp-item-main"><strong>${escapeHtml(ppCustomerLabel(c))}</strong><small>${c.linked_organization_id ? 'Husora-Kunde · verbunden' : escapeHtml([c.city, c.email].filter(Boolean).join(' · ') || 'Eigener Kunde')}</small><small>${propsOf(c).length} Objekt${propsOf(c).length === 1 ? '' : 'e'} · ${ppD('orders').filter((o) => propsOf(c).some((p) => p.id === o.property_id)).length} Aufträge</small></span>${icon('arrow')}</button>`;
+      return `<div class="pp-page-head"><h1>Kunden & Objekte</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-customer">${icon('plus')} Kunde</button>` : ''}</div>
+        ${ppIsLead() ? `<form class="pp-card pp-form pp-compact" data-pp-form="invite-code"><h3>Einladung eines Hausbesitzers</h3><div class="pp-inline"><input class="form-control pp-code" name="code" placeholder="HUS-XXXX-XXXX" autocapitalize="characters" required><button class="primary-btn" type="submit" ${ppDisabled()}>Verbinden</button></div><p class="pp-hint">Den Code erzeugt dein Kunde in seiner Husora-App. Danach siehst du seine Aufträge und die betroffenen Häuser.</p></form>` : ''}
+        ${pp.form === 'new-customer' ? `<form class="pp-card pp-form" data-pp-form="customer"><h3>Eigener Kunde</h3><div class="pp-grid">
+          <label class="full"><span class="form-label">Firma (optional)</span><input class="form-control" name="company_name" maxlength="120"></label>
+          <label><span class="form-label">Vorname</span><input class="form-control" name="first_name" maxlength="60"></label><label><span class="form-label">Nachname</span><input class="form-control" name="last_name" maxlength="60"></label>
+          <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120"></label><label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" maxlength="40"></label>
+          <label class="full"><span class="form-label">Straße</span><input class="form-control" name="street" maxlength="120"></label><label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12"></label><label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80"></label>
+          <label class="full"><span class="form-label">Notizen</span><textarea class="form-control" name="notes" rows="2"></textarea></label></div>
+          <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>Kunde anlegen</button></div></form>` : ''}
+        ${ppSection(`Husora-Kunden (${linked.length})`, `<div class="pp-list">${linked.map(card).join('') || '<p class="pp-muted">Noch kein Hausbesitzer verbunden.</p>'}</div>`)}
+        ${ppSection(`Eigene Kunden (${own.length})`, `<div class="pp-list">${own.map(card).join('') || '<p class="pp-muted">Noch keine eigenen Kunden.</p>'}</div>`)}`;
+    }
+    function ppCustomerDetailHtml(id) {
+      const c = ppD('customers').find((x) => x.id === id);
+      if (!c) return `${ppBack()}${ppEmpty('Kunde nicht gefunden', '')}`;
+      const props = ppD('properties').filter((p) => (c.linked_organization_id ? p.organization_id === c.linked_organization_id : p.owner_customer_id === c.id));
+      return `${ppBack()}<div class="pp-detail-head"><div><span class="pp-eyebrow">${c.linked_organization_id ? 'Husora-Kunde' : 'Eigener Kunde'}</span><h1>${escapeHtml(ppCustomerLabel(c))}</h1></div></div>
+        <div class="pp-card pp-facts"><div><span>Kontakt</span><strong>${escapeHtml([c.first_name, c.last_name].filter(Boolean).join(' ') || '–')}</strong><small>${[c.email ? `<a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>` : '', c.phone ? `<a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a>` : ''].filter(Boolean).join(' · ')}</small></div><div><span>Adresse</span><strong>${escapeHtml(ppAddress(c) || '–')}</strong></div></div>
+        ${c.notes ? `<div class="pp-card"><p class="pp-text">${escapeHtml(c.notes)}</p></div>` : ''}
+        ${ppSection(`Objekte (${props.length})`, `${props.map((p) => `<div class="pp-card pp-prop"><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(ppAddress(p) || p.region || '')}</small></div><div class="pp-prop-stats"><span>${ppD('orders').filter((o) => o.property_id === p.id).length} Aufträge</span><span>${ppD('inspections').filter((i) => i.property_id === p.id).length} Kontrollen</span></div>${!c.linked_organization_id && ppIsLead() ? `<button type="button" class="text-btn" data-pp-action="order-for" data-property="${p.id}">Auftrag anlegen</button>` : ''}</div>`).join('') || `<p class="pp-muted">${c.linked_organization_id ? 'Häuser dieses Kunden erscheinen, sobald er dir einen Auftrag gibt.' : 'Noch kein Objekt.'}</p>`}
+          ${!c.linked_organization_id && ppIsLead() ? `<form class="pp-form pp-subform" data-pp-form="property" data-customer="${c.id}"><h3>Objekt hinzufügen</h3><div class="pp-grid"><label class="full"><span class="form-label">Name *</span><input class="form-control" name="name" required maxlength="80" placeholder="z. B. Ferienhaus am See"></label><label class="full"><span class="form-label">Straße</span><input class="form-control" name="street" maxlength="120" value="${escapeHtml(c.street || '')}"></label><label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12" value="${escapeHtml(c.postal_code || '')}"></label><label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" value="${escapeHtml(c.city || '')}"></label></div><div class="pp-actions"><button class="secondary-btn" type="submit" ${ppDisabled()}>Objekt speichern</button></div></form>` : ''}`)}
+        ${pp.form === 'new-order' ? ppNewOrderForm(pp.formProperty) : ''}`;
+    }
+    function ppCalendarHtml() {
+      const start = new Date(); start.setHours(0, 0, 0, 0);
+      const end = new Date(start.getTime() + 45 * 86400000);
+      const entries = [
+        ...ppD('orders').filter((o) => o.scheduled_at && !['completed', 'cancelled', 'rejected'].includes(o.status)).map((o) => ({ at: o.scheduled_at, html: ppOrderCard(o) })),
+        ...ppD('inspections').filter((i) => i.scheduled_at && ['scheduled', 'in_progress'].includes(i.status)).map((i) => ({ at: i.scheduled_at, html: ppInspectionCard(i) }))
+      ].filter((e) => new Date(e.at) < end).sort((a, b) => new Date(a.at) - new Date(b.at));
+      const overdue = entries.filter((e) => new Date(e.at) < start);
+      const byDay = {};
+      entries.filter((e) => new Date(e.at) >= start).forEach((e) => { (byDay[ppDayKey(e.at)] = byDay[ppDayKey(e.at)] || []).push(e); });
+      return `<div class="pp-page-head"><h1>Kalender</h1></div>
+        ${overdue.length ? ppSection('Überfällig', `<div class="pp-list">${overdue.map((e) => e.html).join('')}</div>`) : ''}
+        ${Object.entries(byDay).map(([day, list]) => ppSection(`${day === ppToday() ? 'Heute · ' : ''}${new Date(`${day}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}`, `<div class="pp-list">${list.map((e) => e.html).join('')}</div>`)).join('') || ppEmpty('Keine Termine', 'In den nächsten 45 Tagen sind keine Aufträge oder Kontrollen terminiert.')}`;
+    }
+    function ppMessagesHtml() {
+      const byOrder = {};
+      ppD('messages').filter((m) => m.service_order_id).forEach((m) => { (byOrder[m.service_order_id] = byOrder[m.service_order_id] || []).push(m); });
+      const rows = Object.entries(byOrder).map(([orderId, list]) => ({ order: ppD('orders').find((o) => o.id === orderId), last: list[0], unread: list.filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length })).filter((r) => r.order);
+      return `<div class="pp-page-head"><h1>Nachrichten</h1></div><div class="pp-list">${rows.map((r) => `<button type="button" class="pp-item" data-pp-open="order:${r.order.id}"><span class="pp-item-main"><strong>${escapeHtml(r.order.title)}</strong><small>${escapeHtml(r.order.property?.name || '')} · ${escapeHtml(ppCustomerName(r.order.organization_id))}</small><small>${escapeHtml(r.last.sender_user_id === ppMe() ? 'Du: ' : '')}${escapeHtml(r.last.message.slice(0, 90))}</small></span>${r.unread ? `<span class="pp-badge amber">${r.unread} neu</span>` : `<small class="pp-muted">${escapeHtml(ppDate(r.last.created_at))}</small>`}</button>`).join('') || ppEmpty('Keine Nachrichten', 'Nachrichten gehören immer zu einem Auftrag – öffne einen Auftrag, um dem Kunden zu schreiben.')}</div>`;
+    }
+    function ppDocumentsHtml() {
+      const photos = ppD('photos');
+      const docs = ppD('documents');
+      const where = (x) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); const p = ppD('properties').find((y) => y.id === x.property_id); return [o?.title, p?.name].filter(Boolean).join(' · '); };
+      return `<div class="pp-page-head"><h1>Dokumente</h1></div>
+        ${ppSection(`Dokumente (${docs.length})`, docs.map((d) => `<button type="button" class="pp-doc" data-pp-file="${d.storage_bucket}|${d.storage_path}|${escapeHtml(d.file_name)}">${icon('document')}<span>${escapeHtml(d.file_name)}<small>${escapeHtml(where(d))}</small></span><small>${escapeHtml(ppDate(d.created_at))}</small></button>`).join('') || '<p class="pp-muted">Noch keine Dokumente. Lade PDFs direkt im Auftrag hoch.</p>')}
+        ${ppSection(`Fotos (${photos.length})`, `<div class="pp-gallery">${photos.slice(0, 60).map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|Foto" title="${escapeHtml(where(ph))}"><img data-pp-thumb="${ph.id}" alt="${escapeHtml(ph.caption || 'Foto')}"></button>`).join('') || '<p class="pp-muted">Noch keine Fotos.</p>'}</div>`)}`;
+    }
+    function ppMoreHtml() {
+      const item = (view, label, caption, ic) => `<button type="button" class="pp-item" data-pp-view="${view}"><span class="pp-item-icon">${icon(ic)}</span><span class="pp-item-main"><strong>${label}</strong><small>${caption}</small></span>${icon('arrow')}</button>`;
+      return `<div class="pp-page-head"><h1>Mehr</h1></div><div class="pp-list">
+        ${item('finance', 'Angebote & Rechnungen', `${ppD('invoices').length} Rechnungen · ${ppD('quotes').length} Angebote`, 'cost')}
+        ${item('services', 'Leistungen', `${ppD('services').filter((s) => s.active).length} angeboten`, 'check')}
+        ${item('team', 'Mitarbeiter', `${ppD('members').length} im Team`, 'users')}
+        ${item('company', 'Firma', 'Firmendaten, Bank, Öffnungszeiten', 'gear')}
+        </div>
+        <div class="pp-card pp-tip">${icon('home')}<div><strong>Auch Hausbesitzer?</strong><p>Mit demselben Konto verwaltest du in der Hausbesitzer-Ansicht deine eigenen Ferienhäuser.</p><button type="button" class="secondary-btn" data-pp-action="close">Zur Hausbesitzer-Ansicht</button></div></div>
+        <div class="pp-actions"><button type="button" class="secondary-btn danger" data-pp-action="signout">Abmelden</button></div>`;
+    }
+    function ppFinanceHtml() {
+      const row = (x, isInvoice) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); return `<button type="button" class="pp-item" ${o ? `data-pp-open="order:${o.id}"` : ''}><span class="pp-item-main"><strong>${isInvoice ? 'Rechnung' : 'Angebot'} ${escapeHtml((isInvoice ? x.invoice_number : x.quote_number) || '')}</strong><small>${escapeHtml(o?.title || '')} · ${escapeHtml(ppCustomerName(x.organization_id))}</small><small>${isInvoice ? `${escapeHtml(x.invoice_date ? fmtDate(x.invoice_date) : '')}${x.due_date ? ` · fällig ${escapeHtml(fmtDate(x.due_date))}` : ''}` : x.valid_until ? `gültig bis ${escapeHtml(fmtDate(x.valid_until))}` : ''}</small></span><span class="pp-amount"><b>${escapeHtml(ppMoney(x.amount_gross, x.currency))}</b>${ppBadge(isInvoice ? PP_INVOICE_STATUS : PP_QUOTE_STATUS, x.status)}</span></button>`; };
+      const unpaid = ppD('invoices').filter((i) => ['received', 'approved', 'overdue'].includes(i.status));
+      const sum = (list) => list.reduce((s, x) => s + Number(x.amount_gross || 0), 0);
+      return `${ppBack()}<div class="pp-page-head"><h1>Angebote & Rechnungen</h1></div>
+        <div class="pp-tiles"><div class="pp-tile"><b>${escapeHtml(ppMoney(sum(unpaid)))}</b><span>offen (${unpaid.length})</span></div><div class="pp-tile"><b>${escapeHtml(ppMoney(sum(ppD('invoices').filter((i) => i.status === 'paid'))))}</b><span>bezahlt</span></div></div>
+        ${ppSection('Rechnungen', `<div class="pp-list">${ppD('invoices').map((x) => row(x, true)).join('') || '<p class="pp-muted">Rechnungen erstellst du im jeweiligen Auftrag.</p>'}</div>`)}
+        ${ppSection('Angebote', `<div class="pp-list">${ppD('quotes').map((x) => row(x, false)).join('') || '<p class="pp-muted">Noch keine Angebote.</p>'}</div>`)}`;
+    }
+    function ppServicesHtml() {
+      const services = ppD('services');
+      const types = ppD('types').filter((t) => !t.organization_id || t.organization_id === ppOrg().id);
+      return `${ppBack()}<div class="pp-page-head"><h1>Leistungen</h1></div><p class="pp-muted">Diese Leistungen und Preise nutzt Husora, um dich Hausbesitzern in deiner Region passend vorzuschlagen.</p>
+        <form class="pp-form" data-pp-form="services">${types.map((t) => { const s = services.find((x) => x.service_type_id === t.id); return `<div class="pp-card pp-service ${s?.active ? 'on' : ''}"><label class="pp-service-head"><input type="checkbox" name="type:${t.id}" ${s?.active ? 'checked' : ''} ${ppIsLead() ? '' : 'disabled'}><strong>${escapeHtml(t.name)}</strong></label>
+          <div class="pp-grid three"><label><span class="form-label">ab</span><input class="form-control" type="number" min="0" step="1" name="from:${t.id}" value="${s?.price_from ?? ''}" ${ppIsLead() ? '' : 'disabled'}></label><label><span class="form-label">bis</span><input class="form-control" type="number" min="0" step="1" name="to:${t.id}" value="${s?.price_to ?? ''}" ${ppIsLead() ? '' : 'disabled'}></label><label><span class="form-label">je</span><select class="form-control" name="unit:${t.id}" ${ppIsLead() ? '' : 'disabled'}>${[['hour', 'Stunde'], ['job', 'Auftrag'], ['visit', 'Besuch'], ['m2', 'm²'], ['month', 'Monat'], ['year', 'Jahr']].map(([v, l]) => `<option value="${v}" ${s?.price_unit === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label></div></div>`; }).join('')}
+        ${ppIsLead() ? `<div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('services') ? 'Speichere …' : 'Leistungen speichern'}</button></div>` : ''}</form>`;
+    }
+    function ppTeamHtml() {
+      const members = ppD('members');
+      const roles = [['dispatcher', 'Disposition – alle Aufträge, Mitarbeiter einteilen'], ['technician', 'Techniker – nur zugewiesene Aufträge'], ['inspector', 'Kontrolleur – zugewiesene Aufträge und Kontrollen'], ['accounting', 'Buchhaltung – Angebote und Rechnungen'], ['viewer', 'Nur lesen'], ['admin', 'Admin – volle Rechte']];
+      return `${ppBack()}<div class="pp-page-head"><h1>Mitarbeiter</h1></div>
+        <div class="pp-list">${members.map((m) => `<div class="pp-item static"><span class="pp-item-main"><strong>${escapeHtml(ppMemberName(m.user_id) || m.user?.email || '–')}${m.user_id === ppMe() ? ' (du)' : ''}</strong><small>${escapeHtml(m.user?.email || '')}</small></span>${ppIsAdmin() && m.user_id !== ppMe() ? `<select class="form-control pp-role" data-pp-role="${m.id}">${roles.map(([r, l]) => `<option value="${r}" ${m.role === r ? 'selected' : ''}>${escapeHtml(l.split(' – ')[0])}</option>`).join('')}</select>` : `<span class="pp-badge muted">${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)}</span>`}</div>`).join('')}</div>
+        ${ppIsAdmin() ? `<form class="pp-card pp-form" data-pp-form="member-invite"><h3>Mitarbeiter einladen</h3><div class="pp-grid"><label class="full"><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" required></label><label class="full"><span class="form-label">Rolle</span><select class="form-control" name="role">${roles.map(([r, l]) => `<option value="${r}" ${r === 'technician' ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label></div><div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>Einladung erstellen</button></div><p class="pp-hint">Der Mitarbeiter erstellt mit genau dieser E-Mail ein Husora-Konto, öffnet das Partner-Portal und gibt den Code ein.</p></form>
+          ${ppD('invites').length ? ppSection('Offene Einladungen', ppD('invites').map((inv) => `<div class="pp-card pp-invite"><div><strong>${escapeHtml(inv.email)}</strong><small>${escapeHtml(PP_ROLE_LABELS[inv.role] || inv.role)} · gültig bis ${escapeHtml(fmtDate(inv.expires_at.slice(0, 10)))}</small></div><code>${escapeHtml(inv.code)}</code><a class="secondary-btn" href="mailto:${encodeURIComponent(inv.email)}?subject=${encodeURIComponent(`Einladung zu ${ppOrg().name} in Husora`)}&body=${encodeURIComponent(`Hallo,\n\ndu bist eingeladen, im Husora Partner-Portal für ${ppOrg().name} mitzuarbeiten.\n\n1. ${location.origin}${location.pathname} öffnen\n2. Mit dieser E-Mail-Adresse ein Konto erstellen\n3. Partner-Portal → Einladungscode: ${inv.code}\n\nViele Grüße`)}">E-Mail</a></div>`).join('')) : ''}` : ''}`;
+    }
+    function ppCompanyHtml() {
+      const o = ppOrg();
+      const f = (name, label, type = 'text', extra = '') => `<label ${extra}><span class="form-label">${label}</span><input class="form-control" name="${name}" type="${type}" value="${escapeHtml(o[name] ?? '')}" ${ppIsAdmin() ? '' : 'disabled'}></label>`;
+      return `${ppBack()}<div class="pp-page-head"><h1>Firma</h1></div><form class="pp-card pp-form" data-pp-form="company-edit"><div class="pp-grid">
+        ${f('name', 'Firmenname', 'text', 'class="full"')}${f('legal_form', 'Rechtsform')}${f('contact_name', 'Ansprechpartner')}${f('street', 'Straße', 'text', 'class="full"')}${f('postal_code', 'PLZ')}${f('city', 'Ort')}
+        ${f('phone', 'Telefon', 'tel')}${f('email', 'E-Mail', 'email')}${f('website', 'Webseite', 'url')}${f('emergency_phone', 'Notfall-Telefon', 'tel')}${f('vat_id', 'USt-IdNr. / Momsnr.')}${f('registration_number', 'Handelsregister / Org.-Nr.')}
+        ${f('billing_street', 'Rechnungsadresse: Straße', 'text', 'class="full"')}${f('billing_postal_code', 'Rechnung: PLZ')}${f('billing_city', 'Rechnung: Ort')}
+        ${f('bank_name', 'Bank')}${f('iban', 'IBAN')}${f('bic', 'BIC')}${f('service_radius_km', 'Einsatzradius (km)', 'number')}
+        <label class="full"><span class="form-label">Öffnungszeiten</span><input class="form-control" name="business_hours" value="${escapeHtml(o.business_hours?.text || '')}" placeholder="Mo–Fr 7–17 Uhr, Notdienst rund um die Uhr" ${ppIsAdmin() ? '' : 'disabled'}></label>
+        <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="3" ${ppIsAdmin() ? '' : 'disabled'}>${escapeHtml(o.description || '')}</textarea></label>
+        </div>${ppIsAdmin() ? `<div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>Speichern</button></div>` : '<p class="pp-hint">Nur Admins können die Firmendaten ändern.</p>'}</form>`;
+    }
+
+    // Prüfbericht als PDF (mehrseitig, A4) – wird beim Abschluss beim Kunden abgelegt
+    function ppInspectionReportPdf(i) {
+      const W = 595, H = 842, M = 50;
+      const pages = [];
+      let ops = [];
+      let y = H - M;
+      const f = (n) => (Math.round(n * 100) / 100).toString();
+      const text = (value, x, size, bold = false, color = '0.1 0.15 0.12') => ops.push(`BT /${bold ? 'F2' : 'F1'} ${size} Tf ${color} rg ${f(x)} ${f(y)} Td (${pdfEncode(value)}) Tj ET`);
+      const box = (x, y0, w, h, fill) => ops.push(`${fill} rg ${f(x)} ${f(y0)} ${f(w)} ${f(h)} re f`);
+      const newPage = () => { pages.push(ops); ops = []; y = H - M; };
+      const need = (h) => { if (y - h < 60) newPage(); };
+      const label = { ok: ['OK', '0.16 0.45 0.3'], warning: ['Hinweis', '0.66 0.47 0.2'], defect: ['Mangel', '0.72 0.25 0.2'], not_checked: ['offen', '0.5 0.5 0.5'], not_applicable: ['n. v.', '0.5 0.5 0.5'] };
+      const items = i.items || [];
+      box(0, H - 8, W, 8, '0.16 0.36 0.27');
+      text(`${(ppOrg()?.name || 'HUSORA').toUpperCase()} · PRÜFBERICHT`, M, 9, true, '0.29 0.39 0.32'); y -= 26;
+      text(i.property?.name || 'Hauskontrolle', M, 22, true); y -= 18;
+      text(`${ppAddress(i.property) || ''}`, M, 10, false, '0.35 0.4 0.36'); y -= 14;
+      text(`Kunde: ${ppCustomerName(i.organization_id)} · Kontrolle: ${fmtDateTime(i.completed_at || i.scheduled_at)}`, M, 10, false, '0.35 0.4 0.36'); y -= 20;
+      const counts = ['ok', 'warning', 'defect'].map((s) => `${label[s][0]}: ${items.filter((x) => x.status === s).length}`).join('   ');
+      box(M, y - 8, W - 2 * M, 26, '0.93 0.95 0.92'); y += 2; text(`${items.length} Prüfpunkte   ${counts}`, M + 10, 10, true); y -= 30;
+      let category = null;
+      items.forEach((item) => {
+        if ((item.category || 'Allgemein') !== category) { category = item.category || 'Allgemein'; need(40); y -= 6; text(category, M, 12, true); y -= 16; }
+        const noteLines = item.notes ? pdfWrap(item.notes, 9, W - 2 * M - 110, false) : [];
+        need(16 + noteLines.length * 11);
+        const [lab, color] = label[item.status] || [item.status, '0.4 0.4 0.4'];
+        text(lab, M, 9, true, color);
+        pdfWrap(item.name, 10, W - 2 * M - 110, false).slice(0, 2).forEach((l, idx) => { if (idx) y -= 12; text(l, M + 70, 10, item.status === 'defect'); });
+        if (item.estimated_cost) text(ppMoney(item.estimated_cost), W - M - 80, 9, false, '0.4 0.4 0.4');
+        y -= 13;
+        noteLines.forEach((l) => { text(l, M + 70, 9, false, '0.35 0.35 0.3'); y -= 11; });
+        y -= 3;
+      });
+      if (i.notes && !/^Vorlage: /.test(i.notes)) { need(60); y -= 10; text('Zusammenfassung', M, 12, true); y -= 16; pdfWrap(i.notes, 10, W - 2 * M, false).forEach((l) => { need(14); text(l, M, 10); y -= 13; }); }
+      newPage();
+      const stream = (data) => `<< /Length ${data.length} >>\nstream\n${data}\nendstream`;
+      const objs = ['<< /Type /Catalog /Pages 2 0 R >>', '', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+      const kids = [];
+      pages.forEach((pageOps, index) => {
+        pageOps.push(`BT /F1 8 Tf 0.5 0.55 0.5 rg ${M} 28 Td (${pdfEncode(`${i.property?.name || ''} · Prüfbericht · Seite ${index + 1}/${pages.length} · erstellt mit Husora`)}) Tj ET`);
+        const pageNo = objs.length + 1;
+        objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${pageNo + 1} 0 R >>`);
+        objs.push(stream(pageOps.join('\n')));
+        kids.push(`${pageNo} 0 R`);
+      });
+      objs[1] = `<< /Type /Pages /Count ${pages.length} /Kids [${kids.join(' ')}] >>`;
+      let pdf = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+      const offsets = [];
+      objs.forEach((body, n) => { offsets.push(pdf.length); pdf += `${n + 1} 0 obj\n${body}\nendobj\n`; });
+      const xref = pdf.length;
+      pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((o) => `${String(o).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+      const bytes = new Uint8Array(pdf.length);
+      for (let n = 0; n < pdf.length; n += 1) bytes[n] = pdf.charCodeAt(n) & 255;
+      return bytes;
+    }
+    const ppBytesToDataUrl = (bytes, mime) => { let bin = ''; for (let n = 0; n < bytes.length; n += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(n, n + 0x8000)); return `data:${mime};base64,${btoa(bin)}`; };
+
+    // ----- Ereignisse -----
+    function ppField(name) { return document.querySelector(`#partner-portal [data-pp-field="${name}"]`)?.value || ''; }
+    const ppIso = (local) => (local ? new Date(local).toISOString() : null);
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('[data-open-partner-portal]')) { event.preventDefault(); ppOpen('dashboard'); return; }
+      const root = event.target.closest('#partner-portal');
+      if (!root) return;
+      const viewBtn = event.target.closest('[data-pp-view]');
+      if (viewBtn) { pp.view = viewBtn.dataset.ppView; pp.detail = null; pp.form = null; ppRender(); root.querySelector('.pp-main')?.scrollTo(0, 0); return; }
+      const openBtn = event.target.closest('[data-pp-open]');
+      if (openBtn) { const [type, id] = openBtn.dataset.ppOpen.split(':'); pp.prev = { view: pp.view, detail: pp.detail }; pp.detail = { type, id }; pp.form = null; ppRender(); root.querySelector('.pp-main')?.scrollTo(0, 0); return; }
+      const filterBtn = event.target.closest('[data-pp-filter]');
+      if (filterBtn) { pp.filter = filterBtn.dataset.ppFilter; ppRender(); return; }
+      const fileBtn = event.target.closest('[data-pp-file]');
+      if (fileBtn) { const [bucket, path, name] = fileBtn.dataset.ppFile.split('|'); ppOpenFile(bucket, path, name).catch((error) => showToast(error.message)); return; }
+      const check = event.target.closest('[data-pp-check]');
+      if (check) {
+        const inspection = ppD('inspections').find((i) => (i.items || []).some((x) => x.id === check.dataset.ppCheck));
+        const item = inspection?.items.find((x) => x.id === check.dataset.ppCheck);
+        if (!item) return;
+        const status = item.status === check.dataset.status ? 'not_checked' : check.dataset.status;
+        item.status = status; item.checked_at = status === 'not_checked' ? null : new Date().toISOString();
+        pp.keepScroll = true; ppRender(); ppSaveCache();
+        ppPatch('inspection_items', item.id, { status }).then(() => { if (inspection.status === 'scheduled') { inspection.status = 'in_progress'; return ppPatch('inspections', inspection.id, { status: 'in_progress' }).then(() => { pp.keepScroll = true; ppRender(); }); } return null; }).catch((error) => { pp.error = error.message; pp.keepScroll = true; ppRender(); });
+        return;
+      }
+      const action = event.target.closest('[data-pp-action]');
+      if (!action) return;
+      const a = action.dataset.ppAction;
+      const id = action.dataset.id;
+      if (a === 'close') { ppClose(); return; }
+      if (a === 'reload') { ppLoad(); return; }
+      if (a === 'back') { pp.detail = pp.prev?.detail && pp.prev.detail.id !== pp.detail?.id ? pp.prev.detail : null; pp.prev = null; pp.form = null; ppRender(); return; }
+      if (a === 'cancel-form') { pp.form = null; ppRender(); return; }
+      if (a === 'new-order') { pp.form = 'new-order'; pp.formProperty = ''; ppRender(); return; }
+      if (a === 'order-for') { pp.form = 'new-order'; pp.formProperty = action.dataset.property; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'new-customer') { pp.form = 'new-customer'; ppRender(); return; }
+      if (a === 'finance-form') { pp.form = `finance:${id}`; pp.formKind = action.dataset.kind; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'signout') { cloudSignOut(); pp.ctx = null; pp.data = null; try { localStorage.removeItem(PP_CACHE_KEY); } catch (error) { /* egal */ } ppRender(); return; }
+      if (a === 'signup') {
+        const form = action.closest('form');
+        if (!form.reportValidity()) return;
+        const values = Object.fromEntries(new FormData(form));
+        cloudState.draftEmail = values.email;
+        ppRun('signup', async () => {
+          if (values.password.length < 8) throw new Error('Das Passwort muss mindestens 8 Zeichen lang sein.');
+          const redirect = encodeURIComponent(location.origin + location.pathname);
+          const data = await cloudFetch(`/auth/v1/signup?redirect_to=${redirect}`, { method: 'POST', body: { email: values.email.trim(), password: values.password, data: { language: 'de' } }, auth: false });
+          if (data?.access_token) cloudSetSession(data);
+          else pp.notice = 'Konto erstellt. Bitte bestätige die E-Mail-Adresse über den Link in der Bestätigungs-Mail und melde dich dann an.';
+        }, { reload: true });
+        return;
+      }
+      const o = ppD('orders').find((x) => x.id === id);
+      // Eingaben vor ppRun lesen – ppRun zeichnet die Ansicht sofort neu
+      if (a === 'accept') { const note = ppField('accept-note') || null; const at = ppIso(ppField('accept-date')); ppRun('accept', () => ppRpc('respond_service_order', { p_service_order_id: id, p_accept: true, p_note: note, p_scheduled_at: at }), { notice: 'Auftrag angenommen – der Kunde sieht es sofort.' }); }
+      if (a === 'reject') { const reason = window.prompt('Grund für die Ablehnung (sieht der Kunde):', ppField('accept-note') || 'Leider keine Kapazität zu diesem Termin.'); if (reason !== null) ppRun('reject', () => ppRpc('respond_service_order', { p_service_order_id: id, p_accept: false, p_note: reason || null }), { notice: 'Auftrag abgelehnt.' }); }
+      if (a === 'schedule') { const at = ppIso(ppField('sched')); if (!at) { showToast('Bitte einen Termin wählen.'); return; } ppRun('schedule', () => ppPatch('service_orders', id, { scheduled_at: at, status: 'scheduled' }), { notice: 'Termin gespeichert.' }); }
+      if (a === 'start') ppRun('start', () => ppPatch('service_orders', id, { status: 'in_progress' }), { notice: 'Auftrag gestartet.' });
+      if (a === 'complete') {
+        const actual = ppField('actual');
+        const note = ppField('done-note');
+        ppRun('complete', async () => {
+          await ppPatch('service_orders', id, { status: 'completed', actual_cost: actual === '' ? null : Number(actual), response_note: note || o?.response_note || null });
+          if (note) await ppInsert('messages', { organization_id: o.organization_id, service_order_id: id, message: `Erledigt: ${note}` });
+        }, { notice: 'Auftrag erledigt – der Kunde wird informiert.' });
+      }
+      if (a === 'start-inspection') {
+        const tpl = ppField('tpl');
+        ppRun('inspection', async () => { const newId = await ppRpc('partner_start_inspection', { p_property_id: action.dataset.property, p_template_id: tpl }); pp.prev = { view: pp.view, detail: pp.detail }; pp.detail = { type: 'inspection', id: newId }; }, { notice: 'Kontrolle angelegt.' });
+      }
+      if (a === 'inspection-status') ppRun('inspection', () => ppPatch('inspections', id, { status: action.dataset.status }));
+      if (a === 'inspection-complete') {
+        if (action.dataset.incomplete && !window.confirm('Noch nicht alle Punkte sind geprüft. Kontrolle trotzdem abschließen?')) return;
+        const i = ppD('inspections').find((x) => x.id === id);
+        const items = i?.items || [];
+        const overall = items.some((x) => x.status === 'defect') ? 'critical' : items.some((x) => x.status === 'warning') ? 'warning' : 'ok';
+        const summary = ppField('summary');
+        ppRun('inspection', async () => {
+          await ppPatch('inspections', id, { status: 'completed', overall_status: overall, notes: summary || i.notes });
+          const pdf = ppInspectionReportPdf({ ...i, status: 'completed', notes: summary || i.notes, completed_at: new Date().toISOString() });
+          if (pdf) {
+            const path = `organization/${i.organization_id}/property/${i.property_id}/inspections/${(window.crypto?.randomUUID ? crypto.randomUUID() : Date.now())}.pdf`;
+            const dataUrl = ppBytesToDataUrl(pdf, 'application/pdf');
+            await cloudPutFile('husora-documents', path, dataUrl, 'application/pdf');
+            await ppInsert('documents', { organization_id: i.organization_id, property_id: i.property_id, inspection_id: i.id, file_name: `Pruefbericht-${(i.property?.name || 'Haus').replace(/[^\wäöüÄÖÜåÅ-]+/g, '_')}-${ppToday()}.pdf`, file_type: 'application/pdf', file_size: pdf.length, storage_bucket: 'husora-documents', storage_path: path, document_type: 'inspection_report' });
+          }
+        }, { notice: overall === 'ok' ? 'Kontrolle abgeschlossen – alles in Ordnung.' : 'Kontrolle abgeschlossen – Mängel wurden an den Kunden gemeldet.' });
+      }
+      if (a === 'inspection-report') {
+        const i = ppD('inspections').find((x) => x.id === id);
+        const doc = ppD('documents').find((d) => d.inspection_id === id && d.document_type === 'inspection_report');
+        if (doc) ppOpenFile(doc.storage_bucket, doc.storage_path, doc.file_name).catch((error) => showToast(error.message));
+        else if (i) { const pdf = ppInspectionReportPdf(i); const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' })); window.open(url, '_blank'); }
+      }
+      if (a === 'defects-to-orders') {
+        const i = ppD('inspections').find((x) => x.id === id);
+        const defects = (i?.items || []).filter((x) => x.status === 'defect');
+        ppRun('defects', async () => {
+          for (const item of defects) await ppInsert('service_orders', { organization_id: i.organization_id, property_id: i.property_id, service_partner_id: pp.ctx.self_partner_id, title: `Mangel: ${item.name}`, description: item.notes || null, status: 'accepted', estimated_cost: item.estimated_cost ?? null, currency: ppOrg().currency });
+        }, { notice: `${defects.length} Auftrag/Aufträge aus Mängeln angelegt.` });
+      }
+    });
+    document.addEventListener('change', (event) => {
+      const root = event.target.closest('#partner-portal');
+      if (!root) return;
+      const upload = event.target.closest('[data-pp-upload]');
+      if (upload) {
+        const [kind, refId] = upload.dataset.ppUpload.split(':');
+        const files = [...upload.files];
+        upload.value = '';
+        const target = kind === 'order' ? ppD('orders').find((o) => o.id === refId) : (() => { const i = ppD('inspections').find((x) => x.id === refId); return i ? { organization_id: i.organization_id, property_id: i.property_id, inspection_id: i.id } : null; })();
+        if (!target || !files.length) return;
+        ppRun('upload', async () => { for (const file of files) await ppUploadFile(file, target, kind); }, { notice: `${files.length} Datei${files.length === 1 ? '' : 'en'} hochgeladen – der Kunde sieht sie im Auftrag.` });
+        return;
+      }
+      const assign = event.target.closest('[data-pp-assign]');
+      if (assign) { ppRun('assign', () => ppPatch('service_orders', assign.dataset.ppAssign, { assigned_user_id: assign.value || null }), { notice: assign.value ? 'Mitarbeiter eingeteilt.' : 'Zuteilung entfernt.' }); return; }
+      const role = event.target.closest('[data-pp-role]');
+      if (role) { ppRun('role', () => ppPatch('organization_members', role.dataset.ppRole, { role: role.value }), { notice: 'Rolle geändert.' }); return; }
+      const note = event.target.closest('[data-pp-note]');
+      if (note) { const item = ppD('inspections').flatMap((i) => i.items || []).find((x) => x.id === note.dataset.ppNote); if (item) item.notes = note.value; ppPatch('inspection_items', note.dataset.ppNote, { notes: note.value || null }).catch((error) => showToast(error.message)); ppSaveCache(); return; }
+      const cost = event.target.closest('[data-pp-cost]');
+      if (cost) { ppPatch('inspection_items', cost.dataset.ppCost, { estimated_cost: cost.value === '' ? null : Number(cost.value) }).catch((error) => showToast(error.message)); }
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('#partner-portal [data-pp-form]');
+      if (!form) return;
+      event.preventDefault();
+      const fd = new FormData(form);
+      const v = Object.fromEntries(fd);
+      const kind = form.dataset.ppForm;
+      const clean = (obj) => Object.fromEntries(Object.entries(obj).map(([k, val]) => [k, typeof val === 'string' ? (val.trim() || null) : val]));
+      if (kind === 'login') { cloudState.draftEmail = v.email; ppRun('login', async () => { const data = await cloudFetch('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: v.email.trim(), password: v.password }, auth: false }); cloudSetSession(data); }); }
+      if (kind === 'company') ppRun('company', () => ppRpc('create_partner_organization', { p_profile: { ...clean(v), services: fd.getAll('services') } }), { notice: 'Dein Betrieb ist angelegt. Willkommen bei Husora!' });
+      if (kind === 'join') ppRun('join', async () => { const r = await ppRpc('accept_member_invite', { p_code: v.code }); pp.notice = `Du bist jetzt im Team von ${r.organization_name}.`; });
+      if (kind === 'invite-code') ppRun('invite', async () => { const r = await ppRpc('accept_service_partner_invite', { p_code: v.code }); showToast(`Verbunden mit ${r.organization_name}.`); });
+      if (kind === 'customer') ppRun('customer', async () => { await ppInsert('customers', { ...clean(v), organization_id: ppOrg().id }); pp.form = null; }, { notice: 'Kunde angelegt.' });
+      if (kind === 'property') ppRun('property', () => ppInsert('properties', { ...clean(v), organization_id: ppOrg().id, owner_customer_id: form.dataset.customer, country: ppOrg().country || 'SE' }), { notice: 'Objekt gespeichert.' });
+      if (kind === 'new-order') ppRun('order', async () => { const [row] = await ppInsert('service_orders', { organization_id: ppOrg().id, property_id: v.property_id, service_partner_id: pp.ctx.self_partner_id, title: v.title.trim(), description: v.description?.trim() || null, status: v.scheduled_at ? 'scheduled' : 'accepted', scheduled_at: ppIso(v.scheduled_at), estimated_cost: v.estimated_cost === '' ? null : Number(v.estimated_cost), currency: ppOrg().currency }); pp.form = null; pp.detail = { type: 'order', id: row.id }; }, { notice: 'Auftrag angelegt.' });
+      if (kind === 'message') { const text = v.message.trim(); if (!text) return; ppRun('message', () => ppInsert('messages', { organization_id: form.dataset.org, service_order_id: form.dataset.order, message: text })); pp.keepScroll = true; }
+      if (kind === 'finance') {
+        const o = ppD('orders').find((x) => x.id === form.dataset.order);
+        const net = Math.round(Number(v.net) * 100) / 100;
+        const tax = Math.round(net * Number(v.vat)) / 100;
+        const base = { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, amount_net: net, tax_amount: tax, amount_gross: Math.round((net + tax) * 100) / 100, currency: o.currency };
+        ppRun('finance', async () => {
+          if (form.dataset.kind === 'invoice') await ppInsert('invoices', { ...base, invoice_number: v.number, invoice_date: v.date || null, due_date: v.due || null, status: o.organization_id === ppOrg().id ? 'approved' : 'received' });
+          else await ppInsert('quotes', { ...base, quote_number: v.number, valid_until: v.valid || null, description: v.description || null, status: o.organization_id === ppOrg().id ? 'approved' : 'received' });
+          pp.form = null;
+        }, { notice: form.dataset.kind === 'invoice' ? 'Rechnung eingereicht.' : 'Angebot gesendet.' });
+      }
+      if (kind === 'inspection-start') ppRun('inspection', async () => { const newId = await ppRpc('partner_start_inspection', { p_property_id: v.property_id, p_template_id: v.template_id }); pp.prev = { view: pp.view, detail: null }; pp.detail = { type: 'inspection', id: newId }; }, { notice: 'Kontrolle angelegt.' });
+      if (kind === 'member-invite') ppRun('member', async () => { const code = await ppRpc('create_member_invite', { p_organization_id: ppOrg().id, p_email: v.email, p_role: v.role }); showToast(`Einladungscode: ${code}`); });
+      if (kind === 'company-edit') {
+        const body = clean(v);
+        body.business_hours = { text: body.business_hours || '' };
+        body.service_radius_km = body.service_radius_km === null ? null : Number(body.service_radius_km);
+        if (body.iban) body.iban = body.iban.replace(/\s+/g, '').toUpperCase();
+        if (body.bic) body.bic = body.bic.replace(/\s+/g, '').toUpperCase();
+        ppRun('company-edit', async () => {
+          await ppPatch('organizations', ppOrg().id, body);
+          if (pp.ctx.self_partner_id) await ppPatch('service_partners', pp.ctx.self_partner_id, { company_name: body.name, contact_name: body.contact_name, email: body.email, phone: body.phone, website: body.website, street: body.street, postal_code: body.postal_code, city: body.city, description: body.description });
+        }, { notice: 'Firmendaten gespeichert.' });
+      }
+      if (kind === 'services') {
+        const self = pp.ctx.self_partner_id;
+        const types = ppD('types');
+        ppRun('services', async () => {
+          const rows = types.filter((t) => fd.get(`type:${t.id}`) || ppD('services').some((s) => s.service_type_id === t.id)).map((t) => ({ service_partner_id: self, service_type_id: t.id, active: Boolean(fd.get(`type:${t.id}`)), price_from: fd.get(`from:${t.id}`) === '' ? null : Number(fd.get(`from:${t.id}`)), price_to: fd.get(`to:${t.id}`) === '' ? null : Number(fd.get(`to:${t.id}`)), price_unit: fd.get(`unit:${t.id}`) || null, currency: ppOrg().currency }));
+          if (rows.length) await cloudFetch('/rest/v1/service_partner_services?on_conflict=service_partner_id,service_type_id', { method: 'POST', body: rows, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+        }, { notice: 'Leistungen gespeichert.' });
+      }
+    });
+    window.addEventListener('online', () => { if (pp.open && cloudSignedIn()) ppLoad(); });
+
+    // ----- Hausbesitzer-Seite: Servicepartner einladen und beauftragen -----
+    const ownerSide = { partners: null, tasks: [], orders: [], busy: '', error: '', code: null };
+    async function ownerLoadPartners() {
+      if (!cloudReady()) return;
+      const org = cloud.org.id;
+      const [partners, tasksRows, orders] = await Promise.all([
+        cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status&order=company_name.asc`),
+        cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=not.is.null&status=in.(pending,assigned)&select=id,app_ref,title,scheduled_start,assigned_partner_id,property:properties(name)&order=scheduled_start.asc.nullslast&limit=100`),
+        cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,scheduled_at,response_note,actual_cost,currency,service_task_id,partner:service_partners(company_name),task:service_tasks(app_ref)&order=created_at.desc&limit=30`)
+      ]);
+      Object.assign(ownerSide, { partners, tasks: tasksRows, orders });
+      // Fortschritt der Partner in die lokalen Aufgaben übernehmen
+      let changed = 0;
+      orders.forEach((order) => {
+        const ref = order.task?.app_ref;
+        if (!ref) return;
+        const task = tasks.find((t) => String(t.id) === ref);
+        if (!task) return;
+        const target = order.status === 'completed' ? 'Erledigt' : ['accepted', 'scheduled', 'in_progress'].includes(order.status) ? 'In Bearbeitung' : null;
+        if (target && taskStatus(task) !== target && !(target === 'In Bearbeitung' && task.done)) { setTaskStatus(task, target); changed += 1; }
+      });
+      if (changed) { persistTasks(); showToast(`${changed} Aufgabe${changed === 1 ? '' : 'n'} mit dem Stand deiner Servicepartner aktualisiert.`); }
+    }
+    async function ownerRun(label, task) {
+      if (ownerSide.busy) return;
+      ownerSide.busy = label; ownerSide.error = '';
+      rerenderCloud();
+      try { await task(); await ownerLoadPartners(); } catch (error) { ownerSide.error = error instanceof TypeError ? 'Keine Verbindung.' : error.message; }
+      finally { ownerSide.busy = ''; rerenderCloud(); }
+    }
+    function ownerPartnerCardHtml() {
+      const head = `<div class="settings-card-head"><span class="settings-icon">${icon('users')}</span><div><h2 class="card-title">Servicepartner in Husora</h2><p class="card-caption">Lade deine Servicepartner ins Partner-Portal ein. Sie sehen dann nur deine Aufträge an sie, melden Termine, Fotos, Kontrollergebnisse und Rechnungen direkt zurück.</p></div></div>`;
+      if (!cloudReady()) return `<section class="card settings-card" id="settings-partners">${head}<p class="settings-hint">Melde dich zuerst oben beim Cloud-Speicher an.</p><div class="settings-actions"><button type="button" class="secondary-btn" data-open-partner-portal>${icon('users')} Ich bin Servicepartner</button></div></section>`;
+      if (ownerSide.partners === null && !ownerSide.busy) { ownerSide.busy = 'load'; ownerLoadPartners().catch((error) => { ownerSide.error = error instanceof TypeError ? 'Keine Verbindung.' : error.message; ownerSide.partners = []; }).finally(() => { ownerSide.busy = ''; rerenderCloud(); }); }
+      const partners = ownerSide.partners || [];
+      const connected = partners.filter((p) => p.partner_organization_id);
+      const statusLabel = (s) => (PP_ORDER_STATUS[s] || [s])[0];
+      return `<section class="card settings-card" id="settings-partners">${head}
+        ${partners.length ? `<div class="owner-partners">${partners.map((p) => `<div class="owner-partner"><div><strong>${escapeHtml(p.company_name)}</strong><small>${p.partner_organization_id ? '✓ verbunden' : 'noch nicht verbunden'}${p.email ? ` · ${escapeHtml(p.email)}` : ''}</small></div>${p.partner_organization_id ? '' : `<button type="button" class="secondary-btn" data-owner-action="invite" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>Code erzeugen</button>`}</div>${ownerSide.code?.id === p.id ? `<div class="owner-code"><code>${escapeHtml(ownerSide.code.code)}</code><a class="primary-btn" href="mailto:${encodeURIComponent(p.email || '')}?subject=${encodeURIComponent('Einladung ins Husora Partner-Portal')}&body=${encodeURIComponent(`Hallo,\n\nich verwalte mein Ferienhaus mit Husora und möchte dir Aufträge direkt über das Husora Partner-Portal senden.\n\n1. ${location.origin}${location.pathname} öffnen und „Servicepartner“ wählen\n2. Konto erstellen und deinen Betrieb anlegen\n3. Unter „Kunden & Objekte“ diesen Code eingeben: ${ownerSide.code.code}\n\nViele Grüße\n${profileData?.name || ''}`)}">Per E-Mail senden</a><small>Gültig 30 Tage, nur einmal verwendbar.</small></div>` : ''}`).join('')}</div>` : ''}
+        <form class="cloud-form owner-add" data-owner-form="partner"><div class="owner-inline"><input class="form-control" name="company_name" placeholder="Firmenname des Partners" required maxlength="120"><input class="form-control" name="email" type="email" placeholder="E-Mail (optional)" maxlength="120"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Einladen</button></div></form>
+        ${connected.length && ownerSide.tasks.length ? `<form class="cloud-form" data-owner-form="send"><span class="form-label" style="margin-top:12px;display:block">Aufgabe an verbundenen Partner senden</span><div class="owner-inline"><select class="form-control" name="task">${ownerSide.tasks.map((t) => `<option value="${t.id}">${escapeHtml(t.title)}${t.property?.name ? ` – ${escapeHtml(t.property.name)}` : ''}${t.scheduled_start ? ` (${escapeHtml(fmtDate(t.scheduled_start.slice(0, 10)))})` : ''}</option>`).join('')}</select><select class="form-control" name="partner">${connected.map((p) => `<option value="${p.id}">${escapeHtml(p.company_name)}</option>`).join('')}</select><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Senden</button></div><p class="settings-hint">Es stehen alle offenen Aufgaben, die per Cloud-Sync in der Datenbank liegen.</p></form>` : connected.length ? '<p class="settings-hint">Offene Aufgaben erscheinen hier nach dem nächsten Cloud-Abgleich.</p>' : ''}
+        ${ownerSide.orders.length ? `<span class="form-label" style="margin-top:14px;display:block">Aufträge an Partner</span><div class="owner-orders">${ownerSide.orders.slice(0, 10).map((o) => `<div class="owner-order"><div><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.partner?.company_name || '')} · ${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}${o.response_note ? ` · „${escapeHtml(o.response_note)}“` : ''}</small></div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml(statusLabel(o.status))}</span></div>`).join('')}</div>` : ''}
+        ${ownerSide.error ? `<p class="cloud-message error">${icon('alert')}<span>${escapeHtml(ownerSide.error)}</span></p>` : ''}
+        <div class="settings-actions"><button type="button" class="secondary-btn" data-owner-action="refresh" ${ownerSide.busy ? 'disabled' : ''}>${ownerSide.busy === 'load' ? 'Lade …' : 'Status aktualisieren'}</button><button type="button" class="secondary-btn" data-open-partner-portal>${icon('users')} Partner-Portal öffnen</button></div>
+      </section>`;
+    }
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-owner-action]');
+      if (!button) return;
+      if (button.dataset.ownerAction === 'refresh') ownerRun('load', async () => {});
+      if (button.dataset.ownerAction === 'invite') ownerRun('invite', async () => { const code = await cloudFetch('/rest/v1/rpc/create_service_partner_invite', { method: 'POST', body: { p_service_partner_id: button.dataset.id, p_email: (ownerSide.partners || []).find((p) => p.id === button.dataset.id)?.email || null } }); ownerSide.code = { id: button.dataset.id, code }; });
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-owner-form]');
+      if (!form) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      if (form.dataset.ownerForm === 'partner') ownerRun('invite', async () => {
+        const [row] = await cloudFetch('/rest/v1/service_partners', { method: 'POST', body: { organization_id: cloud.org.id, company_name: v.company_name.trim(), email: v.email?.trim() || null }, headers: { Prefer: 'return=representation' } });
+        const code = await cloudFetch('/rest/v1/rpc/create_service_partner_invite', { method: 'POST', body: { p_service_partner_id: row.id, p_email: v.email?.trim() || null } });
+        ownerSide.code = { id: row.id, code };
+      });
+      if (form.dataset.ownerForm === 'send') ownerRun('send', async () => { await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: v.task, p_service_partner_id: v.partner } }); showToast('Auftrag an den Partner gesendet.'); });
+    });
+    if (ppMode() === 'partner') setTimeout(() => ppOpen('dashboard'), 0);
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
     if (isEuro()) refreshFxRate();

@@ -30,9 +30,11 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…1400_foreign_key_indexes.sql` | Indizes auf den übrigen Fremdschlüsseln (`created_by`, `updated_by` …) |
 | `…1500_app_sync.sql` | `app_data` (komplette App-Daten), Übernahme von Häusern, Buchungen und Aufgaben, `ensure_my_organization` |
 | `…1600_app_files.sql` | Fotos/Dokumente aus Storage in `documents`/`photos`, `my_cloud_usage` (Speicheranzeige) |
+| `…1700_partner_portal.sql` | Zugang für Servicepartner: Partner-Organisationen, Einladungen, Mitarbeiterrollen, Kunden, Kontrollvorlagen, 14 Servicearten |
 | `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |
 | `tests/rls_test.sql` | 84 automatische Prüfungen der Rechte je Rolle |
+| `tests/partner_portal_test.sql` | 43 Prüfungen für den Partnerzugang (Einladung, Techniker, Abschottung fremder Firmen) |
 
 ### Architektur-Entscheidungen
 
@@ -101,6 +103,43 @@ Die Karte zeigt außerdem den belegten und freien Speicher:
 Die Grenzen lassen sich über `organizations.settings -> 'storage_limits'` anpassen, z. B. `{"database_mb": 8192, "files_mb": 102400}` für den Pro-Plan.
 
 **Einmalig im Dashboard einstellen:** Unter **Authentication → URL Configuration** die Site URL `https://husora26.github.io/markdown/` eintragen und unter „Redirect URLs“ ebenfalls hinzufügen. Dann führen die Bestätigungslinks in den Registrierungs-Mails direkt zur App.
+
+### Partner-Portal (Zugang für Servicepartner)
+
+Servicepartner nutzen dieselbe App. Beim ersten Start wählt man „Servicepartner“, oder man öffnet das Portal unter Einstellungen → Daten & App. Die Wahl legt nur den Einstieg fest, beide Rollen sind jederzeit möglich.
+
+**Datenmodell:** Ein Servicebetrieb ist eine eigene Organisation (`org_type = 'service_partner'`) mit Firmendaten: Rechtsform, USt-IdNr., Bank, Einsatzradius, Öffnungszeiten, Notfallnummer. Verbunden wird so:
+
+1. Der Hausbesitzer legt den Partner an (`service_partners`) und erzeugt mit `create_service_partner_invite()` einen Code `HUS-XXXX-XXXX`.
+2. Der Partner gibt den Code im Portal ein (`accept_service_partner_invite()`). Dabei wird `service_partners.partner_organization_id` gesetzt und automatisch ein Kunde (`customers`) angelegt.
+3. Ab dann gelten die bestehenden Regeln: Der Partner sieht genau die Aufträge, die der Hausbesitzer ihm sendet, sowie die betroffenen Häuser. Gästebuchungen bleiben verborgen.
+
+Es gibt keine doppelten Daten: Aufträge, Kontrollen, Fotos, Rechnungen und Nachrichten liegen einmal in der Organisation des Hausbesitzers.
+
+**Rollen im Servicebetrieb:**
+
+| Rolle | Darf |
+|---|---|
+| `admin` | alles, inkl. Firma und Mitarbeiter |
+| `dispatcher` / `service_manager` | alle Aufträge, Mitarbeiter einteilen, eigene Kunden pflegen |
+| `accounting` | Aufträge lesen, Angebote und Rechnungen |
+| `technician` / `inspector` | **nur zugewiesene** Aufträge (`service_orders.assigned_user_id`) und Kontrollen: starten, Fotos, Checkliste, abschließen; keine Preise, keine Rechnungen |
+| `viewer` | nur lesen |
+
+Mitarbeiter lädt der Admin mit `create_member_invite()` ein (Code `TEAM-XXXX-XXXX`). Der Code gilt nur für die eingeladene E-Mail-Adresse.
+
+**Kontrollen:** `partner_start_inspection()` legt beim Kunden eine Kontrolle mit einer Vorlage des Partners an. Fünf Vorlagen entstehen beim Onboarding: Standard, Ferienhaus, Übergabe, Winter und Technik. Mängel werden beim Abschluss automatisch zu Reparaturen beim Kunden. Der Prüfbericht liegt als PDF in `husora-documents/…/inspections/`.
+
+**Eigene Kunden:** Partner können zusätzlich Kunden ohne Husora führen (`customers`, `properties.owner_customer_id`). Aufträge dafür laufen über den eigenen Partner-Datensatz des Betriebs.
+
+**Bewusst noch nicht umgesetzt** (Spezifikation, spätere Phasen):
+- interne vs. kundensichtbare Nachrichten
+- Rechnungspositionen und Zahlungen
+- Arbeitszeiten und Material
+- wiederkehrende Termine
+- Push-Mitteilungen
+- vollständiger Offline-Modus mit Upload-Warteschlange (das Portal zeigt offline nur den zuletzt geladenen Stand)
+- KI-Assistent
 
 ---
 

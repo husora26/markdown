@@ -98,7 +98,7 @@ insert into public.property_features (property_id, feature_type, feature_name, v
   ('dddddddd-0000-4000-8000-000000000002', 'internet', 'WLAN',            'Glasfaser 250 Mbit/s');
 
 -- -----------------------------------------------------------------------------
--- Servicearten (global)
+-- Servicearten (global; existieren bereits aus Migration 1700)
 -- -----------------------------------------------------------------------------
 insert into public.service_types (id, organization_id, code, name, description, category) values
   ('eeeeeeee-0000-4000-8000-000000000001', null, 'cleaning',            'Reinigung',            'End- und Zwischenreinigung, Wäschewechsel', 'housekeeping'),
@@ -109,7 +109,8 @@ insert into public.service_types (id, organization_id, code, name, description, 
   ('eeeeeeee-0000-4000-8000-000000000006', null, 'plumbing',            'Sanitär',              'Wasser, Abwasser, Brunnen',                  'craft'),
   ('eeeeeeee-0000-4000-8000-000000000007', null, 'heating',             'Heizung',              'Wartung und Reparatur von Heizanlagen',      'craft'),
   ('eeeeeeee-0000-4000-8000-000000000008', null, 'roofing',             'Dach & Dachrinne',     'Dacharbeiten, Rinnenreinigung',              'craft'),
-  ('eeeeeeee-0000-4000-8000-000000000009', null, 'general_maintenance', 'Hausmeisterservice',   'Kleinreparaturen und allgemeine Wartung',    'maintenance');
+  ('eeeeeeee-0000-4000-8000-000000000009', null, 'general_maintenance', 'Hausmeisterservice',   'Kleinreparaturen und allgemeine Wartung',    'maintenance')
+on conflict do nothing;  -- globale Arten legt Migration 1700 bereits an
 
 -- -----------------------------------------------------------------------------
 -- Servicepartner
