@@ -153,5 +153,30 @@ select pp_test.ok('Rechnung des Partners sichtbar', exists (select 1 from invoic
 select pp_test.ok('Hausbesitzer sieht nicht die Kunden des Partners', (select count(*) from customers) = 0);
 reset role;
 
+\echo '=== Messenger Hausbesitzer ↔ Servicepartner ==='
+select pp_test.login('admin@husora.test');
+select pp_test.ok('Hausbesitzer schreibt dem Partner (Gespräch ohne Auftrag)', pp_test.affected(format($$ insert into messages (organization_id, service_partner_id, message) values ('cccccccc-0000-4000-8000-000000000001', %L, 'Hallo, können Sie im Dezember wöchentlich kontrollieren?') $$, pp_test.get('sp'))) = 1);
+reset role;
+select pp_test.login('firma@partner.test');
+select pp_test.ok('Partner sieht die Nachricht', exists (select 1 from messages where service_partner_id = pp_test.get('sp')::uuid and message like 'Hallo, können Sie%'));
+select pp_test.ok('Partner antwortet im Gespräch', pp_test.affected(format($$ insert into messages (organization_id, service_partner_id, message) values ('cccccccc-0000-4000-8000-000000000001', %L, 'Ja, gerne – jeden Montag.') $$, pp_test.get('sp'))) = 1);
+select pp_test.ok('Partner markiert die Nachricht des Kunden als gelesen', pp_test.affected(format($$ update messages set read_at = now() where service_partner_id = %L and message like 'Hallo, können Sie%%' $$, pp_test.get('sp'))) = 1);
+select pp_test.ok('Partner kann den Text des Kunden nicht ändern', (select message from messages where service_partner_id = pp_test.get('sp')::uuid and message like 'Hallo%') = 'Hallo, können Sie im Dezember wöchentlich kontrollieren?');
+select pp_test.denied('Partner kann nicht in Gespräche anderer Partner schreiben', $$ insert into messages (organization_id, service_partner_id, message) values ('cccccccc-0000-4000-8000-000000000001', 'ffffffff-0000-4000-8000-000000000003', 'Fremd') $$);
+reset role;
+select pp_test.login('admin@husora.test');
+select pp_test.ok('Hausbesitzer sieht die Antwort und bekommt eine Benachrichtigung', exists (select 1 from messages where message = 'Ja, gerne – jeden Montag.')
+  and exists (select 1 from notifications where type = 'message' and message = 'Ja, gerne – jeden Montag.'));
+reset role;
+select pp_test.login('techniker@partner.test');
+select pp_test.ok('Techniker sieht das Gespräch der Geschäftsleitung nicht', not exists (select 1 from messages where service_partner_id is not null));
+reset role;
+select pp_test.login('fremdfirma@partner.test');
+select pp_test.ok('Fremde Firma sieht das Gespräch nicht', not exists (select 1 from messages where service_partner_id = pp_test.get('sp')::uuid));
+reset role;
+select pp_test.login('eigentuemer@husora.test');
+select pp_test.ok('Eigentümer (ohne Verwaltungsrolle) sieht das Gespräch nicht', not exists (select 1 from messages where service_partner_id = pp_test.get('sp')::uuid));
+reset role;
+
 \echo '=== Alle Partner-Tests bestanden ==='
 rollback;

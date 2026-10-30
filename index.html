@@ -2443,6 +2443,59 @@
     .owner-inline { display: flex; flex-wrap: wrap; gap: 8px; }
     .owner-inline .form-control { flex: 1 1 160px; min-width: 0; }
     .owner-inline .primary-btn { min-height: 44px; }
+    /* Partner-Portal für Hausbesitzer + Messenger */
+    .hub-tabs { margin: 4px 0 14px; }
+    .hub-count { display: inline-grid; place-items: center; min-width: 19px; height: 19px; margin-left: 4px; padding: 0 5px; border-radius: 10px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; line-height: 1; }
+    .hub-nav-count { margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--red); color: #fff; font-size: 11.5px; font-weight: 700; line-height: 20px; text-align: center; }
+    .hub-card { padding: 18px; margin-bottom: 14px; }
+    .hub-form { display: grid; gap: 10px; margin-top: 12px; }
+    .hub-form label { display: block; }
+    .hub-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    @media (max-width: 520px) { .hub-grid { grid-template-columns: 1fr; } }
+    .hub-section { margin: 0 0 16px; }
+    .hub-section-title { margin: 4px 0 8px; color: var(--muted); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+    .hub-partner, .hub-order { padding: 14px 16px; margin-bottom: 10px; }
+    .hub-partner-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .hub-partner-head > div { min-width: 0; }
+    .hub-partner-head strong { display: block; font-size: 15px; overflow-wrap: anywhere; }
+    .hub-partner-head small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+    .hub-note { font-style: italic; }
+    .hub-partner .pp-actions .primary-btn, .hub-partner .pp-actions .secondary-btn, .hub-order .pp-actions .secondary-btn { flex: 0 1 auto; }
+    .hub-code { margin-top: 12px; padding: 12px 14px; border: 1px dashed #b9ccb8; border-radius: 12px; background: var(--green-soft); }
+    .hub-code code { display: block; margin: 6px 0 10px; color: var(--green); font-size: 24px; font-weight: 800; letter-spacing: .08em; }
+    .hub-code-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .hub-code-actions .secondary-btn { min-height: 40px; padding: 0 14px; display: inline-flex; align-items: center; }
+    .hub-code small { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .hub-convs { display: grid; gap: 8px; }
+    .hub-conv { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); text-align: left; cursor: pointer; }
+    .hub-conv.unread { border-color: #d9c28f; background: var(--amber-soft); }
+    .hub-conv.unread strong { font-weight: 800; }
+    .hub-avatar { display: grid; place-items: center; flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; background: var(--green); color: #fff; font-size: 16px; font-weight: 700; }
+    .hub-conv-main { flex: 1; min-width: 0; }
+    .hub-conv-main strong { display: block; font-size: 14.5px; }
+    .hub-conv-main small { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hub-conv-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; color: var(--muted); font-size: 12px; }
+    .hub-thread { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); overflow: hidden; }
+    .hub-thread-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+    .hub-thread-head .pp-back { margin: 0; }
+    .hub-thread-head > div { min-width: 0; }
+    .hub-thread-head strong { display: block; font-size: 15px; }
+    .hub-thread-head small { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+    .hub-messages { display: flex; flex-direction: column; gap: 8px; min-height: 260px; max-height: min(58vh, 560px); overflow-y: auto; padding: 14px; background: var(--canvas); }
+    .hub-messages .pp-bubble { align-self: flex-start; }
+    .hub-messages .pp-bubble.me { align-self: flex-end; }
+    .hub-day { align-self: center; margin: 6px 0 2px; padding: 3px 10px; border-radius: 10px; background: var(--paper); color: var(--muted); font-size: 11.5px; font-weight: 650; }
+    .hub-send, .pp-send-sticky { display: flex; align-items: flex-end; gap: 8px; padding: 10px; border-top: 1px solid var(--line); background: var(--paper); }
+    .hub-send textarea, .pp-send-sticky textarea { flex: 1; min-width: 0; min-height: 44px; max-height: 160px; resize: none; font: inherit; font-size: 15px; line-height: 1.4; }
+    .hub-send .primary-btn, .pp-send-sticky .primary-btn { min-height: 44px; }
+    .pp-send-sticky { position: sticky; bottom: calc(-40px - env(safe-area-inset-bottom)); margin: 0 -16px; padding-bottom: calc(10px + 40px + env(safe-area-inset-bottom)); }
+    .pp-chat { display: flex; flex-direction: column; min-height: 40vh; }
+    .pp-chat .pp-bubble { align-self: flex-start; }
+    .pp-chat .pp-bubble.me { align-self: flex-end; }
+    .hub-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 10px 10px; background: var(--paper); }
+    .hub-quick button { min-height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 17px; background: #fff; color: var(--ink); font-size: 12.5px; cursor: pointer; }
+    .hub-login { max-width: 640px; }
+    .pp-item .hub-avatar { width: 36px; height: 36px; font-size: 15px; }
     .settings-hint { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
     .settings-danger { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
     .settings-danger strong { display: block; font-size: 13px; }
@@ -3249,6 +3302,8 @@
   
   
   
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3812,6 +3867,12 @@ html.dark .pp-service.on { border-color: #434c42; }
 html.dark .pp-service-head input { accent-color: var(--green-solid); }
 html.dark .pp-skel i { background: linear-gradient(90deg, #2f2d25, #2a271f, #2f2d25); }
 html.dark .pp-spin { border: 2px solid rgba(255, 255, 255, 0.07); border-top-color: #383838; }
+html.dark .hub-count { background: var(--red-solid); }
+html.dark .hub-nav-count { background: var(--red-solid); }
+html.dark .hub-code { border: 1px dashed #495348; }
+html.dark .hub-conv.unread { border-color: #635842; }
+html.dark .hub-avatar { background: var(--green-solid); }
+html.dark .hub-quick button { background: #1c1c1c; }
 html.dark .settings-danger .danger { border-color: #553d3a; }
 html.dark .settings-links button { background: #1c1c1c; color: var(--ink, #dae2dc); }
 html.dark .settings-links button:hover { background: #26251e; }
@@ -3975,6 +4036,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             <button data-page="repairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.7L3 18l3 3 4.8-4.8a5 5 0 0 0 6.7-6.7l-3.1 3.1-3-3z"/></svg><span>Reparatur & Instandhaltung</span></button>
             <button data-page="renovations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21h18M5 21V10l7-6 7 6v11"/><path d="M10 21v-5h4v5"/></svg><span>Sanierung & Renovierung</span></button>
             <button data-page="house3d" data-pro-only><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg><span>Hausmodell</span></button>
+            <button data-page="partnerHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14h4"/></svg><span>Partner-Portal</span></button>
             <button data-page="providers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.7L3 18l3 3 4.8-4.8a5 5 0 0 0 6.7-6.7l-3.1 3.1-3-3z"/><path d="m15.5 4.5 4 4"/></svg><span>Servicepartner finden</span></button>
             <button data-page="assignedProviders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2.1.6 3.5 2.6 3.5 5.8"/></svg><span>Zugeordnete Servicepartner</span></button>
             <button data-page="documents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg><span>Dokumente</span></button>
@@ -9904,8 +9966,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         showToast('Das 3D-Hausmodell ist Teil von Husora Pro.');
         currentPage = 'plans';
       }
-      const pages = { dashboard, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
-      const labels = { dashboard: 'Übersicht', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' };
+      const pages = { dashboard, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
+      const labels = { dashboard: 'Übersicht', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -9929,6 +9991,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       ensureBackButton();
       if (currentPage === 'dashboard') { enhanceDashboardSections(); applySimpleHome(); }
       enhanceWorkPages();
+      try { hubSetPolling(); hubUpdateBadge(); } catch (error) { /* Partner-Portal noch nicht geladen */ }
       if (currentPage === 'house3d') fitHouseScene();
       if (currentPage === 'propertyDetail') initPropertyMap();
     }
@@ -13518,7 +13581,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       { label: 'Mein Ferienhaus', pages: ['properties', 'house3d', 'documents', 'costs', 'contracts', 'meters', 'emergency'] },
       { label: 'Pflege & Service', pages: ['tasks', 'inspections', 'seasons', 'repairs', 'renovations', 'automation'] },
       { label: 'Belegung', pages: ['calendar', 'bookings'] },
-      { label: 'Servicepartner', pages: ['assignedProviders', 'providers'] },
+      { label: 'Servicepartner', pages: ['partnerHub', 'assignedProviders', 'providers'] },
       { label: 'Konto & App', pages: ['profile', 'plans', 'settings', 'help', 'legal'] }
     ];
     function buildGroupedNav() {
@@ -15055,6 +15118,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       cloudState.summary = null; cloudState.usage = null; cloudState.remoteNewer = false;
       cloudDirty.clear();
       cloudFiles.clear();
+      try { Object.assign(ownerSide, { partners: null, tasks: [], orders: [], messages: [], invites: [], me: '', code: null }); } catch (error) { /* noch nicht initialisiert */ }
       persistCloud();
     }
     function cloudDisconnect() {
@@ -15337,6 +15401,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       }
     }
     function rerenderCloud() {
+      if (currentPage === 'partnerHub') { hubRerender(); return; }
       if (currentPage !== 'settings') return;
       const scroll = window.scrollY;
       render();
@@ -15730,6 +15795,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (pp.detail?.type === 'order') return ppOrderDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'inspection') return ppInspectionDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'customer') return ppCustomerDetailHtml(pp.detail.id);
+      if (pp.detail?.type === 'chat') return ppChatHtml(pp.detail.id);
       return ({ dashboard: ppDashboardHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
     }
     function ppOrderCard(o) {
@@ -15912,11 +15978,49 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ${Object.entries(byDay).map(([day, list]) => ppSection(`${day === ppToday() ? 'Heute · ' : ''}${new Date(`${day}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}`, `<div class="pp-list">${list.map((e) => e.html).join('')}</div>`)).join('') || ppEmpty('Keine Termine', 'In den nächsten 45 Tagen sind keine Aufträge oder Kontrollen terminiert.')}`;
     }
     function ppMessagesHtml() {
+      const unreadOf = (list) => list.filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length;
+      const chats = (pp.ctx?.links || []).map((link) => { const list = ppD('messages').filter((m) => m.service_partner_id === link.service_partner_id); return { link, last: list[0], unread: unreadOf(list) }; })
+        .sort((a, b) => new Date(b.last?.created_at || 0) - new Date(a.last?.created_at || 0));
       const byOrder = {};
       ppD('messages').filter((m) => m.service_order_id).forEach((m) => { (byOrder[m.service_order_id] = byOrder[m.service_order_id] || []).push(m); });
-      const rows = Object.entries(byOrder).map(([orderId, list]) => ({ order: ppD('orders').find((o) => o.id === orderId), last: list[0], unread: list.filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length })).filter((r) => r.order);
-      return `<div class="pp-page-head"><h1>Nachrichten</h1></div><div class="pp-list">${rows.map((r) => `<button type="button" class="pp-item" data-pp-open="order:${r.order.id}"><span class="pp-item-main"><strong>${escapeHtml(r.order.title)}</strong><small>${escapeHtml(r.order.property?.name || '')} · ${escapeHtml(ppCustomerName(r.order.organization_id))}</small><small>${escapeHtml(r.last.sender_user_id === ppMe() ? 'Du: ' : '')}${escapeHtml(r.last.message.slice(0, 90))}</small></span>${r.unread ? `<span class="pp-badge amber">${r.unread} neu</span>` : `<small class="pp-muted">${escapeHtml(ppDate(r.last.created_at))}</small>`}</button>`).join('') || ppEmpty('Keine Nachrichten', 'Nachrichten gehören immer zu einem Auftrag – öffne einen Auftrag, um dem Kunden zu schreiben.')}</div>`;
+      const rows = Object.entries(byOrder).map(([orderId, list]) => ({ order: ppD('orders').find((o) => o.id === orderId), last: list[0], unread: unreadOf(list) })).filter((r) => r.order);
+      const chatRow = (c) => `<button type="button" class="pp-item" data-pp-open="chat:${c.link.service_partner_id}"><span class="hub-avatar">${escapeHtml(c.link.organization_name.slice(0, 1).toUpperCase())}</span><span class="pp-item-main"><strong>${escapeHtml(c.link.organization_name)}</strong><small>${c.last ? `${c.last.sender_user_id === ppMe() ? 'Du: ' : ''}${escapeHtml(c.last.message.slice(0, 90))}` : 'Noch keine Nachrichten – schreib deinem Kunden.'}</small></span>${c.unread ? `<span class="pp-badge amber">${c.unread} neu</span>` : c.last ? `<small class="pp-muted">${escapeHtml(ppDate(c.last.created_at))}</small>` : ''}</button>`;
+      return `<div class="pp-page-head"><h1>Nachrichten</h1></div>
+        ${chats.length ? ppSection('Kunden', `<div class="pp-list">${chats.map(chatRow).join('')}</div>`) : ''}
+        ${rows.length ? ppSection('Zu Aufträgen', `<div class="pp-list">${rows.map((r) => `<button type="button" class="pp-item" data-pp-open="order:${r.order.id}"><span class="pp-item-main"><strong>${escapeHtml(r.order.title)}</strong><small>${escapeHtml(r.order.property?.name || '')} · ${escapeHtml(ppCustomerName(r.order.organization_id))}</small><small>${escapeHtml(r.last.sender_user_id === ppMe() ? 'Du: ' : '')}${escapeHtml(r.last.message.slice(0, 90))}</small></span>${r.unread ? `<span class="pp-badge amber">${r.unread} neu</span>` : `<small class="pp-muted">${escapeHtml(ppDate(r.last.created_at))}</small>`}</button>`).join('')}</div>`) : ''}
+        ${!chats.length && !rows.length ? ppEmpty('Keine Nachrichten', 'Sobald dich ein Hausbesitzer eingeladen hat, kannst du hier mit ihm schreiben.') : ''}`;
     }
+    function ppChatHtml(servicePartnerId) {
+      const link = (pp.ctx?.links || []).find((l) => l.service_partner_id === servicePartnerId);
+      if (!link) return `${ppBack()}${ppEmpty('Gespräch nicht gefunden', 'Die Verbindung zu diesem Kunden besteht nicht mehr.')}`;
+      const list = ppD('messages').filter((m) => m.service_partner_id === servicePartnerId).slice().reverse();
+      let day = '';
+      const bubbles = list.map((m) => { const d = ppDayKey(m.created_at); const sep = d !== day ? `<div class="hub-day">${escapeHtml(d === ppToday() ? 'Heute' : new Date(m.created_at).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }))}</div>` : ''; day = d; const mine = m.sender_user_id === ppMe(); return `${sep}<div class="pp-bubble ${mine ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(mine ? 'Du' : ppMemberName(m.sender_user_id) || link.organization_name)} · ${escapeHtml(ppTime(m.created_at))}${mine ? (m.read_at ? ' · gelesen' : '') : ''}</small></div>`; }).join('');
+      return `${ppBack()}<div class="pp-detail-head"><div><span class="pp-eyebrow">Kunde</span><h1>${escapeHtml(link.organization_name)}</h1></div></div>
+        <div class="pp-thread pp-chat" id="pp-chat">${bubbles || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
+        <form class="pp-send pp-send-sticky" data-pp-form="chat" data-sp="${servicePartnerId}" data-org="${link.organization_id}"><textarea class="form-control" name="message" rows="1" maxlength="4000" placeholder="Nachricht an ${escapeHtml(link.organization_name)} …" required></textarea><button class="primary-btn" type="submit" ${ppDisabled()}>Senden</button></form>`;
+    }
+    async function ppMarkRead(filter) {
+      const unread = ppD('messages').filter((m) => filter(m) && !m.read_at && m.sender_user_id !== ppMe());
+      if (!unread.length) return;
+      const now = new Date().toISOString();
+      unread.forEach((m) => { m.read_at = now; });
+      try { await cloudFetch(`/rest/v1/messages?id=in.(${unread.map((m) => m.id).join(',')})`, { method: 'PATCH', body: { read_at: now }, headers: { Prefer: 'return=minimal' } }); } catch (error) { console.error('Gelesen-Status nicht gespeichert:', error); }
+    }
+    async function ppRefreshMessages() {
+      if (!pp.data || pp.busy) return;
+      try {
+        pp.data.messages = await ppQ('messages?select=*&order=created_at.desc&limit=400');
+        if (pp.detail?.type === 'chat') await ppMarkRead((m) => m.service_partner_id === pp.detail.id);
+        const box = document.getElementById('pp-chat');
+        const draft = document.querySelector('[data-pp-form=chat] textarea')?.value || '';
+        const focused = document.activeElement?.matches?.('[data-pp-form=chat] textarea');
+        pp.keepScroll = true; ppRender();
+        const area = document.querySelector('[data-pp-form=chat] textarea'); if (area) { area.value = draft; if (focused) area.focus(); }
+        if (box) document.querySelector('.pp-main')?.scrollTo(0, document.querySelector('.pp-main').scrollHeight);
+      } catch (error) { /* offline: nächster Versuch */ }
+    }
+    setInterval(() => { if (pp.open && document.visibilityState === 'visible' && (pp.detail?.type === 'chat' || pp.view === 'messages' || pp.detail?.type === 'order')) ppRefreshMessages(); }, 12000);
     function ppDocumentsHtml() {
       const photos = ppD('photos');
       const docs = ppD('documents');
@@ -16041,7 +16145,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const viewBtn = event.target.closest('[data-pp-view]');
       if (viewBtn) { pp.view = viewBtn.dataset.ppView; pp.detail = null; pp.form = null; ppRender(); root.querySelector('.pp-main')?.scrollTo(0, 0); return; }
       const openBtn = event.target.closest('[data-pp-open]');
-      if (openBtn) { const [type, id] = openBtn.dataset.ppOpen.split(':'); pp.prev = { view: pp.view, detail: pp.detail }; pp.detail = { type, id }; pp.form = null; ppRender(); root.querySelector('.pp-main')?.scrollTo(0, 0); return; }
+      if (openBtn) {
+        const [type, id] = openBtn.dataset.ppOpen.split(':');
+        pp.prev = { view: pp.view, detail: pp.detail }; pp.detail = { type, id }; pp.form = null; ppRender();
+        const main = root.querySelector('.pp-main');
+        if (type === 'chat') { main?.scrollTo(0, main.scrollHeight); root.querySelector('[data-pp-form=chat] textarea')?.focus(); ppMarkRead((m) => m.service_partner_id === id).then(() => { pp.keepScroll = true; ppRender(); }); }
+        else { main?.scrollTo(0, 0); if (type === 'order') ppMarkRead((m) => m.service_order_id === id); }
+        return;
+      }
       const filterBtn = event.target.closest('[data-pp-filter]');
       if (filterBtn) { pp.filter = filterBtn.dataset.ppFilter; ppRender(); return; }
       const fileBtn = event.target.closest('[data-pp-file]');
@@ -16178,6 +16289,18 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (kind === 'customer') ppRun('customer', async () => { await ppInsert('customers', { ...clean(v), organization_id: ppOrg().id }); pp.form = null; }, { notice: 'Kunde angelegt.' });
       if (kind === 'property') ppRun('property', () => ppInsert('properties', { ...clean(v), organization_id: ppOrg().id, owner_customer_id: form.dataset.customer, country: ppOrg().country || 'SE' }), { notice: 'Objekt gespeichert.' });
       if (kind === 'new-order') ppRun('order', async () => { const [row] = await ppInsert('service_orders', { organization_id: ppOrg().id, property_id: v.property_id, service_partner_id: pp.ctx.self_partner_id, title: v.title.trim(), description: v.description?.trim() || null, status: v.scheduled_at ? 'scheduled' : 'accepted', scheduled_at: ppIso(v.scheduled_at), estimated_cost: v.estimated_cost === '' ? null : Number(v.estimated_cost), currency: ppOrg().currency }); pp.form = null; pp.detail = { type: 'order', id: row.id }; }, { notice: 'Auftrag angelegt.' });
+      if (kind === 'chat') {
+        const text = v.message.trim();
+        if (!text) return;
+        const temp = { id: `tmp-${Date.now()}`, organization_id: form.dataset.org, service_partner_id: form.dataset.sp, message: text, sender_user_id: ppMe(), created_at: new Date().toISOString(), read_at: null };
+        pp.data.messages = [temp, ...ppD('messages')];
+        pp.keepScroll = true; ppRender();
+        document.querySelector('.pp-main')?.scrollTo(0, document.querySelector('.pp-main').scrollHeight);
+        ppInsert('messages', { organization_id: form.dataset.org, service_partner_id: form.dataset.sp, message: text })
+          .then(([row]) => { pp.data.messages = ppD('messages').map((m) => (m.id === temp.id ? row : m)); pp.keepScroll = true; ppRender(); ppSaveCache(); })
+          .catch((error) => { pp.data.messages = ppD('messages').filter((m) => m.id !== temp.id); pp.error = error instanceof TypeError ? 'Nachricht nicht gesendet – keine Verbindung.' : `Nachricht nicht gesendet: ${error.message}`; ppRender(); const area = document.querySelector('[data-pp-form=chat] textarea'); if (area) area.value = text; });
+        return;
+      }
       if (kind === 'message') { const text = v.message.trim(); if (!text) return; ppRun('message', () => ppInsert('messages', { organization_id: form.dataset.org, service_order_id: form.dataset.order, message: text })); pp.keepScroll = true; }
       if (kind === 'finance') {
         const o = ppD('orders').find((x) => x.id === form.dataset.order);
@@ -16215,16 +16338,24 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     window.addEventListener('online', () => { if (pp.open && cloudSignedIn()) ppLoad(); });
 
     // ----- Hausbesitzer-Seite: Servicepartner einladen und beauftragen -----
-    const ownerSide = { partners: null, tasks: [], orders: [], busy: '', error: '', code: null };
+    const ownerSide = { partners: null, tasks: [], orders: [], messages: [], invites: [], me: '', busy: '', error: '', code: null };
     async function ownerLoadPartners() {
       if (!cloudReady()) return;
       const org = cloud.org.id;
-      const [partners, tasksRows, orders] = await Promise.all([
+      if (!ownerSide.me) {
+        try {
+          const sub = JSON.parse(atob(cloud.session.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).sub;
+          ownerSide.me = (await cloudFetch(`/rest/v1/users?auth_user_id=eq.${sub}&select=id`))[0]?.id || '';
+        } catch (error) { ownerSide.me = ''; }
+      }
+      const [partners, tasksRows, orders, messages, invites] = await Promise.all([
         cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status&order=company_name.asc`),
         cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=not.is.null&status=in.(pending,assigned)&select=id,app_ref,title,scheduled_start,assigned_partner_id,property:properties(name)&order=scheduled_start.asc.nullslast&limit=100`),
-        cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,scheduled_at,response_note,actual_cost,currency,service_task_id,partner:service_partners(company_name),task:service_tasks(app_ref)&order=created_at.desc&limit=30`)
+        cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,scheduled_at,response_note,actual_cost,currency,service_task_id,partner:service_partners(company_name),task:service_tasks(app_ref)&order=created_at.desc&limit=30`),
+        cloudFetch(`/rest/v1/messages?organization_id=eq.${org}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`),
+        cloudFetch(`/rest/v1/service_partner_invites?organization_id=eq.${org}&select=service_partner_id,code,expires_at,accepted_at&order=created_at.desc&limit=200`)
       ]);
-      Object.assign(ownerSide, { partners, tasks: tasksRows, orders });
+      Object.assign(ownerSide, { partners, tasks: tasksRows, orders, messages, invites });
       // Fortschritt der Partner in die lokalen Aufgaben übernehmen
       let changed = 0;
       orders.forEach((order) => {
@@ -16245,19 +16376,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       finally { ownerSide.busy = ''; rerenderCloud(); }
     }
     function ownerPartnerCardHtml() {
-      const head = `<div class="settings-card-head"><span class="settings-icon">${icon('users')}</span><div><h2 class="card-title">Servicepartner in Husora</h2><p class="card-caption">Lade deine Servicepartner ins Partner-Portal ein. Sie sehen dann nur deine Aufträge an sie, melden Termine, Fotos, Kontrollergebnisse und Rechnungen direkt zurück.</p></div></div>`;
-      if (!cloudReady()) return `<section class="card settings-card" id="settings-partners">${head}<p class="settings-hint">Melde dich zuerst oben beim Cloud-Speicher an.</p><div class="settings-actions"><button type="button" class="secondary-btn" data-open-partner-portal>${icon('users')} Ich bin Servicepartner</button></div></section>`;
-      if (ownerSide.partners === null && !ownerSide.busy) { ownerSide.busy = 'load'; ownerLoadPartners().catch((error) => { ownerSide.error = error instanceof TypeError ? 'Keine Verbindung.' : error.message; ownerSide.partners = []; }).finally(() => { ownerSide.busy = ''; rerenderCloud(); }); }
-      const partners = ownerSide.partners || [];
-      const connected = partners.filter((p) => p.partner_organization_id);
-      const statusLabel = (s) => (PP_ORDER_STATUS[s] || [s])[0];
-      return `<section class="card settings-card" id="settings-partners">${head}
-        ${partners.length ? `<div class="owner-partners">${partners.map((p) => `<div class="owner-partner"><div><strong>${escapeHtml(p.company_name)}</strong><small>${p.partner_organization_id ? '✓ verbunden' : 'noch nicht verbunden'}${p.email ? ` · ${escapeHtml(p.email)}` : ''}</small></div>${p.partner_organization_id ? '' : `<button type="button" class="secondary-btn" data-owner-action="invite" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>Code erzeugen</button>`}</div>${ownerSide.code?.id === p.id ? `<div class="owner-code"><code>${escapeHtml(ownerSide.code.code)}</code><a class="primary-btn" href="mailto:${encodeURIComponent(p.email || '')}?subject=${encodeURIComponent('Einladung ins Husora Partner-Portal')}&body=${encodeURIComponent(`Hallo,\n\nich verwalte mein Ferienhaus mit Husora und möchte dir Aufträge direkt über das Husora Partner-Portal senden.\n\n1. ${location.origin}${location.pathname} öffnen und „Servicepartner“ wählen\n2. Konto erstellen und deinen Betrieb anlegen\n3. Unter „Kunden & Objekte“ diesen Code eingeben: ${ownerSide.code.code}\n\nViele Grüße\n${profileData?.name || ''}`)}">Per E-Mail senden</a><small>Gültig 30 Tage, nur einmal verwendbar.</small></div>` : ''}`).join('')}</div>` : ''}
-        <form class="cloud-form owner-add" data-owner-form="partner"><div class="owner-inline"><input class="form-control" name="company_name" placeholder="Firmenname des Partners" required maxlength="120"><input class="form-control" name="email" type="email" placeholder="E-Mail (optional)" maxlength="120"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Einladen</button></div></form>
-        ${connected.length && ownerSide.tasks.length ? `<form class="cloud-form" data-owner-form="send"><span class="form-label" style="margin-top:12px;display:block">Aufgabe an verbundenen Partner senden</span><div class="owner-inline"><select class="form-control" name="task">${ownerSide.tasks.map((t) => `<option value="${t.id}">${escapeHtml(t.title)}${t.property?.name ? ` – ${escapeHtml(t.property.name)}` : ''}${t.scheduled_start ? ` (${escapeHtml(fmtDate(t.scheduled_start.slice(0, 10)))})` : ''}</option>`).join('')}</select><select class="form-control" name="partner">${connected.map((p) => `<option value="${p.id}">${escapeHtml(p.company_name)}</option>`).join('')}</select><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Senden</button></div><p class="settings-hint">Es stehen alle offenen Aufgaben, die per Cloud-Sync in der Datenbank liegen.</p></form>` : connected.length ? '<p class="settings-hint">Offene Aufgaben erscheinen hier nach dem nächsten Cloud-Abgleich.</p>' : ''}
-        ${ownerSide.orders.length ? `<span class="form-label" style="margin-top:14px;display:block">Aufträge an Partner</span><div class="owner-orders">${ownerSide.orders.slice(0, 10).map((o) => `<div class="owner-order"><div><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.partner?.company_name || '')} · ${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}${o.response_note ? ` · „${escapeHtml(o.response_note)}“` : ''}</small></div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml(statusLabel(o.status))}</span></div>`).join('')}</div>` : ''}
-        ${ownerSide.error ? `<p class="cloud-message error">${icon('alert')}<span>${escapeHtml(ownerSide.error)}</span></p>` : ''}
-        <div class="settings-actions"><button type="button" class="secondary-btn" data-owner-action="refresh" ${ownerSide.busy ? 'disabled' : ''}>${ownerSide.busy === 'load' ? 'Lade …' : 'Status aktualisieren'}</button><button type="button" class="secondary-btn" data-open-partner-portal>${icon('users')} Partner-Portal öffnen</button></div>
+      const connected = (ownerSide.partners || []).filter((p) => p.partner_organization_id).length;
+      return `<section class="card settings-card" id="settings-partners"><div class="settings-card-head"><span class="settings-icon">${icon('users')}</span><div><h2 class="card-title">Partner-Portal</h2><p class="card-caption">Servicepartner einladen, Aufträge senden und im Messenger direkt mit ihnen schreiben.</p></div></div>
+        ${cloudReady() && ownerSide.partners ? `<p class="settings-hint" style="margin-top:0">${connected} verbundene${connected === 1 ? 'r' : ''} Servicepartner${hubTotalUnread() ? ` · ${hubTotalUnread()} ungelesene Nachricht${hubTotalUnread() === 1 ? '' : 'en'}` : ''}</p>` : ''}
+        <div class="settings-actions"><button type="button" class="primary-btn" data-page="partnerHub">${icon('note')} Partner-Portal öffnen</button><button type="button" class="secondary-btn" data-open-partner-portal>${icon('users')} Ich bin Servicepartner</button></div>
       </section>`;
     }
     document.addEventListener('click', (event) => {
@@ -16278,6 +16400,218 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       });
       if (form.dataset.ownerForm === 'send') ownerRun('send', async () => { await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: v.task, p_service_partner_id: v.partner } }); showToast('Auftrag an den Partner gesendet.'); });
     });
+    // ===== Partner-Portal für Hausbesitzer: Einladungscodes, Messenger, Aufträge =====
+    const hub = { tab: 'partners', thread: null, poll: null, sending: false };
+    const hubMyId = () => ownerSide.me || '';
+    function hubThreadMessages(thread) {
+      const list = ownerSide.messages || [];
+      if (!thread) return [];
+      return list.filter((m) => (thread.kind === 'partner' ? m.service_partner_id === thread.id : m.service_order_id === thread.id))
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    }
+    const hubUnread = (list) => list.filter((m) => !m.read_at && m.sender_user_id !== hubMyId()).length;
+    function hubConversations() {
+      const partners = (ownerSide.partners || []).filter((p) => p.partner_organization_id);
+      const partnerThreads = partners.map((p) => ({ kind: 'partner', id: p.id, title: p.company_name, subtitle: 'Gespräch', partner: p, messages: hubThreadMessages({ kind: 'partner', id: p.id }) }));
+      const orderThreads = (ownerSide.orders || []).map((o) => ({ kind: 'order', id: o.id, title: o.title, subtitle: `${o.partner?.company_name || ''} · ${o.order_number}`, order: o, messages: hubThreadMessages({ kind: 'order', id: o.id }) })).filter((t) => t.messages.length);
+      const last = (t) => (t.messages.length ? new Date(t.messages[t.messages.length - 1].created_at).getTime() : 0);
+      return [...partnerThreads.sort((a, b) => last(b) - last(a)), ...orderThreads.sort((a, b) => last(b) - last(a))];
+    }
+    const hubTotalUnread = () => hubConversations().reduce((sum, t) => sum + hubUnread(t.messages), 0);
+    function hubAssignedProviders() {
+      const ids = new Set(Object.values(servicePartnerAssignments || {}).flat());
+      const known = new Set((ownerSide.partners || []).map((p) => p.company_name.toLowerCase()));
+      return providers.filter((p) => ids.has(p.id) && !known.has(String(p.name || '').toLowerCase()));
+    }
+    function hubStatus(p) {
+      if (p.partner_organization_id) return ['verbunden', 'done'];
+      if ((ownerSide.invites || []).some((i) => i.service_partner_id === p.id && !i.accepted_at && new Date(i.expires_at) > new Date())) return ['Einladung offen', 'amber'];
+      return ['nicht eingeladen', 'muted'];
+    }
+    function hubInviteText(code) {
+      return `Hallo,\n\nich verwalte mein Ferienhaus mit Husora und möchte dir Aufträge und Nachrichten direkt über das Husora Partner-Portal senden.\n\n1. ${location.origin}${location.pathname} öffnen und „Servicepartner“ wählen\n2. Konto erstellen und deinen Betrieb anlegen\n3. Unter „Kunden & Objekte“ diesen Code eingeben: ${code}\n\nDer Code ist 30 Tage gültig.\n\nViele Grüße\n${profileData?.name && profileData.name !== 'Max Mustermann' ? profileData.name : ''}`;
+    }
+    function hubCodeBox(p) {
+      const code = ownerSide.code?.id === p.id ? ownerSide.code.code : (ownerSide.invites || []).find((i) => i.service_partner_id === p.id && !i.accepted_at && new Date(i.expires_at) > new Date())?.code;
+      if (!code || p.partner_organization_id) return '';
+      const text = hubInviteText(code);
+      return `<div class="hub-code"><span class="pp-eyebrow">Einladungscode</span><code>${escapeHtml(code)}</code>
+        <div class="hub-code-actions"><button type="button" class="secondary-btn" data-hub-copy="${escapeHtml(code)}">Kopieren</button>${navigator.share ? `<button type="button" class="secondary-btn" data-hub-share="${p.id}">Teilen</button>` : ''}<a class="secondary-btn" href="mailto:${encodeURIComponent(p.email || '')}?subject=${encodeURIComponent('Einladung ins Husora Partner-Portal')}&body=${encodeURIComponent(text)}">E-Mail</a><a class="secondary-btn" href="sms:?&body=${encodeURIComponent(`Husora Partner-Portal: ${location.origin}${location.pathname} – Einladungscode ${code}`)}">SMS</a></div>
+        <small>Gültig 30 Tage, nur einmal verwendbar. Der Partner gibt den Code in seinem Partner-Portal unter „Kunden & Objekte“ ein.</small></div>`;
+    }
+    function hubPartnersHtml() {
+      const partners = ownerSide.partners || [];
+      const suggestions = hubAssignedProviders();
+      return `<section class="card hub-card"><h2 class="card-title">Servicepartner einladen</h2><p class="card-caption">Erzeuge einen Einladungscode. Nach der Verbindung sieht der Partner nur die Aufträge, die du ihm sendest – und ihr könnt hier direkt schreiben.</p>
+          <form class="hub-form" data-owner-form="partner">
+            ${suggestions.length ? `<label><span class="form-label">Aus deinen Servicepartnern übernehmen</span><select class="form-control" data-hub-suggest><option value="">– auswählen oder unten eintragen –</option>${suggestions.map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${p.town ? ` (${escapeHtml(p.town)})` : ''}</option>`).join('')}</select></label>` : ''}
+            <div class="hub-grid"><label><span class="form-label">Firmenname *</span><input class="form-control" name="company_name" required maxlength="120"></label><label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120"></label></div>
+            <div class="pp-actions"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>${icon('plus')} ${ownerSide.busy === 'invite' ? 'Erzeuge Code …' : 'Einladungscode erzeugen'}</button></div>
+          </form></section>
+        <section class="hub-section"><h3 class="hub-section-title">Deine Servicepartner (${partners.length})</h3>
+          ${partners.length ? partners.map((p) => { const [label, tone] = hubStatus(p); const unread = hubUnread(hubThreadMessages({ kind: 'partner', id: p.id })); return `<div class="card hub-partner"><div class="hub-partner-head"><div><strong>${escapeHtml(p.company_name)}</strong><small>${escapeHtml(p.email || 'keine E-Mail hinterlegt')}</small></div><span class="pp-badge ${tone}">${label}</span></div>
+            ${hubCodeBox(p)}
+            <div class="pp-actions">${p.partner_organization_id ? `<button type="button" class="primary-btn" data-hub-chat="partner:${p.id}">${icon('note')} Nachricht${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button><button type="button" class="secondary-btn" data-hub-tab="orders" data-hub-partner="${p.id}">Auftrag senden</button>` : `<button type="button" class="secondary-btn" data-owner-action="invite" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>${hubStatus(p)[0] === 'Einladung offen' ? 'Neuen Code erzeugen' : 'Einladungscode erzeugen'}</button>`}</div></div>`; }).join('') : `<div class="pp-empty">${icon('users')}<strong>Noch keine Servicepartner</strong><p>Lade oben deinen ersten Partner ein.</p></div>`}
+        </section>`;
+    }
+    function hubChatListHtml() {
+      const convs = hubConversations();
+      if (!convs.length) return `<div class="pp-empty">${icon('note')}<strong>Noch keine Gespräche</strong><p>Sobald ein eingeladener Servicepartner verbunden ist, kannst du ihm hier schreiben.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`;
+      const row = (t) => { const last = t.messages[t.messages.length - 1]; const unread = hubUnread(t.messages); return `<button type="button" class="hub-conv ${unread ? 'unread' : ''}" data-hub-chat="${t.kind}:${t.id}"><span class="hub-avatar">${escapeHtml((t.partner?.company_name || t.order?.partner?.company_name || '?').slice(0, 1).toUpperCase())}</span><span class="hub-conv-main"><strong>${escapeHtml(t.title)}</strong><small>${escapeHtml(t.kind === 'order' ? t.subtitle : last ? `${last.sender_user_id === hubMyId() ? 'Du: ' : ''}${last.message}` : 'Noch keine Nachrichten – schreib die erste.')}</small></span><span class="hub-conv-meta">${last ? `<small>${escapeHtml(ppDate(last.created_at))}</small>` : ''}${unread ? `<b class="hub-count">${unread}</b>` : ''}</span></button>`; };
+      const partnerConvs = convs.filter((t) => t.kind === 'partner');
+      const orderConvs = convs.filter((t) => t.kind === 'order');
+      return `${partnerConvs.length ? `<section class="hub-section"><h3 class="hub-section-title">Servicepartner</h3><div class="hub-convs">${partnerConvs.map(row).join('')}</div></section>` : ''}
+        ${orderConvs.length ? `<section class="hub-section"><h3 class="hub-section-title">Zu Aufträgen</h3><div class="hub-convs">${orderConvs.map(row).join('')}</div></section>` : ''}`;
+    }
+    function hubThreadHtml() {
+      const t = hub.thread;
+      const partner = t.kind === 'partner' ? (ownerSide.partners || []).find((p) => p.id === t.id) : null;
+      const order = t.kind === 'order' ? (ownerSide.orders || []).find((o) => o.id === t.id) : null;
+      const list = hubThreadMessages(t);
+      let day = '';
+      const bubbles = list.map((m) => { const d = ppDayKey(m.created_at); const sep = d !== day ? `<div class="hub-day">${escapeHtml(d === ppToday() ? 'Heute' : new Date(m.created_at).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }))}</div>` : ''; day = d; const mine = m.sender_user_id === hubMyId(); return `${sep}<div class="pp-bubble ${mine ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(ppTime(m.created_at))}${mine ? (m.read_at ? ' · gelesen' : ' · gesendet') : ''}</small></div>`; }).join('');
+      return `<div class="hub-thread">
+        <div class="hub-thread-head"><button type="button" class="pp-back" data-hub-back>${icon('arrow')}<span>Gespräche</span></button><div><strong>${escapeHtml(partner?.company_name || order?.title || 'Gespräch')}</strong><small>${escapeHtml(order ? `${order.partner?.company_name || ''} · ${order.order_number} · ${(PP_ORDER_STATUS[order.status] || [order.status])[0]}` : 'Servicepartner · über das Husora Partner-Portal')}</small></div></div>
+        <div class="hub-messages" id="hub-messages">${bubbles || `<div class="pp-empty">${icon('note')}<strong>Noch keine Nachrichten</strong><p>Schreib ${escapeHtml(partner?.company_name || 'deinem Partner')} – zum Beispiel einen Terminwunsch oder Zugangshinweise.</p></div>`}</div>
+        <form class="hub-send" data-hub-send><textarea class="form-control" name="message" rows="1" maxlength="4000" placeholder="Nachricht schreiben …" required></textarea><button class="primary-btn" type="submit" ${hub.sending ? 'disabled' : ''} aria-label="Senden">${hub.sending ? '…' : 'Senden'}</button></form>
+        ${list.length ? '' : `<div class="hub-quick">${['Wann passt Ihnen ein Termin?', 'Der Schlüssel liegt im Schlüsseltresor.', 'Bitte schicken Sie mir ein Angebot.'].map((q) => `<button type="button" data-hub-quick="${escapeHtml(q)}">${escapeHtml(q)}</button>`).join('')}</div>`}
+      </div>`;
+    }
+    function hubOrdersHtml() {
+      const connected = (ownerSide.partners || []).filter((p) => p.partner_organization_id);
+      const tasksOpen = ownerSide.tasks || [];
+      return `${connected.length ? `<section class="card hub-card"><h2 class="card-title">Aufgabe an Partner senden</h2>${tasksOpen.length ? `<form class="hub-form" data-owner-form="send">
+          <label><span class="form-label">Aufgabe</span><select class="form-control" name="task">${tasksOpen.map((t) => `<option value="${t.id}">${escapeHtml(t.title)}${t.property?.name ? ` – ${escapeHtml(t.property.name)}` : ''}${t.scheduled_start ? ` (${escapeHtml(fmtDate(t.scheduled_start.slice(0, 10)))})` : ''}</option>`).join('')}</select></label>
+          <label><span class="form-label">Servicepartner</span><select class="form-control" name="partner">${connected.map((p) => `<option value="${p.id}" ${hub.partner === p.id ? 'selected' : ''}>${escapeHtml(p.company_name)}</option>`).join('')}</select></label>
+          <div class="pp-actions"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Auftrag senden</button></div></form>` : '<p class="settings-hint">Offene Aufgaben erscheinen hier, sobald sie per Cloud-Speicher abgeglichen sind (Einstellungen → Daten & App).</p>'}</section>` : `<div class="pp-empty">${icon('task')}<strong>Noch kein verbundener Partner</strong><p>Lade zuerst einen Servicepartner ein.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`}
+        ${(ownerSide.orders || []).length ? `<section class="hub-section"><h3 class="hub-section-title">Aufträge an Partner</h3>${ownerSide.orders.map((o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.partner?.company_name || '')} · ${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button></div></div>`; }).join('')}</section>` : ''}`;
+    }
+    function partnerHubPage() {
+      const tabs = [['partners', 'Partner & Codes'], ['chat', 'Messenger'], ['orders', 'Aufträge']];
+      const head = `<div class="welcome"><div><p class="eyebrow">Servicepartner</p><h1>Partner-Portal</h1><p class="subtitle">Servicepartner einladen, Aufträge senden und direkt mit ihnen schreiben.</p></div></div>`;
+      if (!cloudReady()) return `${head}<div class="hub-login"><p class="settings-hint" style="margin:0 0 12px">Das Partner-Portal nutzt deinen Husora Cloud-Speicher. Melde dich einmal an – deine Daten auf diesem Gerät bleiben erhalten.</p>${cloudCardHtml()}</div>`;
+      if (ownerSide.partners === null && !ownerSide.busy) hubRefresh();
+      const unread = hubTotalUnread();
+      const body = hub.tab === 'chat' ? (hub.thread ? hubThreadHtml() : hubChatListHtml()) : hub.tab === 'orders' ? hubOrdersHtml() : hubPartnersHtml();
+      return `${head}
+        <div class="pp-filters hub-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" aria-selected="${hub.tab === id}" class="${hub.tab === id ? 'active' : ''}" data-hub-tab="${id}">${label}${id === 'chat' && unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>`).join('')}</div>
+        ${ownerSide.error ? `<p class="cloud-message error">${icon('alert')}<span>${escapeHtml(ownerSide.error)}</span></p>` : ''}
+        ${ownerSide.partners === null ? '<div class="pp-skel"><i></i><i></i></div>' : body}`;
+    }
+    function hubRerender() {
+      if (currentPage !== 'partnerHub') { hubUpdateBadge(); return; }
+      const box = document.getElementById('hub-messages');
+      const atBottom = !box || box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+      const draft = document.querySelector('[data-hub-send] textarea')?.value || '';
+      const focused = document.activeElement?.matches?.('[data-hub-send] textarea');
+      const scroll = window.scrollY;
+      render();
+      window.scrollTo(0, scroll);
+      const area = document.querySelector('[data-hub-send] textarea');
+      if (area) { area.value = draft; if (focused) area.focus(); }
+      const next = document.getElementById('hub-messages');
+      if (next && atBottom) next.scrollTop = next.scrollHeight;
+      hubUpdateBadge();
+    }
+    function hubUpdateBadge() {
+      const button = document.querySelector('.nav [data-page="partnerHub"]');
+      if (!button) return;
+      let badge = button.querySelector('.hub-nav-count');
+      const unread = cloudReady() && ownerSide.partners ? hubTotalUnread() : 0;
+      if (!unread) { badge?.remove(); return; }
+      if (!badge) { badge = document.createElement('b'); badge.className = 'hub-nav-count'; button.appendChild(badge); }
+      badge.textContent = unread;
+    }
+    async function hubRefresh({ quiet = false } = {}) {
+      if (!cloudReady() || (ownerSide.busy && !quiet)) return;
+      if (!quiet) ownerSide.busy = 'load';
+      try {
+        await ownerLoadPartners();
+        ownerSide.error = '';
+      } catch (error) {
+        ownerSide.error = error instanceof TypeError ? 'Offline – Partnerdaten derzeit nicht erreichbar.' : error.message;
+        if (ownerSide.partners === null) ownerSide.partners = [];
+      } finally {
+        if (!quiet) ownerSide.busy = '';
+        await hubMarkRead();
+        hubRerender();
+      }
+    }
+    async function hubMarkRead() {
+      if (currentPage !== 'partnerHub' || hub.tab !== 'chat' || !hub.thread) return;
+      const unread = hubThreadMessages(hub.thread).filter((m) => !m.read_at && m.sender_user_id !== hubMyId());
+      if (!unread.length) return;
+      const now = new Date().toISOString();
+      unread.forEach((m) => { m.read_at = now; });
+      try { await cloudFetch(`/rest/v1/messages?id=in.(${unread.map((m) => m.id).join(',')})`, { method: 'PATCH', body: { read_at: now }, headers: { Prefer: 'return=minimal' } }); } catch (error) { console.error('Gelesen-Status nicht gespeichert:', error); }
+    }
+    function hubSetPolling() {
+      const active = currentPage === 'partnerHub' && cloudReady();
+      if (active && !hub.poll) hub.poll = setInterval(() => { if (document.visibilityState === 'visible') hubRefresh({ quiet: true }); }, hub.tab === 'chat' ? 12000 : 30000);
+      if (!active && hub.poll) { clearInterval(hub.poll); hub.poll = null; }
+    }
+    document.addEventListener('click', (event) => {
+      if (currentPage !== 'partnerHub') return;
+      const tab = event.target.closest('[data-hub-tab]');
+      if (tab) { hub.tab = tab.dataset.hubTab; hub.thread = null; if (tab.dataset.hubPartner) hub.partner = tab.dataset.hubPartner; if (hub.poll) { clearInterval(hub.poll); hub.poll = null; } hubSetPolling(); hubRerender(); return; }
+      const chat = event.target.closest('[data-hub-chat]');
+      if (chat) { const [kind, id] = chat.dataset.hubChat.split(':'); hub.tab = 'chat'; hub.thread = { kind, id }; if (hub.poll) { clearInterval(hub.poll); hub.poll = null; } hubSetPolling(); hubRerender(); const box = document.getElementById('hub-messages'); if (box) box.scrollTop = box.scrollHeight; document.querySelector('[data-hub-send] textarea')?.focus(); hubMarkRead().then(hubUpdateBadge); return; }
+      if (event.target.closest('[data-hub-back]')) { hub.thread = null; hubRerender(); return; }
+      const quick = event.target.closest('[data-hub-quick]');
+      if (quick) { const area = document.querySelector('[data-hub-send] textarea'); if (area) { area.value = quick.dataset.hubQuick; area.focus(); } return; }
+      const copy = event.target.closest('[data-hub-copy]');
+      if (copy) { const code = copy.dataset.hubCopy; (navigator.clipboard?.writeText(code) || Promise.reject()).then(() => showToast(`Code ${code} kopiert.`)).catch(() => window.prompt('Code zum Kopieren:', code)); return; }
+      const share = event.target.closest('[data-hub-share]');
+      if (share) { const p = (ownerSide.partners || []).find((x) => x.id === share.dataset.hubShare); const code = ownerSide.code?.id === p?.id ? ownerSide.code.code : (ownerSide.invites || []).find((i) => i.service_partner_id === p?.id && !i.accepted_at)?.code; if (code) navigator.share({ title: 'Einladung ins Husora Partner-Portal', text: hubInviteText(code) }).catch(() => {}); }
+    });
+    document.addEventListener('change', (event) => {
+      const suggest = event.target.closest('[data-hub-suggest]');
+      if (!suggest) return;
+      const provider = providerById(suggest.value);
+      const form = suggest.closest('form');
+      if (!provider || !form) return;
+      form.elements.company_name.value = provider.name || '';
+      form.elements.email.value = provider.email || '';
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey && event.target.matches?.('#partner-portal [data-pp-form=chat] textarea')) { event.preventDefault(); event.target.closest('form').requestSubmit(); return; }
+      if (event.key === 'Enter' && !event.shiftKey && event.target.matches?.('[data-hub-send] textarea')) { event.preventDefault(); event.target.closest('form').requestSubmit(); }
+    });
+    document.addEventListener('input', (event) => {
+      if (!event.target.matches?.('[data-hub-send] textarea')) return;
+      event.target.style.height = 'auto';
+      event.target.style.height = `${Math.min(event.target.scrollHeight, 160)}px`;
+    });
+    document.addEventListener('submit', async (event) => {
+      const form = event.target.closest('[data-hub-send]');
+      if (!form) return;
+      event.preventDefault();
+      const area = form.elements.message;
+      const text = area.value.trim();
+      if (!text || hub.sending || !hub.thread) return;
+      const thread = hub.thread;
+      const body = { organization_id: cloud.org.id, message: text, ...(thread.kind === 'partner' ? { service_partner_id: thread.id } : { service_order_id: thread.id }) };
+      const temp = { id: `tmp-${Date.now()}`, ...body, sender_user_id: hubMyId(), created_at: new Date().toISOString(), read_at: null };
+      ownerSide.messages = [...(ownerSide.messages || []), temp];
+      area.value = '';
+      hub.sending = true;
+      hubRerender();
+      try {
+        const [row] = await cloudFetch('/rest/v1/messages', { method: 'POST', body, headers: { Prefer: 'return=representation' } });
+        ownerSide.messages = ownerSide.messages.map((m) => (m.id === temp.id ? row : m));
+      } catch (error) {
+        ownerSide.messages = ownerSide.messages.filter((m) => m.id !== temp.id);
+        ownerSide.error = error instanceof TypeError ? 'Nachricht nicht gesendet – keine Verbindung.' : `Nachricht nicht gesendet: ${error.message}`;
+        const restore = document.querySelector('[data-hub-send] textarea');
+        hub.sending = false; hubRerender();
+        const again = document.querySelector('[data-hub-send] textarea'); if (again) again.value = text;
+        return;
+      }
+      hub.sending = false;
+      ownerSide.error = '';
+      hubRerender();
+    });
+    window.addEventListener('online', () => { if (currentPage === 'partnerHub') hubRefresh({ quiet: true }); });
     if (ppMode() === 'partner') setTimeout(() => ppOpen('dashboard'), 0);
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();

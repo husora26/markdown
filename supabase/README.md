@@ -30,11 +30,12 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…1400_foreign_key_indexes.sql` | Indizes auf den übrigen Fremdschlüsseln (`created_by`, `updated_by` …) |
 | `…1500_app_sync.sql` | `app_data` (komplette App-Daten), Übernahme von Häusern, Buchungen und Aufgaben, `ensure_my_organization` |
 | `…1600_app_files.sql` | Fotos/Dokumente aus Storage in `documents`/`photos`, `my_cloud_usage` (Speicheranzeige) |
+| `…1800_partner_messenger.sql` | Messenger: Gespräch je Servicepartner (`messages.service_partner_id`), Lesebestätigung, Benachrichtigung bei Partner-Nachrichten |
 | `…1700_partner_portal.sql` | Zugang für Servicepartner: Partner-Organisationen, Einladungen, Mitarbeiterrollen, Kunden, Kontrollvorlagen, 14 Servicearten |
 | `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |
 | `tests/rls_test.sql` | 84 automatische Prüfungen der Rechte je Rolle |
-| `tests/partner_portal_test.sql` | 43 Prüfungen für den Partnerzugang (Einladung, Techniker, Abschottung fremder Firmen) |
+| `tests/partner_portal_test.sql` | 53 Prüfungen (inkl. Messenger) für den Partnerzugang (Einladung, Techniker, Abschottung fremder Firmen) |
 
 ### Architektur-Entscheidungen
 
@@ -132,8 +133,24 @@ Mitarbeiter lädt der Admin mit `create_member_invite()` ein (Code `TEAM-XXXX-XX
 
 **Eigene Kunden:** Partner können zusätzlich Kunden ohne Husora führen (`customers`, `properties.owner_customer_id`). Aufträge dafür laufen über den eigenen Partner-Datensatz des Betriebs.
 
+### Partner-Portal für Hausbesitzer (Menü → Servicepartner → Partner-Portal)
+
+- **Partner & Codes:**
+  - Servicepartner anlegen, auch direkt aus den in der App zugeordneten Partnern.
+  - Einladungscode `HUS-XXXX-XXXX` erzeugen und per Kopieren, Teilen, E-Mail oder SMS weitergeben.
+  - Der Status zeigt an, ob der Partner nicht eingeladen ist, die Einladung offen ist oder er verbunden ist.
+- **Messenger:**
+  - Je verbundenem Partner ein durchgehendes Gespräch, dazu die Gespräche zu einzelnen Aufträgen.
+  - Ungelesen-Zähler im Menü und im Reiter, „gelesen“-Anzeige, neue Nachrichten erscheinen automatisch (alle 12 s).
+  - Der Partner antwortet in seinem Portal unter „Nachrichten → Kunden“.
+- **Aufträge:**
+  - Offene Aufgaben an einen verbundenen Partner senden.
+  - Status und Antworten der Partner einsehen.
+
+Sichtbar sind die Gespräche nur für die Verwaltung des Hausbesitzers und die Leitung des Partnerbetriebs, nicht für Techniker oder fremde Firmen.
+
 **Bewusst noch nicht umgesetzt** (Spezifikation, spätere Phasen):
-- interne vs. kundensichtbare Nachrichten
+- interne vs. kundensichtbare Nachrichten und Dateianhänge im Messenger
 - Rechnungspositionen und Zahlungen
 - Arbeitszeiten und Material
 - wiederkehrende Termine
