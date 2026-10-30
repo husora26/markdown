@@ -2499,9 +2499,8 @@
     .hub-login { max-width: 640px; }
     .pp-item .hub-avatar { width: 36px; height: 36px; font-size: 15px; }
     /* Eigene Servicepartner */
-    .custom-provider-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
-    .custom-provider-bar .primary-btn, .custom-provider-bar .secondary-btn, .welcome-actions .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
-    .custom-provider-bar svg, .welcome-actions .secondary-btn svg { width: 16px; height: 16px; }
+    .welcome-actions .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
+    .welcome-actions .secondary-btn svg { width: 16px; height: 16px; }
     .custom-provider-empty strong { display: block; }
     .custom-provider-empty p { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.5; }
     .custom-provider-tag { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; background: var(--amber-soft); color: #87622b; font-size: 11.5px; font-weight: 700; }
@@ -3326,6 +3325,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
   
   
@@ -7137,8 +7137,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>Zugeordnete Servicepartner</h1><p class="subtitle">Dokumente je Servicepartner verwalten.</p></div><button class="primary-btn" data-action="open-provider-search" data-property="${escapeHtml(property.id)}">Servicepartner finden</button></div>
         <section class="assigned-house-bar"><div class="assigned-house-name"><span>Ferienhaus</span><strong>${escapeHtml(property.name)}</strong>${property.address ? `<small>${escapeHtml(property.address)}</small>` : ''}</div>
           ${`<label class="assigned-house-switch"><span class="form-label">Ferienhaus wechseln</span><select id="assigned-property" class="filter-select" aria-label="Ferienhaus wechseln">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)}${item.region ? ` · ${escapeHtml(item.region)}` : ''}</option>`).join('')}</select></label>`}</section>
-        <div class="custom-provider-bar"><button type="button" class="primary-btn" data-custom-provider-new data-property="${escapeHtml(property.id)}">${icon('plus')} Eigenen Servicepartner anlegen</button><button type="button" class="secondary-btn" data-action="open-provider-search" data-property="${escapeHtml(property.id)}">${icon('search')} Im Verzeichnis suchen</button></div>
-        ${assignedPairs.length ? `<div class="assigned-provider-list ap-grid">${providerCards}</div>` : `<section class="card empty custom-provider-empty"><strong>Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.</strong><p>Wähle einen Betrieb aus dem Verzeichnis oder lege deinen eigenen Handwerker, Hausmeister oder Reinigungsservice an.</p></section>`}`;
+        ${assignedPairs.length ? `<div class="assigned-provider-list ap-grid">${providerCards}</div>` : `<section class="card empty custom-provider-empty"><strong>Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.</strong><p>Über „Servicepartner finden“ wählst du einen Betrieb aus dem Verzeichnis oder legst deinen eigenen Handwerker, Hausmeister oder Reinigungsservice an.</p></section>`}`;
     }
     // Hausdetailseite: einklappbare Karten, Bildansicht, wichtige Angaben und Kosten als Kacheln.
     let collapsedSections = new Set();
