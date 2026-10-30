@@ -2226,6 +2226,28 @@
     .settings-actions .primary-btn, .settings-actions .secondary-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; font-size: 13px; }
     .settings-actions svg { width: 16px; height: 16px; }
     .settings-file { cursor: pointer; }
+    .cloud-form { display: grid; gap: 12px; }
+    .cloud-form label { display: grid; gap: 0; }
+    .cloud-form .settings-actions { margin-top: 2px; }
+    .cloud-message { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0 0; color: var(--green); font-size: 13px; line-height: 1.5; }
+    .cloud-message.error { color: var(--red); }
+    .cloud-message svg { flex: 0 0 auto; width: 17px; height: 17px; margin-top: 1px; }
+    .cloud-project { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; color: var(--green); font-size: 13px; overflow-wrap: anywhere; }
+    .cloud-project svg { flex: 0 0 auto; width: 17px; height: 17px; }
+    .cloud-account { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 11px; background: #fbfaf6; }
+    .cloud-account > div { min-width: 0; }
+    .cloud-account strong { display: block; font-size: 14px; overflow-wrap: anywhere; }
+    .cloud-account small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+    .cloud-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .cloud-compare > div { padding: 11px 13px; border: 1px solid var(--line); border-radius: 11px; }
+    .cloud-compare span { display: block; color: var(--muted); font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .cloud-compare strong { display: block; margin-top: 3px; font-size: 15px; }
+    .cloud-compare small { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .cloud-status { margin: 12px 0 0; font-size: 13px; line-height: 1.5; color: var(--green); }
+    .cloud-status:empty { display: none; }
+    .cloud-status.pending { color: var(--muted); }
+    .cloud-status.warn { color: #8e622b; }
+    .cloud-card .settings-switch { margin-top: 14px; }
     .settings-hint { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
     .settings-danger { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
     .settings-danger strong { display: block; font-size: 13px; }
@@ -3027,6 +3049,7 @@
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3562,6 +3585,8 @@ html.dark .storage-bar { background: #2e2d28; }
 html.dark .storage-bar i { background: var(--green-solid); }
 html.dark .storage-meter.full .storage-bar i { background: var(--red-solid); }
 html.dark .backup-status.stale { color: #dcc3a2; }
+html.dark .cloud-account { background: #25231a; }
+html.dark .cloud-status.warn { color: #dcc3a2; }
 html.dark .settings-danger .danger { border-color: #553d3a; }
 html.dark .settings-links button { background: #1c1c1c; color: var(--ink, #dae2dc); }
 html.dark .settings-links button:hover { background: #26251e; }
@@ -12436,7 +12461,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       let lastBackup = '';
       try { lastBackup = localStorage.getItem('stugliv-last-backup') || ''; } catch (error) { lastBackup = ''; }
       const stale = !lastBackup || Date.now() - new Date(lastBackup).getTime() > 30 * 24 * 60 * 60 * 1000;
-      return `<section class="card settings-card" id="settings-backup"><div class="settings-card-head"><span class="settings-icon">${icon('document')}</span><div><h2 class="card-title">Datensicherung</h2><p class="card-caption">Deine Daten liegen nur auf diesem Gerät. Sichere sie regelmäßig als Datei.</p></div></div>
+      return `<section class="card settings-card" id="settings-backup"><div class="settings-card-head"><span class="settings-icon">${icon('document')}</span><div><h2 class="card-title">Datensicherung</h2><p class="card-caption">${cloudReady() ? 'Zusätzlich zur Cloud: eine Sicherungsdatei zum Aufbewahren.' : 'Deine Daten liegen nur auf diesem Gerät. Sichere sie regelmäßig als Datei.'}</p></div></div>
         <div class="storage-meter ${usage.percent > 80 ? 'full' : usage.percent > 60 ? 'warn' : ''}"><div class="storage-meter-top"><strong>Speicher belegt</strong><span>${formatBytes(usage.bytes)} von ca. ${formatBytes(STORAGE_LIMIT)} · ${usage.percent} %</span></div><span class="storage-bar"><i style="width:${Math.max(2, usage.percent)}%"></i></span>${usage.percent > 80 ? '<small>Der Speicher ist fast voll. Lösche nicht mehr benötigte PDFs und Fotos unter „Dokumente“, sonst können neue Daten nicht gespeichert werden.</small>' : ''}</div>
         <div class="backup-status ${stale ? 'stale' : ''}">${stale ? icon('alert') : icon('check')}<span>${lastBackup ? `Letzte Sicherung: ${escapeHtml(fmtDateTime(lastBackup))}` : 'Noch keine Datensicherung erstellt'}${stale ? ' – wir empfehlen eine Sicherung pro Monat.' : ''}</span></div>
         <div class="settings-actions"><button type="button" class="primary-btn" data-settings-action="export">${icon('document')} Daten sichern (Datei)</button><label class="secondary-btn settings-file">Sicherung wiederherstellen<input type="file" accept="application/json,.json" data-settings-import hidden></label></div>
@@ -12453,7 +12478,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const groups = [
         ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
         ['settings-look', 'Darstellung & Erinnerungen', 'Hell oder dunkel, Schriftgröße, Sprache der Aufträge und was dir die Glocke meldet.', settingsCardBuilders.filter((build) => build !== backupCardHtml && build !== appInfoCardHtml)],
-        ['settings-data', 'Daten & App', 'Datensicherung, Speicher und Informationen zur App.', [backupCardHtml, appInfoCardHtml]]
+        ['settings-data', 'Daten & App', 'Cloud-Speicher, Datensicherung und Informationen zur App.', [cloudCardHtml, backupCardHtml, appInfoCardHtml]]
       ];
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Startseite, Darstellung, Erinnerungen und Datensicherung.</p></div></div>
         <nav class="settings-jump" aria-label="Bereiche der Einstellungen">${groups.map(([id, title]) => `<button type="button" data-settings-jump="${id}">${title}</button>`).join('')}</nav>
@@ -12472,7 +12497,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <h3>Verbraucherstreitbeilegung</h3><p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>` },
       privacy: { title: 'Datenschutzerklärung', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Verantwortlicher</h3><p>${legalValue('company', 'Firma oder Name')}, ${legalValue('street', 'Anschrift')}, ${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')} · ${legalValue('email', 'E-Mail-Adresse')}</p>
-        <h3>2. Grundsatz: Speicherung auf deinem Gerät</h3><p>Husora benötigt kein Benutzerkonto. Alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – werden ausschließlich im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p>
+        <h3>2. Grundsatz: Speicherung auf deinem Gerät</h3><p>Husora benötigt kein Benutzerkonto. Alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – werden im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p><p><strong>Optionaler Cloud-Speicher:</strong> Verbindest du Husora unter „Einstellungen → Daten & App“ mit einem eigenen Supabase-Projekt, werden deine Husora-Daten verschlüsselt (HTTPS) an dieses Projekt übertragen und dort gespeichert. Verantwortlich für dieses Projekt und den gewählten Speicherort bist du selbst; Anbieter ist die Supabase Inc. (supabase.com). Für die Anmeldung werden deine E-Mail-Adresse und ein Passwort bei Supabase Auth hinterlegt. Die Verbindung lässt sich jederzeit trennen.</p>
         <h3>3. Externe Dienste</h3><p>Für einzelne Funktionen ruft die App Inhalte von Drittanbietern ab. Dabei wird technisch bedingt deine IP-Adresse an den jeweiligen Anbieter übertragen; bei Suchanfragen zusätzlich der eingegebene Suchbegriff bzw. Link.</p>
         <ul>
           <li><strong>Karten und Adresssuche:</strong> OpenStreetMap Foundation (Kartenkacheln, Nominatim-Adresssuche), Google Maps (Kartenvorschau in der Objektübersicht).</li>
@@ -12485,7 +12510,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <li><strong>E-Mails an Servicepartner:</strong> werden über dein eigenes Mailprogramm versendet; Husora selbst versendet keine E-Mails.</li>
         </ul>
         <h3>4. Rechtsgrundlagen</h3><p>Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der von dir genutzten Funktionen und Abwicklung des Kaufs) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer funktionsfähigen App).</p>
-        <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls.</p>
+        <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls. Daten im optionalen Cloud-Speicher löschst du in deinem Supabase-Projekt.</p>
         <h3>6. Deine Rechte</h3><p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde. Da wir keine Daten von dir speichern, betreffen diese Rechte vor allem die Kaufabwicklung.</p>` },
       terms: { title: 'Allgemeine Geschäftsbedingungen', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Geltungsbereich</h3><p>Diese Bedingungen gelten für die Nutzung der App Husora, angeboten von ${legalValue('company', 'Firma oder Name')}.</p>
@@ -12987,7 +13012,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
 
     // --- Hilfe & Support ---
     const FAQ = [
-      ['Wo werden meine Daten gespeichert?', 'Nur auf diesem Gerät im Speicher des Browsers bzw. der App. Es gibt (noch) kein Benutzerkonto und keine Cloud. Sichere deine Daten deshalb regelmäßig unter Einstellungen → Datensicherung als Datei.'],
+      ['Wo werden meine Daten gespeichert?', 'Zunächst nur auf diesem Gerät im Speicher des Browsers bzw. der App. Optional verbindest du Husora unter Einstellungen → Daten & App mit deinem eigenen Supabase-Projekt: Dann liegen alle Daten zusätzlich in deiner Cloud und lassen sich auf Handy, Tablet und Computer abgleichen. Eine Sicherungsdatei kannst du jederzeit zusätzlich erstellen.'],
       ['Wie übertrage ich meine Daten auf ein anderes Gerät?', 'Unter Einstellungen → „Daten sichern (Datei)“ eine Sicherung erstellen, die Datei z. B. per AirDrop, E-Mail oder Cloud-Speicher auf das neue Gerät bringen und dort unter Einstellungen → „Sicherung wiederherstellen“ einlesen.'],
       ['Wie beauftrage ich eine Hauskontrolle?', 'Unter Hauskontrolle in Schritt 1 die Prüfpositionen festlegen, in Schritt 2 „Service beauftragen“ wählen. Husora erstellt den Kontrollplan als PDF und öffnet eine vorbereitete E-Mail an deinen Servicepartner. Den ausgefüllten Plan liest du danach in Schritt 3 wieder ein.'],
       ['Was passiert mit Mängeln aus der Kontrolle?', 'Auffällige Positionen werden automatisch als Mangel unter „Reparatur & Instandhaltung“ angelegt. Dort beauftragst du einen Handwerker per E-Mail mit PDF-Auftrag. Sind alle Mängel behoben, kannst du das Prüfprotokoll im Archiv ablegen.'],
@@ -14652,6 +14677,407 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
       }
     });
+    // ===== Cloud-Sync mit Supabase =====
+    // Alle Husora-Daten (Schlüssel "stugliv-…") werden 1:1 in public.app_data des eigenen
+    // Supabase-Projekts gespeichert; Häuser, Buchungen und Aufgaben übernimmt die Datenbank
+    // zusätzlich in ihre Fachtabellen. Verbindung und Anmeldung liegen unter "husora-cloud"
+    // und gehören zum Gerät – sie werden weder gesichert noch synchronisiert.
+    const CLOUD_STORE = 'husora-cloud';
+    const CLOUD_EXCLUDED = ['stugliv-dev', 'stugliv-geocache', 'stugliv-fx', 'stugliv-last-backup'];
+    const CLOUD_ORDER = ['stugliv-properties', 'stugliv-bookings', 'stugliv-tasks'];
+    const CLOUD_BATCH_CHARS = 900 * 1024;
+    const CLOUD_STAFF_ROLES = ['admin', 'property_manager', 'service_manager'];
+    let cloud = { url: '', key: '', session: null, org: null, autoSync: true, lastSyncAt: '', deviceId: '' };
+    try { cloud = { ...cloud, ...(JSON.parse(localStorage.getItem(CLOUD_STORE) || '{}') || {}) }; } catch (error) { /* noch nicht eingerichtet */ }
+    if (!cloud.deviceId) cloud.deviceId = (window.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now().toString(16)}-${Math.random().toString(16).slice(2, 14)}`).slice(0, 36);
+    const cloudState = { busy: '', error: '', notice: '', summary: null, remoteNewer: false, draftEmail: cloud.session?.email || '' };
+    const cloudDirty = new Set();
+    let cloudTimer = null;
+    let cloudApplying = false;
+    function persistCloud() {
+      try { localStorage.setItem(CLOUD_STORE, JSON.stringify(cloud)); } catch (error) { console.error('Cloud-Einstellungen konnten nicht gespeichert werden:', error); }
+    }
+    const cloudBase = () => String(cloud.url || '').replace(/\/+$/, '');
+    const cloudConnected = () => Boolean(cloud.url && cloud.key);
+    const cloudSignedIn = () => cloudConnected() && Boolean(cloud.session?.access_token);
+    const cloudReady = () => cloudSignedIn() && Boolean(cloud.org?.id);
+    const cloudCanWrite = () => cloudReady() && CLOUD_STAFF_ROLES.includes(cloud.org.role);
+    const cloudTime = (value) => (value ? new Date(value).getTime() : 0);
+    function jwtRole(token) {
+      try { return JSON.parse(atob(String(token).split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).role || ''; } catch (error) { return ''; }
+    }
+    function cloudErrorText(status, data) {
+      const message = (data && typeof data === 'object' && (data.msg || data.message || data.error_description || data.error)) || '';
+      if (/invalid login credentials/i.test(message)) return 'E-Mail oder Passwort ist falsch.';
+      if (/email not confirmed/i.test(message)) return 'Bitte bestätige zuerst deine E-Mail-Adresse über den Link in der Bestätigungs-Mail.';
+      if (/already (been )?registered|already exists/i.test(message)) return 'Für diese E-Mail gibt es bereits ein Konto – bitte anmelden.';
+      if (/password/i.test(message) && /(characters|weak|short|length)/i.test(message)) return 'Das Passwort ist zu kurz oder zu einfach (mindestens 8 Zeichen).';
+      if (/signups? not allowed|signup.*disabled/i.test(message)) return 'Neue Konten sind in diesem Supabase-Projekt deaktiviert.';
+      if (/rate limit/i.test(message)) return 'Zu viele Versuche – bitte kurz warten und erneut versuchen.';
+      if (status === 404 || /could not find|does not exist|schema cache/i.test(message)) return 'Husora-Tabellen nicht gefunden – bitte zuerst die Husora-Datenbank in das Supabase-Projekt einspielen (siehe Hinweis unten).';
+      if (status === 401 || status === 403 || /row-level security|permission denied|JWT/i.test(message)) return 'Keine Berechtigung – bitte abmelden und erneut anmelden.';
+      if (status === 413) return 'Die Daten sind zu groß für eine einzelne Übertragung.';
+      return message ? `Supabase: ${message}` : `Supabase antwortet mit Fehler ${status}.`;
+    }
+    async function cloudFetch(path, { method = 'GET', body, headers = {}, auth = true, retry = true } = {}) {
+      if (auth) await cloudEnsureToken();
+      const response = await fetch(cloudBase() + path, {
+        method,
+        headers: { apikey: cloud.key, 'Content-Type': 'application/json', ...(auth && cloud.session ? { Authorization: `Bearer ${cloud.session.access_token}` } : {}), ...headers },
+        body: body === undefined ? undefined : JSON.stringify(body)
+      });
+      if (response.status === 401 && auth && retry && cloud.session?.refresh_token) {
+        await cloudRefresh();
+        return cloudFetch(path, { method, body, headers, auth, retry: false });
+      }
+      const text = await response.text();
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch (error) { data = text; }
+      if (!response.ok) throw new Error(cloudErrorText(response.status, data));
+      return data;
+    }
+    function cloudSetSession(data) {
+      cloud.session = {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        expires_at: data.expires_at || Math.floor(Date.now() / 1000) + (data.expires_in || 3600),
+        email: data.user?.email || cloud.session?.email || ''
+      };
+      persistCloud();
+    }
+    async function cloudRefresh() {
+      let data;
+      try {
+        data = await cloudFetch('/auth/v1/token?grant_type=refresh_token', { method: 'POST', body: { refresh_token: cloud.session.refresh_token }, auth: false });
+      } catch (error) {
+        cloud.session = null;
+        persistCloud();
+        throw new Error('Die Anmeldung ist abgelaufen – bitte erneut anmelden.');
+      }
+      cloudSetSession(data);
+    }
+    async function cloudEnsureToken() {
+      if (!cloud.session?.access_token) throw new Error('Bitte zuerst anmelden.');
+      if (cloud.session.expires_at * 1000 - Date.now() < 60 * 1000) await cloudRefresh();
+    }
+
+    async function cloudConnect(url, key) {
+      const cleanUrl = String(url || '').trim().replace(/\/+$/, '').replace(/\/(rest|auth)\/v1.*$/, '');
+      const cleanKey = String(key || '').trim();
+      if (!/^https?:\/\/[^\s/]+$/i.test(cleanUrl)) throw new Error('Bitte die Projekt-URL angeben, z. B. https://abcd1234.supabase.co');
+      if (cleanKey.length < 20) throw new Error('Bitte den „anon“- bzw. „publishable“-Schlüssel des Projekts einfügen.');
+      if (/^sb_secret_/.test(cleanKey) || jwtRole(cleanKey) === 'service_role') throw new Error('Das ist der geheime Schlüssel (service_role/secret). Er darf nie in die App – bitte den „anon“- bzw. „publishable“-Schlüssel verwenden.');
+      const previous = { url: cloud.url, key: cloud.key };
+      cloud.url = cleanUrl;
+      cloud.key = cleanKey;
+      try { await cloudFetch('/auth/v1/settings', { auth: false }); } catch (error) {
+        cloud.url = previous.url; cloud.key = previous.key;
+        throw error instanceof TypeError ? new Error('Keine Verbindung – bitte Projekt-URL und Internetverbindung prüfen.') : error;
+      }
+      cloud.session = null; cloud.org = null; cloud.lastSyncAt = '';
+      persistCloud();
+      cloudState.notice = 'Verbunden. Melde dich jetzt an oder erstelle ein Konto.';
+    }
+    async function cloudLoadOrg() {
+      const rows = await cloudFetch('/rest/v1/rpc/ensure_my_organization', { method: 'POST', body: { p_name: profileData?.name ? `Ferienhäuser ${profileData.name}` : 'Meine Ferienhäuser' } });
+      const row = Array.isArray(rows) ? rows[0] : rows;
+      if (!row?.organization_id) throw new Error('Die Organisation konnte nicht angelegt werden.');
+      cloud.org = { id: row.organization_id, name: row.name, role: row.role };
+      persistCloud();
+    }
+    async function cloudSignIn(email, password) {
+      const data = await cloudFetch('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: email.trim(), password }, auth: false });
+      cloudSetSession(data);
+      await cloudLoadOrg();
+      await cloudLoadSummary();
+      cloudState.notice = cloudState.summary?.count ? 'Angemeldet. In der Cloud liegen bereits Daten – wähle unten, welche gelten sollen.' : 'Angemeldet. Lade jetzt deine Daten hoch.';
+    }
+    async function cloudSignUp(email, password) {
+      if (String(password).length < 8) throw new Error('Das Passwort muss mindestens 8 Zeichen lang sein.');
+      const data = await cloudFetch('/auth/v1/signup', { method: 'POST', body: { email: email.trim(), password, data: { first_name: profileData?.name || '', language: 'de' } }, auth: false });
+      if (data?.access_token) {
+        cloudSetSession(data);
+        await cloudLoadOrg();
+        await cloudLoadSummary();
+        cloudState.notice = 'Konto erstellt. Lade jetzt deine Daten hoch.';
+      } else {
+        cloudState.notice = 'Konto erstellt. Bitte bestätige die E-Mail-Adresse über den Link in der Bestätigungs-Mail und melde dich dann hier an.';
+      }
+    }
+    function cloudSignOut() {
+      if (cloud.session?.access_token) fetch(`${cloudBase()}/auth/v1/logout`, { method: 'POST', headers: { apikey: cloud.key, Authorization: `Bearer ${cloud.session.access_token}` } }).catch(() => {});
+      cloud.session = null; cloud.org = null; cloud.lastSyncAt = '';
+      cloudState.summary = null; cloudState.remoteNewer = false;
+      cloudDirty.clear();
+      persistCloud();
+    }
+    function cloudDisconnect() {
+      cloudSignOut();
+      cloud.url = ''; cloud.key = '';
+      persistCloud();
+    }
+
+    async function cloudLoadSummary() {
+      const rows = await cloudFetch(`/rest/v1/app_data?organization_id=eq.${cloud.org.id}&select=key,size_bytes,updated_at,device_id,projection_status`);
+      const latest = rows.reduce((best, row) => (!best || cloudTime(row.updated_at) > cloudTime(best.updated_at) ? row : best), null);
+      cloudState.summary = {
+        count: rows.length,
+        bytes: rows.reduce((sum, row) => sum + (row.size_bytes || 0), 0),
+        updatedAt: latest?.updated_at || '',
+        fromThisDevice: latest ? latest.device_id === cloud.deviceId : false,
+        projections: CLOUD_ORDER.map((key) => rows.find((row) => row.key === key)?.projection_status).filter(Boolean)
+      };
+      cloudState.remoteNewer = rows.some((row) => row.device_id !== cloud.deviceId && cloudTime(row.updated_at) > cloudTime(cloud.lastSyncAt));
+      return rows;
+    }
+    function cloudLocalEntries(onlyKeys) {
+      const keys = storageUsage().keys.filter((key) => /^stugliv-[a-z0-9-]+$/.test(key) && !CLOUD_EXCLUDED.includes(key));
+      // Ferienhäuser stehen erst nach der ersten Bearbeitung im Speicher – für die Cloud immer mitsenden
+      const extra = keys.includes('stugliv-properties') ? [] : [['stugliv-properties', JSON.stringify(properties)]];
+      return [...extra, ...keys.map((key) => [key, localStorage.getItem(key) || ''])]
+        .filter(([key]) => !onlyKeys || onlyKeys.has(key))
+        .sort(([a], [b]) => (CLOUD_ORDER.indexOf(a) + 1 || 99) - (CLOUD_ORDER.indexOf(b) + 1 || 99));
+    }
+    // full = true: Cloud wird exakt auf den Stand dieses Geräts gebracht (auch Löschungen)
+    async function cloudUpload({ full = true, keys = null } = {}) {
+      if (!cloudCanWrite()) throw new Error('Mit deiner Rolle in dieser Organisation kannst du nur lesen.');
+      const entries = cloudLocalEntries(keys);
+      let latest = cloud.lastSyncAt;
+      let batch = [];
+      let size = 0;
+      const send = async () => {
+        if (!batch.length) return;
+        const rows = await cloudFetch('/rest/v1/app_data?on_conflict=organization_id,key&select=key,updated_at', { method: 'POST', body: batch, headers: { Prefer: 'resolution=merge-duplicates,return=representation' } });
+        (rows || []).forEach((row) => { if (cloudTime(row.updated_at) > cloudTime(latest)) latest = row.updated_at; });
+        batch = [];
+        size = 0;
+      };
+      for (const [key, value] of entries) {
+        if (batch.length && size + value.length > CLOUD_BATCH_CHARS) await send();
+        batch.push({ organization_id: cloud.org.id, key, value, device_id: cloud.deviceId });
+        size += value.length;
+      }
+      await send();
+      const present = new Set(entries.map(([key]) => key));
+      const removed = keys ? [...keys].filter((key) => !present.has(key)) : null;
+      if (full) {
+        const keep = [...present, ...CLOUD_EXCLUDED];
+        await cloudFetch(`/rest/v1/app_data?organization_id=eq.${cloud.org.id}&key=not.in.(${keep.join(',')})`, { method: 'DELETE' });
+      } else if (removed?.length) {
+        await cloudFetch(`/rest/v1/app_data?organization_id=eq.${cloud.org.id}&key=in.(${removed.join(',')})`, { method: 'DELETE' });
+      }
+      cloud.lastSyncAt = latest || new Date().toISOString();
+      persistCloud();
+      return entries.length;
+    }
+    async function cloudDownload() {
+      const rows = await cloudFetch(`/rest/v1/app_data?organization_id=eq.${cloud.org.id}&select=key,value,updated_at`);
+      const entries = rows.filter((row) => /^stugliv-[a-z0-9-]+$/.test(row.key) && !CLOUD_EXCLUDED.includes(row.key) && typeof row.value === 'string');
+      if (!entries.length) throw new Error('In der Cloud liegen noch keine Husora-Daten.');
+      const previous = storageUsage().keys.filter((key) => !CLOUD_EXCLUDED.includes(key)).map((key) => [key, localStorage.getItem(key)]);
+      cloudApplying = true;
+      try {
+        previous.forEach(([key]) => localStorage.removeItem(key));
+        entries.forEach((row) => localStorage.setItem(row.key, row.value));
+      } catch (error) {
+        previous.forEach(([key, value]) => { try { localStorage.setItem(key, value); } catch (inner) { /* bestmöglich zurücksetzen */ } });
+        throw new Error('Die Cloud-Daten sind zu groß für den Speicher dieses Geräts – es wurde nichts geändert.');
+      } finally {
+        cloudApplying = false;
+      }
+      cloud.lastSyncAt = entries.reduce((max, row) => (cloudTime(row.updated_at) > cloudTime(max) ? row.updated_at : max), '');
+      cloudDirty.clear();
+      persistCloud();
+      sessionStorage.setItem('husora-cloud-loaded', String(entries.length));
+      location.reload();
+    }
+
+    // Automatischer Abgleich: jede Änderung an "stugliv-…" wird nach kurzer Pause hochgeladen
+    const nativeSetItem = Storage.prototype.setItem;
+    const nativeRemoveItem = Storage.prototype.removeItem;
+    Storage.prototype.setItem = function setItem(key, value) {
+      nativeSetItem.call(this, key, value);
+      if (this === window.localStorage) cloudNoteChange(key);
+    };
+    Storage.prototype.removeItem = function removeItem(key) {
+      nativeRemoveItem.call(this, key);
+      if (this === window.localStorage) cloudNoteChange(key);
+    };
+    function cloudNoteChange(key) {
+      if (cloudApplying || !cloud.autoSync || !cloud.lastSyncAt || !cloudCanWrite()) return;
+      if (typeof key !== 'string' || !/^stugliv-[a-z0-9-]+$/.test(key) || CLOUD_EXCLUDED.includes(key)) return;
+      cloudDirty.add(key);
+      clearTimeout(cloudTimer);
+      cloudTimer = setTimeout(cloudFlush, 4000);
+      updateCloudStatusLine();
+    }
+    async function cloudFlush() {
+      clearTimeout(cloudTimer);
+      if (!cloudDirty.size || !cloudCanWrite()) return;
+      if (cloudState.busy) { cloudTimer = setTimeout(cloudFlush, 3000); return; }
+      if (cloudState.remoteNewer) { updateCloudStatusLine(); return; }
+      const keys = new Set(cloudDirty);
+      cloudDirty.clear();
+      cloudState.busy = 'sync';
+      updateCloudStatusLine();
+      try {
+        await cloudUpload({ full: false, keys });
+        cloudState.error = '';
+      } catch (error) {
+        keys.forEach((key) => cloudDirty.add(key));
+        cloudState.error = error instanceof TypeError ? 'Offline – Änderungen werden hochgeladen, sobald wieder eine Verbindung besteht.' : error.message;
+        cloudTimer = setTimeout(cloudFlush, 60 * 1000);
+      } finally {
+        cloudState.busy = '';
+        updateCloudStatusLine();
+      }
+    }
+    function cloudStatusText() {
+      if (!cloudReady()) return '';
+      if (cloudState.busy === 'sync') return 'Wird synchronisiert …';
+      if (cloudState.error) return cloudState.error;
+      if (cloudState.remoteNewer) return 'Auf einem anderen Gerät wurde etwas geändert – lade die Cloud-Daten, bevor du hier weiterarbeitest.';
+      if (!cloud.lastSyncAt) return 'Noch kein Abgleich mit diesem Gerät.';
+      if (cloudDirty.size) return `${cloudDirty.size} Änderung${cloudDirty.size === 1 ? '' : 'en'} warten auf Upload …`;
+      return `Synchronisiert · ${fmtDateTime(cloud.lastSyncAt)}`;
+    }
+    function updateCloudStatusLine() {
+      const line = document.querySelector('[data-cloud-status]');
+      if (!line) return;
+      line.textContent = cloudStatusText();
+      line.className = `cloud-status ${cloudState.error || cloudState.remoteNewer ? 'warn' : cloudDirty.size || cloudState.busy ? 'pending' : 'ok'}`;
+    }
+    async function cloudRun(label, task) {
+      if (cloudState.busy) return;
+      cloudState.busy = label;
+      cloudState.error = '';
+      cloudState.notice = '';
+      rerenderCloud();
+      try {
+        await task();
+      } catch (error) {
+        cloudState.error = error instanceof TypeError ? 'Keine Verbindung zu Supabase – Internetverbindung und Projekt-URL prüfen.' : error.message;
+      } finally {
+        cloudState.busy = '';
+        rerenderCloud();
+      }
+    }
+    function rerenderCloud() {
+      if (currentPage !== 'settings') return;
+      const scroll = window.scrollY;
+      render();
+      window.scrollTo(0, scroll);
+    }
+
+    function cloudCardHtml() {
+      const head = `<div class="settings-card-head"><span class="settings-icon">${icon('cloud')}</span><div><h2 class="card-title">Cloud-Speicher (Supabase)</h2><p class="card-caption">Alle Husora-Daten in deinem eigenen Supabase-Projekt – als Sicherung und zum Abgleich zwischen Handy, Tablet und Computer.</p></div></div>`;
+      const busy = (label) => cloudState.busy === label;
+      const messages = `${cloudState.error ? `<p class="cloud-message error" role="alert">${icon('alert')}<span>${escapeHtml(cloudState.error)}</span></p>` : ''}${cloudState.notice ? `<p class="cloud-message">${icon('check')}<span>${escapeHtml(cloudState.notice)}</span></p>` : ''}`;
+      if (!cloudConnected()) {
+        return `<section class="card settings-card cloud-card" id="settings-cloud">${head}
+          <form class="cloud-form" data-cloud-form="connect" autocomplete="off">
+            <label><span class="form-label">Projekt-URL</span><input class="form-control" name="url" type="url" inputmode="url" spellcheck="false" placeholder="https://abcd1234.supabase.co" required></label>
+            <label><span class="form-label">Öffentlicher Schlüssel (anon / publishable)</span><input class="form-control" name="key" type="text" spellcheck="false" autocapitalize="off" placeholder="eyJhbGciOi… oder sb_publishable_…" required></label>
+            <div class="settings-actions"><button type="submit" class="primary-btn" ${cloudState.busy ? 'disabled' : ''}>${icon('cloud')} ${busy('connect') ? 'Verbinde …' : 'Mit Supabase verbinden'}</button></div>
+          </form>${messages}
+          <p class="settings-hint">Beides findest du im Supabase-Dashboard unter <strong>Project Settings → API</strong>. Den geheimen „service_role“-Schlüssel niemals hier eintragen. Vorher einmal die Husora-Datenbank einspielen: Datei <strong>supabase/husora_komplett.sql</strong> aus dem Repository im <strong>SQL Editor</strong> des Projekts ausführen.</p>
+        </section>`;
+      }
+      const host = escapeHtml(cloudBase().replace(/^https?:\/\//, ''));
+      if (!cloudReady()) {
+        return `<section class="card settings-card cloud-card" id="settings-cloud">${head}
+          <div class="cloud-project">${icon('check')}<span>Verbunden mit <strong>${host}</strong></span></div>
+          <form class="cloud-form" data-cloud-form="signin">
+            <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" autocomplete="username" inputmode="email" value="${escapeHtml(cloudState.draftEmail || profileData?.email || '')}" required></label>
+            <label><span class="form-label">Passwort</span><input class="form-control" name="password" type="password" autocomplete="current-password" minlength="6" required></label>
+            <div class="settings-actions"><button type="submit" class="primary-btn" ${cloudState.busy ? 'disabled' : ''}>${busy('signin') ? 'Melde an …' : 'Anmelden'}</button><button type="button" class="secondary-btn" data-cloud-action="signup" ${cloudState.busy ? 'disabled' : ''}>${busy('signup') ? 'Erstelle Konto …' : 'Neues Konto erstellen'}</button></div>
+          </form>${messages}
+          <div class="settings-danger"><div><strong>Verbindung trennen</strong><small>Entfernt Projekt-URL und Schlüssel von diesem Gerät. Die Daten in der Cloud bleiben erhalten.</small></div><button type="button" class="secondary-btn" data-cloud-action="disconnect">Trennen</button></div>
+        </section>`;
+      }
+      const summary = cloudState.summary;
+      const firstSync = !cloud.lastSyncAt;
+      const canWrite = cloudCanWrite();
+      const local = cloudLocalEntries();
+      const localBytes = local.reduce((sum, [key, value]) => sum + (key.length + value.length) * 2, 0);
+      return `<section class="card settings-card cloud-card" id="settings-cloud">${head}
+        <div class="cloud-account"><div><strong>${escapeHtml(cloud.session.email || 'Angemeldet')}</strong><small>${escapeHtml(cloud.org.name)} · ${escapeHtml({ admin: 'Admin', property_manager: 'Hausverwaltung', service_manager: 'Serviceleitung', owner: 'Eigentümer', viewer: 'Nur lesen' }[cloud.org.role] || cloud.org.role)} · ${host}</small></div><button type="button" class="text-btn" data-cloud-action="signout">Abmelden</button></div>
+        <div class="cloud-compare">
+          <div><span>Dieses Gerät</span><strong>${local.length} Bereiche</strong><small>${formatBytes(localBytes)}</small></div>
+          <div><span>Cloud</span><strong>${summary ? `${summary.count} Bereiche` : '–'}</strong><small>${summary?.count ? `${formatBytes(summary.bytes)} · ${escapeHtml(fmtDateTime(summary.updatedAt))}${summary.fromThisDevice ? '' : ' · anderes Gerät'}` : 'noch leer'}</small></div>
+        </div>
+        <p class="cloud-status ${cloudState.error || cloudState.remoteNewer ? 'warn' : cloudDirty.size || cloudState.busy ? 'pending' : 'ok'}" data-cloud-status aria-live="polite">${escapeHtml(cloudStatusText())}</p>
+        ${firstSync ? `<p class="cloud-message">${icon('alert')}<span>${summary?.count ? 'Erster Abgleich: Lege fest, welcher Stand gilt – die Daten dieses Geräts oder die aus der Cloud.' : 'Lade jetzt alle Daten dieses Geräts in die Cloud.'}</span></p>` : ''}
+        <div class="settings-actions">
+          ${canWrite ? `<button type="button" class="primary-btn" data-cloud-action="upload" ${cloudState.busy ? 'disabled' : ''}>${icon('cloud')} ${busy('upload') ? 'Lade hoch …' : 'Alles hochladen'}</button>` : ''}
+          <button type="button" class="${canWrite ? 'secondary-btn' : 'primary-btn'}" data-cloud-action="download" ${cloudState.busy || !summary?.count ? 'disabled' : ''}>${busy('download') ? 'Lade …' : 'Aus der Cloud laden'}</button>
+          <button type="button" class="secondary-btn" data-cloud-action="refresh" ${cloudState.busy ? 'disabled' : ''}>${busy('refresh') ? 'Prüfe …' : 'Status prüfen'}</button>
+        </div>${messages}
+        ${canWrite ? `<label class="settings-switch"><span><strong>Automatisch synchronisieren</strong><small>Jede Änderung wird nach wenigen Sekunden hochgeladen.${firstSync ? ' Startet nach dem ersten Abgleich.' : ''}</small></span><span class="switch"><input type="checkbox" data-cloud-auto ${cloud.autoSync ? 'checked' : ''}><span class="switch-track"></span></span></label>` : '<p class="settings-hint">Deine Rolle in dieser Organisation erlaubt nur das Lesen der Cloud-Daten.</p>'}
+        ${summary?.projections?.length ? `<p class="settings-hint">In der Datenbank übernommen: ${summary.projections.map(escapeHtml).join(' · ')}</p>` : ''}
+        <p class="settings-hint">Gespeichert werden alle Bereiche – Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Dokumente und Einstellungen. Ferienhäuser, Buchungen und Aufgaben stehen zusätzlich in den Husora-Tabellen für Auswertungen und Partnerzugänge.</p>
+      </section>`;
+    }
+
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-cloud-form]');
+      if (!form) return;
+      event.preventDefault();
+      const values = Object.fromEntries(new FormData(form));
+      if (form.dataset.cloudForm === 'connect') cloudRun('connect', () => cloudConnect(values.url, values.key));
+      if (form.dataset.cloudForm === 'signin') { cloudState.draftEmail = values.email; cloudRun('signin', () => cloudSignIn(values.email, values.password)); }
+    });
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-cloud-action]');
+      if (!button) return;
+      const action = button.dataset.cloudAction;
+      if (action === 'signup') {
+        const form = button.closest('form');
+        if (!form.reportValidity()) return;
+        const values = Object.fromEntries(new FormData(form));
+        cloudState.draftEmail = values.email;
+        cloudRun('signup', () => cloudSignUp(values.email, values.password));
+      }
+      if (action === 'signout') { cloudSignOut(); cloudState.notice = 'Abgemeldet. Die Daten auf diesem Gerät bleiben erhalten.'; rerenderCloud(); }
+      if (action === 'disconnect' && window.confirm('Verbindung zu Supabase von diesem Gerät entfernen? Die Daten in der Cloud bleiben erhalten.')) { cloudDisconnect(); cloudState.notice = ''; rerenderCloud(); }
+      if (action === 'refresh') cloudRun('refresh', async () => { await cloudLoadOrg(); await cloudLoadSummary(); });
+      if (action === 'upload') {
+        cloudRun('upload', async () => {
+          await cloudLoadSummary();
+          const summary = cloudState.summary;
+          if (summary?.count && !summary.fromThisDevice && !window.confirm(`In der Cloud liegen Daten von einem anderen Gerät (Stand ${fmtDateTime(summary.updatedAt)}). Beim Hochladen werden sie durch die Daten dieses Geräts ersetzt. Fortfahren?`)) return;
+          const count = await cloudUpload({ full: true });
+          await cloudLoadSummary();
+          cloudState.notice = `${count} Bereiche hochgeladen – deine komplette Husora-Datenbank liegt jetzt in der Cloud.`;
+        });
+      }
+      if (action === 'download') {
+        if (!window.confirm('Daten aus der Cloud auf dieses Gerät laden? Die aktuellen Daten auf diesem Gerät werden dabei ersetzt. Tipp: Vorher unter „Datensicherung“ eine Sicherungsdatei erstellen.')) return;
+        cloudRun('download', cloudDownload);
+      }
+    });
+    document.addEventListener('change', (event) => {
+      if (!event.target.matches('[data-cloud-auto]')) return;
+      cloud.autoSync = event.target.checked;
+      persistCloud();
+      if (cloud.autoSync) cloudFlush();
+      updateCloudStatusLine();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && cloudDirty.size) cloudFlush(); });
+    window.addEventListener('online', () => { if (cloudDirty.size) cloudFlush(); });
+    // Beim Start: Stand der Cloud prüfen
+    if (cloudReady()) {
+      cloudLoadSummary().then(() => {
+        if (cloudState.remoteNewer) showToast('Neuere Daten in der Cloud – unter Einstellungen → Daten & App laden.');
+        updateCloudStatusLine();
+        if (currentPage === 'settings' && !cloudState.busy) rerenderCloud();
+      }).catch((error) => { cloudState.error = error instanceof TypeError ? 'Offline – Cloud derzeit nicht erreichbar.' : error.message; updateCloudStatusLine(); });
+    }
+    if (sessionStorage.getItem('husora-cloud-loaded')) {
+      const loaded = sessionStorage.getItem('husora-cloud-loaded');
+      sessionStorage.removeItem('husora-cloud-loaded');
+      setTimeout(() => showToast(`${loaded} Bereiche aus der Cloud geladen.`), 300);
+    }
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
     if (isEuro()) refreshFxRate();
