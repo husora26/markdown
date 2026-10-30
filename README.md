@@ -19,3 +19,14 @@ python3 -m http.server 8080
 ```
 
 Alle Daten werden im Browser gespeichert (localStorage). Unter Einstellungen → Datensicherung lassen sie sich als Datei sichern und wiederherstellen.
+
+## Datenbank (Supabase)
+
+Unter [`supabase/`](supabase/README.md) liegt die komplette PostgreSQL-Datenbank für den Mehrbenutzerbetrieb:
+
+- Migrationen mit Fremdschlüsseln, Indizes und Row Level Security
+- Storage-Buckets
+- Automatisierung, Partner-Ranking und Webhooks
+- Seed-Daten und ein RLS-Test
+
+Installation, Konfiguration und Tests beschreibt [`supabase/README.md`](supabase/README.md).

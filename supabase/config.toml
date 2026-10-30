@@ -1,0 +1,46 @@
+# Supabase CLI – lokale Entwicklungsumgebung für Husora
+# Vollständige Referenz: https://supabase.com/docs/guides/local-development/cli/config
+
+project_id = "husora"
+
+[api]
+enabled = true
+port = 54321
+# "private" wird bewusst NICHT veröffentlicht (RLS-Hilfsfunktionen)
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:8080"
+additional_redirect_urls = ["http://localhost:8080", "https://husora26.github.io/markdown/"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
