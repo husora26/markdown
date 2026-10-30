@@ -2261,7 +2261,7 @@
     .ob-roles small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
     /* Partner-Portal */
     body.pp-active { overflow: hidden; }
-    .pp { position: fixed; inset: 0; z-index: 900; display: flex; flex-direction: column; background: var(--canvas); color: var(--ink); }
+    .pp { position: fixed; inset: 0; z-index: 900; display: flex; flex-direction: column; height: 100vh; height: 100dvh; background: var(--canvas); color: var(--ink); }
     .pp[hidden] { display: none; }
     .pp-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) 16px 10px; border-bottom: 1px solid var(--line); background: var(--green-dark); color: #fff; }
     .pp-brand { display: flex; gap: 10px; align-items: center; min-width: 0; }
@@ -2273,7 +2273,8 @@
     .pp-top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
     .pp-icon-btn, .pp-switch { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border: 1px solid rgba(255, 255, 255, .28); border-radius: 18px; background: transparent; color: #fff; font-size: 12.5px; font-weight: 650; cursor: pointer; }
     .pp-icon-btn svg, .pp-switch svg { width: 16px; height: 16px; }
-    .pp-main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 16px 24px; }
+    .pp-main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 16px calc(40px + env(safe-area-inset-bottom)); }
+    .pp-main::after { content: ''; display: block; height: 1px; }
     .pp-main > * { max-width: 760px; margin-left: auto; margin-right: auto; }
     .pp-nav { display: flex; gap: 2px; overflow-x: auto; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); scrollbar-width: none; }
     .pp-nav::-webkit-scrollbar { display: none; }
@@ -2299,7 +2300,9 @@
     .pp-actions .primary-btn, .pp-actions .secondary-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; flex: 1 1 auto; }
     .pp-actions .big { min-height: 52px; font-size: 15px; }
     .pp-actions svg { width: 16px; height: 16px; }
-    .pp-actions.sticky { position: sticky; bottom: 0; padding: 10px 0; background: var(--canvas); }
+    .pp-actions.sticky { position: sticky; bottom: calc(-40px - env(safe-area-inset-bottom)); z-index: 2; margin: 12px -14px -14px; padding: 12px 14px calc(12px + 40px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); border-radius: 0 0 14px 14px; background: var(--paper); box-shadow: 0 -8px 18px rgba(35, 48, 39, .06); }
+    .pp-actions.sticky .primary-btn { min-height: 50px; font-size: 15px; }
+    .pp-actions.sticky.flat { margin: 12px 0 0; padding-left: 0; padding-right: 0; background: var(--canvas); border-radius: 0; box-shadow: none; }
     .pp-file { cursor: pointer; }
     .pp-hint { margin: 10px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.55; }
     .pp-muted { margin: 4px 0; color: var(--muted); font-size: 13px; }
@@ -2397,8 +2400,8 @@
     .pp-check.warning.on { border-color: var(--amber); background: var(--amber); color: #fff; }
     .pp-check.defect.on { border-color: var(--red); background: var(--red); color: #fff; }
     .pp-check.not_applicable.on { border-color: var(--muted); background: var(--muted); color: #fff; }
-    .pp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .pp-chip { display: inline-flex; }
+    .pp-chips { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; }
+    .pp-chip { position: relative; display: inline-flex; align-items: center; }
     .pp-chip input { position: absolute; opacity: 0; pointer-events: none; }
     .pp-chip span { padding: 8px 12px; border: 1px solid var(--line); border-radius: 18px; background: #fff; font-size: 13px; cursor: pointer; }
     .pp-chip input:checked + span { border-color: var(--green); background: var(--green); color: #fff; }
@@ -3244,6 +3247,8 @@
   
   
   
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3785,6 +3790,7 @@ html.dark .pp-top { background: var(--green-solid-dark); }
 html.dark .pp-logo { background: rgba(255, 255, 255, 0.02); }
 html.dark .pp-icon-btn, html.dark .pp-switch { border: 1px solid rgba(255, 255, 255, 0.05); }
 html.dark .pp-dot { background: var(--red-solid); }
+html.dark .pp-actions.sticky { box-shadow: 0 -8px 18px rgba(0, 0, 0, 0.18); }
 html.dark .pp-tile.amber { border-color: #5d503a; }
 html.dark .pp-tile.red { border-color: #563c38; }
 html.dark .pp-badge.amber { color: #dcc7a6; }
@@ -15596,6 +15602,17 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ppRender();
       }
     }
+    // Schnelle Eingaben (Checkliste, Notizen) nacheinander speichern; bei Fehler einmal wiederholen
+    let ppSaveChain = Promise.resolve();
+    function ppQueueSave(task, onFail) {
+      ppSaveChain = ppSaveChain.then(async () => {
+        try { await task(); } catch (first) {
+          await new Promise((resolve) => setTimeout(resolve, 1200));
+          try { await task(); } catch (error) { console.error('Partner-Portal: Speichern fehlgeschlagen', error); onFail?.(error); }
+        }
+      });
+      return ppSaveChain;
+    }
     const ppPatch = (table, id, body) => cloudFetch(`/rest/v1/${table}?id=eq.${id}`, { method: 'PATCH', body, headers: { Prefer: 'return=minimal' } });
     const ppInsert = (table, body) => cloudFetch(`/rest/v1/${table}`, { method: 'POST', body, headers: { Prefer: 'return=representation' } });
     const ppRpc = (name, body) => cloudFetch(`/rest/v1/rpc/${name}`, { method: 'POST', body });
@@ -15705,7 +15722,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <span class="form-label" style="margin-top:12px;display:block">Angebotene Leistungen</span>
           <div class="pp-chips">${(types.length ? types : PP_DEFAULT_TYPES).map((t) => `<label class="pp-chip"><input type="checkbox" name="services" value="${escapeHtml(t.code)}" ${['inspection', 'holiday_home_inspection'].includes(t.code) ? 'checked' : ''}><span>${escapeHtml(t.name)}</span></label>`).join('')}</div>
           <p class="pp-hint">Bankverbindung, Rechnungsadresse und Öffnungszeiten ergänzt du später unter Mehr → Firma. Fünf Kontrollvorlagen (Standard, Ferienhaus, Übergabe, Winter, Technik) werden automatisch angelegt.</p>
-          <div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('company') ? 'Lege an …' : 'Betrieb anlegen'}</button></div></form>`;
+          <div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${icon('check')} ${ppBusy('company') ? 'Lege an …' : 'Betrieb anlegen und starten'}</button></div></form>`;
     }
     const PP_DEFAULT_TYPES = [['inspection', 'Hauskontrolle'], ['holiday_home_inspection', 'Ferienhauskontrolle'], ['cleaning', 'Reinigung'], ['gardening', 'Gartenpflege'], ['snow_removal', 'Winterdienst'], ['repair', 'Reparatur'], ['plumbing', 'Sanitär'], ['heating', 'Heizung'], ['electrician', 'Elektro'], ['roofing', 'Dach'], ['facade', 'Fassade'], ['windows', 'Fenster'], ['key_service', 'Schlüsselservice'], ['general_maintenance', 'Technische Wartung']].map(([code, name]) => ({ code, name }));
 
@@ -15934,7 +15951,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return `${ppBack()}<div class="pp-page-head"><h1>Leistungen</h1></div><p class="pp-muted">Diese Leistungen und Preise nutzt Husora, um dich Hausbesitzern in deiner Region passend vorzuschlagen.</p>
         <form class="pp-form" data-pp-form="services">${types.map((t) => { const s = services.find((x) => x.service_type_id === t.id); return `<div class="pp-card pp-service ${s?.active ? 'on' : ''}"><label class="pp-service-head"><input type="checkbox" name="type:${t.id}" ${s?.active ? 'checked' : ''} ${ppIsLead() ? '' : 'disabled'}><strong>${escapeHtml(t.name)}</strong></label>
           <div class="pp-grid three"><label><span class="form-label">ab</span><input class="form-control" type="number" min="0" step="1" name="from:${t.id}" value="${s?.price_from ?? ''}" ${ppIsLead() ? '' : 'disabled'}></label><label><span class="form-label">bis</span><input class="form-control" type="number" min="0" step="1" name="to:${t.id}" value="${s?.price_to ?? ''}" ${ppIsLead() ? '' : 'disabled'}></label><label><span class="form-label">je</span><select class="form-control" name="unit:${t.id}" ${ppIsLead() ? '' : 'disabled'}>${[['hour', 'Stunde'], ['job', 'Auftrag'], ['visit', 'Besuch'], ['m2', 'm²'], ['month', 'Monat'], ['year', 'Jahr']].map(([v, l]) => `<option value="${v}" ${s?.price_unit === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label></div></div>`; }).join('')}
-        ${ppIsLead() ? `<div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('services') ? 'Speichere …' : 'Leistungen speichern'}</button></div>` : ''}</form>`;
+        ${ppIsLead() ? `<div class="pp-actions sticky flat"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('services') ? 'Speichere …' : 'Leistungen speichern'}</button></div>` : ''}</form>`;
     }
     function ppTeamHtml() {
       const members = ppD('members');
@@ -15954,7 +15971,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ${f('bank_name', 'Bank')}${f('iban', 'IBAN')}${f('bic', 'BIC')}${f('service_radius_km', 'Einsatzradius (km)', 'number')}
         <label class="full"><span class="form-label">Öffnungszeiten</span><input class="form-control" name="business_hours" value="${escapeHtml(o.business_hours?.text || '')}" placeholder="Mo–Fr 7–17 Uhr, Notdienst rund um die Uhr" ${ppIsAdmin() ? '' : 'disabled'}></label>
         <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="3" ${ppIsAdmin() ? '' : 'disabled'}>${escapeHtml(o.description || '')}</textarea></label>
-        </div>${ppIsAdmin() ? `<div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>Speichern</button></div>` : '<p class="pp-hint">Nur Admins können die Firmendaten ändern.</p>'}</form>`;
+        </div>${ppIsAdmin() ? `<div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${icon('check')} Firmendaten speichern</button></div>` : '<p class="pp-hint">Nur Admins können die Firmendaten ändern.</p>'}</form>`;
     }
 
     // Prüfbericht als PDF (mehrseitig, A4) – wird beim Abschluss beim Kunden abgelegt
@@ -16034,10 +16051,16 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const inspection = ppD('inspections').find((i) => (i.items || []).some((x) => x.id === check.dataset.ppCheck));
         const item = inspection?.items.find((x) => x.id === check.dataset.ppCheck);
         if (!item) return;
+        const previous = item.status;
         const status = item.status === check.dataset.status ? 'not_checked' : check.dataset.status;
         item.status = status; item.checked_at = status === 'not_checked' ? null : new Date().toISOString();
         pp.keepScroll = true; ppRender(); ppSaveCache();
-        ppPatch('inspection_items', item.id, { status }).then(() => { if (inspection.status === 'scheduled') { inspection.status = 'in_progress'; return ppPatch('inspections', inspection.id, { status: 'in_progress' }).then(() => { pp.keepScroll = true; ppRender(); }); } return null; }).catch((error) => { pp.error = error.message; pp.keepScroll = true; ppRender(); });
+        const startInspection = inspection.status === 'scheduled';
+        if (startInspection) inspection.status = 'in_progress';
+        ppQueueSave(async () => {
+          await ppPatch('inspection_items', item.id, { status });
+          if (startInspection) await ppPatch('inspections', inspection.id, { status: 'in_progress' });
+        }, () => { item.status = previous; if (startInspection) inspection.status = 'scheduled'; pp.error = `„${item.name}“ konnte nicht gespeichert werden – bitte erneut antippen.`; pp.keepScroll = true; ppRender(); ppSaveCache(); });
         return;
       }
       const action = event.target.closest('[data-pp-action]');
@@ -16093,6 +16116,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const overall = items.some((x) => x.status === 'defect') ? 'critical' : items.some((x) => x.status === 'warning') ? 'warning' : 'ok';
         const summary = ppField('summary');
         ppRun('inspection', async () => {
+          await ppSaveChain;
           await ppPatch('inspections', id, { status: 'completed', overall_status: overall, notes: summary || i.notes });
           const pdf = ppInspectionReportPdf({ ...i, status: 'completed', notes: summary || i.notes, completed_at: new Date().toISOString() });
           if (pdf) {
@@ -16135,9 +16159,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const role = event.target.closest('[data-pp-role]');
       if (role) { ppRun('role', () => ppPatch('organization_members', role.dataset.ppRole, { role: role.value }), { notice: 'Rolle geändert.' }); return; }
       const note = event.target.closest('[data-pp-note]');
-      if (note) { const item = ppD('inspections').flatMap((i) => i.items || []).find((x) => x.id === note.dataset.ppNote); if (item) item.notes = note.value; ppPatch('inspection_items', note.dataset.ppNote, { notes: note.value || null }).catch((error) => showToast(error.message)); ppSaveCache(); return; }
+      if (note) { const item = ppD('inspections').flatMap((i) => i.items || []).find((x) => x.id === note.dataset.ppNote); if (item) item.notes = note.value; const value = note.value || null; ppQueueSave(() => ppPatch('inspection_items', note.dataset.ppNote, { notes: value }), () => showToast('Notiz konnte nicht gespeichert werden – bitte erneut eingeben.')); ppSaveCache(); return; }
       const cost = event.target.closest('[data-pp-cost]');
-      if (cost) { ppPatch('inspection_items', cost.dataset.ppCost, { estimated_cost: cost.value === '' ? null : Number(cost.value) }).catch((error) => showToast(error.message)); }
+      if (cost) { const item = ppD('inspections').flatMap((i) => i.items || []).find((x) => x.id === cost.dataset.ppCost); const value = cost.value === '' ? null : Number(cost.value); if (item) item.estimated_cost = value; ppQueueSave(() => ppPatch('inspection_items', cost.dataset.ppCost, { estimated_cost: value }), () => showToast('Kosten konnten nicht gespeichert werden.')); ppSaveCache(); }
     });
     document.addEventListener('submit', (event) => {
       const form = event.target.closest('#partner-portal [data-pp-form]');
