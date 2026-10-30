@@ -2498,6 +2498,35 @@
     .hub-quick button { min-height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 17px; background: #fff; color: var(--ink); font-size: 12.5px; cursor: pointer; }
     .hub-login { max-width: 640px; }
     .pp-item .hub-avatar { width: 36px; height: 36px; font-size: 15px; }
+    /* Eigene Servicepartner */
+    .custom-provider-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+    .custom-provider-bar .primary-btn, .custom-provider-bar .secondary-btn, .welcome-actions .secondary-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; }
+    .custom-provider-bar svg, .welcome-actions .secondary-btn svg { width: 16px; height: 16px; }
+    .custom-provider-empty strong { display: block; }
+    .custom-provider-empty p { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+    .custom-provider-tag { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 10px; background: var(--amber-soft); color: #87622b; font-size: 11.5px; font-weight: 700; }
+    .custom-provider-edit { padding: 2px 4px; font-size: 12.5px; }
+    .custom-provider-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 6px 0; color: var(--muted); font-size: 13px; }
+    .custom-provider-meta span { display: inline-flex; align-items: center; gap: 5px; }
+    .custom-provider-meta svg { width: 14px; height: 14px; }
+    .custom-provider-meta .text-btn { display: inline-flex; align-items: center; gap: 4px; padding: 2px 0; font-size: 13px; }
+    .custom-provider-notes { flex-basis: 100%; font-style: italic; }
+    .custom-provider-form { width: min(560px, 100%); max-height: 92vh; max-height: 92dvh; overflow-y: auto; }
+    .custom-provider-form .card-caption { margin: 4px 0 0; }
+    .custom-provider-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .custom-provider-grid label { display: block; }
+    .custom-provider-grid .full { grid-column: 1 / -1; }
+    @media (max-width: 480px) { .custom-provider-grid { grid-template-columns: 1fr; } }
+    .custom-provider-houses { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 14px 0 0; padding: 0; border: 0; }
+    .custom-provider-houses legend { margin-bottom: 6px; }
+    .custom-provider-check { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; cursor: pointer; }
+    .custom-provider-check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--green); }
+    .custom-provider-check.invite { margin-top: 14px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--green-soft); }
+    .custom-provider-check small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+    .custom-provider-error { margin: 12px 0 0; padding: 9px 12px; border-radius: 10px; background: var(--red-soft); color: var(--red); font-size: 13px; }
+    .custom-provider-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
+    .custom-provider-actions > span { flex: 1; }
+    .custom-provider-actions .danger { color: var(--red); border-color: #e8c4bf; }
     .settings-hint { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
     .settings-danger { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
     .settings-danger strong { display: block; font-size: 13px; }
@@ -3307,6 +3336,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3876,6 +3906,9 @@ html.dark .hub-code { border: 1px dashed #495348; }
 html.dark .hub-conv.unread { border-color: #635842; }
 html.dark .hub-avatar { background: var(--green-solid); }
 html.dark .hub-quick button { background: #1c1c1c; }
+html.dark .custom-provider-tag { color: #dcc7a6; }
+html.dark .custom-provider-check input { accent-color: var(--green-solid); }
+html.dark .custom-provider-actions .danger { border-color: #553d3a; }
 html.dark .settings-danger .danger { border-color: #553d3a; }
 html.dark .settings-links button { background: #1c1c1c; color: var(--ink, #dae2dc); }
 html.dark .settings-links button:hover { background: #26251e; }
@@ -4691,6 +4724,16 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const initials = provider.name.split(/\s+/).slice(0, 2).map((word) => word[0]).join('').toLocaleUpperCase('sv');
       providers.push({ ...provider, initials, distances: {} });
     });
+    // Eigene, selbst angelegte Servicepartner (werden wie Verzeichnis-Partner überall angeboten)
+    const CUSTOM_PROVIDERS_KEY = 'stugliv-custom-providers';
+    const CUSTOM_PROVIDER_FIELDS = ['id', 'name', 'category', 'services', 'specialty', 'contact', 'phone', 'email', 'website', 'town', 'notes', 'createdAt'];
+    const providerInitials = (name) => String(name || '?').trim().split(/\s+/).filter((word) => /[\p{L}\d]/u.test(word)).slice(0, 2).map((word) => [...word][0]).join('').toLocaleUpperCase('sv') || '?';
+    let customProviders = [];
+    try {
+      const saved = JSON.parse(localStorage.getItem(CUSTOM_PROVIDERS_KEY) || '[]');
+      if (Array.isArray(saved)) customProviders = saved.filter((provider) => provider && typeof provider.id === 'string' && provider.id.startsWith('custom-') && typeof provider.name === 'string' && provider.name.trim());
+    } catch (error) { console.error('Eigene Servicepartner konnten nicht geladen werden:', error); }
+    customProviders.forEach((provider) => providers.push({ ...provider, custom: true, initials: providerInitials(provider.name), distances: {} }));
     const LOCALITIES = {
       mora: [61.007, 14.544], orsa: [61.121, 14.617], 'rättvik': [60.887, 15.113], leksand: [60.735, 14.998], 'tällberg': [60.838, 14.990],
       siljansnäs: [60.80, 14.68], falun: [60.607, 15.627], 'borlänge': [60.485, 15.436], 'sälen': [61.16, 13.26], 'säter': [60.346, 15.756],
@@ -7083,8 +7126,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ].filter(Boolean).join('');
         const uploadButton = `<label class="ap-upload">${icon('plus')} Dokument<input type="file" data-provider-document-upload="${escapeHtml(provider.id)}" data-provider-property="${escapeHtml(property.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label>`;
         return `<article class="card assigned-provider-card ap-card cat-${escapeHtml(provider.category)}">
-          <div class="ap-head"><div class="provider-avatar">${escapeHtml(provider.initials)}</div><div class="ap-title"><h3>${escapeHtml(provider.name)}</h3><div class="ap-tags"><span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${partnerCategoryLabel(provider)}</span>${provider.specialty ? `<span class="ap-specialty">${escapeHtml(provider.specialty)}</span>` : ''}</div></div></div>
+          <div class="ap-head"><div class="provider-avatar">${escapeHtml(provider.initials)}</div><div class="ap-title"><h3>${escapeHtml(provider.name)}</h3><div class="ap-tags">${provider.custom ? '<span class="custom-provider-tag">Eigener Partner</span>' : ''}<span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${partnerCategoryLabel(provider)}</span>${provider.specialty ? `<span class="ap-specialty">${escapeHtml(provider.specialty)}</span>` : ''}</div></div></div>
           ${provider.services ? `<p class="ap-services">${escapeHtml(provider.services)}</p>` : ''}
+          ${provider.custom ? `<div class="custom-provider-meta">${provider.contact ? `<span>${icon('users')} ${escapeHtml(provider.contact)}</span>` : ''}${provider.notes ? `<span class="custom-provider-notes">${escapeHtml(provider.notes)}</span>` : ''}<button type="button" class="text-btn" data-custom-provider-edit="${escapeHtml(provider.id)}">${icon('edit')} Bearbeiten</button></div>` : ''}
           <div class="ap-meta"><span>${escapeHtml(provider.town || '')}${Number.isFinite(distance) ? ` · ${distance} km` : ''}</span>${contacts ? `<span class="ap-contacts">${contacts}</span>` : ''}</div>
           <button type="button" class="ap-tasks ${openTasks.length ? 'has-open' : ''}" data-partner-tasks="${escapeHtml(provider.id)}"><span>${icon('task')} ${openTasks.length ? `${openTasks.length} offene ${openTasks.length === 1 ? 'Aufgabe' : 'Aufgaben'}${overdueTasks ? ` · <em>${overdueTasks} überfällig</em>` : ''}` : 'Keine offenen Aufgaben'}</span><span class="ap-tasks-action">${openTasks.length ? 'Ansehen' : 'Aufgaben zuordnen'} →</span></button>
           ${controlInfo}
@@ -7093,7 +7137,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>Zugeordnete Servicepartner</h1><p class="subtitle">Dokumente je Servicepartner verwalten.</p></div><button class="primary-btn" data-action="open-provider-search" data-property="${escapeHtml(property.id)}">Servicepartner finden</button></div>
         <section class="assigned-house-bar"><div class="assigned-house-name"><span>Ferienhaus</span><strong>${escapeHtml(property.name)}</strong>${property.address ? `<small>${escapeHtml(property.address)}</small>` : ''}</div>
           ${`<label class="assigned-house-switch"><span class="form-label">Ferienhaus wechseln</span><select id="assigned-property" class="filter-select" aria-label="Ferienhaus wechseln">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)}${item.region ? ` · ${escapeHtml(item.region)}` : ''}</option>`).join('')}</select></label>`}</section>
-        ${assignedPairs.length ? `<div class="assigned-provider-list ap-grid">${providerCards}</div>` : '<section class="card empty">Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.</section>'}`;
+        <div class="custom-provider-bar"><button type="button" class="primary-btn" data-custom-provider-new data-property="${escapeHtml(property.id)}">${icon('plus')} Eigenen Servicepartner anlegen</button><button type="button" class="secondary-btn" data-action="open-provider-search" data-property="${escapeHtml(property.id)}">${icon('search')} Im Verzeichnis suchen</button></div>
+        ${assignedPairs.length ? `<div class="assigned-provider-list ap-grid">${providerCards}</div>` : `<section class="card empty custom-provider-empty"><strong>Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.</strong><p>Wähle einen Betrieb aus dem Verzeichnis oder lege deinen eigenen Handwerker, Hausmeister oder Reinigungsservice an.</p></section>`}`;
     }
     // Hausdetailseite: einklappbare Karten, Bildansicht, wichtige Angaben und Kosten als Kacheln.
     let collapsedSections = new Set();
@@ -7273,8 +7318,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const matchesCategory = providerCategory === 'all' || provider.category === providerCategory || (providerCategory === 'house' && provider.category === 'inspection');
         const matchesFavorite = !onlyFavorites || favorites.includes(provider.id);
         const haystack = `${provider.name} ${provider.town} ${provider.specialty || ''} ${provider.services} ${provider.phone || ''} ${provider.email || ''}`.toLocaleLowerCase('de');
-        return Number.isFinite(distance) && distance <= providerRadius && matchesCategory && matchesFavorite && haystack.includes(providerSearch.toLocaleLowerCase('de'));
-      }).sort((a, b) => Number(favorites.includes(b.id)) - Number(favorites.includes(a.id)) || providerDistanceKm(a, property) - providerDistanceKm(b, property) || Number(b.priority === 'A') - Number(a.priority === 'A'));
+        return (provider.custom || (Number.isFinite(distance) && distance <= providerRadius)) && matchesCategory && matchesFavorite && haystack.includes(providerSearch.toLocaleLowerCase('de'));
+      }).sort((a, b) => Number(Boolean(b.custom)) - Number(Boolean(a.custom)) || Number(favorites.includes(b.id)) - Number(favorites.includes(a.id)) || providerDistanceKm(a, property) - providerDistanceKm(b, property) || Number(b.priority === 'A') - Number(a.priority === 'A'));
       const providerCards = matches.map((provider) => {
         const isFavorite = favorites.includes(provider.id);
         const isAssigned = (servicePartnerAssignments[property.id] || []).includes(provider.id);
@@ -7284,11 +7329,11 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             <button class="assign-provider-btn ${isAssigned ? 'selected' : ''}" data-action="toggle-provider-assignment" data-provider="${escapeHtml(provider.id)}" data-property="${escapeHtml(property.id)}" aria-label="${isAssigned ? 'Zuordnung für ' + escapeHtml(property.name) + ' entfernen' : 'Diesem Ferienhaus zuordnen'}" aria-pressed="${isAssigned}" title="${isAssigned ? 'Zugeordnet – Klick zum Entfernen' : 'Diesem Ferienhaus zuordnen'}">${icon('check')}</button>
             <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-favorite="${escapeHtml(provider.id)}" aria-label="${isFavorite ? 'Aus Favoriten entfernen' : 'Als Favorit speichern'}" aria-pressed="${isFavorite}" title="${isFavorite ? 'Aus Favoriten entfernen' : 'Als Favorit speichern'}"><svg viewBox="0 0 24 24" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.8"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/></svg></button>
           </div>
-          <div class="provider-details"><span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${categoryLabel}</span>${provider.specialty ? `<span class="provider-specialty">${escapeHtml(provider.specialty)}</span>` : ''}${properties.length > 1 ? properties.filter((item) => (servicePartnerAssignments[item.id] || []).includes(provider.id)).map((item) => `<span class="house-chip" title="Dieses Ferienhaus nutzt den Servicepartner">${icon('home')}${escapeHtml(item.name)}</span>`).join('') : ''}</div>
+          <div class="provider-details">${provider.custom ? `<span class="custom-provider-tag">Eigener Partner</span><button type="button" class="text-btn custom-provider-edit" data-custom-provider-edit="${escapeHtml(provider.id)}">Bearbeiten</button>` : ''}<span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${categoryLabel}</span>${provider.specialty ? `<span class="provider-specialty">${escapeHtml(provider.specialty)}</span>` : ''}${properties.length > 1 ? properties.filter((item) => (servicePartnerAssignments[item.id] || []).includes(provider.id)).map((item) => `<span class="house-chip" title="Dieses Ferienhaus nutzt den Servicepartner">${icon('home')}${escapeHtml(item.name)}</span>`).join('') : ''}</div>
           <div class="provider-result-footer"><div class="provider-contact-links">${providerContactLinks(provider)}</div><div class="provider-location-distance"><span class="provider-town">${escapeHtml(provider.town)}</span><span class="provider-distance">Entfernung ${providerDistanceKm(provider, property)} km</span></div></div>
         </article>`;
       }).join('');
-      return `<div class="welcome"><div><p class="eyebrow">Schwedische Betriebe vor Ort</p><h1>Servicepartner finden</h1><p class="subtitle">Hausservice und Sanierungsunternehmen im Umkreis ${singleHouse() ? 'deines Ferienhauses' : 'deiner Ferienhäuser'}.</p></div><div class="welcome-actions"><button type="button" class="primary-btn" data-action="open-partner-map">${icon('map')} Karte aller Standorte</button></div></div>
+      return `<div class="welcome"><div><p class="eyebrow">Schwedische Betriebe vor Ort</p><h1>Servicepartner finden</h1><p class="subtitle">Hausservice und Sanierungsunternehmen im Umkreis ${singleHouse() ? 'deines Ferienhauses' : 'deiner Ferienhäuser'}.</p></div><div class="welcome-actions"><button type="button" class="primary-btn" data-action="open-partner-map">${icon('map')} Karte aller Standorte</button><button type="button" class="secondary-btn" data-custom-provider-new data-property="${escapeHtml(property.id)}">${icon('plus')} Eigenen Servicepartner anlegen</button></div></div>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Betriebe im Umkreis von ${providerRadius} km</h2><p class="card-caption">${matches.length} passende Betriebe · nächstgelegene zuerst</p></div><button class="secondary-btn" data-action="toggle-favorites">${onlyFavorites ? 'Alle anzeigen' : `☆ Favoriten (${favorites.length})`}</button></div>
           <div class="provider-filters">
             ${singleHouse() ? '' : `<label><span class="form-label">Ferienhaus</span><select id="provider-property" class="filter-select" aria-label="Ferienhaus wählen">${properties.map((item) => `<option value="${item.id}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label>`}
@@ -15611,6 +15656,133 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       sessionStorage.removeItem('husora-cloud-loaded');
       setTimeout(() => showToast(`${loaded} aus der Cloud geladen.`), 300);
     }
+    // ===== Eigene Servicepartner anlegen, bearbeiten, löschen =====
+    const customProviderState = { editing: null, property: '' };
+    function persistCustomProviders() {
+      const list = providers.filter((provider) => provider.custom).map((provider) => Object.fromEntries(CUSTOM_PROVIDER_FIELDS.map((key) => [key, provider[key] ?? ''])));
+      try { localStorage.setItem(CUSTOM_PROVIDERS_KEY, JSON.stringify(list)); return true; } catch (error) { showToast('Speichern nicht möglich – Speicher voll?'); return false; }
+    }
+    function customProviderModal() {
+      let modal = document.getElementById('custom-provider-modal');
+      if (modal) return modal;
+      modal = document.createElement('div');
+      modal.className = 'modal-backdrop';
+      modal.id = 'custom-provider-modal';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('aria-labelledby', 'custom-provider-title');
+      document.body.appendChild(modal);
+      return modal;
+    }
+    function openCustomProvider(providerId, propertyId) {
+      const provider = providerId ? providers.find((item) => item.id === providerId && item.custom) : null;
+      customProviderState.editing = provider?.id || null;
+      customProviderState.property = propertyId || selectedPropertyId || properties[0]?.id || '';
+      const v = (key) => escapeHtml(provider?.[key] || '');
+      const assignedHouses = provider ? properties.filter((item) => (servicePartnerAssignments[item.id] || []).includes(provider.id)).map((item) => item.id) : [customProviderState.property];
+      const modal = customProviderModal();
+      modal.innerHTML = `<form class="modal custom-provider-form" id="custom-provider-form" novalidate>
+        <div class="modal-head"><div><h2 id="custom-provider-title">${provider ? 'Servicepartner bearbeiten' : 'Eigenen Servicepartner anlegen'}</h2><p class="card-caption">Für Betriebe, die nicht im Verzeichnis stehen – z. B. dein Handwerker vor Ort.</p></div><button class="close-btn" type="button" data-custom-provider-close aria-label="Schließen">✕</button></div>
+        <div class="custom-provider-grid">
+          <label class="full"><span class="form-label">Firmenname *</span><input class="form-control" name="name" required maxlength="120" value="${v('name')}" placeholder="z. B. Anderssons Bygg AB"></label>
+          <label><span class="form-label">Bereich</span><select class="form-control" name="category">${[['house', 'Hausservice'], ['inspection', 'Hauskontrolle'], ['renovation', 'Sanierung & Bau']].map(([id, label]) => `<option value="${id}" ${(provider?.category || 'house') === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>
+          <label><span class="form-label">Ort</span><input class="form-control" name="town" maxlength="80" value="${v('town')}" placeholder="z. B. Sunne"></label>
+          <label class="full"><span class="form-label">Leistungen</span><input class="form-control" name="services" maxlength="200" value="${v('services')}" placeholder="z. B. Reinigung · Garten · Schneeräumung"></label>
+          <label><span class="form-label">Ansprechpartner</span><input class="form-control" name="contact" maxlength="80" value="${v('contact')}"></label>
+          <label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" maxlength="40" value="${v('phone')}"></label>
+          <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120" value="${v('email')}"></label>
+          <label><span class="form-label">Webseite</span><input class="form-control" name="website" type="url" maxlength="200" value="${v('website')}" placeholder="https://"></label>
+          <label class="full"><span class="form-label">Notizen</span><textarea class="form-control" name="notes" rows="2" maxlength="500">${v('notes')}</textarea></label>
+        </div>
+        ${properties.length ? `<fieldset class="custom-provider-houses"><legend class="form-label">Zuordnen zu</legend>${properties.map((item) => `<label class="custom-provider-check"><input type="checkbox" name="houses" value="${escapeHtml(item.id)}" ${assignedHouses.includes(item.id) ? 'checked' : ''}><span>${escapeHtml(item.name)}</span></label>`).join('')}</fieldset>` : ''}
+        ${!provider && typeof cloudReady === 'function' && cloudReady() ? `<label class="custom-provider-check invite"><input type="checkbox" name="invite"><span><strong>Ins Husora Partner-Portal einladen</strong><small>Erzeugt einen Einladungscode – danach kannst du dem Partner Aufträge und Nachrichten direkt senden.</small></span></label>` : ''}
+        <p class="custom-provider-error" role="alert" hidden></p>
+        <div class="form-actions custom-provider-actions">${provider ? `<button type="button" class="secondary-btn danger" data-custom-provider-delete>Löschen</button>` : ''}<span></span><button type="button" class="secondary-btn" data-custom-provider-close>Abbrechen</button><button type="submit" class="primary-btn">${provider ? 'Speichern' : 'Servicepartner anlegen'}</button></div>
+      </form>`;
+      modal.classList.add('open');
+      setTimeout(() => modal.querySelector('[name=name]')?.focus(), 50);
+    }
+    const closeCustomProvider = () => document.getElementById('custom-provider-modal')?.classList.remove('open');
+    function saveCustomProvider(form) {
+      const fd = new FormData(form);
+      const value = (key) => String(fd.get(key) || '').trim();
+      const error = form.querySelector('.custom-provider-error');
+      const fail = (message, field) => { error.textContent = message; error.hidden = false; form.querySelector(`[name=${field}]`)?.focus(); return false; };
+      if (!value('name')) return fail('Bitte gib den Firmennamen an.', 'name');
+      if (value('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value('email'))) return fail('Die E-Mail-Adresse sieht nicht gültig aus.', 'email');
+      let website = value('website');
+      if (website && !/^https?:\/\//i.test(website)) website = `https://${website}`;
+      const duplicate = providers.find((item) => item.id !== customProviderState.editing && item.name.trim().toLocaleLowerCase('sv') === value('name').toLocaleLowerCase('sv'));
+      if (duplicate && !window.confirm(`„${duplicate.name}“ gibt es bereits${duplicate.custom ? ' als eigenen Partner' : ' im Verzeichnis'}. Trotzdem neu anlegen?`)) return false;
+      const data = { name: value('name'), category: value('category') || 'house', services: value('services'), specialty: '', contact: value('contact'), phone: value('phone'), email: value('email'), website, town: value('town'), notes: value('notes') };
+      let provider = customProviderState.editing ? providers.find((item) => item.id === customProviderState.editing) : null;
+      if (provider) Object.assign(provider, data, { initials: providerInitials(data.name) });
+      else {
+        provider = { id: `custom-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, ...data, createdAt: new Date().toISOString(), custom: true, initials: providerInitials(data.name), distances: {} };
+        providers.push(provider);
+      }
+      const houses = new Set(fd.getAll('houses'));
+      const nextMapping = { ...servicePartnerAssignments };
+      properties.forEach((item) => {
+        const ids = (nextMapping[item.id] || []).filter((id) => id !== provider.id);
+        nextMapping[item.id] = houses.has(item.id) ? [...ids, provider.id] : ids;
+      });
+      if (!persistCustomProviders()) return false;
+      try { localStorage.setItem('stugliv-provider-assignments', JSON.stringify(nextMapping)); servicePartnerAssignments = nextMapping; } catch (storageError) { console.error(storageError); }
+      closeCustomProvider();
+      const invite = fd.get('invite') === 'on';
+      showToast(customProviderState.editing ? 'Servicepartner gespeichert.' : `„${provider.name}“ angelegt${houses.size ? ' und zugeordnet' : ''}.`);
+      if (invite) customProviderInvite(provider);
+      else render();
+      return true;
+    }
+    async function customProviderInvite(provider) {
+      currentPage = 'partnerHub';
+      hub.tab = 'partners'; hub.thread = null;
+      render();
+      try {
+        ownerSide.busy = 'invite'; hubRerender();
+        const [row] = await cloudFetch('/rest/v1/service_partners', { method: 'POST', body: { organization_id: cloud.org.id, company_name: provider.name, email: provider.email || null, phone: provider.phone || null, website: provider.website || null, city: provider.town || null, contact_name: provider.contact || null }, headers: { Prefer: 'return=representation' } });
+        const code = await cloudFetch('/rest/v1/rpc/create_service_partner_invite', { method: 'POST', body: { p_service_partner_id: row.id, p_email: provider.email || null } });
+        ownerSide.code = { id: row.id, code };
+        await ownerLoadPartners();
+        showToast(`Einladungscode für ${provider.name}: ${code}`);
+      } catch (error) {
+        ownerSide.error = error instanceof TypeError ? 'Keine Verbindung – Einladung später im Partner-Portal erzeugen.' : error.message;
+      } finally {
+        ownerSide.busy = ''; hubRerender();
+      }
+    }
+    function deleteCustomProvider() {
+      const provider = providers.find((item) => item.id === customProviderState.editing && item.custom);
+      if (!provider) return;
+      const openTasks = tasks.filter((task) => !task.done && task.partnerId === provider.id).length;
+      if (!window.confirm(`„${provider.name}“ löschen?${openTasks ? ` ${openTasks} offene Aufgabe(n) bleiben erhalten, sind dann aber keinem Partner mehr zugeordnet.` : ''}`)) return;
+      providers.splice(providers.indexOf(provider), 1);
+      persistCustomProviders();
+      const nextMapping = Object.fromEntries(Object.entries(servicePartnerAssignments).map(([house, ids]) => [house, ids.filter((id) => id !== provider.id)]));
+      try { localStorage.setItem('stugliv-provider-assignments', JSON.stringify(nextMapping)); servicePartnerAssignments = nextMapping; } catch (error) { console.error(error); }
+      if (openTasks) { tasks.forEach((task) => { if (task.partnerId === provider.id) delete task.partnerId; }); persistTasks(); }
+      favorites = favorites.filter((id) => id !== provider.id);
+      try { localStorage.setItem('stugliv-favorites', JSON.stringify(favorites)); } catch (error) { /* optional */ }
+      closeCustomProvider();
+      showToast('Servicepartner gelöscht.');
+      render();
+    }
+    document.addEventListener('click', (event) => {
+      const create = event.target.closest('[data-custom-provider-new]');
+      if (create) { event.preventDefault(); openCustomProvider(null, create.dataset.property); return; }
+      const edit = event.target.closest('[data-custom-provider-edit]');
+      if (edit) { event.preventDefault(); event.stopPropagation(); openCustomProvider(edit.dataset.customProviderEdit); return; }
+      if (event.target.closest('[data-custom-provider-close]') || event.target.id === 'custom-provider-modal') { closeCustomProvider(); return; }
+      if (event.target.closest('[data-custom-provider-delete]')) deleteCustomProvider();
+    });
+    document.addEventListener('submit', (event) => {
+      if (event.target.id !== 'custom-provider-form') return;
+      event.preventDefault();
+      saveCustomProvider(event.target);
+    });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && document.getElementById('custom-provider-modal')?.classList.contains('open')) closeCustomProvider(); });
     // ===== Partner-Portal (Zugang als Servicepartner) =====
     // Arbeitet direkt mit Supabase (Aufträge, Kontrollen, Kunden …). Die zuletzt geladenen
     // Daten werden auf dem Gerät zwischengespeichert, damit das Portal offline lesbar bleibt.
