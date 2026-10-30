@@ -2248,6 +2248,8 @@
     .cloud-status.pending { color: var(--muted); }
     .cloud-status.warn { color: #8e622b; }
     .cloud-card .settings-switch { margin-top: 14px; }
+    .cloud-links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 4px; }
+    .cloud-links .text-btn { padding: 4px 0; font-size: 13px; }
     .cloud-usage { display: grid; gap: 10px; margin-top: 12px; }
     .storage-meter-top b { color: var(--green); font-weight: 700; }
     .storage-meter small.meter-detail { color: var(--muted); }
@@ -3295,6 +3297,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
   
   
@@ -14993,6 +14996,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const stored = JSON.parse(localStorage.getItem(CLOUD_STORE) || 'null');
       cloud = { ...cloud, ...(stored && typeof stored === 'object' ? stored : CLOUD_DEFAULT) };
     } catch (error) { cloud = { ...cloud, ...CLOUD_DEFAULT }; }
+    // Ältere App-Versionen haben eine leere Verbindung gespeichert – dann gilt das Husora-Projekt
+    if (!cloud.url && !cloud.disconnected) { cloud.url = CLOUD_DEFAULT.url; cloud.key = CLOUD_DEFAULT.key; }
     if (!cloud.deviceId) cloud.deviceId = (window.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now().toString(16)}-${Math.random().toString(16).slice(2, 14)}`).slice(0, 36);
     const cloudState = { busy: '', error: '', notice: '', summary: null, usage: null, remoteNewer: false, draftEmail: cloud.session?.email || '' };
     const cloudFiles = new Set(Array.isArray(cloud.files) ? cloud.files : []);
@@ -15080,7 +15085,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         cloud.url = previous.url; cloud.key = previous.key;
         throw error instanceof TypeError ? new Error('Keine Verbindung – bitte Projekt-URL und Internetverbindung prüfen.') : error;
       }
-      cloud.session = null; cloud.org = null; cloud.lastSyncAt = '';
+      cloud.session = null; cloud.org = null; cloud.lastSyncAt = ''; cloud.disconnected = false;
       persistCloud();
       cloudState.notice = 'Verbunden. Melde dich jetzt an oder erstelle ein Konto.';
     }
@@ -15092,24 +15097,56 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       persistCloud();
     }
     async function cloudSignIn(email, password) {
-      const data = await cloudFetch('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: email.trim(), password }, auth: false });
+      let data;
+      try {
+        data = await cloudFetch('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: email.trim(), password }, auth: false });
+      } catch (error) {
+        if (/bestätige zuerst/.test(error.message)) cloudState.pendingConfirm = email.trim();
+        throw error;
+      }
+      cloudState.pendingConfirm = '';
       cloudSetSession(data);
       await cloudLoadOrg();
       await cloudLoadSummary();
       await cloudLoadUsage().catch(() => {});
       cloudState.notice = cloudState.summary?.count ? 'Angemeldet. In der Cloud liegen bereits Daten – wähle unten, welche gelten sollen.' : 'Angemeldet. Lade jetzt deine Daten hoch.';
     }
-    async function cloudSignUp(email, password) {
+    const cloudRedirect = () => encodeURIComponent(location.origin + location.pathname);
+    // Supabase meldet bei bereits registrierter E-Mail aus Sicherheitsgründen keinen Fehler,
+    // sondern einen Benutzer ohne Identitäten – das wird hier erkannt.
+    async function cloudRegister(email, password, meta = {}) {
       if (String(password).length < 8) throw new Error('Das Passwort muss mindestens 8 Zeichen lang sein.');
-      const redirect = encodeURIComponent(location.origin + location.pathname);
-      const data = await cloudFetch(`/auth/v1/signup?redirect_to=${redirect}`, { method: 'POST', body: { email: email.trim(), password, data: { first_name: profileData?.name || '', language: 'de' } }, auth: false });
+      const data = await cloudFetch(`/auth/v1/signup?redirect_to=${cloudRedirect()}`, { method: 'POST', body: { email: email.trim(), password, data: { language: 'de', ...meta } }, auth: false });
+      const identities = data?.identities || data?.user?.identities;
+      if (!data?.access_token && Array.isArray(identities) && identities.length === 0) {
+        throw new Error('Für diese E-Mail gibt es bereits ein Husora-Konto. Bitte mit dem Passwort anmelden – oder „Passwort vergessen?“ wählen.');
+      }
+      if (data?.access_token) cloudSetSession(data);
+      else cloudState.pendingConfirm = email.trim();
+      return data;
+    }
+    async function cloudResendConfirmation(email) {
+      await cloudFetch(`/auth/v1/resend?redirect_to=${cloudRedirect()}`, { method: 'POST', body: { type: 'signup', email: email.trim() }, auth: false });
+    }
+    async function cloudRecover(email) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim())) throw new Error('Bitte zuerst deine E-Mail-Adresse eintragen.');
+      await cloudFetch(`/auth/v1/recover?redirect_to=${cloudRedirect()}`, { method: 'POST', body: { email: email.trim() }, auth: false });
+    }
+    async function cloudActivateOwner() {
+      await cloudLoadOrg();
+      await cloudLoadSummary();
+      await cloudLoadUsage().catch(() => {});
+      cloudState.notice = cloudState.summary?.count ? 'Angemeldet. In der Cloud liegen bereits Daten – wähle unten, welche gelten sollen.' : 'Angemeldet. Lade jetzt deine Daten hoch.';
+    }
+    async function cloudSignUp(email, password) {
+      const data = await cloudRegister(email, password, { first_name: profileData?.name || '' });
       if (data?.access_token) {
         cloudSetSession(data);
         await cloudLoadOrg();
         await cloudLoadSummary();
         cloudState.notice = 'Konto erstellt. Lade jetzt deine Daten hoch.';
       } else {
-        cloudState.notice = 'Konto erstellt. Bitte bestätige die E-Mail-Adresse über den Link in der Bestätigungs-Mail und melde dich dann hier an.';
+        cloudState.notice = `Fast geschafft: Wir haben eine Bestätigungs-Mail an ${email.trim()} geschickt. Öffne den Link darin – danach bist du automatisch angemeldet. Keine Mail? Auch im Spam-Ordner nachsehen.`;
       }
     }
     function cloudSignOut() {
@@ -15123,7 +15160,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     function cloudDisconnect() {
       cloudSignOut();
-      cloud.url = ''; cloud.key = '';
+      cloud.url = ''; cloud.key = ''; cloud.disconnected = true;
       persistCloud();
     }
 
@@ -15437,6 +15474,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         </section>`;
       }
       const host = escapeHtml(cloudBase().replace(/^https?:\/\//, ''));
+      if (cloudSignedIn() && !cloud.org) {
+        // Schon angemeldet (z. B. im Partner-Portal): Hausbesitzer-Bereich für dieses Konto einrichten
+        if (!cloudState.busy && !cloudState.error) setTimeout(() => cloudRun('signin', cloudActivateOwner), 0);
+        return `<section class="card settings-card cloud-card" id="settings-cloud">${head}
+          <div class="cloud-account"><div><strong>${escapeHtml(cloud.session.email || 'Angemeldet')}</strong><small>${cloudState.error ? 'Der Hausbesitzer-Bereich konnte nicht eingerichtet werden.' : 'Angemeldet – dein Hausbesitzer-Bereich wird eingerichtet …'}</small></div><button type="button" class="text-btn" data-cloud-action="signout">Abmelden</button></div>
+          ${messages}${cloudState.error ? `<div class="settings-actions"><button type="button" class="primary-btn" data-cloud-action="activate">Erneut versuchen</button></div>` : ''}
+        </section>`;
+      }
       if (!cloudReady()) {
         return `<section class="card settings-card cloud-card" id="settings-cloud">${head}
           <div class="cloud-project">${icon('check')}<span>Verbunden mit <strong>${host}</strong></span></div>
@@ -15444,7 +15489,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" autocomplete="username" inputmode="email" value="${escapeHtml(cloudState.draftEmail || profileData?.email || '')}" required></label>
             <label><span class="form-label">Passwort</span><input class="form-control" name="password" type="password" autocomplete="current-password" minlength="6" required></label>
             <div class="settings-actions"><button type="submit" class="primary-btn" ${cloudState.busy ? 'disabled' : ''}>${busy('signin') ? 'Melde an …' : 'Anmelden'}</button><button type="button" class="secondary-btn" data-cloud-action="signup" ${cloudState.busy ? 'disabled' : ''}>${busy('signup') ? 'Erstelle Konto …' : 'Neues Konto erstellen'}</button></div>
+            <div class="cloud-links"><button type="button" class="text-btn" data-cloud-action="recover" ${cloudState.busy ? 'disabled' : ''}>Passwort vergessen?</button>${cloudState.pendingConfirm ? `<button type="button" class="text-btn" data-cloud-action="resend" ${cloudState.busy ? 'disabled' : ''}>Bestätigungs-Mail erneut senden</button>` : ''}</div>
           </form>${messages}
+          <p class="settings-hint">Ein Konto für alles: Mit derselben E-Mail nutzt du Husora als Hausbesitzer und im Partner-Portal als Servicepartner.</p>
           <div class="settings-danger"><div><strong>Verbindung trennen</strong><small>Entfernt Projekt-URL und Schlüssel von diesem Gerät. Die Daten in der Cloud bleiben erhalten.</small></div><button type="button" class="secondary-btn" data-cloud-action="disconnect">Trennen</button></div>
         </section>`;
       }
@@ -15492,6 +15539,16 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         cloudState.draftEmail = values.email;
         cloudRun('signup', () => cloudSignUp(values.email, values.password));
       }
+      if (action === 'activate') { cloudState.error = ''; cloudRun('signin', cloudActivateOwner); return; }
+      if (action === 'recover' || action === 'resend') {
+        const email = button.closest('form')?.elements.email?.value || cloudState.pendingConfirm || cloudState.draftEmail;
+        cloudState.draftEmail = email;
+        cloudRun(action, async () => {
+          if (action === 'recover') { await cloudRecover(email); cloudState.notice = `Wir haben dir einen Link zum Zurücksetzen des Passworts an ${email} geschickt.`; }
+          else { await cloudResendConfirmation(email); cloudState.notice = `Bestätigungs-Mail erneut an ${email} gesendet.`; }
+        });
+        return;
+      }
       if (action === 'signout') { cloudSignOut(); cloudState.notice = 'Abgemeldet. Die Daten auf diesem Gerät bleiben erhalten.'; rerenderCloud(); }
       if (action === 'disconnect' && window.confirm('Verbindung zu Supabase von diesem Gerät entfernen? Die Daten in der Cloud bleiben erhalten.')) { cloudDisconnect(); cloudState.notice = ''; rerenderCloud(); }
       if (action === 'refresh') cloudRun('refresh', async () => { await cloudLoadOrg(); await cloudLoadSummary(); await cloudLoadUsage(); });
@@ -15529,6 +15586,26 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         if (currentPage === 'settings' && !cloudState.busy) rerenderCloud();
       }).catch((error) => { cloudState.error = error instanceof TypeError ? 'Offline – Cloud derzeit nicht erreichbar.' : error.message; updateCloudStatusLine(); });
     }
+    // Rückkehr aus der Bestätigungs- oder Passwort-Mail (#access_token=…&type=signup|recovery)
+    (function cloudHandleAuthRedirect() {
+      const hash = new URLSearchParams(location.hash.replace(/^#/, ''));
+      if (!hash.get('access_token') && !hash.get('error_description')) return;
+      history.replaceState(null, '', location.pathname + location.search);
+      if (hash.get('error_description')) { setTimeout(() => showToast(`Anmeldelink: ${hash.get('error_description').replace(/\+/g, ' ')}`), 300); return; }
+      if (!cloudConnected()) return;
+      cloudSetSession({ access_token: hash.get('access_token'), refresh_token: hash.get('refresh_token'), expires_in: Number(hash.get('expires_in')) || 3600, expires_at: Number(hash.get('expires_at')) || undefined });
+      cloudFetch('/auth/v1/user').then(async (user) => {
+        cloud.session.email = user?.email || ''; persistCloud();
+        if (hash.get('type') === 'recovery') {
+          const password = window.prompt('Neues Passwort für dein Husora-Konto (mindestens 8 Zeichen):');
+          if (password && password.length >= 8) { await cloudFetch('/auth/v1/user', { method: 'PUT', body: { password } }); showToast('Passwort geändert – du bist angemeldet.'); }
+          else if (password !== null) showToast('Das Passwort war zu kurz – bitte erneut „Passwort vergessen?“ wählen.');
+        } else {
+          showToast(`E-Mail bestätigt – du bist als ${user?.email || ''} angemeldet.`);
+        }
+        if (pp.open) ppLoad(); else if (currentPage === 'settings' || currentPage === 'partnerHub') rerenderCloud();
+      }).catch((error) => showToast(error.message));
+    })();
     if (sessionStorage.getItem('husora-cloud-loaded')) {
       const loaded = sessionStorage.getItem('husora-cloud-loaded');
       sessionStorage.removeItem('husora-cloud-loaded');
@@ -15731,7 +15808,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const head = `<header class="pp-top"><div class="pp-brand"><span class="pp-logo">${icon('users')}</span><div><strong>${escapeHtml(org?.name || 'Husora für Servicepartner')}</strong><small>${org ? `${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())} · ${escapeHtml(cloud.session?.email || '')}` : 'Partner-Portal'}</small></div></div>
         <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button>` : ''}<button type="button" class="pp-switch" data-pp-action="close">${icon('home')}<span>Hausbesitzer</span></button></div></header>`;
       let body;
-      if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal benötigt die Verbindung zu Supabase. Richte sie unter Einstellungen → Daten & App ein.');
+      if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal arbeitet mit dem Husora-Cloud-Speicher.', `<div class="pp-actions" style="justify-content:center"><button type="button" class="primary-btn" data-pp-action="connect-default">Mit Husora verbinden</button></div>`);
       else if (!signedIn) body = ppLoginHtml();
       else if (!pp.ctx && pp.busy === 'load') body = ppSkeleton();
       else if (!org) body = ppOnboardingHtml();
@@ -15756,9 +15833,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" autocomplete="username" required value="${escapeHtml(cloudState.draftEmail || '')}"></label>
           <label><span class="form-label">Passwort</span><input class="form-control" name="password" type="password" autocomplete="current-password" minlength="8" required></label>
           <div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('login') ? 'Melde an …' : 'Anmelden'}</button><button class="secondary-btn" type="button" data-pp-action="signup" ${ppDisabled()}>${ppBusy('signup') ? 'Erstelle …' : 'Neues Konto'}</button></div>
+          <div class="cloud-links"><button type="button" class="text-btn" data-pp-action="recover" ${ppDisabled()}>Passwort vergessen?</button>${cloudState.pendingConfirm ? `<button type="button" class="text-btn" data-pp-action="resend" ${ppDisabled()}>Bestätigungs-Mail erneut senden</button>` : ''}</div>
           ${pp.notice ? `<p class="pp-msg">${icon('check')}<span>${escapeHtml(pp.notice)}</span></p>` : ''}
         </form>
-        <p class="pp-hint">Du nutzt Husora mit demselben Konto auch als Hausbesitzer? Melde dich einfach mit diesem Konto an – beide Rollen sind möglich.</p>`;
+        <p class="pp-hint">Ein Konto für alles: Mit derselben E-Mail nutzt du Husora auch als Hausbesitzer. Hast du schon ein Konto, melde dich einfach an.</p>`;
     }
     function ppOnboardingHtml() {
       const types = ppD('types').length ? ppD('types') : [];
@@ -16193,14 +16271,21 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const values = Object.fromEntries(new FormData(form));
         cloudState.draftEmail = values.email;
         ppRun('signup', async () => {
-          if (values.password.length < 8) throw new Error('Das Passwort muss mindestens 8 Zeichen lang sein.');
-          const redirect = encodeURIComponent(location.origin + location.pathname);
-          const data = await cloudFetch(`/auth/v1/signup?redirect_to=${redirect}`, { method: 'POST', body: { email: values.email.trim(), password: values.password, data: { language: 'de' } }, auth: false });
-          if (data?.access_token) cloudSetSession(data);
-          else pp.notice = 'Konto erstellt. Bitte bestätige die E-Mail-Adresse über den Link in der Bestätigungs-Mail und melde dich dann an.';
+          const data = await cloudRegister(values.email, values.password);
+          if (!data?.access_token) pp.notice = `Fast geschafft: Wir haben eine Bestätigungs-Mail an ${values.email.trim()} geschickt. Öffne den Link darin – danach bist du automatisch angemeldet. Keine Mail? Auch im Spam-Ordner nachsehen.`;
         }, { reload: true });
         return;
       }
+      if (a === 'recover' || a === 'resend') {
+        const email = action.closest('form')?.elements.email?.value || cloudState.pendingConfirm || '';
+        cloudState.draftEmail = email;
+        ppRun(a, async () => {
+          if (a === 'recover') { await cloudRecover(email); pp.notice = `Wir haben dir einen Link zum Zurücksetzen des Passworts an ${email} geschickt.`; }
+          else { await cloudResendConfirmation(email); pp.notice = `Bestätigungs-Mail erneut an ${email} gesendet.`; }
+        }, { reload: false });
+        return;
+      }
+      if (a === 'connect-default') { cloud.url = CLOUD_DEFAULT.url; cloud.key = CLOUD_DEFAULT.key; cloud.disconnected = false; persistCloud(); ppRender(); return; }
       const o = ppD('orders').find((x) => x.id === id);
       // Eingaben vor ppRun lesen – ppRun zeichnet die Ansicht sofort neu
       if (a === 'accept') { const note = ppField('accept-note') || null; const at = ppIso(ppField('accept-date')); ppRun('accept', () => ppRpc('respond_service_order', { p_service_order_id: id, p_accept: true, p_note: note, p_scheduled_at: at }), { notice: 'Auftrag angenommen – der Kunde sieht es sofort.' }); }
@@ -16282,7 +16367,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const v = Object.fromEntries(fd);
       const kind = form.dataset.ppForm;
       const clean = (obj) => Object.fromEntries(Object.entries(obj).map(([k, val]) => [k, typeof val === 'string' ? (val.trim() || null) : val]));
-      if (kind === 'login') { cloudState.draftEmail = v.email; ppRun('login', async () => { const data = await cloudFetch('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: v.email.trim(), password: v.password }, auth: false }); cloudSetSession(data); }); }
+      if (kind === 'login') { cloudState.draftEmail = v.email; ppRun('login', async () => { let data; try { data = await cloudFetch('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: v.email.trim(), password: v.password }, auth: false }); } catch (error) { if (/bestätige zuerst/.test(error.message)) cloudState.pendingConfirm = v.email.trim(); throw error; } cloudState.pendingConfirm = ''; cloudSetSession(data); }); }
       if (kind === 'company') ppRun('company', () => ppRpc('create_partner_organization', { p_profile: { ...clean(v), services: fd.getAll('services') } }), { notice: 'Dein Betrieb ist angelegt. Willkommen bei Husora!' });
       if (kind === 'join') ppRun('join', async () => { const r = await ppRpc('accept_member_invite', { p_code: v.code }); pp.notice = `Du bist jetzt im Team von ${r.organization_name}.`; });
       if (kind === 'invite-code') ppRun('invite', async () => { const r = await ppRpc('accept_service_partner_invite', { p_code: v.code }); showToast(`Verbunden mit ${r.organization_name}.`); });
