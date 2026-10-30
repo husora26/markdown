@@ -2248,6 +2248,9 @@
     .cloud-status.pending { color: var(--muted); }
     .cloud-status.warn { color: #8e622b; }
     .cloud-card .settings-switch { margin-top: 14px; }
+    .cloud-usage { display: grid; gap: 10px; margin-top: 12px; }
+    .storage-meter-top b { color: var(--green); font-weight: 700; }
+    .storage-meter small.meter-detail { color: var(--muted); }
     .settings-hint { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
     .settings-danger { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
     .settings-danger strong { display: block; font-size: 13px; }
@@ -3047,6 +3050,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
   
   
@@ -12462,7 +12466,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       try { lastBackup = localStorage.getItem('stugliv-last-backup') || ''; } catch (error) { lastBackup = ''; }
       const stale = !lastBackup || Date.now() - new Date(lastBackup).getTime() > 30 * 24 * 60 * 60 * 1000;
       return `<section class="card settings-card" id="settings-backup"><div class="settings-card-head"><span class="settings-icon">${icon('document')}</span><div><h2 class="card-title">Datensicherung</h2><p class="card-caption">${cloudReady() ? 'Zusätzlich zur Cloud: eine Sicherungsdatei zum Aufbewahren.' : 'Deine Daten liegen nur auf diesem Gerät. Sichere sie regelmäßig als Datei.'}</p></div></div>
-        <div class="storage-meter ${usage.percent > 80 ? 'full' : usage.percent > 60 ? 'warn' : ''}"><div class="storage-meter-top"><strong>Speicher belegt</strong><span>${formatBytes(usage.bytes)} von ca. ${formatBytes(STORAGE_LIMIT)} · ${usage.percent} %</span></div><span class="storage-bar"><i style="width:${Math.max(2, usage.percent)}%"></i></span>${usage.percent > 80 ? '<small>Der Speicher ist fast voll. Lösche nicht mehr benötigte PDFs und Fotos unter „Dokumente“, sonst können neue Daten nicht gespeichert werden.</small>' : ''}</div>
+        <div class="storage-meter ${usage.percent > 80 ? 'full' : usage.percent > 60 ? 'warn' : ''}"><div class="storage-meter-top"><strong>Speicher auf diesem Gerät</strong><span>${formatBytes(usage.bytes)} von ca. ${formatBytes(STORAGE_LIMIT)} · <b>${formatBytes(Math.max(0, STORAGE_LIMIT - usage.bytes))} frei</b></span></div><span class="storage-bar"><i style="width:${Math.max(2, usage.percent)}%"></i></span>${usage.percent > 80 ? '<small>Der Speicher ist fast voll. Lösche nicht mehr benötigte PDFs und Fotos unter „Dokumente“, sonst können neue Daten nicht gespeichert werden.</small>' : ''}</div>
         <div class="backup-status ${stale ? 'stale' : ''}">${stale ? icon('alert') : icon('check')}<span>${lastBackup ? `Letzte Sicherung: ${escapeHtml(fmtDateTime(lastBackup))}` : 'Noch keine Datensicherung erstellt'}${stale ? ' – wir empfehlen eine Sicherung pro Monat.' : ''}</span></div>
         <div class="settings-actions"><button type="button" class="primary-btn" data-settings-action="export">${icon('document')} Daten sichern (Datei)</button><label class="secondary-btn settings-file">Sicherung wiederherstellen<input type="file" accept="application/json,.json" data-settings-import hidden></label></div>
         <p class="settings-hint">Die Sicherungsdatei enthält alle Ferienhäuser, Aufgaben, Buchungen, Kontrollen, Kosten und hochgeladenen Dokumente. Mit „Wiederherstellen“ überträgst du alles auf ein anderes Gerät oder in einen anderen Browser.</p>
@@ -14687,14 +14691,16 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     const CLOUD_ORDER = ['stugliv-properties', 'stugliv-bookings', 'stugliv-tasks'];
     const CLOUD_BATCH_CHARS = 900 * 1024;
     const CLOUD_STAFF_ROLES = ['admin', 'property_manager', 'service_manager'];
-    let cloud = { url: '', key: '', session: null, org: null, autoSync: true, lastSyncAt: '', deviceId: '' };
+    let cloud = { url: '', key: '', session: null, org: null, autoSync: true, lastSyncAt: '', deviceId: '', files: [], propertyMap: {} };
     try { cloud = { ...cloud, ...(JSON.parse(localStorage.getItem(CLOUD_STORE) || '{}') || {}) }; } catch (error) { /* noch nicht eingerichtet */ }
     if (!cloud.deviceId) cloud.deviceId = (window.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now().toString(16)}-${Math.random().toString(16).slice(2, 14)}`).slice(0, 36);
-    const cloudState = { busy: '', error: '', notice: '', summary: null, remoteNewer: false, draftEmail: cloud.session?.email || '' };
+    const cloudState = { busy: '', error: '', notice: '', summary: null, usage: null, remoteNewer: false, draftEmail: cloud.session?.email || '' };
+    const cloudFiles = new Set(Array.isArray(cloud.files) ? cloud.files : []);
     const cloudDirty = new Set();
     let cloudTimer = null;
     let cloudApplying = false;
     function persistCloud() {
+      cloud.files = [...cloudFiles];
       try { localStorage.setItem(CLOUD_STORE, JSON.stringify(cloud)); } catch (error) { console.error('Cloud-Einstellungen konnten nicht gespeichert werden:', error); }
     }
     const cloudBase = () => String(cloud.url || '').replace(/\/+$/, '');
@@ -14790,6 +14796,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       cloudSetSession(data);
       await cloudLoadOrg();
       await cloudLoadSummary();
+      await cloudLoadUsage().catch(() => {});
       cloudState.notice = cloudState.summary?.count ? 'Angemeldet. In der Cloud liegen bereits Daten – wähle unten, welche gelten sollen.' : 'Angemeldet. Lade jetzt deine Daten hoch.';
     }
     async function cloudSignUp(email, password) {
@@ -14806,9 +14813,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     function cloudSignOut() {
       if (cloud.session?.access_token) fetch(`${cloudBase()}/auth/v1/logout`, { method: 'POST', headers: { apikey: cloud.key, Authorization: `Bearer ${cloud.session.access_token}` } }).catch(() => {});
-      cloud.session = null; cloud.org = null; cloud.lastSyncAt = '';
-      cloudState.summary = null; cloudState.remoteNewer = false;
+      cloud.session = null; cloud.org = null; cloud.lastSyncAt = ''; cloud.propertyMap = {};
+      cloudState.summary = null; cloudState.usage = null; cloudState.remoteNewer = false;
       cloudDirty.clear();
+      cloudFiles.clear();
       persistCloud();
     }
     function cloudDisconnect() {
@@ -14830,6 +14838,124 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       cloudState.remoteNewer = rows.some((row) => row.device_id !== cloud.deviceId && cloudTime(row.updated_at) > cloudTime(cloud.lastSyncAt));
       return rows;
     }
+    // ----- Dateien (Fotos, PDFs …) in Supabase Storage -----
+    // Eingebettete Dateien (data:-URLs) werden beim Hochladen als echte Dateien in Storage
+    // abgelegt und in app_data durch "husora-storage:<bucket>/<pfad>" ersetzt. Auf dem Gerät
+    // bleiben sie eingebettet, damit die App auch offline vollständig funktioniert.
+    const CLOUD_FILE_PREFIX = 'husora-storage:';
+    const CLOUD_FILE_REF = /husora-storage:[a-z-]+\/organization\/[A-Za-z0-9._\/-]+/g;
+    const DATA_URL_HEAD = /^data:([a-z0-9.+-]+\/[a-z0-9.+-]+)?(;[^,]*)?,/i;
+    const CLOUD_DOC_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+    const CLOUD_EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic', 'image/heif': 'heif', 'application/pdf': 'pdf', 'text/plain': 'txt', 'text/csv': 'csv',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx' };
+    async function sha256Hex(text) {
+      const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+    function cloudFileTarget(mime, propertyUuid) {
+      const org = `organization/${cloud.org.id}`;
+      const ext = CLOUD_EXT[mime] || 'bin';
+      if (propertyUuid && /^image\/(jpeg|png|webp|heic|heif)$/.test(mime)) return { bucket: 'husora-property-photos', dir: `${org}/property/${propertyUuid}/photos`, ext };
+      if (propertyUuid && CLOUD_DOC_TYPES.includes(mime)) return { bucket: 'husora-documents', dir: `${org}/property/${propertyUuid}/documents`, ext };
+      if (CLOUD_DOC_TYPES.includes(mime)) return { bucket: 'husora-documents', dir: `${org}/documents`, ext };
+      return { bucket: 'husora-private', dir: `${org}/documents`, ext };
+    }
+    async function cloudStorageFetch(path, options = {}) {
+      await cloudEnsureToken();
+      const response = await fetch(`${cloudBase()}/storage/v1/${path}`, { ...options, headers: { apikey: cloud.key, Authorization: `Bearer ${cloud.session.access_token}`, ...(options.headers || {}) } });
+      if (!response.ok) {
+        let data = null;
+        try { data = await response.json(); } catch (error) { /* keine JSON-Antwort */ }
+        const message = data?.message || data?.error || '';
+        if (/bucket not found/i.test(message)) throw new Error('Storage-Buckets fehlen – bitte die Husora-Datenbank vollständig einspielen.');
+        if (/row-level security|unauthorized/i.test(message) || response.status === 403) throw new Error('Keine Berechtigung, Dateien in dieser Organisation zu speichern.');
+        if (/mime type/i.test(message)) throw new Error(`Dateityp wird von Supabase Storage abgelehnt (${message}).`);
+        if (/too large|exceeded the maximum/i.test(message) || response.status === 413) throw new Error('Eine Datei ist größer als in Supabase Storage erlaubt.');
+        throw new Error(message ? `Supabase Storage: ${message}` : `Supabase Storage antwortet mit Fehler ${response.status}.`);
+      }
+      return response;
+    }
+    async function cloudPutFile(bucket, path, dataUrl, mime) {
+      const blob = await (await fetch(dataUrl)).blob();
+      await cloudStorageFetch(`object/${bucket}/${path}`, { method: 'POST', headers: { 'Content-Type': mime, 'x-upsert': 'true', 'cache-control': '31536000' }, body: blob });
+    }
+    async function cloudGetFile(ref) {
+      const rest = ref.slice(CLOUD_FILE_PREFIX.length);
+      const response = await cloudStorageFetch(`object/authenticated/${rest}`);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(reader.error); reader.readAsDataURL(blob); });
+    }
+    // Zuordnung App-Haus-ID → Haus-UUID in Supabase (für Storage-Pfade je Haus)
+    async function cloudPropertyMap(entries) {
+      const appIds = properties.map((property) => property.id);
+      if (appIds.every((id) => cloud.propertyMap[id])) return cloud.propertyMap;
+      const raw = entries.find(([key]) => key === 'stugliv-properties')?.[1] || JSON.stringify(properties);
+      // Häuser zuerst ohne Dateien anlegen, damit es die UUIDs für die Pfade gibt
+      const stripped = raw.replace(/"data:[^"]*"/g, '""');
+      await cloudFetch('/rest/v1/app_data?on_conflict=organization_id,key', { method: 'POST', body: [{ organization_id: cloud.org.id, key: 'stugliv-properties', value: stripped, device_id: cloud.deviceId }], headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+      const rows = await cloudFetch(`/rest/v1/properties?organization_id=eq.${cloud.org.id}&app_ref=not.is.null&select=id,app_ref`);
+      cloud.propertyMap = Object.fromEntries(rows.map((row) => [row.app_ref, row.id]));
+      persistCloud();
+      return cloud.propertyMap;
+    }
+    async function cloudExtractFiles(key, raw, propertyMap, stats) {
+      if (!raw || !raw.includes('"data:')) return raw;
+      let data;
+      try { data = JSON.parse(raw); } catch (error) { return raw; }
+      const propertyIds = new Set(Object.keys(propertyMap));
+      const walk = async (node, propertyId, depth) => {
+        if (typeof node === 'string') {
+          const head = node.length > 100 && DATA_URL_HEAD.exec(node);
+          if (!head) return node;
+          const mime = (head[1] || 'application/octet-stream').toLowerCase();
+          const target = cloudFileTarget(mime, propertyMap[propertyId]);
+          const ref = `${CLOUD_FILE_PREFIX}${target.bucket}/${target.dir}/${(await sha256Hex(node)).slice(0, 40)}.${target.ext}`;
+          if (!cloudFiles.has(ref)) {
+            await cloudPutFile(target.bucket, ref.slice(CLOUD_FILE_PREFIX.length + target.bucket.length + 1), node, mime);
+            cloudFiles.add(ref);
+            stats.uploaded += 1;
+            stats.bytes += Math.round((node.length - node.indexOf(',') - 1) * 0.75);
+          }
+          stats.files += 1;
+          return ref;
+        }
+        if (Array.isArray(node)) {
+          const out = [];
+          for (const item of node) out.push(await walk(item, propertyId, depth + 1));
+          return out;
+        }
+        if (node && typeof node === 'object') {
+          const own = typeof node.propertyId === 'string' ? node.propertyId
+            : key === 'stugliv-properties' && depth === 1 && typeof node.id === 'string' ? node.id : propertyId;
+          const out = {};
+          for (const [childKey, value] of Object.entries(node)) out[childKey] = await walk(value, propertyIds.has(childKey) ? childKey : own, depth + 1);
+          return out;
+        }
+        return node;
+      };
+      return JSON.stringify(await walk(data, null, 0));
+    }
+    async function cloudRestoreFiles(raw, stats) {
+      if (!raw || !raw.includes(CLOUD_FILE_PREFIX)) return raw;
+      let out = raw;
+      for (const ref of new Set(raw.match(CLOUD_FILE_REF) || [])) {
+        try {
+          const dataUrl = await cloudGetFile(ref);
+          out = out.split(`"${ref}"`).join(JSON.stringify(dataUrl));
+          cloudFiles.add(ref);
+          stats.files += 1;
+        } catch (error) {
+          console.error('Datei aus Supabase Storage nicht geladen:', ref, error);
+          stats.failed += 1;
+        }
+      }
+      return out;
+    }
+    async function cloudLoadUsage() {
+      const rows = await cloudFetch('/rest/v1/rpc/my_cloud_usage', { method: 'POST', body: { p_organization_id: cloud.org.id } });
+      cloudState.usage = Array.isArray(rows) ? rows[0] : rows;
+    }
     function cloudLocalEntries(onlyKeys) {
       const keys = storageUsage().keys.filter((key) => /^stugliv-[a-z0-9-]+$/.test(key) && !CLOUD_EXCLUDED.includes(key));
       // Ferienhäuser stehen erst nach der ersten Bearbeitung im Speicher – für die Cloud immer mitsenden
@@ -14842,6 +14968,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     async function cloudUpload({ full = true, keys = null } = {}) {
       if (!cloudCanWrite()) throw new Error('Mit deiner Rolle in dieser Organisation kannst du nur lesen.');
       const entries = cloudLocalEntries(keys);
+      const stats = { files: 0, uploaded: 0, bytes: 0 };
+      if (entries.some(([, value]) => value.includes('"data:'))) {
+        const propertyMap = await cloudPropertyMap(cloudLocalEntries());
+        for (const entry of entries) entry[1] = await cloudExtractFiles(entry[0], entry[1], propertyMap, stats);
+        persistCloud();
+      }
+      cloudState.lastFileStats = stats;
       let latest = cloud.lastSyncAt;
       let batch = [];
       let size = 0;
@@ -14874,6 +15007,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const rows = await cloudFetch(`/rest/v1/app_data?organization_id=eq.${cloud.org.id}&select=key,value,updated_at`);
       const entries = rows.filter((row) => /^stugliv-[a-z0-9-]+$/.test(row.key) && !CLOUD_EXCLUDED.includes(row.key) && typeof row.value === 'string');
       if (!entries.length) throw new Error('In der Cloud liegen noch keine Husora-Daten.');
+      const stats = { files: 0, failed: 0 };
+      for (const row of entries) row.value = await cloudRestoreFiles(row.value, stats);
+      if (stats.failed && !window.confirm(`${stats.failed} Datei(en) konnten nicht aus Supabase Storage geladen werden. Trotzdem fortfahren?`)) return;
       const previous = storageUsage().keys.filter((key) => !CLOUD_EXCLUDED.includes(key)).map((key) => [key, localStorage.getItem(key)]);
       cloudApplying = true;
       try {
@@ -14888,7 +15024,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       cloud.lastSyncAt = entries.reduce((max, row) => (cloudTime(row.updated_at) > cloudTime(max) ? row.updated_at : max), '');
       cloudDirty.clear();
       persistCloud();
-      sessionStorage.setItem('husora-cloud-loaded', String(entries.length));
+      sessionStorage.setItem('husora-cloud-loaded', `${entries.length} Bereiche${stats.files ? ` und ${stats.files} Dateien` : ''}`);
       location.reload();
     }
 
@@ -14969,6 +15105,20 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       window.scrollTo(0, scroll);
     }
 
+    function cloudUsageHtml() {
+      const usage = cloudState.usage;
+      if (!usage) return '';
+      const meter = (label, used, limit, detail) => {
+        const percent = Math.min(100, Math.round((Number(used) / Math.max(1, Number(limit))) * 100));
+        const free = Math.max(0, Number(limit) - Number(used));
+        return `<div class="storage-meter ${percent > 80 ? 'full' : percent > 60 ? 'warn' : ''}"><div class="storage-meter-top"><strong>${label}</strong><span>${formatBytes(Number(used))} von ${formatBytes(Number(limit))} · <b>${formatBytes(free)} frei</b></span></div><span class="storage-bar"><i style="width:${Math.max(2, percent)}%"></i></span>${detail ? `<small class="meter-detail">${detail}</small>` : ''}</div>`;
+      };
+      return `<div class="cloud-usage">
+        ${meter('Supabase-Datenbank', usage.database_bytes, usage.database_limit, `davon Husora-Daten: ${formatBytes(Number(usage.app_data_bytes))}`)}
+        ${meter('Supabase Storage (Fotos & Dokumente)', usage.file_bytes, usage.files_limit, `${Number(usage.file_count)} Datei${Number(usage.file_count) === 1 ? '' : 'en'}`)}
+        <p class="settings-hint" style="margin-top:4px">Grenzen des kostenlosen Supabase-Plans. Bei einem bezahlten Plan steht mehr Platz zur Verfügung.</p>
+      </div>`;
+    }
     function cloudCardHtml() {
       const head = `<div class="settings-card-head"><span class="settings-icon">${icon('cloud')}</span><div><h2 class="card-title">Cloud-Speicher (Supabase)</h2><p class="card-caption">Alle Husora-Daten in deinem eigenen Supabase-Projekt – als Sicherung und zum Abgleich zwischen Handy, Tablet und Computer.</p></div></div>`;
       const busy = (label) => cloudState.busy === label;
@@ -15006,6 +15156,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <div><span>Dieses Gerät</span><strong>${local.length} Bereiche</strong><small>${formatBytes(localBytes)}</small></div>
           <div><span>Cloud</span><strong>${summary ? `${summary.count} Bereiche` : '–'}</strong><small>${summary?.count ? `${formatBytes(summary.bytes)} · ${escapeHtml(fmtDateTime(summary.updatedAt))}${summary.fromThisDevice ? '' : ' · anderes Gerät'}` : 'noch leer'}</small></div>
         </div>
+        ${cloudUsageHtml()}
         <p class="cloud-status ${cloudState.error || cloudState.remoteNewer ? 'warn' : cloudDirty.size || cloudState.busy ? 'pending' : 'ok'}" data-cloud-status aria-live="polite">${escapeHtml(cloudStatusText())}</p>
         ${firstSync ? `<p class="cloud-message">${icon('alert')}<span>${summary?.count ? 'Erster Abgleich: Lege fest, welcher Stand gilt – die Daten dieses Geräts oder die aus der Cloud.' : 'Lade jetzt alle Daten dieses Geräts in die Cloud.'}</span></p>` : ''}
         <div class="settings-actions">
@@ -15040,7 +15191,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       }
       if (action === 'signout') { cloudSignOut(); cloudState.notice = 'Abgemeldet. Die Daten auf diesem Gerät bleiben erhalten.'; rerenderCloud(); }
       if (action === 'disconnect' && window.confirm('Verbindung zu Supabase von diesem Gerät entfernen? Die Daten in der Cloud bleiben erhalten.')) { cloudDisconnect(); cloudState.notice = ''; rerenderCloud(); }
-      if (action === 'refresh') cloudRun('refresh', async () => { await cloudLoadOrg(); await cloudLoadSummary(); });
+      if (action === 'refresh') cloudRun('refresh', async () => { await cloudLoadOrg(); await cloudLoadSummary(); await cloudLoadUsage(); });
       if (action === 'upload') {
         cloudRun('upload', async () => {
           await cloudLoadSummary();
@@ -15048,7 +15199,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           if (summary?.count && !summary.fromThisDevice && !window.confirm(`In der Cloud liegen Daten von einem anderen Gerät (Stand ${fmtDateTime(summary.updatedAt)}). Beim Hochladen werden sie durch die Daten dieses Geräts ersetzt. Fortfahren?`)) return;
           const count = await cloudUpload({ full: true });
           await cloudLoadSummary();
-          cloudState.notice = `${count} Bereiche hochgeladen – deine komplette Husora-Datenbank liegt jetzt in der Cloud.`;
+          await cloudLoadUsage().catch(() => {});
+          const files = cloudState.lastFileStats || {};
+          cloudState.notice = `${count} Bereiche hochgeladen${files.files ? `, ${files.files} Fotos und Dokumente in Supabase Storage${files.uploaded ? ` (${files.uploaded} neu, ${formatBytes(files.bytes)})` : ''}` : ''} – deine komplette Husora-Datenbank liegt jetzt in der Cloud.`;
         });
       }
       if (action === 'download') {
@@ -15067,7 +15220,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     window.addEventListener('online', () => { if (cloudDirty.size) cloudFlush(); });
     // Beim Start: Stand der Cloud prüfen
     if (cloudReady()) {
-      cloudLoadSummary().then(() => {
+      Promise.all([cloudLoadSummary(), cloudLoadUsage().catch(() => {})]).then(() => {
         if (cloudState.remoteNewer) showToast('Neuere Daten in der Cloud – unter Einstellungen → Daten & App laden.');
         updateCloudStatusLine();
         if (currentPage === 'settings' && !cloudState.busy) rerenderCloud();
@@ -15076,7 +15229,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     if (sessionStorage.getItem('husora-cloud-loaded')) {
       const loaded = sessionStorage.getItem('husora-cloud-loaded');
       sessionStorage.removeItem('husora-cloud-loaded');
-      setTimeout(() => showToast(`${loaded} Bereiche aus der Cloud geladen.`), 300);
+      setTimeout(() => showToast(`${loaded} aus der Cloud geladen.`), 300);
     }
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
