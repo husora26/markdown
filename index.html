@@ -2448,6 +2448,14 @@
     /* Partner-Portal für Hausbesitzer + Messenger */
     .hub-tabs { margin: 4px 0 14px; }
     .hub-count { display: inline-grid; place-items: center; min-width: 19px; height: 19px; margin-left: 4px; padding: 0 5px; border-radius: 10px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; line-height: 1; }
+    .msg-wrap[hidden] { display: none; }
+    .msg-item { border-left-color: #c9a96a; }
+    .msg-item.unread { border-left-color: var(--red); }
+    .msg-item.unread strong::after { content: ''; display: inline-block; width: 7px; height: 7px; margin-left: 6px; border-radius: 50%; background: var(--red); vertical-align: middle; }
+    .msg-item > span:last-child { flex: 1; min-width: 0; }
+    .msg-item small { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .msg-item .msg-time { float: right; margin-left: 8px; color: var(--muted); font-size: 12px; font-weight: 600; }
+    .msg-item .msg-badge { display: inline-grid; place-items: center; min-width: 18px; height: 18px; margin-left: 6px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; vertical-align: middle; }
     .hub-nav-count { margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--red); color: #fff; font-size: 11.5px; font-weight: 700; line-height: 20px; text-align: center; }
     .hub-card { padding: 18px; margin-bottom: 14px; }
     .hub-form { display: grid; gap: 10px; margin-top: 12px; }
@@ -3337,6 +3345,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3901,6 +3910,9 @@ html.dark .pp-service-head input { accent-color: var(--green-solid); }
 html.dark .pp-skel i { background: linear-gradient(90deg, #2f2d25, #2a271f, #2f2d25); }
 html.dark .pp-spin { border: 2px solid rgba(255, 255, 255, 0.07); border-top-color: #383838; }
 html.dark .hub-count { background: var(--red-solid); }
+html.dark .msg-item { border-left-color: #6d614a; }
+html.dark .msg-item.unread strong::after { background: var(--red-solid); }
+html.dark .msg-item .msg-badge { background: var(--red-solid); }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
 html.dark .hub-conv.unread { border-color: #635842; }
@@ -4054,6 +4066,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <div class="top-actions">
           <div class="plan-info" id="plan-info"></div>
           <nav class="top-tabs" id="top-tabs" aria-label="Hauptbereiche"></nav>
+          <div class="notify-wrap msg-wrap" id="msg-wrap" hidden><button type="button" class="notify-btn" id="msg-toggle" aria-label="Nachrichten von Servicepartnern anzeigen" title="Nachrichten von Servicepartnern" aria-haspopup="true" aria-expanded="false" aria-controls="msg-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14h4"/></svg><span class="notify-count urgent" id="msg-count" hidden>0</span></button><div class="notify-panel" id="msg-panel" role="region" aria-label="Nachrichten von Servicepartnern"></div></div>
           <div class="notify-wrap"><button type="button" class="notify-btn" id="notify-toggle" aria-label="Erinnerungen anzeigen" title="Erinnerungen" aria-haspopup="true" aria-expanded="false" aria-controls="notify-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg><span class="notify-count" id="notify-count" hidden>0</span></button><div class="notify-panel" id="notify-panel" role="region" aria-label="Erinnerungen"></div></div>
           <div class="nav-menu-wrap"><button class="icon-btn avatar-btn" id="menu-toggle" aria-label="Menü und Benutzerprofil öffnen" title="Menü und Benutzerprofil" aria-haspopup="true" aria-expanded="false" aria-controls="main-menu"><span id="user-avatar">MM</span></button>
         <div class="nav-menu" id="main-menu">
@@ -13494,6 +13507,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (target.closest('[data-notify-read-all]')) { markRemindersRead(collectReminders().map((item) => item.id)); renderNotifyPanel(); return; }
       if (target.closest('.notify-settings')) toggleNotifyPanel(false);
       else if (!target.closest('#notify-panel')) document.getElementById('notify-panel')?.classList.remove('open');
+      if (!target.closest('#msg-wrap')) msgTogglePanel(false);
       const simpleSwitch = target.closest('[data-simple-home]');
       if (simpleSwitch) { displaySettings = { ...displaySettings, simpleHome: simpleSwitch.checked }; saveStore('stugliv-display', displaySettings); showToast(simpleSwitch.checked ? 'Die Startseite zeigt jetzt die einfache Darstellung.' : 'Die Startseite zeigt wieder Bildkacheln und Bereiche.'); return; }
       const themeButton = target.closest('[data-display-theme]');
@@ -13618,7 +13632,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (target.matches('[data-notify-pref]')) { notifySettings = { ...notifySettings, [target.dataset.notifyPref]: target.checked }; saveStore('stugliv-notify', notifySettings); updateNotifyBadge(); }
     });
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') { document.getElementById('notify-panel')?.classList.remove('open'); if (document.getElementById('onboarding-modal')?.classList.contains('open') && onboardingStep === 3) closeOnboarding(); }
+      if (event.key === 'Escape') { document.getElementById('notify-panel')?.classList.remove('open'); msgTogglePanel(false); if (document.getElementById('onboarding-modal')?.classList.contains('open') && onboardingStep === 3) closeOnboarding(); }
       if (event.key === 'Enter' && event.target.matches('[data-meter-value]')) { event.preventDefault(); addMeterReading(event.target.dataset.meterValue); }
       if (event.key === 'Enter' && event.target.closest('#onboarding-body') && event.target.matches('input:not([type=radio])')) { event.preventDefault(); document.querySelector('#onboarding-body [data-ob-next], #onboarding-body [data-ob-finish]')?.click(); }
     });
@@ -16770,6 +16784,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       hubUpdateBadge();
     }
     function hubUpdateBadge() {
+      msgUpdateBadge();
       const button = document.querySelector('.nav [data-page="partnerHub"]');
       if (!button) return;
       let badge = button.querySelector('.hub-nav-count');
@@ -16868,6 +16883,76 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       hubRerender();
     });
     window.addEventListener('online', () => { if (currentPage === 'partnerHub') hubRefresh({ quiet: true }); });
+    // ----- Nachrichten von Servicepartnern oben rechts in der Hauptleiste -----
+    const msgTop = { seen: null, loading: false };
+    const msgActive = () => cloudReady() && ppMode() !== 'partner';
+    const msgIncoming = (m) => m.sender_user_id !== hubMyId();
+    function msgUpdateBadge() {
+      const wrap = document.getElementById('msg-wrap');
+      if (!wrap) return;
+      wrap.hidden = !msgActive();
+      const badge = document.getElementById('msg-count');
+      const unread = msgActive() && ownerSide.partners ? hubTotalUnread() : 0;
+      badge.textContent = unread > 9 ? '9+' : String(unread);
+      badge.hidden = !unread;
+      document.getElementById('msg-toggle').title = unread ? `${unread} ungelesene Nachricht${unread === 1 ? '' : 'en'} von Servicepartnern` : 'Nachrichten von Servicepartnern';
+      if (document.getElementById('msg-panel').classList.contains('open')) msgRenderPanel();
+    }
+    function msgRenderPanel() {
+      const panel = document.getElementById('msg-panel');
+      const threads = hubConversations().filter((t) => t.messages.some(msgIncoming))
+        .map((t) => ({ ...t, unread: hubUnread(t.messages), last: t.messages[t.messages.length - 1] }))
+        .sort((a, b) => (b.unread > 0) - (a.unread > 0) || new Date(b.last.created_at) - new Date(a.last.created_at)).slice(0, 8);
+      const when = (iso) => (ppDayKey(iso) === ppToday() ? ppTime(iso) : new Date(iso).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' }));
+      const unread = hubTotalUnread();
+      panel.innerHTML = `<div class="notify-head"><strong>Nachrichten von Servicepartnern</strong>${unread ? `<small class="muted">${unread} ungelesen</small>` : ''}</div>
+        ${ownerSide.partners === null ? '<div class="pp-skel"><i></i><i></i></div>' : threads.length ? `<div class="notify-list">${threads.map((t) => `<button type="button" class="notify-item msg-item ${t.unread ? 'unread' : 'read'}" data-msg-open="${t.kind}:${escapeHtml(t.id)}"><span class="notify-icon">${icon(t.kind === 'order' ? 'task' : 'users')}</span><span><span class="msg-time">${escapeHtml(when(t.last.created_at))}</span><strong>${escapeHtml(t.kind === 'order' ? t.order.partner?.company_name || t.title : t.title)}${t.unread > 1 ? `<b class="msg-badge">${t.unread}</b>` : ''}</strong><small>${t.kind === 'order' ? `${escapeHtml(t.title)}: ` : ''}${msgIncoming(t.last) ? '' : 'Du: '}${escapeHtml(t.last.message)}</small></span></button>`).join('')}</div>`
+          : `<div class="notify-empty">${icon('check')}<span>Noch keine Nachrichten von deinen Servicepartnern.</span></div>`}
+        <button type="button" class="notify-settings" data-msg-hub>${icon('note')} Alle Nachrichten im Partner-Portal</button>`;
+    }
+    function msgTogglePanel(force) {
+      const panel = document.getElementById('msg-panel');
+      if (!panel) return;
+      const open = force ?? !panel.classList.contains('open');
+      if (open === panel.classList.contains('open')) return;
+      if (open) { msgRenderPanel(); document.getElementById('notify-panel')?.classList.remove('open'); if (ownerSide.partners === null) msgPoll(); }
+      panel.classList.toggle('open', open);
+      document.getElementById('msg-toggle').setAttribute('aria-expanded', String(open));
+    }
+    // Leichter Abgleich im Hintergrund: beim ersten Mal alles, danach nur die Nachrichten.
+    async function msgPoll() {
+      if (!msgActive() || msgTop.loading || currentPage === 'partnerHub' || ownerSide.busy) return;
+      msgTop.loading = true;
+      try {
+        if (ownerSide.partners === null) await ownerLoadPartners();
+        else {
+          ownerSide.messages = await cloudFetch(`/rest/v1/messages?organization_id=eq.${cloud.org.id}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`);
+          const known = new Set([...(ownerSide.partners || []).filter((p) => p.partner_organization_id).map((p) => p.id), ...(ownerSide.orders || []).map((o) => o.id)]);
+          if (ownerSide.messages.some((m) => msgIncoming(m) && !m.read_at && !known.has(m.service_partner_id || m.service_order_id))) await ownerLoadPartners();
+        }
+        const fresh = hubConversations().flatMap((t) => t.messages.filter((m) => msgIncoming(m) && !m.read_at).map((m) => ({ m, t })));
+        if (msgTop.seen) {
+          const added = fresh.filter(({ m }) => !msgTop.seen.has(m.id));
+          if (added.length) { const { t } = added[0]; showToast(added.length === 1 ? `Neue Nachricht von ${t.kind === 'order' ? t.order.partner?.company_name || t.title : t.title}` : `${added.length} neue Nachrichten von Servicepartnern`); }
+        }
+        msgTop.seen = new Set(fresh.map(({ m }) => m.id));
+      } catch (error) { console.warn('Nachrichten nicht abgerufen:', error); }
+      finally { msgTop.loading = false; msgUpdateBadge(); }
+    }
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('#msg-toggle')) { msgTogglePanel(); return; }
+      const item = event.target.closest('[data-msg-open], [data-msg-hub]');
+      if (!item) return;
+      msgTogglePanel(false);
+      const [kind, id] = (item.dataset.msgOpen || '').split(':');
+      hub.tab = 'chat'; hub.thread = kind ? { kind, id } : null;
+      currentPage = 'partnerHub'; render(); window.scrollTo(0, 0);
+      const box = document.getElementById('hub-messages'); if (box) box.scrollTop = box.scrollHeight;
+      if (kind) hubMarkRead().then(() => { hubRerender(); });
+    });
+    setInterval(() => { if (document.visibilityState === 'visible') msgPoll(); }, 30000);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') msgPoll(); });
+    setTimeout(msgPoll, 1500);
     if (ppMode() === 'partner') setTimeout(() => ppOpen('dashboard'), 0);
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
