@@ -2282,6 +2282,52 @@
     .pp-main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 16px calc(40px + env(safe-area-inset-bottom)); }
     .pp-main::after { content: ''; display: block; height: 1px; }
     .pp-main > * { max-width: 760px; margin-left: auto; margin-right: auto; }
+    /* die allgemeine main-Regel (margin: 0 auto) ließ den Inhalt auf Inhaltsbreite schrumpfen */
+    .pp > .pp-main { width: 100%; max-width: none; margin: 0; }
+    .pp-obj { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; align-items: start; }
+    .pp-obj-photo { position: relative; display: block; width: 112px; height: 96px; padding: 0; overflow: hidden; border: 0; border-radius: 12px; background: var(--green-soft); color: var(--green); cursor: pointer; }
+    .pp-obj-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .pp-obj-photo.empty { display: grid; place-items: center; cursor: default; }
+    .pp-obj-photo.empty svg { width: 30px; height: 30px; opacity: .6; }
+    .pp-obj-photo em { position: absolute; right: 6px; bottom: 6px; padding: 1px 7px; border-radius: 9px; background: rgba(0, 0, 0, .55); color: #fff; font-size: 11px; font-style: normal; font-weight: 700; }
+    .pp-obj-main strong { display: block; font-size: 16px; }
+    .pp-obj-main small { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .pp-obj-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin-top: 12px; grid-column: 1 / -1; }
+    .pp-obj-facts div { padding: 8px 10px; border-radius: 10px; background: var(--green-soft); }
+    .pp-obj-facts span { display: block; color: var(--muted); font-size: 11px; font-weight: 650; }
+    .pp-obj-facts b { display: block; margin-top: 2px; font-size: 14px; }
+    .pp-obj-gallery { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; grid-column: 1 / -1; }
+    .pp-obj-gallery button { flex: 0 0 auto; width: 64px; height: 52px; padding: 0; overflow: hidden; border: 0; border-radius: 8px; background: var(--green-soft); cursor: pointer; }
+    .pp-obj-gallery img { width: 100%; height: 100%; object-fit: cover; }
+    @media (max-width: 380px) { .pp-obj { grid-template-columns: 1fr; } .pp-obj-photo { width: 100%; height: 150px; } }
+    .pp-cal { padding: 12px; }
+    .pp-cal-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+    .pp-cal-head strong { font-size: 16px; text-transform: capitalize; }
+    .pp-cal-nav { display: flex; gap: 6px; }
+    .pp-cal-nav button { display: grid; place-items: center; min-width: 36px; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 18px; background: transparent; color: var(--ink); font-size: 13px; font-weight: 650; cursor: pointer; }
+    .pp-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+    .pp-cal-wd { padding: 2px 0 4px; color: var(--muted); font-size: 11px; font-weight: 700; text-align: center; text-transform: uppercase; }
+    .pp-cal-day { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px; min-height: 46px; padding: 6px 0 4px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .pp-cal-day.other { color: var(--muted); opacity: .45; }
+    .pp-cal-day.today { border-color: var(--green); }
+    .pp-cal-day.sel { background: var(--green-dark); color: #fff; }
+    .pp-cal-day.has:not(.sel) { background: var(--green-soft); }
+    .pp-cal-dots { display: flex; gap: 3px; }
+    .pp-cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .pp-cal-dots i.insp { background: #3b7bbf; }
+    .pp-cal-dots i.new { background: #c48a1d; }
+    .pp-cal-dots i.done { background: #9aa59e; }
+    .pp-cal-day.sel .pp-cal-dots i { background: #fff; }
+    .pp-cal-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; color: var(--muted); font-size: 12px; }
+    .pp-cal-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .pp-cal-legend i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    .pp-cal-legend i.insp { background: #3b7bbf; }
+    .pp-cal-legend i.new { background: #c48a1d; }
+    .pp-svc-price { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; margin-top: 10px; }
+    .pp-svc-desc { margin: 4px 0 0 30px; color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .pp-pdf-pick { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px dashed var(--line); border-radius: 12px; }
+    .pp-pdf-pick strong { display: block; font-size: 14px; }
+    .pp-pdf-pick small { display: block; color: var(--muted); font-size: 12.5px; }
     .pp-nav { display: flex; gap: 2px; overflow-x: auto; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); scrollbar-width: none; }
     .pp-nav::-webkit-scrollbar { display: none; }
     .pp-nav button { position: relative; display: flex; flex: 1 0 74px; flex-direction: column; align-items: center; gap: 3px; min-height: 52px; padding: 6px 4px; border: 0; border-radius: 11px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 650; cursor: pointer; }
@@ -2460,6 +2506,12 @@
     .msg-item small { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     .msg-item .msg-time { float: right; margin-left: 8px; color: var(--muted); font-size: 12px; font-weight: 600; }
     .msg-item .msg-badge { display: inline-grid; place-items: center; min-width: 18px; height: 18px; margin-left: 6px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; vertical-align: middle; }
+    .hub-invoice { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--green-soft); }
+    .hub-invoice > svg { flex: 0 0 auto; width: 20px; height: 20px; color: var(--green); }
+    .hub-invoice > span { flex: 1; min-width: 0; }
+    .hub-invoice strong { display: block; font-size: 14px; }
+    .hub-invoice small { display: block; color: var(--muted); font-size: 12.5px; }
+    .hub-invoice .secondary-btn { min-height: 36px; padding: 0 12px; }
     .hub-nav-count { margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--red); color: #fff; font-size: 11.5px; font-weight: 700; line-height: 20px; text-align: center; }
     .hub-card { padding: 18px; margin-bottom: 14px; }
     .hub-form { display: grid; gap: 10px; margin-top: 12px; }
@@ -3352,6 +3404,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3893,6 +3946,10 @@ html.dark .pp-top { background: var(--green-solid-dark); }
 html.dark .pp-brand-btn:hover, html.dark .pp-brand-btn:focus-visible { background: rgba(255, 255, 255, 0.01); }
 html.dark .pp-logo { background: rgba(255, 255, 255, 0.02); }
 html.dark .pp-icon-btn, html.dark .pp-switch { border: 1px solid rgba(255, 255, 255, 0.05); }
+html.dark .pp-cal-day.sel { background: var(--green-solid-dark); }
+html.dark .pp-cal-dots i { background: var(--green-solid); }
+html.dark .pp-cal-day.sel .pp-cal-dots i { background: #1c1c1c; }
+html.dark .pp-cal-legend i { background: var(--green-solid); }
 html.dark .pp-dot { background: var(--red-solid); }
 html.dark .pp-actions.sticky { box-shadow: 0 -8px 18px rgba(0, 0, 0, 0.18); }
 html.dark .pp-tile.amber { border-color: #5d503a; }
@@ -15819,6 +15876,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     const PP_INVOICE_STATUS = { draft: ['Entwurf', 'muted'], received: ['Eingereicht', 'amber'], approved: ['Freigegeben', 'green'], paid: ['Bezahlt', 'done'], overdue: ['Überfällig', 'red'], cancelled: ['Storniert', 'muted'] };
     const PP_QUOTE_STATUS = { requested: ['Angefragt', 'amber'], received: ['Eingereicht', 'amber'], approved: ['Angenommen', 'done'], rejected: ['Abgelehnt', 'red'], expired: ['Abgelaufen', 'muted'] };
     const PP_NAV = [['dashboard', 'Start', 'home'], ['orders', 'Aufträge', 'task'], ['customers', 'Kunden & Objekte', 'property'], ['calendar', 'Kalender', 'calendar'], ['inspections', 'Kontrollen', 'inspection'], ['messages', 'Nachrichten', 'note'], ['documents', 'Dokumente', 'document'], ['more', 'Mehr', 'menu']];
+    const PP_MORE_VIEWS = ['finance', 'services', 'team', 'company'];
     const pp = { open: false, view: 'dashboard', detail: null, filter: 'active', busy: '', error: '', notice: '', ctx: null, data: null, loadedAt: '', thumbs: {}, form: null };
     try { const cached = JSON.parse(localStorage.getItem(PP_CACHE_KEY) || 'null'); if (cached?.ctx) Object.assign(pp, { ctx: cached.ctx, data: cached.data, loadedAt: cached.loadedAt }); } catch (error) { /* kein Cache */ }
     const ppMode = () => { try { return localStorage.getItem(PP_MODE_KEY) || ''; } catch (error) { return ''; } };
@@ -15888,7 +15946,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const org = ppOrg();
         if (org) {
           const self = pp.ctx.self_partner_id;
-          const propSel = 'id,name,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id';
+          const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
           const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
@@ -16035,7 +16093,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     function ppOnboardingHtml() {
       const types = ppD('types').length ? ppD('types') : [];
-      return `<div class="pp-hero small"><h1>Servicebetrieb einrichten</h1><p>Lege deinen Betrieb an oder tritt mit einem Einladungscode dem Team eines Betriebs bei.</p></div>
+      return `<button type="button" class="pp-back" data-pp-action="settings">${icon('arrow')}<span>Zurück zu den Einstellungen</span></button><div class="pp-hero small"><h1>Servicebetrieb einrichten</h1><p>Lege deinen Betrieb an oder tritt mit einem Einladungscode dem Team eines Betriebs bei.</p></div>
         <form class="pp-card pp-form" data-pp-form="join"><h3>Ich wurde als Mitarbeiter eingeladen</h3>
           <label><span class="form-label">Einladungscode</span><input class="form-control pp-code" name="code" placeholder="TEAM-XXXX-XXXX" autocapitalize="characters" required></label>
           <div class="pp-actions"><button class="secondary-btn" type="submit" ${ppDisabled()}>Team beitreten</button></div></form>
@@ -16058,10 +16116,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             <label><span class="form-label">Einsatzradius (km)</span><input class="form-control" name="service_radius_km" type="number" min="0" max="1000" value="50"></label>
           </div>
           <span class="form-label" style="margin-top:12px;display:block">Angebotene Leistungen</span>
-          <div class="pp-chips">${(types.length ? types : PP_DEFAULT_TYPES).map((t) => `<label class="pp-chip"><input type="checkbox" name="services" value="${escapeHtml(t.code)}" ${['inspection', 'holiday_home_inspection'].includes(t.code) ? 'checked' : ''}><span>${escapeHtml(t.name)}</span></label>`).join('')}</div>
+          <div class="pp-chips">${PP_SERVICE_GROUPS.map(([code, name]) => ({ code, name })).map((t) => `<label class="pp-chip"><input type="checkbox" name="services" value="${escapeHtml(t.code)}" ${t.code === 'inspection' ? 'checked' : ''}><span>${escapeHtml(t.name)}</span></label>`).join('')}</div>
           <p class="pp-hint">Bankverbindung, Rechnungsadresse und Öffnungszeiten ergänzt du später unter Mehr → Firma. Fünf Kontrollvorlagen (Standard, Ferienhaus, Übergabe, Winter, Technik) werden automatisch angelegt.</p>
           <div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${icon('check')} ${ppBusy('company') ? 'Lege an …' : 'Betrieb anlegen und starten'}</button></div></form>`;
     }
+    // Im Portal wählbare Leistungsgruppen (service_types.code)
+    const PP_SERVICE_GROUPS = [['inspection', 'Hauskontrolle', 'Abwesenheits-, Saison- und Ferienhauskontrollen'], ['service_work', 'Servicearbeiten', 'Hausservice, Reinigung, Garten, Winterdienst, kleine Reparaturen'], ['renovation', 'Sanierungen', 'Dach, Fassade, Fenster, Bad, Heizung und Technik']];
+    const PP_PRICE_UNITS = [['job', 'je Arbeitspaket'], ['hour', 'je Stunde']];
     const PP_DEFAULT_TYPES = [['inspection', 'Hauskontrolle'], ['holiday_home_inspection', 'Ferienhauskontrolle'], ['cleaning', 'Reinigung'], ['gardening', 'Gartenpflege'], ['snow_removal', 'Winterdienst'], ['repair', 'Reparatur'], ['plumbing', 'Sanitär'], ['heating', 'Heizung'], ['electrician', 'Elektro'], ['roofing', 'Dach'], ['facade', 'Fassade'], ['windows', 'Fenster'], ['key_service', 'Schlüsselservice'], ['general_maintenance', 'Technische Wartung']].map(([code, name]) => ({ code, name }));
 
     function ppViewHtml() {
@@ -16132,8 +16193,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       else if (o.status === 'in_progress') actions = `<div class="pp-card pp-form"><h3>Auftrag abschließen</h3><label><span class="form-label">Ist-Kosten (${escapeHtml(o.currency)})</span><input class="form-control" type="number" min="0" step="0.01" data-pp-field="actual" value="${o.actual_cost ?? o.estimated_cost ?? ''}"></label><label><span class="form-label">Abschlussnotiz</span><input class="form-control" data-pp-field="done-note" placeholder="Was wurde erledigt?"></label><div class="pp-actions"><button type="button" class="primary-btn big" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Erledigt</button></div></div>`;
       return `${ppBack()}
         <div class="pp-detail-head"><div><span class="pp-eyebrow">${escapeHtml(o.order_number)} · ${escapeHtml(ppCustomerName(o.organization_id))}</span><h1>${escapeHtml(o.title)}</h1></div>${ppBadge(PP_ORDER_STATUS, o.status)}</div>
+        ${ppPropertyCard(ppD('properties').find((x) => x.id === p?.id) || p, { maps })}
         <div class="pp-card pp-facts">
-          <div><span>Objekt</span><strong>${escapeHtml(p?.name || '–')}</strong><small>${escapeHtml(ppAddress(p) || p?.region || '')}</small>${maps ? `<a class="pp-link" href="${maps}" target="_blank" rel="noopener">${icon('map')} Navigation</a>` : ''}</div>
           <div><span>Termin</span><strong>${escapeHtml(ppDateTime(o.scheduled_at))}</strong></div>
           <div><span>Preis</span><strong>${escapeHtml(ppMoney(o.actual_cost ?? o.estimated_cost, o.currency))}</strong>${o.actual_cost != null ? '<small>Ist-Kosten</small>' : '<small>geschätzt</small>'}</div>
           <div><span>Mitarbeiter</span>${lead && !['completed', 'cancelled', 'rejected'].includes(o.status) ? `<select class="form-control" data-pp-assign="${o.id}"><option value="">– nicht zugewiesen –</option>${members.map((m) => `<option value="${m.user_id}" ${m.user_id === o.assigned_user_id ? 'selected' : ''}>${escapeHtml(ppMemberName(m.user_id) || m.user_id)} (${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)})</option>`).join('')}</select>` : `<strong>${escapeHtml(ppMemberName(o.assigned_user_id) || '–')}</strong>`}</div>
@@ -16148,21 +16209,38 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           ${ppD('templates').length ? `<div class="pp-inline"><select class="form-control" data-pp-field="tpl">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-action="start-inspection" data-property="${o.property_id}" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}`)}
         ${ppSection('Nachrichten', `<div class="pp-thread">${thread.map((m) => `<div class="pp-bubble ${m.sender_user_id === ppMe() ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(m.sender_user_id === ppMe() ? 'Du' : ppMemberName(m.sender_user_id) || 'Kunde')} · ${escapeHtml(fmtDateTime(m.created_at))}</small></div>`).join('') || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
           <form class="pp-send" data-pp-form="message" data-order="${o.id}" data-org="${o.organization_id}"><input class="form-control" name="message" placeholder="Nachricht an den Kunden …" maxlength="2000" required><button class="primary-btn" type="submit" aria-label="Senden" ${ppDisabled()}>Senden</button></form>`)}
-        ${['accepted', 'scheduled', 'in_progress', 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
-          ${pp.form === `finance:${o.id}` ? ppFinanceForm(o) : `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="quote">Angebot</button><button type="button" class="primary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice">Rechnung erstellen</button></div>`}`) : ''}`;
+        ${['accepted', 'scheduled', 'in_progress', 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
+          ${pp.form === `finance:${o.id}` ? ppFinanceForm(o) : `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="quote">Angebot</button><button type="button" class="primary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice">Rechnung erstellen</button><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice" data-mode="upload">${icon('document')} PDF-Rechnung hochladen</button></div>`}`) : ''}`;
     }
     function ppFinanceForm(o) {
       const kind = pp.formKind || 'invoice';
+      const upload = kind === 'invoice' && pp.formMode === 'upload';
       const vat = o.currency === 'SEK' || ppOrg().country === 'SE' ? 25 : 19;
       const net = o.actual_cost ?? o.estimated_cost ?? '';
       const number = `${kind === 'invoice' ? 'R' : 'A'}-${new Date().getFullYear()}-${String((kind === 'invoice' ? ppD('invoices') : ppD('quotes')).length + 1).padStart(4, '0')}`;
-      return `<form class="pp-form pp-subform" data-pp-form="finance" data-order="${o.id}" data-kind="${kind}"><h3>${kind === 'invoice' ? 'Rechnung' : 'Angebot'} an ${escapeHtml(ppCustomerName(o.organization_id))}</h3><div class="pp-grid">
+      return `<form class="pp-form pp-subform" data-pp-form="finance" data-order="${o.id}" data-kind="${kind}" data-mode="${upload ? 'upload' : 'create'}"><h3>${upload ? 'Eigene Rechnung (PDF)' : kind === 'invoice' ? 'Rechnung' : 'Angebot'} an ${escapeHtml(ppCustomerName(o.organization_id))}</h3>
+        ${upload ? `<label class="pp-pdf-pick">${icon('document')}<span><strong>Rechnung als PDF auswählen *</strong><small>Deine fertige Rechnung aus dem eigenen Programm (max. 10 MB).</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf" required style="margin-top:8px"></span></label>` : ''}<div class="pp-grid">
         <label><span class="form-label">Nummer</span><input class="form-control" name="number" value="${escapeHtml(number)}" required maxlength="40"></label>
         <label><span class="form-label">Netto (${escapeHtml(o.currency)})</span><input class="form-control" name="net" type="number" min="0" step="0.01" value="${net !== '' ? (Number(net) / (1 + vat / 100)).toFixed(2) : ''}" required></label>
         <label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}" required></label>
         ${kind === 'invoice' ? `<label><span class="form-label">Rechnungsdatum</span><input class="form-control" name="date" type="date" value="${ppToday()}"></label><label><span class="form-label">Fällig am</span><input class="form-control" name="due" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label>` : `<label><span class="form-label">Gültig bis</span><input class="form-control" name="valid" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label><label class="full"><span class="form-label">Leistung</span><input class="form-control" name="description" value="${escapeHtml(o.title)}"></label>`}
-        </div><p class="pp-hint">Brutto wird automatisch berechnet. Die Rechnung erscheint beim Kunden zur Freigabe; das PDF kannst du unter „Dokument“ anhängen.</p>
-        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>${kind === 'invoice' ? 'Rechnung einreichen' : 'Angebot senden'}</button></div></form>`;
+        </div><p class="pp-hint">${kind !== 'invoice' ? 'Brutto wird automatisch berechnet. Das Angebot erscheint beim Kunden zur Freigabe.' : upload ? 'Nummer und Beträge übernimmst du aus deinem PDF – damit sieht der Hausbesitzer die Summe direkt. Das PDF wird ihm zugeschickt und bei seinem Ferienhaus unter Dokumente abgelegt.' : 'Brutto wird automatisch berechnet. Husora erstellt die Rechnung als PDF (mit deinen Firmen- und Bankdaten) und schickt sie dem Hausbesitzer.'}</p>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>${kind === 'invoice' ? `${icon('check')} PDF an Hausbesitzer senden` : 'Angebot senden'}</button></div></form>`;
+    }
+    // Objektkarte: Foto, Adresse und Eckdaten des Ferienhauses
+    function ppPropertyCard(p, { maps = '' } = {}) {
+      if (!p) return '';
+      const photos = ppD('photos').filter((x) => x.property_id === p.id && !x.service_order_id && !x.inspection_id);
+      const num = (v, unit) => (v === null || v === undefined || v === '' ? '' : `${Number(v).toLocaleString('de-DE', { maximumFractionDigits: 1 })}${unit}`);
+      const facts = [['Baujahr', p.year_built ? String(p.year_built) : ''], ['Wohnfläche', num(p.living_area_m2, ' m²')], ['Grundstück', num(p.land_area_m2, ' m²')], ['Zimmer', num(p.bedrooms, '')], ['Bäder', num(p.bathrooms, '')], ['Betten', num(p.max_guests, '')]].filter(([, v]) => v);
+      const address = ppAddress(p) || (p.description || '').split(' · ')[0] || p.region || '';
+      const cover = photos[0];
+      return `<div class="pp-card pp-obj">
+        ${cover ? `<button type="button" class="pp-obj-photo" data-pp-file="${cover.storage_bucket}|${cover.storage_path}|${escapeHtml(p.name)}" aria-label="Foto von ${escapeHtml(p.name)} öffnen"><img data-pp-thumb="${cover.id}" alt="${escapeHtml(p.name)}">${photos.length > 1 ? `<em>${photos.length}</em>` : ''}</button>` : `<span class="pp-obj-photo empty">${icon('property')}</span>`}
+        <div class="pp-obj-main"><span class="pp-eyebrow">Ferienhaus</span><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(address || 'Adresse nicht hinterlegt')}</small>${p.region && !address.includes(p.region) ? `<small>${escapeHtml(p.region)}</small>` : ''}${maps ? `<a class="pp-link" href="${maps}" target="_blank" rel="noopener">${icon('map')} Navigation</a>` : ''}</div>
+        ${facts.length ? `<div class="pp-obj-facts">${facts.map(([l, v]) => `<div><span>${l}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div>` : '<p class="pp-hint" style="grid-column:1/-1;margin:8px 0 0">Baujahr und Fläche hat der Hausbesitzer noch nicht eingetragen.</p>'}
+        ${photos.length > 1 ? `<div class="pp-obj-gallery">${photos.slice(1, 12).map((ph) => `<button type="button" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(p.name)}"><img data-pp-thumb="${ph.id}" alt=""></button>`).join('')}</div>` : ''}
+      </div>`;
     }
     const ppBack = () => `<button type="button" class="pp-back" data-pp-action="back">${icon('arrow')}<span>Zurück</span></button>`;
     function ppInspectionCard(i) {
@@ -16232,24 +16310,58 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return `${ppBack()}<div class="pp-detail-head"><div><span class="pp-eyebrow">${c.linked_organization_id ? 'Husora-Kunde' : 'Eigener Kunde'}</span><h1>${escapeHtml(ppCustomerLabel(c))}</h1></div></div>
         <div class="pp-card pp-facts"><div><span>Kontakt</span><strong>${escapeHtml([c.first_name, c.last_name].filter(Boolean).join(' ') || '–')}</strong><small>${[c.email ? `<a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>` : '', c.phone ? `<a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a>` : ''].filter(Boolean).join(' · ')}</small></div><div><span>Adresse</span><strong>${escapeHtml(ppAddress(c) || '–')}</strong></div></div>
         ${c.notes ? `<div class="pp-card"><p class="pp-text">${escapeHtml(c.notes)}</p></div>` : ''}
-        ${ppSection(`Objekte (${props.length})`, `${props.map((p) => `<div class="pp-card pp-prop"><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(ppAddress(p) || p.region || '')}</small></div><div class="pp-prop-stats"><span>${ppD('orders').filter((o) => o.property_id === p.id).length} Aufträge</span><span>${ppD('inspections').filter((i) => i.property_id === p.id).length} Kontrollen</span></div>${!c.linked_organization_id && ppIsLead() ? `<button type="button" class="text-btn" data-pp-action="order-for" data-property="${p.id}">Auftrag anlegen</button>` : ''}</div>`).join('') || `<p class="pp-muted">${c.linked_organization_id ? 'Häuser dieses Kunden erscheinen, sobald er dir einen Auftrag gibt.' : 'Noch kein Objekt.'}</p>`}
+        ${ppSection(`Objekte (${props.length})`, `${props.map((p) => `${ppPropertyCard(p)}<div class="pp-card pp-prop"><div class="pp-prop-stats"><span>${ppD('orders').filter((o) => o.property_id === p.id).length} Aufträge</span><span>${ppD('inspections').filter((i) => i.property_id === p.id).length} Kontrollen</span></div>${!c.linked_organization_id && ppIsLead() ? `<button type="button" class="text-btn" data-pp-action="order-for" data-property="${p.id}">Auftrag anlegen</button>` : ''}</div>`).join('') || `<p class="pp-muted">${c.linked_organization_id ? 'Häuser dieses Kunden erscheinen, sobald er dir einen Auftrag gibt.' : 'Noch kein Objekt.'}</p>`}
           ${!c.linked_organization_id && ppIsLead() ? `<form class="pp-form pp-subform" data-pp-form="property" data-customer="${c.id}"><h3>Objekt hinzufügen</h3><div class="pp-grid"><label class="full"><span class="form-label">Name *</span><input class="form-control" name="name" required maxlength="80" placeholder="z. B. Ferienhaus am See"></label><label class="full"><span class="form-label">Straße</span><input class="form-control" name="street" maxlength="120" value="${escapeHtml(c.street || '')}"></label><label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12" value="${escapeHtml(c.postal_code || '')}"></label><label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" value="${escapeHtml(c.city || '')}"></label></div><div class="pp-actions"><button class="secondary-btn" type="submit" ${ppDisabled()}>Objekt speichern</button></div></form>` : ''}`)}
         ${pp.form === 'new-order' ? ppNewOrderForm(pp.formProperty) : ''}`;
     }
     function ppCalendarHtml() {
-      const start = new Date(); start.setHours(0, 0, 0, 0);
-      const end = new Date(start.getTime() + 45 * 86400000);
+      const today = ppToday();
+      const month = pp.calMonth || today.slice(0, 7);
+      const selected = pp.calDay || today;
       const entries = [
-        ...ppD('orders').filter((o) => o.scheduled_at && !['completed', 'cancelled', 'rejected'].includes(o.status)).map((o) => ({ at: o.scheduled_at, html: ppOrderCard(o) })),
-        ...ppD('inspections').filter((i) => i.scheduled_at && ['scheduled', 'in_progress'].includes(i.status)).map((i) => ({ at: i.scheduled_at, html: ppInspectionCard(i) }))
-      ].filter((e) => new Date(e.at) < end).sort((a, b) => new Date(a.at) - new Date(b.at));
-      const overdue = entries.filter((e) => new Date(e.at) < start);
+        ...ppD('orders').filter((o) => o.scheduled_at && !['cancelled', 'rejected'].includes(o.status)).map((o) => ({ at: o.scheduled_at, kind: o.status === 'completed' ? 'done' : o.status === 'offered' ? 'new' : 'order', open: !['completed'].includes(o.status), html: ppOrderCard(o) })),
+        ...ppD('inspections').filter((i) => i.scheduled_at && i.status !== 'cancelled').map((i) => ({ at: i.scheduled_at, kind: i.status === 'completed' ? 'done' : 'insp', open: i.status !== 'completed', html: ppInspectionCard(i) }))
+      ].sort((x, y) => new Date(x.at) - new Date(y.at));
       const byDay = {};
-      entries.filter((e) => new Date(e.at) >= start).forEach((e) => { (byDay[ppDayKey(e.at)] = byDay[ppDayKey(e.at)] || []).push(e); });
+      entries.forEach((e) => { (byDay[ppDayKey(e.at)] = byDay[ppDayKey(e.at)] || []).push(e); });
+      const overdue = entries.filter((e) => e.open && ppDayKey(e.at) < today);
+      const unscheduled = ppD('orders').filter((o) => !o.scheduled_at && ['offered', 'accepted'].includes(o.status));
+      const [y, m] = month.split('-').map(Number);
+      const first = new Date(y, m - 1, 1);
+      const start = new Date(y, m - 1, 1 - ((first.getDay() + 6) % 7));
+      const cells = [];
+      for (let n = 0; n < 42; n += 1) {
+        const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + n);
+        if (n >= 35 && d.getMonth() !== m - 1) break;
+        const key = localDateKey(d);
+        const list = byDay[key] || [];
+        const kinds = [...new Set(list.map((e) => e.kind))].slice(0, 3);
+        cells.push(`<button type="button" class="pp-cal-day ${d.getMonth() !== m - 1 ? 'other' : ''} ${key === today ? 'today' : ''} ${key === selected ? 'sel' : ''} ${list.length ? 'has' : ''}" data-pp-cal-day="${key}" aria-label="${escapeHtml(d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }))}${list.length ? `, ${list.length} Termin${list.length === 1 ? '' : 'e'}` : ''}" aria-pressed="${key === selected}">${d.getDate()}<span class="pp-cal-dots">${kinds.map((k) => `<i class="${k}"></i>`).join('')}</span></button>`);
+      }
+      const dayList = byDay[selected] || [];
+      const label = new Date(`${selected}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
       return `<div class="pp-page-head"><h1>Kalender</h1></div>
-        ${overdue.length ? ppSection('Überfällig', `<div class="pp-list">${overdue.map((e) => e.html).join('')}</div>`) : ''}
-        ${Object.entries(byDay).map(([day, list]) => ppSection(`${day === ppToday() ? 'Heute · ' : ''}${new Date(`${day}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}`, `<div class="pp-list">${list.map((e) => e.html).join('')}</div>`)).join('') || ppEmpty('Keine Termine', 'In den nächsten 45 Tagen sind keine Aufträge oder Kontrollen terminiert.')}`;
+        <div class="pp-card pp-cal">
+          <div class="pp-cal-head"><strong>${escapeHtml(first.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' }))}</strong><div class="pp-cal-nav"><button type="button" data-pp-cal-nav="-1" aria-label="Vorheriger Monat">‹</button><button type="button" data-pp-cal-nav="0">Heute</button><button type="button" data-pp-cal-nav="1" aria-label="Nächster Monat">›</button></div></div>
+          <div class="pp-cal-grid">${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((w) => `<span class="pp-cal-wd">${w}</span>`).join('')}${cells.join('')}</div>
+          <div class="pp-cal-legend"><span><i></i>Auftrag</span><span><i class="new"></i>Neue Anfrage</span><span><i class="insp"></i>Kontrolle</span></div>
+        </div>
+        ${ppSection(`${selected === today ? 'Heute · ' : ''}${label}`, dayList.length ? `<div class="pp-list">${dayList.map((e) => e.html).join('')}</div>` : '<p class="pp-muted">An diesem Tag sind keine Aufträge oder Kontrollen geplant.</p>')}
+        ${overdue.length ? ppSection(`Überfällig (${overdue.length})`, `<div class="pp-list">${overdue.map((e) => e.html).join('')}</div>`) : ''}
+        ${unscheduled.length ? ppSection(`Ohne Termin (${unscheduled.length})`, `<div class="pp-list">${unscheduled.map(ppOrderCard).join('')}</div>`) : ''}`;
     }
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('#partner-portal')) return;
+      const day = event.target.closest('[data-pp-cal-day]');
+      if (day) { pp.calDay = day.dataset.ppCalDay; pp.calMonth = pp.calDay.slice(0, 7); pp.keepScroll = true; ppRender(); return; }
+      const nav = event.target.closest('[data-pp-cal-nav]');
+      if (nav) {
+        const step = Number(nav.dataset.ppCalNav);
+        if (!step) { pp.calMonth = ppToday().slice(0, 7); pp.calDay = ppToday(); }
+        else { const [y, m] = (pp.calMonth || ppToday().slice(0, 7)).split('-').map(Number); const d = new Date(y, m - 1 + step, 1); pp.calMonth = localDateKey(d).slice(0, 7); pp.calDay = localDateKey(d); }
+        pp.keepScroll = true; ppRender();
+      }
+    });
     function ppMessagesHtml() {
       const unreadOf = (list) => list.filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length;
       const chats = (pp.ctx?.links || []).map((link) => { const list = ppD('messages').filter((m) => m.service_partner_id === link.service_partner_id); return { link, last: list[0], unread: unreadOf(list) }; })
@@ -16295,18 +16407,18 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     setInterval(() => { if (pp.open && document.visibilityState === 'visible' && (pp.detail?.type === 'chat' || pp.view === 'messages' || pp.detail?.type === 'order')) ppRefreshMessages(); }, 12000);
     function ppDocumentsHtml() {
-      const photos = ppD('photos');
-      const docs = ppD('documents');
+      // nur Dokumente (PDF, Rechnungen, Berichte) – Fotos der Häuser stehen beim jeweiligen Objekt bzw. Auftrag
+      const docs = ppD('documents').filter((d) => !/^image\//.test(d.file_type || ''));
       const where = (x) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); const p = ppD('properties').find((y) => y.id === x.property_id); return [o?.title, p?.name].filter(Boolean).join(' · '); };
       return `<div class="pp-page-head"><h1>Dokumente</h1></div>
         ${ppSection(`Dokumente (${docs.length})`, docs.map((d) => `<button type="button" class="pp-doc" data-pp-file="${d.storage_bucket}|${d.storage_path}|${escapeHtml(d.file_name)}">${icon('document')}<span>${escapeHtml(d.file_name)}<small>${escapeHtml(where(d))}</small></span><small>${escapeHtml(ppDate(d.created_at))}</small></button>`).join('') || '<p class="pp-muted">Noch keine Dokumente. Lade PDFs direkt im Auftrag hoch.</p>')}
-        ${ppSection(`Fotos (${photos.length})`, `<div class="pp-gallery">${photos.slice(0, 60).map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|Foto" title="${escapeHtml(where(ph))}"><img data-pp-thumb="${ph.id}" alt="${escapeHtml(ph.caption || 'Foto')}"></button>`).join('') || '<p class="pp-muted">Noch keine Fotos.</p>'}</div>`)}`;
+`;
     }
     function ppMoreHtml() {
       const item = (view, label, caption, ic) => `<button type="button" class="pp-item" data-pp-view="${view}"><span class="pp-item-icon">${icon(ic)}</span><span class="pp-item-main"><strong>${label}</strong><small>${caption}</small></span>${icon('arrow')}</button>`;
       return `<div class="pp-page-head"><h1>Mehr</h1></div><div class="pp-list">
         ${item('finance', 'Angebote & Rechnungen', `${ppD('invoices').length} Rechnungen · ${ppD('quotes').length} Angebote`, 'cost')}
-        ${item('services', 'Leistungen', `${ppD('services').filter((s) => s.active).length} angeboten`, 'check')}
+        ${item('services', 'Leistungen', ppD('services').filter((s) => s.active && PP_SERVICE_GROUPS.some(([code]) => ppD('types').find((t) => t.id === s.service_type_id)?.code === code)).map((s) => ppD('types').find((t) => t.id === s.service_type_id)?.name).join(' · ') || 'Hauskontrolle, Servicearbeiten, Sanierungen', 'check')}
         ${item('team', 'Mitarbeiter', `${ppD('members').length} im Team`, 'users')}
         ${item('company', 'Firma', 'Firmendaten, Bank, Öffnungszeiten', 'gear')}
         </div>
@@ -16324,11 +16436,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     function ppServicesHtml() {
       const services = ppD('services');
-      const types = ppD('types').filter((t) => !t.organization_id || t.organization_id === ppOrg().id);
-      return `${ppBack()}<div class="pp-page-head"><h1>Leistungen</h1></div><p class="pp-muted">Diese Leistungen und Preise nutzt Husora, um dich Hausbesitzern in deiner Region passend vorzuschlagen.</p>
-        <form class="pp-form" data-pp-form="services">${types.map((t) => { const s = services.find((x) => x.service_type_id === t.id); return `<div class="pp-card pp-service ${s?.active ? 'on' : ''}"><label class="pp-service-head"><input type="checkbox" name="type:${t.id}" ${s?.active ? 'checked' : ''} ${ppIsLead() ? '' : 'disabled'}><strong>${escapeHtml(t.name)}</strong></label>
-          <div class="pp-grid three"><label><span class="form-label">ab</span><input class="form-control" type="number" min="0" step="1" name="from:${t.id}" value="${s?.price_from ?? ''}" ${ppIsLead() ? '' : 'disabled'}></label><label><span class="form-label">bis</span><input class="form-control" type="number" min="0" step="1" name="to:${t.id}" value="${s?.price_to ?? ''}" ${ppIsLead() ? '' : 'disabled'}></label><label><span class="form-label">je</span><select class="form-control" name="unit:${t.id}" ${ppIsLead() ? '' : 'disabled'}>${[['hour', 'Stunde'], ['job', 'Auftrag'], ['visit', 'Besuch'], ['m2', 'm²'], ['month', 'Monat'], ['year', 'Jahr']].map(([v, l]) => `<option value="${v}" ${s?.price_unit === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label></div></div>`; }).join('')}
-        ${ppIsLead() ? `<div class="pp-actions sticky flat"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('services') ? 'Speichere …' : 'Leistungen speichern'}</button></div>` : ''}</form>`;
+      const lead = ppIsLead();
+      const dis = lead ? '' : 'disabled';
+      const groups = PP_SERVICE_GROUPS.map(([code, name, desc]) => ({ code, name, desc, type: ppD('types').find((t) => t.code === code && !t.organization_id) })).filter((g) => g.type);
+      return `${ppBack()}<div class="pp-page-head"><h1>Leistungen</h1></div><p class="pp-muted">Wähle, was dein Betrieb anbietet, und gib den Preis je Arbeitspaket oder je Stunde an. Husora nutzt das, um dich Hausbesitzern in deiner Region passend vorzuschlagen.</p>
+        <form class="pp-form" data-pp-form="services">${groups.map(({ name, desc, type: t }) => { const s = services.find((x) => x.service_type_id === t.id); const unit = ['job', 'hour'].includes(s?.price_unit) ? s.price_unit : 'job'; return `<div class="pp-card pp-service ${s?.active ? 'on' : ''}"><label class="pp-service-head"><input type="checkbox" name="type:${t.id}" ${s?.active ? 'checked' : ''} ${dis}><strong>${escapeHtml(name)}</strong></label><p class="pp-svc-desc">${escapeHtml(desc)}</p>
+          <div class="pp-svc-price"><label><span class="form-label">Preis (${escapeHtml(ppOrg().currency || 'SEK')})</span><input class="form-control" type="number" min="0" step="1" inputmode="decimal" name="price:${t.id}" value="${s?.price_from ?? ''}" placeholder="z. B. 450" ${dis}></label><label><span class="form-label">Abrechnung</span><select class="form-control" name="unit:${t.id}" ${dis}>${PP_PRICE_UNITS.map(([v, l]) => `<option value="${v}" ${unit === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label></div></div>`; }).join('') || '<p class="pp-muted">Die Leistungsgruppen werden gerade eingerichtet – bitte später erneut öffnen.</p>'}
+        ${lead && groups.length ? `<div class="pp-actions sticky flat"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('services') ? 'Speichere …' : 'Leistungen speichern'}</button></div>` : ''}</form>`;
     }
     function ppTeamHtml() {
       const members = ppD('members');
@@ -16351,6 +16465,76 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         </div>${ppIsAdmin() ? `<div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${icon('check')} Firmendaten speichern</button></div>` : '<p class="pp-hint">Nur Admins können die Firmendaten ändern.</p>'}</form>`;
     }
 
+    // Rechnung: eigenes PDF hochladen oder aus den Angaben erzeugen, beim Kunden ablegen und per Nachricht melden
+    async function ppSendInvoice(o, invoice, file, uploadMode) {
+      const hasFile = file && typeof file === 'object' && file.size > 0;
+      if (uploadMode && !hasFile) throw new Error('Bitte wähle die Rechnung als PDF aus.');
+      if (hasFile && file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) throw new Error(`„${file.name}“ ist kein PDF.`);
+      if (hasFile && file.size > 10 * 1024 * 1024) throw new Error(`„${file.name}“ ist größer als 10 MB.`);
+      let dataUrl, name, size;
+      if (hasFile) {
+        dataUrl = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).replace(/^data:[^;,]*/, 'data:application/pdf')); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
+        name = file.name; size = file.size;
+      } else {
+        const bytes = ppInvoicePdf(o, invoice);
+        dataUrl = ppBytesToDataUrl(bytes, 'application/pdf');
+        name = `Rechnung-${String(invoice.invoice_number).replace(/[^\w-]+/g, '_')}.pdf`; size = bytes.length;
+      }
+      const path = `organization/${o.organization_id}/property/${o.property_id}/documents/${window.crypto?.randomUUID ? crypto.randomUUID() : Date.now()}.pdf`;
+      await cloudPutFile('husora-documents', path, dataUrl, 'application/pdf');
+      const [doc] = await ppInsert('documents', { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, file_name: name, file_type: 'application/pdf', file_size: size, storage_bucket: 'husora-documents', storage_path: path, document_type: 'invoice' });
+      await ppInsert('invoices', { ...invoice, document_id: doc.id });
+      if (o.organization_id !== ppOrg().id) {
+        await ppInsert('messages', { organization_id: o.organization_id, service_order_id: o.id, message: `Rechnung ${invoice.invoice_number} über ${ppMoney(invoice.amount_gross, invoice.currency)} als PDF gesendet${invoice.due_date ? ` – zahlbar bis ${fmtDate(invoice.due_date)}` : ''}.` });
+      }
+    }
+    function ppInvoicePdf(o, inv) {
+      const W = 595, H = 842, M = 56;
+      const ops = [];
+      let y = H - M;
+      const f = (n) => (Math.round(n * 100) / 100).toString();
+      const text = (value, x, size, bold = false, color = '0.1 0.15 0.12') => ops.push(`BT /${bold ? 'F2' : 'F1'} ${size} Tf ${color} rg ${f(x)} ${f(y)} Td (${pdfEncode(String(value ?? ''))}) Tj ET`);
+      const right = (value, xr, size, bold = false) => { const w = String(value).length * size * (bold ? 0.56 : 0.52); text(value, xr - w, size, bold); };
+      const box = (x, y0, w, h, fill) => ops.push(`${fill} rg ${f(x)} ${f(y0)} ${f(w)} ${f(h)} re f`);
+      const org = ppOrg() || {};
+      const p = ppD('properties').find((x) => x.id === o.property_id) || o.property || {};
+      const money = (v) => ppMoney(v, inv.currency);
+      const day = (v) => new Date(`${v}T12:00:00`).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const vatRate = inv.amount_net ? Math.round((inv.tax_amount / inv.amount_net) * 1000) / 10 : 0;
+      box(0, H - 8, W, 8, '0.16 0.36 0.27');
+      text(org.name || 'Servicebetrieb', M, 16, true); y -= 14;
+      [[org.street, [org.postal_code, org.city].filter(Boolean).join(' ')].filter(Boolean).join(', '), [org.phone, org.email].filter(Boolean).join(' · '), org.website].filter(Boolean).forEach((l) => { text(l, M, 9, false, '0.35 0.4 0.36'); y -= 11; });
+      y -= 22; text('RECHNUNG', M, 22, true); y -= 26;
+      const meta = [['Rechnungsnummer', inv.invoice_number], ['Rechnungsdatum', day(inv.invoice_date || ppToday())], ['Zahlbar bis', inv.due_date ? day(inv.due_date) : '–'], ['Auftrag', o.order_number || '']];
+      const top = y;
+      meta.forEach(([l, v]) => { text(l, M, 9, false, '0.4 0.45 0.4'); text(v, M + 110, 10, true); y -= 14; });
+      y = top; text('Rechnung an', 330, 9, false, '0.4 0.45 0.4'); y -= 13; text(ppCustomerName(o.organization_id), 330, 11, true); y -= 13;
+      text(`Objekt: ${p.name || ''}`, 330, 9); y -= 11; const addr = ppAddress(p) || (p.description || '').split(' · ')[0]; if (addr) { text(addr, 330, 9, false, '0.35 0.4 0.36'); y -= 11; }
+      y = Math.min(y, top - meta.length * 14) - 26;
+      box(M, y - 6, W - 2 * M, 22, '0.93 0.95 0.92'); y += 1;
+      text('Leistung', M + 8, 10, true); right('Betrag', W - M - 8, 10, true); y -= 26;
+      pdfWrap(o.title || 'Leistung', 10, W - 2 * M - 140, false).slice(0, 3).forEach((l, i) => { text(l, M + 8, 10, i === 0); if (i === 0) right(money(inv.amount_net), W - M - 8, 10); y -= 13; });
+      if (o.scheduled_at) { text(`Ausgeführt am ${day(ppDayKey(o.scheduled_at))}`, M + 8, 9, false, '0.4 0.45 0.4'); y -= 13; }
+      y -= 4; ops.push(`0.8 0.83 0.8 RG 0.6 w ${M} ${f(y + 8)} m ${W - M} ${f(y + 8)} l S`); y -= 12;
+      text('Nettobetrag', 330, 10); right(money(inv.amount_net), W - M - 8, 10); y -= 15;
+      text(`MwSt. ${String(vatRate).replace('.', ',')} %`, 330, 10); right(money(inv.tax_amount), W - M - 8, 10); y -= 24;
+      box(322, y - 7, W - M - 322, 24, '0.16 0.36 0.27'); y += 1;
+      text('Gesamtbetrag', 330, 11, true, '1 1 1'); const tot = money(inv.amount_gross); text(tot, W - M - 8 - tot.length * 11 * 0.56, 11, true, '1 1 1'); y -= 44;
+      text('Bitte überweise den Betrag bis zum Fälligkeitsdatum unter Angabe der Rechnungsnummer.', M, 9.5); y -= 18;
+      [['Bank', org.bank_name], ['IBAN', org.iban], ['BIC', org.bic], ['USt-IdNr. / Momsnr.', org.vat_id], ['Org.-Nr.', org.registration_number]].filter(([, v]) => v).forEach(([l, v]) => { text(l, M, 9, false, '0.4 0.45 0.4'); text(v, M + 110, 9.5, true); y -= 13; });
+      ops.push(`BT /F1 8 Tf 0.5 0.55 0.5 rg ${M} 30 Td (${pdfEncode(`${org.name || ''} · Rechnung ${inv.invoice_number} · erstellt mit Husora`)}) Tj ET`);
+      const content = ops.join('\n');
+      const objs = ['<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Count 1 /Kids [5 0 R] >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
+        `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>`, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`];
+      let pdf = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+      const offsets = [];
+      objs.forEach((body, n) => { offsets.push(pdf.length); pdf += `${n + 1} 0 obj\n${body}\nendobj\n`; });
+      const xref = pdf.length;
+      pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((x) => `${String(x).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+      const bytes = new Uint8Array(pdf.length);
+      for (let n = 0; n < pdf.length; n += 1) bytes[n] = pdf.charCodeAt(n) & 255;
+      return bytes;
+    }
     // Prüfbericht als PDF (mehrseitig, A4) – wird beim Abschluss beim Kunden abgelegt
     function ppInspectionReportPdf(i) {
       const W = 595, H = 842, M = 50;
@@ -16459,12 +16643,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         return;
       }
       if (a === 'reload') { ppLoad(); return; }
+      if (a === 'back' && !pp.detail && PP_MORE_VIEWS.includes(pp.view)) { pp.view = 'more'; pp.form = null; ppRender(); document.querySelector('.pp-main')?.scrollTo(0, 0); return; }
       if (a === 'back') { pp.detail = pp.prev?.detail && pp.prev.detail.id !== pp.detail?.id ? pp.prev.detail : null; pp.prev = null; pp.form = null; ppRender(); return; }
       if (a === 'cancel-form') { pp.form = null; ppRender(); return; }
       if (a === 'new-order') { pp.form = 'new-order'; pp.formProperty = ''; ppRender(); return; }
       if (a === 'order-for') { pp.form = 'new-order'; pp.formProperty = action.dataset.property; pp.keepScroll = true; ppRender(); return; }
       if (a === 'new-customer') { pp.form = 'new-customer'; ppRender(); return; }
-      if (a === 'finance-form') { pp.form = `finance:${id}`; pp.formKind = action.dataset.kind; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'finance-form') { pp.form = `finance:${id}`; pp.formKind = action.dataset.kind; pp.formMode = action.dataset.mode || 'create'; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'invoice-pdf') { const inv = ppD('invoices').find((x) => x.id === id); const doc = ppD('documents').find((d) => d.id === inv?.document_id); if (doc) ppOpenFile(doc.storage_bucket, doc.storage_path, doc.file_name).catch((error) => showToast(error.message)); return; }
       if (a === 'signout') { cloudSignOut(); pp.ctx = null; pp.data = null; try { localStorage.removeItem(PP_CACHE_KEY); } catch (error) { /* egal */ } ppRender(); return; }
       if (a === 'signup') {
         const form = action.closest('form');
@@ -16594,10 +16780,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const tax = Math.round(net * Number(v.vat)) / 100;
         const base = { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, amount_net: net, tax_amount: tax, amount_gross: Math.round((net + tax) * 100) / 100, currency: o.currency };
         ppRun('finance', async () => {
-          if (form.dataset.kind === 'invoice') await ppInsert('invoices', { ...base, invoice_number: v.number, invoice_date: v.date || null, due_date: v.due || null, status: o.organization_id === ppOrg().id ? 'approved' : 'received' });
+          if (form.dataset.kind === 'invoice') await ppSendInvoice(o, { ...base, invoice_number: v.number.trim(), invoice_date: v.date || null, due_date: v.due || null, status: o.organization_id === ppOrg().id ? 'approved' : 'received' }, fd.get('pdf'), form.dataset.mode === 'upload');
           else await ppInsert('quotes', { ...base, quote_number: v.number, valid_until: v.valid || null, description: v.description || null, status: o.organization_id === ppOrg().id ? 'approved' : 'received' });
           pp.form = null;
-        }, { notice: form.dataset.kind === 'invoice' ? 'Rechnung eingereicht.' : 'Angebot gesendet.' });
+        }, { notice: form.dataset.kind === 'invoice' ? (o.organization_id === ppOrg().id ? 'Rechnung als PDF gespeichert.' : `Rechnung als PDF an ${ppCustomerName(o.organization_id)} gesendet.`) : 'Angebot gesendet.' });
       }
       if (kind === 'inspection-start') ppRun('inspection', async () => { const newId = await ppRpc('partner_start_inspection', { p_property_id: v.property_id, p_template_id: v.template_id }); pp.prev = { view: pp.view, detail: null }; pp.detail = { type: 'inspection', id: newId }; }, { notice: 'Kontrolle angelegt.' });
       if (kind === 'member-invite') ppRun('member', async () => { const code = await ppRpc('create_member_invite', { p_organization_id: ppOrg().id, p_email: v.email, p_role: v.role }); showToast(`Einladungscode: ${code}`); });
@@ -16616,7 +16802,11 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const self = pp.ctx.self_partner_id;
         const types = ppD('types');
         ppRun('services', async () => {
-          const rows = types.filter((t) => fd.get(`type:${t.id}`) || ppD('services').some((s) => s.service_type_id === t.id)).map((t) => ({ service_partner_id: self, service_type_id: t.id, active: Boolean(fd.get(`type:${t.id}`)), price_from: fd.get(`from:${t.id}`) === '' ? null : Number(fd.get(`from:${t.id}`)), price_to: fd.get(`to:${t.id}`) === '' ? null : Number(fd.get(`to:${t.id}`)), price_unit: fd.get(`unit:${t.id}`) || null, currency: ppOrg().currency }));
+          const groupTypes = types.filter((t) => !t.organization_id && PP_SERVICE_GROUPS.some(([code]) => code === t.code));
+          const rows = groupTypes.filter((t) => fd.get(`type:${t.id}`) || ppD('services').some((s) => s.service_type_id === t.id)).map((t) => ({ service_partner_id: self, service_type_id: t.id, active: Boolean(fd.get(`type:${t.id}`)), price_from: fd.get(`price:${t.id}`) === '' || fd.get(`price:${t.id}`) === null ? null : Number(fd.get(`price:${t.id}`)), price_to: null, price_unit: fd.get(`unit:${t.id}`) || 'job', currency: ppOrg().currency }));
+          // frühere Einzel-Leistungen (Dach, Elektro …) abschalten – angeboten werden nur noch die drei Gruppen
+          const legacy = ppD('services').filter((s) => s.active && !groupTypes.some((t) => t.id === s.service_type_id));
+          if (legacy.length) await cloudFetch(`/rest/v1/service_partner_services?service_partner_id=eq.${self}&service_type_id=in.(${legacy.map((s) => s.service_type_id).join(',')})`, { method: 'PATCH', body: { active: false }, headers: { Prefer: 'return=minimal' } });
           if (rows.length) await cloudFetch('/rest/v1/service_partner_services?on_conflict=service_partner_id,service_type_id', { method: 'POST', body: rows, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
         }, { notice: 'Leistungen gespeichert.' });
       }
@@ -16634,14 +16824,16 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           ownerSide.me = (await cloudFetch(`/rest/v1/users?auth_user_id=eq.${sub}&select=id`))[0]?.id || '';
         } catch (error) { ownerSide.me = ''; }
       }
-      const [partners, tasksRows, orders, messages, invites] = await Promise.all([
+      const [partners, tasksRows, orders, messages, invites, invoices] = await Promise.all([
         cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status&order=company_name.asc`),
         cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=not.is.null&status=in.(pending,assigned)&select=id,app_ref,title,scheduled_start,assigned_partner_id,property:properties(name)&order=scheduled_start.asc.nullslast&limit=100`),
         cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,scheduled_at,response_note,actual_cost,currency,service_task_id,partner:service_partners(company_name),task:service_tasks(app_ref)&order=created_at.desc&limit=30`),
         cloudFetch(`/rest/v1/messages?organization_id=eq.${org}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`),
-        cloudFetch(`/rest/v1/service_partner_invites?organization_id=eq.${org}&select=service_partner_id,code,expires_at,accepted_at&order=created_at.desc&limit=200`)
+        cloudFetch(`/rest/v1/service_partner_invites?organization_id=eq.${org}&select=service_partner_id,code,expires_at,accepted_at&order=created_at.desc&limit=200`),
+        cloudFetch(`/rest/v1/invoices?organization_id=eq.${org}&service_order_id=not.is.null&select=id,invoice_number,amount_gross,currency,status,invoice_date,due_date,service_order_id,partner:service_partners!invoices_organization_id_service_partner_id_fkey(company_name),property:properties!invoices_organization_id_property_id_fkey(app_ref,name),document:documents!invoices_organization_id_document_id_fkey(id,file_name,file_size,storage_bucket,storage_path)&order=created_at.desc&limit=100`).catch(() => [])
       ]);
-      Object.assign(ownerSide, { partners, tasks: tasksRows, orders, messages, invites });
+      Object.assign(ownerSide, { partners, tasks: tasksRows, orders, messages, invites, invoices });
+      ownerImportInvoices().catch((error) => console.warn('Rechnungen nicht übernommen:', error));
       // Fortschritt der Partner in die lokalen Aufgaben übernehmen
       let changed = 0;
       orders.forEach((order) => {
@@ -16701,6 +16893,29 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         if (currentPage === 'partnerHub') hubRerender();
       }
       return total;
+    }
+    // Rechnungen der Partner (PDF) beim Ferienhaus unter Dokumente ablegen – jede nur einmal
+    let ownerImporting = false;
+    async function ownerImportInvoices() {
+      if (ownerImporting) return;
+      const localProperty = (inv) => properties.find((pr) => pr.id === inv.property?.app_ref) || properties.find((pr) => pr.name.trim().toLowerCase() === String(inv.property?.name || '').trim().toLowerCase());
+      const fresh = (ownerSide.invoices || []).filter((inv) => inv.document && !documents.some((d) => d.id === `cloud-invoice-${inv.id}`) && localProperty(inv));
+      if (!fresh.length) return;
+      ownerImporting = true;
+      const added = [];
+      try {
+        for (const inv of fresh) {
+          try {
+            let dataUrl = await cloudGetFile(`${CLOUD_FILE_PREFIX}${inv.document.storage_bucket}/${inv.document.storage_path}`);
+            dataUrl = String(dataUrl).replace(/^data:[^;,]*/, 'data:application/pdf');
+            added.push({ id: `cloud-invoice-${inv.id}`, propertyId: localProperty(inv).id, name: inv.document.file_name, type: 'application/pdf', size: inv.document.file_size || Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75), dataUrl, category: 'invoice', createdIso: inv.invoice_date || localDateKey(new Date()), createdAt: new Intl.DateTimeFormat('de-DE').format(inv.invoice_date ? new Date(`${inv.invoice_date}T12:00:00`) : new Date()), partnerName: inv.partner?.company_name || '' });
+          } catch (error) { console.warn('Rechnungs-PDF nicht geladen:', error); }
+        }
+        if (added.length && persistDocuments([...documents, ...added])) {
+          showToast(added.length === 1 ? `Rechnung von ${added[0].partnerName || 'deinem Servicepartner'} erhalten – unter Dokumente beim Ferienhaus abgelegt.` : `${added.length} Rechnungen erhalten – unter Dokumente bei den Ferienhäusern abgelegt.`);
+          if (['documents', 'propertyDetail', 'partnerHub'].includes(currentPage)) render();
+        }
+      } finally { ownerImporting = false; }
     }
     async function ownerRun(label, task) {
       if (ownerSide.busy) return;
@@ -16818,7 +17033,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <label><span class="form-label">Aufgabe</span><select class="form-control" name="task">${tasksOpen.map((t) => `<option value="${t.id}">${escapeHtml(t.title)}${t.property?.name ? ` – ${escapeHtml(t.property.name)}` : ''}${t.scheduled_start ? ` (${escapeHtml(fmtDate(t.scheduled_start.slice(0, 10)))})` : ''}</option>`).join('')}</select></label>
           <label><span class="form-label">Servicepartner</span><select class="form-control" name="partner">${connected.map((p) => `<option value="${p.id}" ${hub.partner === p.id ? 'selected' : ''}>${escapeHtml(p.company_name)}</option>`).join('')}</select></label>
           <div class="pp-actions"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Auftrag senden</button></div></form>` : '<p class="settings-hint">Offene Aufgaben erscheinen hier, sobald sie per Cloud-Speicher abgeglichen sind (Einstellungen → Daten & App).</p>'}</section>` : `<div class="pp-empty">${icon('task')}<strong>Noch kein verbundener Partner</strong><p>Lade zuerst einen Servicepartner ein.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`}
-        ${(ownerSide.orders || []).length ? `<section class="hub-section"><h3 class="hub-section-title">Aufträge an Partner</h3>${ownerSide.orders.map((o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.partner?.company_name || '')} · ${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button></div></div>`; }).join('')}</section>` : ''}`;
+        ${(ownerSide.orders || []).length ? `<section class="hub-section"><h3 class="hub-section-title">Aufträge an Partner</h3>${ownerSide.orders.map((o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.partner?.company_name || '')} · ${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}<div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button></div></div>`; }).join('')}</section>` : ''}`;
     }
     function partnerHubPage() {
       const tabs = [['partners', 'Partner & Codes'], ['chat', 'Messenger'], ['orders', 'Aufträge']];
@@ -16881,6 +17096,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       unread.forEach((m) => { m.read_at = now; });
       try { await cloudFetch(`/rest/v1/messages?id=in.(${unread.map((m) => m.id).join(',')})`, { method: 'PATCH', body: { read_at: now }, headers: { Prefer: 'return=minimal' } }); } catch (error) { console.error('Gelesen-Status nicht gespeichert:', error); }
     }
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-hub-invoice]');
+      if (!button) return;
+      const inv = (ownerSide.invoices || []).find((x) => x.id === button.dataset.hubInvoice);
+      const local = documents.find((d) => d.id === `cloud-invoice-${inv?.id}`);
+      if (local) { openDocument(local); return; }
+      if (inv?.document) cloudGetFile(`${CLOUD_FILE_PREFIX}${inv.document.storage_bucket}/${inv.document.storage_path}`).then((url) => showPdf(dataUrlBytes(url), inv.document.file_name, 'Rechnung')).catch((error) => showToast(error.message));
+    });
     function hubSetPolling() {
       const active = currentPage === 'partnerHub' && cloudReady();
       if (active && !hub.poll) hub.poll = setInterval(() => { if (document.visibilityState === 'visible') hubRefresh({ quiet: true }); }, hub.tab === 'chat' ? 12000 : 30000);
