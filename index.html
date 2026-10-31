@@ -917,6 +917,16 @@
     .booking-overview-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 16px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: white; }
     .booking-overview-card.past { opacity: .66; }
     .booking-overview-title { min-width: 0; }
+    .booking-overview-title.with-photo { display: flex; align-items: center; gap: 12px; }
+    .booking-overview-name { flex: 1; min-width: 0; }
+    .booking-house-photo { position: relative; flex: 0 0 auto; display: grid; place-items: center; align-content: center; gap: 2px; width: 76px; height: 64px; overflow: hidden; border-radius: 10px; background: var(--green-soft); color: var(--green); cursor: pointer; }
+    .booking-house-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .booking-house-photo.empty { border: 1.5px dashed rgba(36, 75, 61, .35); text-align: center; }
+    .booking-house-photo.empty svg { width: 20px; height: 20px; }
+    .booking-house-photo.empty span { padding: 0 4px; font-size: 10.5px; font-weight: 700; line-height: 1.15; }
+    .booking-house-photo-edit { position: absolute; right: 4px; bottom: 4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(0, 0, 0, .55); color: #fff; }
+    .booking-house-photo-edit svg { width: 12px; height: 12px; }
+    .booking-house-photo:focus-within { outline: 2px solid var(--green); outline-offset: 2px; }
     .booking-overview-title strong { display: block; font-size: 13px; }
     .booking-overview-title small { display: block; margin-top: 4px; color: var(--muted); font-size: 12.5px; }
     .booking-status { align-self: start; padding: 6px 12px; border-radius: 999px; color: #fff; background: var(--green); font-size: 12px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; justify-self: end; }
@@ -2326,6 +2336,8 @@
     .pp-svc-price { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; margin-top: 10px; }
     .pp-svc-desc { margin: 4px 0 0 30px; color: var(--muted); font-size: 13px; line-height: 1.4; }
     .pp-pdf-pick { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px dashed var(--line); border-radius: 12px; }
+    .pp-pdf-pick > svg { flex: 0 0 auto; width: 24px; height: 24px; color: var(--green); }
+    .pp-pdf-pick > span { flex: 1; min-width: 0; }
     .pp-pdf-pick strong { display: block; font-size: 14px; }
     .pp-pdf-pick small { display: block; color: var(--muted); font-size: 12.5px; }
     .pp-nav { display: flex; gap: 2px; overflow-x: auto; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); scrollbar-width: none; }
@@ -3442,6 +3454,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4506,6 +4519,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         arrow: '<path d="m9 6 6 6-6 6"/>',
         menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
         bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/>',
+        camera: '<path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.2" r="3.4"/>',
         gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
         help: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/>',
         shield: '<path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6z"/>',
@@ -6672,15 +6686,17 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           ${allStays.length ? bookingKpis : ''}
           <section class="card booking-overview"><div class="card-head"><div><h2 class="card-title">${bookingsEnabled() ? 'Belegungsplan' : 'Deine Aufenthalte'}</h2><p class="card-caption">${allStays.filter((booking) => !isOwnerStay(booking)).length} ${bookingsEnabled() ? 'Gästebuchungen · ' : ''}${allStays.filter(isOwnerStay).length}× Eigennutzung</p></div>${bookingsEnabled() ? '<div class="stay-legend"><span><i class="guest"></i>Gäste</span><span><i class="owner"></i>Eigennutzung</span></div>' : ''}</div>
             ${allStays.length ? `${upcomingBookings.length ? '' : '<div class="empty">Keine kommenden Aufenthalte.</div>'}<div class="booking-overview-list">${[...upcomingBookings, ...pastBookingList].map((booking, position) => {
-              const propertyName = properties.find((property) => property.id === booking.propertyId)?.name || 'Ferienhaus entfernt';
+              const house = properties.find((property) => property.id === booking.propertyId);
+              const propertyName = house?.name || 'Ferienhaus entfernt';
               const checkedOut = booking.endDate < todayKey;
               const inHouse = booking.startDate <= todayKey && todayKey < booking.endDate;
               const pastHeading = position === upcomingBookings.length && pastBookingList.length ? `<h3 class="booking-list-heading">Vergangene Buchungen (${pastBookingList.length})</h3>` : '';
               const guests = Number(booking.guestCount) || 1;
               const nights = nightCount(booking.startDate, booking.endDate);
               const owner = isOwnerStay(booking);
+              const housePhoto = house ? `<label class="booking-house-photo ${house.photo ? '' : 'empty'}" title="${house.photo ? `Hausfoto von ${escapeHtml(house.name)} ändern` : `Foto von ${escapeHtml(house.name)} hinzufügen`}">${house.photo ? `<img src="${escapeHtml(house.photo)}" alt="${escapeHtml(house.name)}"><span class="booking-house-photo-edit">${icon('camera')}</span>` : `${icon('camera')}<span>Foto hinzufügen</span>`}<input type="file" accept="image/*" hidden data-booking-house-photo="${escapeHtml(house.id)}"></label>` : '';
               return `${pastHeading}<article class="booking-overview-card ${checkedOut ? 'past' : ''} ${owner ? 'owner-stay' : ''}">
-                <div class="booking-overview-title"><strong>${escapeHtml(booking.guestName)}${owner ? '<span class="booking-source owner">Eigennutzung</span>' : ''}${booking.source && !owner ? `<span class="booking-source">${escapeHtml(portalSourceName(booking.source))}</span>` : ''}</strong><small>${escapeHtml(propertyName)}</small></div>
+                <div class="booking-overview-title ${house ? 'with-photo' : ''}">${housePhoto}<div class="booking-overview-name"><strong>${escapeHtml(booking.guestName)}${owner ? '<span class="booking-source owner">Eigennutzung</span>' : ''}${booking.source && !owner ? `<span class="booking-source">${escapeHtml(portalSourceName(booking.source))}</span>` : ''}</strong><small>${escapeHtml(propertyName)}</small></div></div>
                 <span class="booking-status ${checkedOut ? 'past' : inHouse ? 'live' : ''} ${owner ? 'owner' : ''}">${owner ? (checkedOut ? 'Vorbei' : inHouse ? 'Du bist im Haus' : 'Eigennutzung geplant') : checkedOut ? 'Ausgecheckt' : inHouse ? 'Gast im Haus' : 'Gebucht'}</span>
                 <div class="booking-overview-dates"><div class="booking-overview-date"><span>Anreise</span><strong>${escapeHtml(detailedDate(booking.startDate))}</strong></div><div class="booking-overview-date"><span>Abreise</span><strong>${escapeHtml(detailedDate(booking.endDate))}</strong></div></div>
                 ${(() => {
@@ -11210,6 +11226,23 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         pendingPropertyPhoto = pendingPropertyPhotos[Number(thumb.dataset.photoCover)];
         renderPhotoGallery();
       }
+    });
+    // Hausfoto direkt aus der Buchungsübersicht hinzufügen oder ändern (wird Titelbild des Hauses)
+    pageContent.addEventListener('change', async (event) => {
+      const input = event.target.closest('[data-booking-house-photo]');
+      if (!input || !input.files?.[0]) return;
+      const house = properties.find((property) => property.id === input.dataset.bookingHousePhoto);
+      const file = input.files[0];
+      input.value = '';
+      if (!house || !file.type.startsWith('image/')) { showToast('Bitte ein Bild auswählen (JPG, PNG, HEIC …).'); return; }
+      try {
+        const photo = await compressPropertyPhoto(file, 1800, 0.82);
+        house.photos = [...new Set([photo, ...(house.photos || []).filter((src) => src !== house.photo)])].slice(0, 6);
+        house.photo = photo;
+        if (!saveProperties()) return;
+        render();
+        showToast(`Foto für „${house.name}“ gespeichert – es ist jetzt das Titelbild des Hauses.`);
+      } catch (error) { console.error('Hausfoto:', error); showToast('Das Foto konnte nicht gelesen werden.'); }
     });
     pageContent.addEventListener('submit', (event) => {
       if (event.target.id === 'expense-entry') {
@@ -16231,7 +16264,19 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       let actions = '';
       if (o.status === 'offered') actions = `<div class="pp-card pp-form"><h3>Anfrage beantworten</h3><label><span class="form-label">Termin (optional)</span><input class="form-control" type="datetime-local" data-pp-field="accept-date" value="${ppLocalInput(o.scheduled_at)}"></label><label><span class="form-label">Nachricht an den Kunden</span><input class="form-control" data-pp-field="accept-note" placeholder="z. B. Wir kommen am Vormittag."></label><div class="pp-actions"><button type="button" class="secondary-btn danger" data-pp-action="reject" data-id="${o.id}" ${ppDisabled()}>Ablehnen</button><button type="button" class="primary-btn" data-pp-action="accept" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Annehmen</button></div></div>`;
       else if (['accepted', 'scheduled'].includes(o.status)) actions = `<div class="pp-card pp-form"><h3>Termin & Start</h3><label><span class="form-label">Termin</span><input class="form-control" type="datetime-local" data-pp-field="sched" value="${ppLocalInput(o.scheduled_at)}"></label><div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="schedule" data-id="${o.id}" ${ppDisabled()}>Termin speichern</button><button type="button" class="primary-btn" data-pp-action="start" data-id="${o.id}" ${ppDisabled()}>Auftrag starten</button></div></div>`;
-      else if (o.status === 'in_progress') actions = `<div class="pp-card pp-form"><h3>Auftrag abschließen</h3><label><span class="form-label">Ist-Kosten (${escapeHtml(o.currency)})</span><input class="form-control" type="number" min="0" step="0.01" data-pp-field="actual" value="${o.actual_cost ?? o.estimated_cost ?? ''}"></label><label><span class="form-label">Abschlussnotiz</span><input class="form-control" data-pp-field="done-note" placeholder="Was wurde erledigt?"></label><div class="pp-actions"><button type="button" class="primary-btn big" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Erledigt</button></div></div>`;
+      else if (o.status === 'in_progress') {
+        const vat = o.currency === 'SEK' || ppOrg().country === 'SE' ? 25 : 19;
+        const canBill = o.organization_id !== ppOrg().id && (ppIsLead() || ppRole() === 'accounting');
+        const number = `R-${new Date().getFullYear()}-${String(ppD('invoices').length + 1).padStart(4, '0')}`;
+        actions = `<form class="pp-card pp-form" data-pp-form="complete-invoice" data-order="${o.id}"><h3>Auftrag abschließen</h3>
+          <div class="pp-grid"><label><span class="form-label">Ist-Kosten brutto (${escapeHtml(o.currency)})</span><input class="form-control" type="number" min="0" step="0.01" name="gross" data-pp-field="actual" value="${o.actual_cost ?? o.estimated_cost ?? ''}" ${canBill ? 'required' : ''}></label>
+          ${canBill ? `<label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}"></label>
+          <label><span class="form-label">Rechnungsnummer</span><input class="form-control" name="number" value="${escapeHtml(number)}" maxlength="40"></label>
+          <label><span class="form-label">Zahlbar bis</span><input class="form-control" name="due" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label>` : ''}
+          <label class="full"><span class="form-label">Abschlussnotiz</span><input class="form-control" name="note" data-pp-field="done-note" placeholder="Was wurde erledigt?"></label></div>
+          ${canBill ? `<label class="pp-pdf-pick">${icon('document')}<span><strong>Eigene Rechnung als PDF (optional)</strong><small>Ohne Datei erstellt Husora die Rechnung als PDF mit deinen Firmen- und Bankdaten.</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf" style="margin-top:8px"></span></label>` : ''}
+          <div class="pp-actions">${canBill ? `<button type="button" class="secondary-btn" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>Nur als erledigt melden</button><button type="submit" class="primary-btn big" ${ppDisabled()}>${icon('check')} Auftrag erledigt und Rechnung an Kunden schicken</button>` : `<button type="button" class="primary-btn big" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Erledigt</button>`}</div></form>`;
+      }
       return `${ppBack()}
         <div class="pp-detail-head"><div><span class="pp-eyebrow">${escapeHtml(o.order_number)} · ${escapeHtml(ppCustomerName(o.organization_id))}</span><h1>${escapeHtml(o.title)}</h1></div>${ppBadge(PP_ORDER_STATUS, o.status)}</div>
         ${ppPropertyCard(ppD('properties').find((x) => x.id === p?.id) || p, { maps })}
@@ -16826,6 +16871,19 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           pp.form = null;
         }, { notice: form.dataset.kind === 'invoice' ? (o.organization_id === ppOrg().id ? 'Rechnung als PDF gespeichert.' : `Rechnung als PDF an ${ppCustomerName(o.organization_id)} gesendet.`) : 'Angebot gesendet.' });
       }
+      if (kind === 'complete-invoice') {
+        const o = ppD('orders').find((x) => x.id === form.dataset.order);
+        const gross = Math.round(Number(v.gross) * 100) / 100;
+        const vatRate = Number(v.vat || 0);
+        const net = Math.round((gross / (1 + vatRate / 100)) * 100) / 100;
+        const note = (v.note || '').trim();
+        ppRun('complete', async () => {
+          await ppPatch('service_orders', o.id, { status: 'completed', actual_cost: gross, response_note: note || o.response_note || null });
+          if (note) await ppInsert('messages', { organization_id: o.organization_id, service_order_id: o.id, message: `Erledigt: ${note}` });
+          await ppSendInvoice(o, { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, invoice_number: (v.number || '').trim() || `R-${Date.now()}`, invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: Math.round((gross - net) * 100) / 100, amount_gross: gross, currency: o.currency, status: 'received' }, fd.get('pdf'), false);
+        }, { notice: `Auftrag erledigt – Rechnung als PDF an ${ppCustomerName(o.organization_id)} gesendet.` });
+        return;
+      }
       if (kind === 'inspection-start') ppRun('inspection', async () => { const newId = await ppRpc('partner_start_inspection', { p_property_id: v.property_id, p_template_id: v.template_id }); pp.prev = { view: pp.view, detail: null }; pp.detail = { type: 'inspection', id: newId }; }, { notice: 'Kontrolle angelegt.' });
       if (kind === 'member-invite') ppRun('member', async () => { const code = await ppRpc('create_member_invite', { p_organization_id: ppOrg().id, p_email: v.email, p_role: v.role }); showToast(`Einladungscode: ${code}`); });
       if (kind === 'company-edit') {
@@ -16946,11 +17004,39 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       }
       return total;
     }
+    // Rechnungen der Partner als Ist-Kosten beim Ferienhaus buchen (Ferienhaus-Kosten) – jede nur einmal
+    function ownerInvoiceCategory(inv) {
+      const order = (ownerSide.orders || []).find((o) => o.id === inv.service_order_id);
+      const task = tasks.find((t) => String(t.id) === order?.task?.app_ref);
+      const text = `${task?.area || ''} ${task?.auto || ''} ${order?.title || ''}`.toLowerCase();
+      if (/kontroll|inspection/.test(text)) return 'inspection';
+      if (/reinig|gästewechsel|turnover|clean/.test(text)) return 'cleaning';
+      if (/reparatur|repair|mangel/.test(text)) return 'repairs';
+      if (/sanier|renov/.test(text)) return 'renovation';
+      if (/außen|garten|hecke|rasen|schnee|laub|winterdienst/.test(text)) return 'grounds';
+      return 'serviceTasks';
+    }
+    function ownerBookInvoices(localProperty) {
+      const fresh = (ownerSide.invoices || []).filter((inv) => ['received', 'approved', 'paid', 'overdue'].includes(inv.status) && Number(inv.amount_gross) > 0 && !expenses.some((e) => e.id === `expense-cloud-invoice-${inv.id}`) && localProperty(inv));
+      if (!fresh.length) return;
+      const booked = fresh.map((inv) => {
+        const order = (ownerSide.orders || []).find((o) => o.id === inv.service_order_id);
+        const gross = Number(inv.amount_gross);
+        const amount = Math.round((inv.currency === 'EUR' ? gross / (fxRate.rate || 0.09) : gross) * 100) / 100;
+        return { id: `expense-cloud-invoice-${inv.id}`, documentId: inv.document ? `cloud-invoice-${inv.id}` : '', propertyId: localProperty(inv).id, vendor: inv.partner?.company_name || 'Servicepartner', date: inv.invoice_date || localDateKey(new Date()), invoiceNo: inv.invoice_number || '', amount, originalAmount: gross, originalCurrency: inv.currency || 'SEK', category: ownerInvoiceCategory(inv), projectId: '', note: `Rechnung über das Partner-Portal${order?.title ? ` · ${order.title}` : ''}` };
+      });
+      expenses = [...expenses, ...booked];
+      if (!persistExpenses()) return;
+      const sum = booked.reduce((a, e) => a + e.amount, 0);
+      showToast(`${booked.length === 1 ? `Rechnung von ${booked[0].vendor}` : `${booked.length} Rechnungen`} über ${formatCost(sum)} als Ist-Kosten beim Ferienhaus gebucht.`);
+      if (currentPage === 'partnerHub') hubRerender(); else if (['costs', 'propertyDetail', 'dashboard'].includes(currentPage)) render();
+    }
     // Rechnungen der Partner (PDF) beim Ferienhaus unter Dokumente ablegen – jede nur einmal
     let ownerImporting = false;
     async function ownerImportInvoices() {
       if (ownerImporting) return;
       const localProperty = (inv) => properties.find((pr) => pr.id === inv.property?.app_ref) || properties.find((pr) => pr.name.trim().toLowerCase() === String(inv.property?.name || '').trim().toLowerCase());
+      ownerBookInvoices(localProperty);
       const fresh = (ownerSide.invoices || []).filter((inv) => inv.document && !documents.some((d) => d.id === `cloud-invoice-${inv.id}`) && localProperty(inv));
       if (!fresh.length) return;
       ownerImporting = true;
@@ -16963,7 +17049,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             added.push({ id: `cloud-invoice-${inv.id}`, propertyId: localProperty(inv).id, name: inv.document.file_name, type: 'application/pdf', size: inv.document.file_size || Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75), dataUrl, category: 'invoice', createdIso: inv.invoice_date || localDateKey(new Date()), createdAt: new Intl.DateTimeFormat('de-DE').format(inv.invoice_date ? new Date(`${inv.invoice_date}T12:00:00`) : new Date()), partnerName: inv.partner?.company_name || '' });
           } catch (error) { console.warn('Rechnungs-PDF nicht geladen:', error); }
         }
-        if (added.length && persistDocuments([...documents, ...added])) {
+        if (added.length) persistDocuments([...documents, ...added]);
+        if (added.length) {
           showToast(added.length === 1 ? `Rechnung von ${added[0].partnerName || 'deinem Servicepartner'} erhalten – unter Dokumente beim Ferienhaus abgelegt.` : `${added.length} Rechnungen erhalten – unter Dokumente bei den Ferienhäusern abgelegt.`);
           if (currentPage === 'partnerHub') hubRerender(); else if (['documents', 'propertyDetail'].includes(currentPage)) render();
         }
