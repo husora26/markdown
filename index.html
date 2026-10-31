@@ -49,7 +49,7 @@
     .breadcrumb { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 13px; }
     .breadcrumb-home { display: grid; place-items: center; width: 40px; height: 40px; flex: none; padding: 0; border: 1px solid transparent; border-radius: 8px; background: transparent; }
     .breadcrumb-home:hover, .breadcrumb-home:focus-visible { border-color: var(--line); background: rgba(255,254,250,.8); outline: none; }
-    .breadcrumb-home svg { width: 38px; height: 35px; }
+    .breadcrumb-home img { display: block; width: 38px; height: 35px; object-fit: contain; }
     .brand-lockup { display: inline-flex; align-items: center; gap: 9px; margin-left: 2px; color: #fff9eb; }
     .brand-symbol { width: 38px; height: 35px; flex: none; }
     .brand-wordmark { display: flex; flex-direction: column; gap: 1px; }
@@ -1074,7 +1074,7 @@
       .notification-panel { position: fixed; top: 75px; right: 13px; left: 13px; width: auto; max-height: calc(100vh - 95px); }
       .breadcrumb { gap: 6px; font-size: 12.5px; }
       .breadcrumb-home { width: 34px; height: 36px; }
-      .breadcrumb-home svg { width: 34px; height: 30px; }
+      .breadcrumb-home img { width: 34px; height: 30px; }
       .breadcrumb-brand { font-size: 19px; }
       .top-actions { gap: 7px; }
       .welcome { align-items: flex-start; flex-direction: column; gap: 15px; }
@@ -3616,6 +3616,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4361,7 +4362,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
   <div class="app">
     <main>
       <header class="topbar">
-        <div class="breadcrumb"><button class="breadcrumb-home" data-page="dashboard" aria-label="Zur Übersicht" title="Zur Übersicht"><svg viewBox="0 0 42 36" aria-hidden="true"><path d="M3 19 16 7l13 12M6 17v14h19V17M11 23h3v3h-3zm7 0h3v3h-3z" fill="none" stroke="#fff9eb" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3"/><path d="M34 2 29 10h3l-5 6h4l-4 7h6v8h3v-8h6l-4-7h4l-5-6h3z" fill="#b9955f"/></svg></button><span class="brand-lockup"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></span><span class="breadcrumb-separator" aria-hidden="true">/</span><b id="breadcrumb">Übersicht</b></div>
+        <div class="breadcrumb"><button class="breadcrumb-home" data-page="dashboard" aria-label="Zur Übersicht" title="Zur Übersicht"><img src="assets/logo.png" alt="" aria-hidden="true"></button><span class="brand-lockup"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></span><span class="breadcrumb-separator" aria-hidden="true">/</span><b id="breadcrumb">Übersicht</b></div>
         <div class="page-bar" id="page-bar"></div>
         <div class="top-actions">
           <div class="plan-info" id="plan-info"></div>
