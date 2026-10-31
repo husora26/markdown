@@ -1461,9 +1461,14 @@
     .partner-task-head small { color: var(--muted); font-size: 12.5px; }
     .partner-task-head b { color: var(--red); }
     .partner-task-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
-    .partner-task-list li { display: grid; grid-template-columns: 52px 1fr; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #f0ece2; font-size: 13px; }
+    .partner-task-list li { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #f0ece2; font-size: 13px; }
     .partner-task-list li > span { color: var(--muted); font-size: 12.5px; font-weight: 700; }
     .partner-task-list li.overdue > span { color: var(--red); }
+    .ptask-status { align-self: center; padding: 3px 8px; border-radius: 999px; background: #e3eefa; color: #245d96; font-size: 11px; font-style: normal; font-weight: 700; white-space: nowrap; }
+    .ptask-work-count { color: #245d96; font-weight: 700; }
+    .primary-btn.sp-commissioned { border-color: #2f6fb0; background: #2f6fb0; color: #fff; }
+    .primary-btn.sp-commissioned:hover { background: #285f98; }
+    .partner-task-card.commissioned { border-color: #b9d2ec; }
     .partner-task-list button { padding: 0; border: 0; color: var(--ink); background: none; font-weight: 650; text-align: left; }
     .partner-task-list button small { display: block; color: var(--muted); font-size: 12px; font-weight: 500; }
     .partner-task-actions { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -3462,6 +3467,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3800,6 +3806,9 @@ html.dark .view-toggle button.active { background: #1c1c1c; box-shadow: 0 1px 3p
 html.dark .partner-task-card { background: #1c1c1c; }
 html.dark .partner-task-card.unassigned { border-top-color: #50534f; background: #25231b; }
 html.dark .partner-task-list li { border-bottom: 1px solid #484338; }
+html.dark .ptask-status { background: #192531; color: #9ebfe0; }
+html.dark .ptask-work-count { color: #9ebfe0; }
+html.dark .partner-task-card.commissioned { border-color: #374758; }
 html.dark .ap-chip { background: #1c1c1c; }
 html.dark .ap-tasks { background: #28241a; }
 html.dark .ap-tasks em { color: #da9b90; }
@@ -6904,9 +6913,11 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const partner = providerById(partnerId);
         const overdue = list.filter((task) => task.date && task.date < today).length;
         const sorted = [...list].sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
-        return `<article class="partner-task-card ${partner ? '' : 'unassigned'}"><div class="partner-task-head"><span class="provider-avatar">${escapeHtml(partner ? partner.initials || partner.name.slice(0, 2).toUpperCase() : partnerId === '__self' ? 'EL' : '?')}</span><div><strong>${escapeHtml(partner ? partner.name : partnerId === '__self' ? 'Eigenleistung' : 'Noch ohne Servicepartner')}</strong><small>${list.length} offen${overdue ? ` · <b>${overdue} überfällig</b>` : ''}${partner ? ` · ${escapeHtml(partnerCategoryLabel(partner))}` : ''}</small></div></div>
-          <ul class="partner-task-list">${sorted.map((task) => `<li class="${task.date && task.date < today ? 'overdue' : ''}"><span>${task.date ? escapeHtml(fmtDate(task.date)) : '—'}</span><button type="button" data-edit-task="${task.id}">${escapeHtml(task.title)}<small>${escapeHtml(task.property)}</small></button></li>`).join('')}</ul>
-          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button><button type="button" class="primary-btn" data-commission-partner="${escapeHtml(partnerId)}">${icon('check')} SP beauftragen</button>${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : partnerId === '__self' ? '<span class="partner-hint">Diese Aufgaben erledigst du selbst – kein Servicepartner beauftragt.</span>' : '<span class="partner-hint">In der Liste je Aufgabe einen Servicepartner wählen oder „Selbst“ einschalten.</span>'}</div></article>`;
+        const inWork = list.filter((task) => taskStatus(task) === 'In Bearbeitung').length;
+        const commissioned = Boolean(partner) && inWork > 0 && inWork === list.length;
+        return `<article class="partner-task-card ${partner ? '' : 'unassigned'} ${commissioned ? 'commissioned' : ''}"><div class="partner-task-head"><span class="provider-avatar">${escapeHtml(partner ? partner.initials || partner.name.slice(0, 2).toUpperCase() : partnerId === '__self' ? 'EL' : '?')}</span><div><strong>${escapeHtml(partner ? partner.name : partnerId === '__self' ? 'Eigenleistung' : 'Noch ohne Servicepartner')}</strong><small>${list.length - inWork ? `${list.length - inWork} offen` : ''}${list.length - inWork && inWork ? ' · ' : ''}${inWork ? `<span class="ptask-work-count">${inWork} in Bearbeitung</span>` : ''}${overdue ? ` · <b>${overdue} überfällig</b>` : ''}${partner ? ` · ${escapeHtml(partnerCategoryLabel(partner))}` : ''}</small></div></div>
+          <ul class="partner-task-list">${sorted.map((task) => `<li class="${task.date && task.date < today ? 'overdue' : ''}"><span>${task.date ? escapeHtml(fmtDate(task.date)) : '—'}</span><button type="button" data-edit-task="${task.id}">${escapeHtml(task.title)}<small>${escapeHtml(task.property)}</small></button>${taskStatus(task) === 'In Bearbeitung' ? '<em class="ptask-status">In Bearbeitung</em>' : ''}</li>`).join('')}</ul>
+          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button>${commissioned ? `<button type="button" class="primary-btn sp-commissioned" data-commission-partner="${escapeHtml(partnerId)}" aria-pressed="true" title="Alle Aufgaben sind an ${escapeHtml(partner.name)} übergeben – neue Aufgaben werden beim Antippen nachgesendet">${icon('check')} SP beauftragt</button>` : `<button type="button" class="primary-btn" data-commission-partner="${escapeHtml(partnerId)}">${icon('check')} SP beauftragen</button>`}${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : partnerId === '__self' ? '<span class="partner-hint">Diese Aufgaben erledigst du selbst – kein Servicepartner beauftragt.</span>' : '<span class="partner-hint">In der Liste je Aufgabe einen Servicepartner wählen oder „Selbst“ einschalten.</span>'}</div></article>`;
       }).join('');
       return cards ? `<div class="partner-task-grid">${cards}</div>` : '<div class="empty">Keine offenen Aufgaben für diese Auswahl.</div>';
     }
@@ -16986,6 +16997,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       ownerSide.dispatching = true;
       const org = cloud.org.id;
       const sent = new Map();
+      let restated = 0;
       try {
         // immer frisch: ein Partner kann sich seit dem letzten Laden verbunden haben
         const partners = await cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&partner_organization_id=not.is.null&select=id,company_name,partner_organization_id`);
@@ -16998,10 +17010,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         }
         const ids = [...byRef.values()];
         const existing = [];
-        for (let i = 0; i < ids.length; i += 50) existing.push(...await cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&service_task_id=in.(${ids.slice(i, i + 50).join(',')})&select=service_task_id,service_partner_id`));
+        for (let i = 0; i < ids.length; i += 50) existing.push(...await cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&service_task_id=in.(${ids.slice(i, i + 50).join(',')})&select=service_task_id,service_partner_id,status`));
         const done = new Set(existing.map((o) => `${o.service_task_id}:${o.service_partner_id}`));
+        const running = new Set(existing.filter((o) => ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)).map((o) => `${o.service_task_id}:${o.service_partner_id}`));
         for (const { t, sp } of wanted) {
           const taskId = byRef.get(String(t.id));
+          // schon früher gesendet und noch aktiv → Status nachziehen
+          if (taskId && running.has(`${taskId}:${sp.id}`) && taskStatus(t) === 'Offen') { markTaskCommissioned(t); restated += 1; }
           if (!taskId || done.has(`${taskId}:${sp.id}`)) continue; // noch nicht in der Cloud oder schon gesendet
           await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: taskId, p_service_partner_id: sp.id } });
           done.add(`${taskId}:${sp.id}`);
@@ -17010,6 +17025,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         }
       } finally { ownerSide.dispatching = false; }
       const total = [...sent.values()].reduce((a, b) => a + b, 0);
+      if (restated && !total) { persistTasks(); if (['tasks', 'dashboard', 'calendar'].includes(currentPage)) render(); }
       if (total) {
         persistTasks();
         if (['tasks', 'dashboard', 'calendar'].includes(currentPage)) render();
@@ -17093,7 +17109,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         }
         await cloudUpload({ full: false, keys: new Set(['stugliv-tasks']) });
         const sent = await ownerDispatchOrders({ providerId });
-        if (!sent) showToast(`Alle offenen Aufgaben sind bereits an ${provider.name} gesendet.`);
+        if (!sent) { showToast(`Alle offenen Aufgaben sind bereits an ${provider.name} gesendet.`); if (currentPage === 'tasks') render(); }
       } catch (error) {
         showToast(error instanceof TypeError ? 'Keine Verbindung – bitte später erneut versuchen.' : `Beauftragen fehlgeschlagen: ${error.message}`);
       } finally {
