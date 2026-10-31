@@ -4746,7 +4746,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     });
     // Eigene, selbst angelegte Servicepartner (werden wie Verzeichnis-Partner überall angeboten)
     const CUSTOM_PROVIDERS_KEY = 'stugliv-custom-providers';
-    const CUSTOM_PROVIDER_FIELDS = ['id', 'name', 'category', 'services', 'specialty', 'contact', 'phone', 'email', 'website', 'town', 'notes', 'createdAt'];
+    const CUSTOM_PROVIDER_FIELDS = ['id', 'name', 'category', 'services', 'specialty', 'contact', 'phone', 'email', 'website', 'town', 'notes', 'createdAt', 'cloudPartnerId'];
     const providerInitials = (name) => String(name || '?').trim().split(/\s+/).filter((word) => /[\p{L}\d]/u.test(word)).slice(0, 2).map((word) => [...word][0]).join('').toLocaleUpperCase('sv') || '?';
     let customProviders = [];
     try {
@@ -15405,6 +15405,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       }
       cloud.lastSyncAt = latest || new Date().toISOString();
       persistCloud();
+      if (present.has('stugliv-tasks')) setTimeout(() => ownerDispatchOrders().catch((error) => console.warn('Aufträge nicht gesendet:', error)), 300);
       return entries.length;
     }
     async function cloudDownload() {
@@ -15765,6 +15766,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const [row] = await cloudFetch('/rest/v1/service_partners', { method: 'POST', body: { organization_id: cloud.org.id, company_name: provider.name, email: provider.email || null, phone: provider.phone || null, website: provider.website || null, city: provider.town || null, contact_name: provider.contact || null }, headers: { Prefer: 'return=representation' } });
         const code = await cloudFetch('/rest/v1/rpc/create_service_partner_invite', { method: 'POST', body: { p_service_partner_id: row.id, p_email: provider.email || null } });
         ownerSide.code = { id: row.id, code };
+        const live = providerById(provider.id);
+        if (live?.custom) { live.cloudPartnerId = row.id; persistCustomProviders(); }
         await ownerLoadPartners();
         showToast(`Einladungscode für ${provider.name}: ${code}`);
       } catch (error) {
@@ -16651,6 +16654,54 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       });
       if (changed) { persistTasks(); showToast(`${changed} Aufgabe${changed === 1 ? '' : 'n'} mit dem Stand deiner Servicepartner aktualisiert.`); }
     }
+    // Verbundener Cloud-Partner zu einem Servicepartner der App (eigener Partner oder Verzeichnis)
+    function cloudPartnerOf(providerId, partners = ownerSide.partners) {
+      const provider = providerById(providerId);
+      if (!provider) return null;
+      const connected = (partners || []).filter((p) => p.partner_organization_id);
+      const name = String(provider.name || '').trim().toLowerCase();
+      return connected.find((p) => p.id === provider.cloudPartnerId) || connected.find((p) => p.company_name.trim().toLowerCase() === name) || null;
+    }
+    // Offene Aufgaben, die in der App einem verbundenen Partner zugeordnet sind, als Auftrag ins Partner-Portal senden.
+    // Jede Aufgabe geht nur einmal an denselben Partner (auch nach einer Ablehnung kein erneutes Senden).
+    async function ownerDispatchOrders() {
+      if (!cloudReady() || ppMode() === 'partner' || ownerSide.dispatching) return 0;
+      const open = tasks.filter((t) => t.partnerId && !t.done && !t.selfService && taskStatus(t) !== 'Erledigt');
+      if (!open.length) return 0;
+      ownerSide.dispatching = true;
+      const org = cloud.org.id;
+      const sent = new Map();
+      try {
+        // immer frisch: ein Partner kann sich seit dem letzten Laden verbunden haben
+        const partners = await cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&partner_organization_id=not.is.null&select=id,company_name,partner_organization_id`);
+        const wanted = open.map((t) => ({ t, sp: cloudPartnerOf(t.partnerId, partners) })).filter((entry) => entry.sp);
+        if (!wanted.length) return 0;
+        const byRef = new Map();
+        for (let i = 0; i < wanted.length; i += 50) {
+          const refs = wanted.slice(i, i + 50).map(({ t }) => `"${String(t.id).replace(/"/g, '')}"`).join(',');
+          (await cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=in.(${encodeURIComponent(refs)})&select=id,app_ref`)).forEach((row) => byRef.set(row.app_ref, row.id));
+        }
+        const ids = [...byRef.values()];
+        const existing = [];
+        for (let i = 0; i < ids.length; i += 50) existing.push(...await cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&service_task_id=in.(${ids.slice(i, i + 50).join(',')})&select=service_task_id,service_partner_id`));
+        const done = new Set(existing.map((o) => `${o.service_task_id}:${o.service_partner_id}`));
+        for (const { t, sp } of wanted) {
+          const taskId = byRef.get(String(t.id));
+          if (!taskId || done.has(`${taskId}:${sp.id}`)) continue; // noch nicht in der Cloud oder schon gesendet
+          await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: taskId, p_service_partner_id: sp.id } });
+          done.add(`${taskId}:${sp.id}`);
+          sent.set(sp.company_name, (sent.get(sp.company_name) || 0) + 1);
+        }
+      } finally { ownerSide.dispatching = false; }
+      const total = [...sent.values()].reduce((a, b) => a + b, 0);
+      if (total) {
+        const names = [...sent.keys()].join(', ');
+        showToast(`${total} Aufgabe${total === 1 ? '' : 'n'} an ${names} gesendet – jetzt im Partner-Portal des Betriebs sichtbar.`);
+        try { await ownerLoadPartners(); } catch (error) { /* nächster Abgleich holt den Stand */ }
+        if (currentPage === 'partnerHub') hubRerender();
+      }
+      return total;
+    }
     async function ownerRun(label, task) {
       if (ownerSide.busy) return;
       ownerSide.busy = label; ownerSide.error = '';
@@ -16811,6 +16862,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (!quiet) ownerSide.busy = 'load';
       try {
         await ownerLoadPartners();
+        await ownerDispatchOrders();
         ownerSide.error = '';
       } catch (error) {
         ownerSide.error = error instanceof TypeError ? 'Offline – Partnerdaten derzeit nicht erreichbar.' : error.message;
@@ -16943,6 +16995,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           const known = new Set([...(ownerSide.partners || []).filter((p) => p.partner_organization_id).map((p) => p.id), ...(ownerSide.orders || []).map((o) => o.id)]);
           if (ownerSide.messages.some((m) => msgIncoming(m) && !m.read_at && !known.has(m.service_partner_id || m.service_order_id))) await ownerLoadPartners();
         }
+        await ownerDispatchOrders();
         const fresh = hubConversations().flatMap((t) => t.messages.filter((m) => msgIncoming(m) && !m.read_at).map((m) => ({ m, t })));
         if (msgTop.seen) {
           const added = fresh.filter(({ m }) => !msgTop.seen.has(m.id));
