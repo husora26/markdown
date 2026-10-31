@@ -133,6 +133,7 @@
     .card-title { margin: 0; font-size: 13px; font-weight: 720; }
     .card-caption { margin: 4px 0 0; color: var(--muted); font-size: 11.5px; }
     .text-btn { padding: 4px 0; border: 0; color: var(--green); background: none; font-size: 12.5px; font-weight: 700; }
+    .text-btn > svg { width: 14px; height: 14px; vertical-align: -2px; }
     .task-list { padding: 0 19px; }
     .task-row { display: flex; align-items: center; gap: 12px; min-height: 67px; border-bottom: 1px solid var(--line); }
     .task-name:hover { color: var(--green); }
@@ -836,6 +837,7 @@
     .calendar-day.past-day .calendar-date-button:disabled { color: inherit; cursor: not-allowed; }
     .calendar-day.selected { border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
     .calendar-date-button { display: block; width: 100%; margin: 0; padding: 0; border: 0; color: inherit; background: transparent; text-align: left; }
+    @media (max-width: 640px) { .calendar-date-button { min-height: 32px; margin: -4px 0 0; padding: 4px 0; } }
     .calendar-day.today .calendar-day-number { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: white; background: var(--green); }
     .calendar-day-number { font-size: 12.5px; font-weight: 650; }
     .calendar-dots { display: flex; gap: 3px; margin-top: 8px; }
@@ -1464,7 +1466,7 @@
     .partner-task-list li { display: grid; grid-template-columns: 22px 52px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #f0ece2; font-size: 13px; }
     .partner-task-list li > span { color: var(--muted); font-size: 12.5px; font-weight: 700; }
     .partner-task-list li.overdue > span { color: var(--red); }
-    .bulk-check { display: grid; place-items: center; align-self: center; cursor: pointer; }
+    .bulk-check { display: grid; place-items: center; align-self: center; min-width: 32px; min-height: 32px; margin: -7px; cursor: pointer; }
     .bulk-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--green); cursor: pointer; }
     .partner-task-head .bulk-check { margin-right: 2px; }
     .partner-task-list li.picked { background: var(--green-soft); border-radius: 8px; }
@@ -2435,7 +2437,7 @@
     .pp-filters button b { margin-left: 4px; color: var(--muted); }
     .pp-filters button.active { border-color: var(--green); background: var(--green); color: #fff; }
     .pp-filters button.active b { color: rgba(255, 255, 255, .8); }
-    .pp-back { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 10px; padding: 6px 0; border: 0; background: none; color: var(--green); font-size: 14px; font-weight: 650; cursor: pointer; }
+    .pp-back { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; margin: -4px 0 6px; padding: 6px 10px 6px 0; border: 0; background: none; color: var(--green); font-size: 14px; font-weight: 650; cursor: pointer; }
     .pp-back svg { width: 16px; height: 16px; transform: rotate(180deg); }
     .pp-detail-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
     .pp-detail-head h1 { margin: 2px 0 0; font-size: 21px; overflow-wrap: anywhere; }
@@ -2446,7 +2448,7 @@
     .pp-facts strong { display: block; margin-top: 2px; font-size: 14px; overflow-wrap: anywhere; }
     .pp-facts small { display: block; margin-top: 2px; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
     .pp-facts select { margin-top: 4px; }
-    .pp-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; color: var(--green); font-size: 13px; font-weight: 650; }
+    .pp-link { display: inline-flex; align-items: center; gap: 4px; min-height: 34px; margin-top: 2px; color: var(--green); font-size: 13px; font-weight: 650; }
     .pp-link svg { width: 14px; height: 14px; }
     .pp-text { margin: 4px 0 0; font-size: 14px; line-height: 1.55; white-space: pre-wrap; }
     .pp-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; }
@@ -3458,6 +3460,8 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
+  
   
   
   
@@ -13031,7 +13035,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <h3>Verbraucherstreitbeilegung</h3><p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>` },
       privacy: { title: 'Datenschutzerklärung', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Verantwortlicher</h3><p>${legalValue('company', 'Firma oder Name')}, ${legalValue('street', 'Anschrift')}, ${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')} · ${legalValue('email', 'E-Mail-Adresse')}</p>
-        <h3>2. Grundsatz: Speicherung auf deinem Gerät</h3><p>Husora benötigt kein Benutzerkonto. Alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – werden im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p><p><strong>Optionaler Cloud-Speicher:</strong> Verbindest du Husora unter „Einstellungen → Daten & App“ mit einem eigenen Supabase-Projekt, werden deine Husora-Daten verschlüsselt (HTTPS) an dieses Projekt übertragen und dort gespeichert. Verantwortlich für dieses Projekt und den gewählten Speicherort bist du selbst; Anbieter ist die Supabase Inc. (supabase.com). Für die Anmeldung werden deine E-Mail-Adresse und ein Passwort bei Supabase Auth hinterlegt. Die Verbindung lässt sich jederzeit trennen.</p>
+        <h3>2. Grundsatz: Speicherung auf deinem Gerät</h3><p>Husora benötigt kein Benutzerkonto. Alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – werden im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p><p><strong>Optionaler Cloud-Speicher (Husora Cloud):</strong> Meldest du dich unter „Einstellungen → Daten & App“ beim Cloud-Speicher an, werden deine Husora-Daten, Fotos und Dokumente verschlüsselt (HTTPS) übertragen und in der Husora Cloud gespeichert, damit sie auf mehreren Geräten verfügbar sind. Technischer Dienstleister (Auftragsverarbeiter) ist die Supabase Inc. (supabase.com); die Datenbank liegt im Rechenzentrum London (Vereinigtes Königreich, Angemessenheitsbeschluss der EU-Kommission). Für die Anmeldung werden deine E-Mail-Adresse und ein Passwort (nur verschlüsselt) bei Supabase Auth hinterlegt. Fotos und Dokumente liegen in privaten Speicherbereichen, die nur mit Anmeldung abrufbar sind. Alternativ kannst du ein eigenes Supabase-Projekt verbinden – dann bist du für dieses selbst verantwortlich. Die Verbindung lässt sich jederzeit trennen.</p>
+<p><strong>Partner-Portal:</strong> Lädst du einen Servicepartner in das Partner-Portal ein, sieht dieser Betrieb nur, was zu seinen Aufträgen gehört: Name, Adresse, Eckdaten und Hausfotos des betroffenen Ferienhauses, die Aufgaben, die du ihm sendest, eure Nachrichten sowie Kontrollergebnisse, Fotos und Rechnungen zu diesen Aufträgen. Andere Häuser, Buchungen und Kosten sieht er nicht. Die Verbindung beendest du, indem du den Partner entfernst; gesendete Aufträge bleiben zur Nachweisführung erhalten.</p>
         <h3>3. Externe Dienste</h3><p>Für einzelne Funktionen ruft die App Inhalte von Drittanbietern ab. Dabei wird technisch bedingt deine IP-Adresse an den jeweiligen Anbieter übertragen; bei Suchanfragen zusätzlich der eingegebene Suchbegriff bzw. Link.</p>
         <ul>
           <li><strong>Karten und Adresssuche:</strong> OpenStreetMap Foundation (Kartenkacheln, Nominatim-Adresssuche), Google Maps (Kartenvorschau in der Objektübersicht).</li>
@@ -13044,7 +13049,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <li><strong>E-Mails an Servicepartner:</strong> werden über dein eigenes Mailprogramm versendet; Husora selbst versendet keine E-Mails.</li>
         </ul>
         <h3>4. Rechtsgrundlagen</h3><p>Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der von dir genutzten Funktionen und Abwicklung des Kaufs) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer funktionsfähigen App).</p>
-        <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls. Daten im optionalen Cloud-Speicher löschst du in deinem Supabase-Projekt.</p>
+        <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls. Daten im Cloud-Speicher löschen wir auf Anfrage per E-Mail an ${escapeHtml(LEGAL_INFO.supportEmail)}; bei einem eigenen Supabase-Projekt in diesem Projekt.</p>
         <h3>6. Deine Rechte</h3><p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde. Da wir keine Daten von dir speichern, betreffen diese Rechte vor allem die Kaufabwicklung.</p>` },
       terms: { title: 'Allgemeine Geschäftsbedingungen', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Geltungsbereich</h3><p>Diese Bedingungen gelten für die Nutzung der App Husora, angeboten von ${legalValue('company', 'Firma oder Name')}.</p>
@@ -16376,7 +16381,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ${cover ? `<button type="button" class="pp-obj-photo" data-pp-file="${cover.storage_bucket}|${cover.storage_path}|${escapeHtml(p.name)}" aria-label="Foto von ${escapeHtml(p.name)} öffnen"><img data-pp-thumb="${cover.id}" alt="${escapeHtml(p.name)}">${photos.length > 1 ? `<em>${photos.length}</em>` : ''}</button>` : `<span class="pp-obj-photo empty">${icon('property')}</span>`}
         <div class="pp-obj-main"><span class="pp-eyebrow">Ferienhaus</span><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(address || 'Adresse nicht hinterlegt')}</small>${p.region && !address.includes(p.region) ? `<small>${escapeHtml(p.region)}</small>` : ''}${maps ? `<a class="pp-link" href="${maps}" target="_blank" rel="noopener">${icon('map')} Navigation</a>` : ''}</div>
         ${facts.length ? `<div class="pp-obj-facts">${facts.map(([l, v]) => `<div><span>${l}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div>` : '<p class="pp-hint" style="grid-column:1/-1;margin:8px 0 0">Baujahr und Fläche hat der Hausbesitzer noch nicht eingetragen.</p>'}
-        ${photos.length > 1 ? `<div class="pp-obj-gallery">${photos.slice(1, 12).map((ph) => `<button type="button" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(p.name)}"><img data-pp-thumb="${ph.id}" alt=""></button>`).join('')}</div>` : ''}
+        ${photos.length > 1 ? `<div class="pp-obj-gallery">${photos.slice(1, 12).map((ph, n) => `<button type="button" aria-label="Foto ${n + 2} von ${escapeHtml(p.name)} öffnen" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(p.name)}"><img data-pp-thumb="${ph.id}" alt=""></button>`).join('')}</div>` : ''}
       </div>`;
     }
     const ppBack = () => `<button type="button" class="pp-back" data-pp-action="back">${icon('arrow')}<span>Zurück</span></button>`;
@@ -17025,10 +17030,27 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     // Offene Aufgaben, die in der App einem verbundenen Partner zugeordnet sind, als Auftrag ins Partner-Portal senden.
     // Jede Aufgabe geht nur einmal an denselben Partner (auch nach einer Ablehnung kein erneutes Senden).
+    // Noch nicht angenommene Anfragen zurückziehen, wenn die Aufgabe in der App neu vergeben,
+    // erledigt oder auf Eigenleistung gestellt wurde. Angenommene Aufträge bleiben unberührt.
+    async function ownerWithdrawStale(partners) {
+      const offered = await cloudFetch(`/rest/v1/service_orders?organization_id=eq.${cloud.org.id}&status=eq.offered&service_task_id=not.is.null&select=id,title,service_partner_id,task:service_tasks(app_ref)`);
+      let withdrawn = 0;
+      for (const order of offered) {
+        const task = tasks.find((t) => String(t.id) === order.task?.app_ref);
+        if (!task) continue;
+        const wanted = task.partnerId ? cloudPartnerOf(task.partnerId, partners) : null;
+        const reason = task.done || taskStatus(task) === 'Erledigt' ? 'die Aufgabe ist bereits erledigt' : task.selfService ? 'die Aufgabe wird selbst erledigt' : wanted && wanted.id !== order.service_partner_id ? 'die Aufgabe wurde an einen anderen Servicepartner vergeben' : '';
+        if (!reason) continue;
+        await cloudFetch(`/rest/v1/service_orders?id=eq.${order.id}`, { method: 'PATCH', body: { status: 'cancelled', response_note: `Zurückgezogen: ${reason}.` }, headers: { Prefer: 'return=minimal' } });
+        await cloudFetch('/rest/v1/messages', { method: 'POST', body: { organization_id: cloud.org.id, service_order_id: order.id, message: `Anfrage „${order.title}“ zurückgezogen – ${reason}.` }, headers: { Prefer: 'return=minimal' } }).catch(() => {});
+        withdrawn += 1;
+      }
+      if (withdrawn) showToast(`${withdrawn} offene Anfrage${withdrawn === 1 ? '' : 'n'} beim bisherigen Servicepartner zurückgezogen.`);
+      return withdrawn;
+    }
     async function ownerDispatchOrders({ providerId = '' } = {}) {
       if (!cloudReady() || ppMode() === 'partner' || ownerSide.dispatching) return 0;
       const open = tasks.filter((t) => t.partnerId && (!providerId || t.partnerId === providerId) && !t.done && !t.selfService && taskStatus(t) !== 'Erledigt');
-      if (!open.length) return 0;
       ownerSide.dispatching = true;
       const org = cloud.org.id;
       const sent = new Map();
@@ -17036,6 +17058,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       try {
         // immer frisch: ein Partner kann sich seit dem letzten Laden verbunden haben
         const partners = await cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&partner_organization_id=not.is.null&select=id,company_name,partner_organization_id`);
+        if (!providerId) await ownerWithdrawStale(partners);
+        if (!open.length) return 0;
         const wanted = open.map((t) => ({ t, sp: cloudPartnerOf(t.partnerId, partners) })).filter((entry) => entry.sp);
         if (!wanted.length) return 0;
         const byRef = new Map();
@@ -17357,7 +17381,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           for (const id of ids) {
             await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: id, p_service_partner_id: partner.id } });
             const ref = (ownerSide.tasks || []).find((t) => t.id === id)?.app_ref;
-            markTaskCommissioned(tasks.find((t) => String(t.id) === ref));
+            const local = tasks.find((t) => String(t.id) === ref);
+            const match = providers.find((pr) => pr.cloudPartnerId === partner.id) || providers.find((pr) => String(pr.name || '').trim().toLowerCase() === partner.company_name.trim().toLowerCase());
+            if (local && match) { local.partnerId = match.id; local.selfService = false; }
+            markTaskCommissioned(local);
           }
           persistTasks();
           hub.picked = new Set();
