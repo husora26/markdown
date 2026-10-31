@@ -29,8 +29,11 @@ Unter [`supabase/`](supabase/README.md) liegt die komplette PostgreSQL-Datenbank
 - Automatisierung, Partner-Ranking und Webhooks
 - Seed-Daten und ein RLS-Test
 - Partner-Portal: Zugang für Servicepartner mit Aufträgen, Kontrollen, Fotos, Rechnungen und Mitarbeitern
+- Feedback, automatische Fehlerberichte, Konto selbst löschen, Benachrichtigungen bei Auftragsstatus, Offline-Hinweis
 - Tarife FREE, PLUS, PRO und ULTIMATE mit zentraler Freischaltung (Preise und Grenzwerte aus der Datenbank)
 - Messenger mit Servicepartnern: neue Nachrichten erscheinen oben rechts in der Hauptleiste (Zähler, Vorschau, direkt ins Gespräch)
 - Aufgaben, die in der App einem verbundenen Servicepartner zugeordnet sind, gehen automatisch als Auftrag in dessen Partner-Portal (einmal je Aufgabe)
+
+Den Prüfstand zum Launch zeigt [`LAUNCH_CHECKLIST.md`](LAUNCH_CHECKLIST.md).
 
 Installation, Konfiguration und Tests beschreibt [`supabase/README.md`](supabase/README.md).

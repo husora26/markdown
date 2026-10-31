@@ -470,6 +470,21 @@
       .pm-soon { display: block; width: max-content; margin: 2px 0 0; }
     }
     .pm-soon { display: inline-block; margin-left: 4px; padding: 0 6px; border-radius: 8px; background: #fbf2d3; color: #7a5a10; font-size: 10px; font-style: normal; font-weight: 700; }
+    .cloud-danger { margin: 14px 0 0; padding: 12px 14px; border: 1px solid #ecd2cc; border-radius: 12px; }
+    .cloud-danger summary { color: var(--red); font-size: 14px; font-weight: 700; cursor: pointer; }
+    .cloud-danger-form { display: grid; gap: 10px; margin-top: 8px; }
+    .danger-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 14px; border: 0; border-radius: 10px; background: var(--red); color: #fff; font-weight: 700; cursor: pointer; }
+    .danger-btn svg { width: 16px; height: 16px; }
+    .feedback-card { padding: 18px; }
+    .feedback-form { display: grid; gap: 12px; margin-top: 12px; }
+    .feedback-kinds { display: flex; flex-wrap: wrap; gap: 8px; }
+    .feedback-kinds label { position: relative; }
+    .feedback-kinds input { position: absolute; opacity: 0; }
+    .feedback-kinds span { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 19px; font-size: 13.5px; font-weight: 650; cursor: pointer; }
+    .feedback-kinds input:checked + span { border-color: var(--green); background: var(--green-dark); color: #fff; }
+    .feedback-kinds input:focus-visible + span { outline: 2px solid var(--green); outline-offset: 2px; }
+    #offline-banner { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 950; display: flex; align-items: center; gap: 8px; width: min(560px, calc(100vw - 24px)); padding: 10px 14px; border-radius: 12px; background: #3a2f12; color: #fff3cf; font-size: 13px; line-height: 1.4; transform: translateX(-50%); box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+    #offline-banner svg { flex: 0 0 auto; width: 18px; height: 18px; }
     .plan-grid-4 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)) !important; }
     .plan-limits { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin: 10px 0 4px; padding: 8px; border-radius: 10px; background: var(--green-soft); text-align: center; }
     .plan-limits dt { color: var(--muted); font-size: 10.5px; font-weight: 700; }
@@ -3532,6 +3547,8 @@
   
   
   
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3622,6 +3639,10 @@ html.dark .photo-thumb { background: #252525; }
 html.dark .pro-hint { color: #d7c7b1; background: #312813; }
 html.dark .pm-yes { background: var(--green-solid); }
 html.dark .pm-soon { background: #39321a; color: #edd9ab; }
+html.dark .cloud-danger { border: 1px solid #513d38; }
+html.dark .danger-btn { background: var(--red-solid); }
+html.dark .feedback-kinds input:checked + span { background: var(--green-solid-dark); }
+html.dark #offline-banner { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); }
 html.dark .plan-usage-row i { background: linear-gradient(90deg, var(--green-solid) var(--pct), #2a2d28 var(--pct)); }
 html.dark .plan-usage-row.full i { background: var(--red-solid); }
 html.dark .plan-tag { background: #39321a; color: #edd9ab; }
@@ -6105,7 +6126,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       try {
         const base = cloud.url || CLOUD_DEFAULT.url;
         const key = cloud.key || CLOUD_DEFAULT.key;
-        const response = await fetch(`${base.replace(/\/$/, '')}/rest/v1/plans?select=id,name,tagline,price_monthly_cents,currency,sort,highlight,limits,features,highlights&order=sort.asc`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
+        const response = await fetch(`${base.replace(/\/$/, '')}/rest/v1/plans?select=id,name,tagline,price_monthly_cents,currency,sort,highlight,limits,features,highlights,stripe_price_id&order=sort.asc`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
         if (!response.ok) return;
         const rows = await response.json();
         if (!Array.isArray(rows) || !rows.length) return;
@@ -6124,7 +6145,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const changed = next.plan_id !== orgPlan?.plan_id || next.organization_id !== orgPlan?.organization_id;
         orgPlan = next;
         try { localStorage.setItem(ORG_PLAN_KEY, JSON.stringify(next)); } catch (error) { /* optional */ }
-        if (changed) render();
+        if (changed) { if (currentPage === 'partnerHub' && typeof hubRerender === 'function' && PAGE_GATES.partnerHub && entitlements.can('service_portal') && document.querySelector('.hub-tabs')) hubRerender(); else render(); }
       } catch (error) { /* offline: letzter bekannter Tarif */ }
     }
     // Kompatibilität für ältere Stellen
@@ -6969,7 +6990,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const isCurrent = plan.id === currentId;
         const higher = PLAN_ORDER.indexOf(plan.id) > PLAN_ORDER.indexOf(currentId);
         const action = isCurrent ? '<button type="button" class="secondary-btn" disabled>Dein Tarif</button>'
-          : `<a class="${higher ? 'primary-btn' : 'secondary-btn'}" href="${supportMail(plan)}">${higher ? `Zu ${escapeHtml(plan.name)} wechseln` : `Zu ${escapeHtml(plan.name)} wechseln`}</a>`;
+          : plan.stripe_price_id && cloudReady() ? `<button type="button" class="${higher ? 'primary-btn' : 'secondary-btn'}" data-plan-checkout="${escapeHtml(plan.id)}">Zu ${escapeHtml(plan.name)} wechseln</button>`
+          : `<a class="${higher ? 'primary-btn' : 'secondary-btn'}" href="${supportMail(plan)}">Zu ${escapeHtml(plan.name)} wechseln</a>`;
         return `<article class="card plan-card ${plan.highlight ? 'highlight' : ''} ${isCurrent ? 'current' : ''}">${isCurrent ? '<span class="plan-current-tag">Dein Tarif</span>' : plan.highlight ? '<span class="plan-current-tag plan-reco">Beliebt</span>' : ''}<h2>${escapeHtml(plan.name)}</h2><p class="plan-tagline">${escapeHtml(plan.tagline || '')}</p>
           <div class="plan-price"><strong>${escapeHtml(price(plan))}</strong><span>${loaded && plan.price_monthly_cents ? 'pro Monat · inkl. MwSt.' : loaded ? 'für immer' : 'Preise werden geladen …'}</span></div>
           <dl class="plan-limits"><div><dt>Häuser</dt><dd>${limitText(plan, 'properties')}</dd></div><div><dt>Benutzer</dt><dd>${limitText(plan, 'users')}</dd></div><div><dt>Aufgaben</dt><dd>${limitText(plan, 'tasks_active')}</dd></div><div><dt>Partner</dt><dd>${limitText(plan, 'service_partners')}</dd></div><div><dt>Dokumente</dt><dd>${limitText(plan, 'documents')}</dd></div></dl>
@@ -6983,10 +7005,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       }).join('');
       const status = orgPlan && cloudReady() && orgPlan.organization_id === cloud.org?.id ? (orgPlan.status === 'none' ? 'ohne Abo (kostenlos)' : `${orgPlan.status === 'active' ? 'aktiv' : orgPlan.status === 'trialing' ? 'Testphase' : orgPlan.status}${orgPlan.current_period_end ? ` · bis ${fmtDateFull(new Date(orgPlan.current_period_end))}` : ''}${orgPlan.cancel_at_period_end ? ' · gekündigt zum Laufzeitende' : ''}`) : cloudReady() ? 'wird geladen …' : 'ohne Cloud-Anmeldung – Tarif gilt für dieses Gerät';
       return `<div class="welcome"><div><p class="eyebrow">Husora</p><h1>Versionen</h1><p class="subtitle">FREE, PLUS, PRO oder ULTIMATE – wähle den Umfang, der zu deinen Ferienhäusern passt. Monatlich kündbar.</p></div></div>
-        <section class="card plan-usage"><div class="card-head"><div><h2 class="card-title">Dein Tarif: ${escapeHtml(entitlements.plan().name)}</h2><p class="card-caption">${escapeHtml(status)}${proState?.orderId && currentId === 'pro' ? ' · frühere Pro-Lizenz' : ''}</p></div></div><div class="plan-usage-grid">${usage}</div></section>
+        <section class="card plan-usage"><div class="card-head"><div><h2 class="card-title">Dein Tarif: ${escapeHtml(entitlements.plan().name)}</h2><p class="card-caption">${escapeHtml(status)}${proState?.orderId && currentId === 'pro' ? ' · frühere Pro-Lizenz' : ''}</p></div>${cloudReady() && orgPlan?.status && !['none', 'canceled'].includes(orgPlan.status) && planList().some((plan) => plan.stripe_price_id) ? '<button type="button" class="secondary-btn" data-plan-portal>Abo verwalten</button>' : ''}</div><div class="plan-usage-grid">${usage}</div></section>
         <div class="plan-grid plan-grid-4">${cards}</div>
         ${planMatrixHtml(currentId)}
-        <section class="card plan-note"><p class="settings-hint" style="margin:0"><strong>Wechsel:</strong> Online-Bezahlung (Stripe) ist vorbereitet. Bis sie freigeschaltet ist, schalten wir deinen Tarif nach deiner Anfrage per E-Mail frei – in der Regel am selben Tag. Beim Wechsel in einen kleineren Tarif bleiben alle Daten erhalten; nur neue Einträge über dem Limit sind dann gesperrt.</p></section>`;
+        <section class="card plan-note"><p class="settings-hint" style="margin:0"><strong>Wechsel:</strong> ${planList().some((plan) => plan.stripe_price_id) ? 'Bezahlung sicher über Stripe; kündbar jederzeit zum Monatsende im Kundenportal („Abo verwalten“).' : 'Online-Bezahlung (Stripe) ist vorbereitet. Bis sie freigeschaltet ist, schalten wir deinen Tarif nach deiner Anfrage per E-Mail frei – in der Regel am selben Tag.'} Beim Wechsel in einen kleineren Tarif bleiben alle Daten erhalten; nur neue Einträge über dem Limit sind dann gesperrt.</p></section>`;
     }
     // Vergleichstabelle: alle Tarife mit Häkchen je Eigenschaft
     const PLAN_MATRIX = [
@@ -7010,6 +7032,22 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <div class="pm-scroll"><table class="pm-table"><thead><tr><th scope="col">Eigenschaft</th>${plans.map((plan) => `<th scope="col" class="${plan.id === currentId ? 'pm-current' : ''}">${escapeHtml(plan.name)}${plan.id === currentId ? '<small>Dein Tarif</small>' : ''}</th>`).join('')}</tr></thead>
         <tbody>${PLAN_MATRIX.map(([group, rows]) => `<tr class="pm-group"><th scope="rowgroup" colspan="${plans.length + 1}">${escapeHtml(group)}</th></tr>${rows.map(([key, label]) => `<tr><th scope="row">${escapeHtml(label)}${PLAN_PLANNED.has(key) ? ' <em class="pm-soon">in Vorbereitung</em>' : ''}</th>${plans.map((plan) => `<td class="${plan.id === currentId ? 'pm-current' : ''}">${cell(plan, key)}</td>`).join('')}</tr>`).join('')}`).join('')}</tbody></table></div></section>`;
     }
+    // Stripe: Checkout bzw. Kundenportal über die Edge Function „stripe-checkout“
+    async function startCheckout(body) {
+      const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
+      const response = await fetch(`${base}/functions/v1/stripe-checkout`, { method: 'POST', headers: { apikey: cloud.key || CLOUD_DEFAULT.key, Authorization: `Bearer ${cloud.session.access_token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, return_url: `${location.origin}${location.pathname}` }) });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.url) throw new Error(data.error || `HTTP ${response.status}`);
+      location.href = data.url;
+    }
+    document.addEventListener('click', (event) => {
+      const checkout = event.target.closest('[data-plan-checkout], [data-plan-portal]');
+      if (!checkout) return;
+      checkout.disabled = true;
+      startCheckout(checkout.dataset.planPortal !== undefined ? { portal: true } : { plan_id: checkout.dataset.planCheckout })
+        .catch((error) => { checkout.disabled = false; showToast(`Online-Bezahlung gerade nicht möglich (${error.message}). Schreib uns gern eine E-Mail.`); });
+    });
+    (() => { try { const flag = new URLSearchParams(location.search).get('checkout'); if (!flag) return; history.replaceState(null, '', location.pathname); setTimeout(() => { showToast(flag === 'success' ? 'Danke! Dein Tarif wird freigeschaltet – das dauert nur einen Moment.' : 'Bezahlung abgebrochen – dein Tarif bleibt unverändert.'); currentPage = 'plans'; render(); setTimeout(loadOrgPlan, 2500); }, 800); } catch (error) { /* optional */ } })();
     const assignedProviderCount = () => new Set(Object.values(servicePartnerAssignments || {}).flat().filter((id) => providerById(id))).size;
     // Kacheln der Startseite: zu jedem Menüpunkt eine Kachel, im Profil frei wählbar (höchstens 10).
     const DASHBOARD_TILES = [
@@ -13216,6 +13254,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       privacy: { title: 'Datenschutzerklärung', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Verantwortlicher</h3><p>${legalValue('company', 'Firma oder Name')}, ${legalValue('street', 'Anschrift')}, ${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')} · ${legalValue('email', 'E-Mail-Adresse')}</p>
         <h3>2. Grundsatz: Speicherung auf deinem Gerät</h3><p>Husora benötigt kein Benutzerkonto. Alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – werden im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p><p><strong>Optionaler Cloud-Speicher (Husora Cloud):</strong> Meldest du dich unter „Einstellungen → Daten & App“ beim Cloud-Speicher an, werden deine Husora-Daten, Fotos und Dokumente verschlüsselt (HTTPS) übertragen und in der Husora Cloud gespeichert, damit sie auf mehreren Geräten verfügbar sind. Technischer Dienstleister (Auftragsverarbeiter) ist die Supabase Inc. (supabase.com); die Datenbank liegt im Rechenzentrum London (Vereinigtes Königreich, Angemessenheitsbeschluss der EU-Kommission). Für die Anmeldung werden deine E-Mail-Adresse und ein Passwort (nur verschlüsselt) bei Supabase Auth hinterlegt. Fotos und Dokumente liegen in privaten Speicherbereichen, die nur mit Anmeldung abrufbar sind. Alternativ kannst du ein eigenes Supabase-Projekt verbinden – dann bist du für dieses selbst verantwortlich. Die Verbindung lässt sich jederzeit trennen.</p>
+<p><strong>Feedback und Fehlerberichte:</strong> Nachrichten, die du unter „Hilfe & Support“ sendest, speichern wir mit App-Version, Gerätetyp (Browser-Kennung) und – falls angegeben – deiner E-Mail-Adresse, um zu antworten und Fehler zu beheben. Tritt ein technischer Fehler auf, wird automatisch nur die Fehlermeldung mit diesen technischen Angaben übermittelt, keine Haus-, Buchungs- oder Kostendaten; das kannst du dort jederzeit abschalten. Rechtsgrundlage ist unser berechtigtes Interesse an einer funktionierenden App (Art. 6 Abs. 1 lit. f DSGVO); gelöscht wird nach spätestens 12 Monaten.</p>
 <p><strong>Partner-Portal:</strong> Lädst du einen Servicepartner in das Partner-Portal ein, sieht dieser Betrieb nur, was zu seinen Aufträgen gehört: Name, Adresse, Eckdaten und Hausfotos des betroffenen Ferienhauses, die Aufgaben, die du ihm sendest, eure Nachrichten sowie Kontrollergebnisse, Fotos und Rechnungen zu diesen Aufträgen. Andere Häuser, Buchungen und Kosten sieht er nicht. Die Verbindung beendest du, indem du den Partner entfernst; gesendete Aufträge bleiben zur Nachweisführung erhalten.</p>
         <h3>3. Externe Dienste</h3><p>Für einzelne Funktionen ruft die App Inhalte von Drittanbietern ab. Dabei wird technisch bedingt deine IP-Adresse an den jeweiligen Anbieter übertragen; bei Suchanfragen zusätzlich der eingegebene Suchbegriff bzw. Link.</p>
         <ul>
@@ -13229,7 +13268,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <li><strong>E-Mails an Servicepartner:</strong> werden über dein eigenes Mailprogramm versendet; Husora selbst versendet keine E-Mails.</li>
         </ul>
         <h3>4. Rechtsgrundlagen</h3><p>Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der von dir genutzten Funktionen und Abwicklung des Kaufs) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer funktionsfähigen App).</p>
-        <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls. Daten im Cloud-Speicher löschen wir auf Anfrage per E-Mail an ${escapeHtml(LEGAL_INFO.supportEmail)}; bei einem eigenen Supabase-Projekt in diesem Projekt.</p>
+        <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls. Dein Konto und alle Daten im Cloud-Speicher löschst du selbst unter „Einstellungen → Daten & App → Konto und Cloud-Daten löschen“ oder auf Anfrage per E-Mail an ${escapeHtml(LEGAL_INFO.supportEmail)}; bei einem eigenen Supabase-Projekt in diesem Projekt. Aufträge und Rechnungen, die du mit anderen Betrieben ausgetauscht hast, bleiben bei diesen zur Erfüllung gesetzlicher Aufbewahrungspflichten erhalten.</p>
         <h3>6. Deine Rechte</h3><p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde. Da wir keine Daten von dir speichern, betreffen diese Rechte vor allem die Kaufabwicklung.</p>` },
       terms: { title: 'Allgemeine Geschäftsbedingungen', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Geltungsbereich</h3><p>Diese Bedingungen gelten für die Nutzung der App Husora, angeboten von ${legalValue('company', 'Firma oder Name')}.</p>
@@ -13508,9 +13547,26 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       try { lastBackup = localStorage.getItem('stugliv-last-backup') || ''; } catch (error) { lastBackup = ''; }
       if (!lastBackup || Date.now() - new Date(lastBackup).getTime() > 30 * 24 * 60 * 60 * 1000) add('backup', { id: `backup-${today.slice(0, 7)}`, level: 'info', icon: 'document', title: lastBackup ? 'Datensicherung ist älter als 30 Tage' : 'Noch keine Datensicherung', detail: 'Sichere deine Daten als Datei.', page: 'settings' });
       const order = { urgent: 0, soon: 1, info: 2 };
+      cloudNotices.forEach((notice) => list.push({ category: 'cloud', id: `cloud-${notice.id}`, cloudId: notice.id, level: notice.type === 'service_order' && /abgelehnt|zurückgezogen/.test(notice.title) ? 'soon' : 'info', icon: notice.type === 'invoice' ? 'cost' : notice.type === 'message' ? 'note' : 'task', title: notice.title, detail: notice.message || '', page: 'partnerHub' }));
       return list.sort((a, b) => order[a.level] - order[b.level]);
     }
     let readReminders = loadStore('stugliv-notify-read', []);
+    // Benachrichtigungen aus der Cloud (Auftrag angenommen/abgelehnt/erledigt, Rechnung erhalten …)
+    let cloudNotices = [];
+    let cloudNoticesSeen = null;
+    async function loadCloudNotices() {
+      if (!cloudReady() || ppMode() === 'partner') return;
+      try {
+        const rows = await cloudFetch(`/rest/v1/notifications?read_at=is.null&type=in.(service_order,invoice)&select=id,type,title,message,entity_type,entity_id,created_at&order=created_at.desc&limit=20`);
+        const fresh = cloudNoticesSeen ? rows.filter((row) => !cloudNoticesSeen.has(row.id)) : [];
+        cloudNotices = rows;
+        cloudNoticesSeen = new Set(rows.map((row) => row.id));
+        updateNotifyBadge();
+        if (fresh.length) showToast(fresh.length === 1 ? fresh[0].title : `${fresh.length} Neuigkeiten von deinen Servicepartnern`);
+      } catch (error) { /* offline */ }
+    }
+    setInterval(() => { if (document.visibilityState === 'visible') loadCloudNotices(); }, 60 * 1000);
+    setTimeout(loadCloudNotices, 2000);
     function updateNotifyBadge() {
       const badge = document.getElementById('notify-count');
       if (!badge) return;
@@ -13534,6 +13590,12 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       document.getElementById('notify-toggle').setAttribute('aria-expanded', String(open));
     }
     function markRemindersRead(ids) {
+      const cloudIds = ids.filter((id) => String(id).startsWith('cloud-')).map((id) => String(id).slice(6));
+      if (cloudIds.length && cloudReady()) {
+        const now = new Date().toISOString();
+        cloudNotices = cloudNotices.filter((notice) => !cloudIds.includes(notice.id));
+        cloudFetch(`/rest/v1/notifications?id=in.(${cloudIds.join(',')})`, { method: 'PATCH', body: { read_at: now }, headers: { Prefer: 'return=minimal' } }).catch(() => {});
+      }
       readReminders = [...new Set([...readReminders, ...ids])].slice(-300);
       saveStore('stugliv-notify-read', readReminders);
       updateNotifyBadge();
@@ -13748,8 +13810,56 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <button type="button" class="help-action" data-support-mail="bug">${icon('alert')}<span><strong>Fehler melden</strong><small>mit Geräteinfos für eine schnelle Lösung</small></span></button>
           <button type="button" class="help-action" data-support-mail="feedback">${icon('note')}<span><strong>Idee oder Feedback</strong><small>Was sollen wir verbessern?</small></span></button>
         </div>
+        ${feedbackCardHtml()}
         <section class="card faq-card"><h2 class="card-title">Häufige Fragen</h2>${FAQ.map(([question, answer]) => `<details class="faq-item"><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p></details>`).join('')}</section>`;
     }
+    // ===== Feedback und Fehlerberichte → public.app_feedback (nur schreibbar, Auswertung im Supabase-Dashboard) =====
+    const ERROR_REPORTS_KEY = 'husora-error-reports';
+    const errorReportsOn = () => { try { return localStorage.getItem(ERROR_REPORTS_KEY) !== '0'; } catch (error) { return true; } };
+    async function sendAppFeedback({ kind = 'feedback', message, context = {}, contactEmail = '' }) {
+      const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
+      const key = cloud.key || CLOUD_DEFAULT.key;
+      const body = { kind, message: String(message || '').slice(0, 4000), context, page: String(currentPage || '').slice(0, 80), app_version: `${APP_VERSION} (${APP_BUILD})`.slice(0, 40), user_agent: navigator.userAgent.slice(0, 300), contact_email: contactEmail || null };
+      const post = (token, extra = {}) => fetch(`${base}/rest/v1/app_feedback`, { method: 'POST', headers: { apikey: key, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify({ ...body, ...extra }) });
+      let response = cloudSignedIn() ? await post(cloud.session.access_token, { organization_id: cloudReady() ? cloud.org.id : null }) : null;
+      if (!response || !response.ok) response = await post(key); // ohne Konto oder bei abgelaufener Sitzung
+      if (!response.ok) { let detail = ''; try { detail = (await response.json()).message || ''; } catch (error) { /* leer */ } throw new Error(detail || `HTTP ${response.status}`); }
+    }
+    const errorReport = { sent: new Set(), count: 0 };
+    function reportClientError(error, where = '') {
+      if (!errorReportsOn() || errorReport.count >= 5) return;
+      const message = String(error?.message || error || '').slice(0, 500);
+      if (!message || /ResizeObserver|^Script error|NetworkError|Failed to fetch|Load failed|ERR_/.test(message) || errorReport.sent.has(message)) return;
+      errorReport.sent.add(message); errorReport.count += 1;
+      sendAppFeedback({ kind: 'error', message, context: { where: String(where).slice(0, 200), stack: String(error?.stack || '').split('\n').slice(0, 8).join('\n').slice(0, 1500), online: navigator.onLine } }).catch(() => {});
+    }
+    window.addEventListener('error', (event) => reportClientError(event.error || event.message, `${event.filename || ''}:${event.lineno || ''}`));
+    window.addEventListener('unhandledrejection', (event) => reportClientError(event.reason, 'promise'));
+    function feedbackCardHtml() {
+      return `<section class="card feedback-card" id="feedback"><h2 class="card-title">Feedback & Fehler melden</h2><p class="card-caption">Direkt an das Husora-Team – ohne E-Mail-Programm.</p>
+        <form class="feedback-form" data-feedback-form><div class="feedback-kinds" role="radiogroup" aria-label="Art der Meldung">${[['feedback', 'Idee / Feedback'], ['bug', 'Fehler'], ['question', 'Frage']].map(([value, label], n) => `<label><input type="radio" name="kind" value="${value}" ${n === 0 ? 'checked' : ''}><span>${label}</span></label>`).join('')}</div>
+          <label><span class="form-label">Deine Nachricht</span><textarea class="form-control textarea" name="message" rows="4" maxlength="4000" required placeholder="Was ist dir aufgefallen, was sollen wir verbessern?"></textarea></label>
+          <label><span class="form-label">E-Mail für Rückfragen (optional)</span><input class="form-control" type="email" name="email" maxlength="120" value="${escapeHtml(cloud.session?.email || profileData.email || '')}"></label>
+          <div class="settings-actions"><button type="submit" class="primary-btn">${icon('check')} Senden</button></div></form>
+        <label class="settings-switch"><span><strong>Fehlerberichte automatisch senden</strong><small>Bei einem technischen Fehler wird die Fehlermeldung (ohne deine Haus- oder Buchungsdaten) übermittelt, damit wir ihn beheben können.</small></span><span class="switch"><input type="checkbox" data-error-reports ${errorReportsOn() ? 'checked' : ''}><span></span></span></label></section>`;
+    }
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-feedback-form]');
+      if (!form) return;
+      event.preventDefault();
+      const values = Object.fromEntries(new FormData(form));
+      const button = form.querySelector('button[type=submit]');
+      button.disabled = true;
+      sendAppFeedback({ kind: values.kind === 'bug' ? 'bug' : 'feedback', message: values.kind === 'question' ? `[Frage] ${values.message}` : values.message, contactEmail: String(values.email || '').trim(), context: { houses: properties.length, plan: currentPlanId() } })
+        .then(() => { form.reset(); showToast('Danke! Deine Nachricht ist beim Husora-Team angekommen.'); })
+        .catch(() => { showToast('Senden hat nicht geklappt – wir öffnen dein E-Mail-Programm.'); openSupportMail(values.kind === 'bug' ? 'bug' : values.kind === 'question' ? 'question' : 'feedback'); })
+        .finally(() => { button.disabled = false; });
+    });
+    document.addEventListener('change', (event) => {
+      if (!event.target.matches?.('[data-error-reports]')) return;
+      try { localStorage.setItem(ERROR_REPORTS_KEY, event.target.checked ? '1' : '0'); } catch (error) { /* optional */ }
+      showToast(event.target.checked ? 'Fehlerberichte werden automatisch gesendet.' : 'Automatische Fehlerberichte sind aus.');
+    });
     function openSupportMail(kind) {
       const to = LEGAL_INFO.supportEmail || LEGAL_INFO.email;
       if (!to) { showToast('Die Support-Adresse ist noch nicht hinterlegt (LEGAL_INFO.supportEmail).'); return; }
@@ -15725,11 +15835,23 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const rows = await cloudFetch('/rest/v1/rpc/my_cloud_usage', { method: 'POST', body: { p_organization_id: cloud.org.id } });
       cloudState.usage = Array.isArray(rows) ? rows[0] : rows;
     }
+    // Geheimnisse (z. B. Repull-API-Schlüssel) verlassen das Gerät nie – weder in die Cloud noch in fremde Hände
+    const CLOUD_SECRET_FIELDS = { 'stugliv-portal-sync': ['apiKey'] };
+    function cloudScrubSecrets(key, value) {
+      const fields = CLOUD_SECRET_FIELDS[key];
+      if (!fields || !value) return value;
+      try { const data = JSON.parse(value); fields.forEach((field) => { if (field in data) data[field] = ''; }); return JSON.stringify(data); } catch (error) { return value; }
+    }
+    function cloudKeepLocalSecrets(key, remoteValue, previous = null) {
+      const fields = CLOUD_SECRET_FIELDS[key];
+      if (!fields) return remoteValue;
+      try { const local = JSON.parse((previous ? previous.find(([k]) => k === key)?.[1] : localStorage.getItem(key)) || '{}'); const remote = JSON.parse(remoteValue); fields.forEach((field) => { if (local[field]) remote[field] = local[field]; }); return JSON.stringify(remote); } catch (error) { return remoteValue; }
+    }
     function cloudLocalEntries(onlyKeys) {
       const keys = storageUsage().keys.filter((key) => /^stugliv-[a-z0-9-]+$/.test(key) && !CLOUD_EXCLUDED.includes(key));
       // Ferienhäuser stehen erst nach der ersten Bearbeitung im Speicher – für die Cloud immer mitsenden
       const extra = keys.includes('stugliv-properties') ? [] : [['stugliv-properties', JSON.stringify(properties)]];
-      return [...extra, ...keys.map((key) => [key, localStorage.getItem(key) || ''])]
+      return [...extra, ...keys.map((key) => [key, cloudScrubSecrets(key, localStorage.getItem(key) || '')])]
         .filter(([key]) => !onlyKeys || onlyKeys.has(key))
         .sort(([a], [b]) => (CLOUD_ORDER.indexOf(a) + 1 || 99) - (CLOUD_ORDER.indexOf(b) + 1 || 99));
     }
@@ -15784,7 +15906,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       cloudApplying = true;
       try {
         previous.forEach(([key]) => localStorage.removeItem(key));
-        entries.forEach((row) => localStorage.setItem(row.key, row.value));
+        entries.forEach((row) => localStorage.setItem(row.key, cloudKeepLocalSecrets(row.key, row.value, previous)));
       } catch (error) {
         previous.forEach(([key, value]) => { try { localStorage.setItem(key, value); } catch (inner) { /* bestmöglich zurücksetzen */ } });
         throw new Error('Die Cloud-Daten sind zu groß für den Speicher dieses Geräts – es wurde nichts geändert.');
@@ -15948,8 +16070,64 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ${canWrite ? `<label class="settings-switch"><span><strong>Automatisch synchronisieren</strong><small>Jede Änderung wird nach wenigen Sekunden hochgeladen.${firstSync ? ' Startet nach dem ersten Abgleich.' : ''}</small></span><span class="switch"><input type="checkbox" data-cloud-auto ${cloud.autoSync ? 'checked' : ''}><span class="switch-track"></span></span></label>` : '<p class="settings-hint">Deine Rolle in dieser Organisation erlaubt nur das Lesen der Cloud-Daten.</p>'}
         ${summary?.projections?.length ? `<p class="settings-hint">In der Datenbank übernommen: ${summary.projections.map(escapeHtml).join(' · ')}</p>` : ''}
         <p class="settings-hint">Gespeichert werden alle Bereiche – Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Dokumente und Einstellungen. Ferienhäuser, Buchungen und Aufgaben stehen zusätzlich in den Husora-Tabellen für Auswertungen und Partnerzugänge.</p>
+        <details class="cloud-danger"><summary>Konto und Cloud-Daten löschen</summary>
+          <p class="settings-hint">Löscht dein Husora-Konto, deine Organisation(en) mit allen Häusern, Aufgaben, Fotos und Dokumenten in der Cloud. Aufträge und Rechnungen, die du mit anderen Betrieben ausgetauscht hast, bleiben dort zur Nachweisführung erhalten. Das lässt sich nicht rückgängig machen – lege vorher eine Datensicherung an.</p>
+          <form class="cloud-danger-form" data-account-delete><label><span class="form-label">Zur Bestätigung <b>LÖSCHEN</b> eingeben</span><input class="form-control" name="confirm" autocomplete="off" placeholder="LÖSCHEN" required></label>
+          <label class="settings-switch"><span><strong>Auch die Daten auf diesem Gerät löschen</strong><small>sonst bleiben sie lokal erhalten</small></span><span class="switch"><input type="checkbox" name="local"><span></span></span></label>
+          <button type="submit" class="danger-btn" ${cloudState.busy ? 'disabled' : ''}>${icon('trash')} Konto endgültig löschen</button></form>
+        </details>
       </section>`;
     }
+
+    // ----- Konto löschen: zuerst Dateien über die Storage-API, dann Konto und Organisationen -----
+    async function cloudListFiles(bucket, prefix, depth = 0) {
+      if (depth > 8) return [];
+      const out = [];
+      for (let offset = 0; offset < 20000; offset += 1000) {
+        const rows = await cloudFetch(`/storage/v1/object/list/${bucket}`, { method: 'POST', body: { prefix, limit: 1000, offset, sortBy: { column: 'name', order: 'asc' } } });
+        for (const row of rows || []) {
+          const path = `${prefix}${row.name}`;
+          if (row.id) out.push(path); else out.push(...await cloudListFiles(bucket, `${path}/`, depth + 1));
+        }
+        if (!rows || rows.length < 1000) break;
+      }
+      return out;
+    }
+    async function deleteMyAccount(confirmText, wipeLocal) {
+      const preview = await cloudFetch('/rest/v1/rpc/my_deletion_preview', { method: 'POST', body: {} });
+      let files = 0;
+      for (const org of preview?.organizations || []) {
+        for (const bucket of ['husora-property-photos', 'husora-documents', 'husora-private']) {
+          const paths = await cloudListFiles(bucket, `organization/${org.id}/`).catch(() => []);
+          for (let i = 0; i < paths.length; i += 100) {
+            await cloudFetch(`/storage/v1/object/${bucket}`, { method: 'DELETE', body: { prefixes: paths.slice(i, i + 100) } });
+            files += Math.min(100, paths.length - i);
+          }
+        }
+      }
+      const result = await cloudFetch('/rest/v1/rpc/delete_my_account', { method: 'POST', body: { p_confirm: confirmText } });
+      try { [ORG_PLAN_KEY, 'husora-partner-cache', 'husora-mode'].forEach((key) => localStorage.removeItem(key)); } catch (error) { /* optional */ }
+      cloud.session = null; cloud.org = null; cloud.lastSyncAt = ''; persistCloud();
+      if (wipeLocal) {
+        try { Object.keys(localStorage).filter((key) => /^(stugliv-|husora-)/.test(key)).forEach((key) => localStorage.removeItem(key)); } catch (error) { /* optional */ }
+        location.reload();
+        return result;
+      }
+      showToast(`Konto gelöscht: ${result.deleted_organizations} Organisation(en), ${files} Dateien in der Cloud entfernt. Die Daten auf diesem Gerät bleiben erhalten.`);
+      render();
+      return result;
+    }
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-account-delete]');
+      if (!form) return;
+      event.preventDefault();
+      const confirmText = String(new FormData(form).get('confirm') || '').trim();
+      if (confirmText !== 'LÖSCHEN') { showToast('Bitte genau LÖSCHEN eingeben.'); return; }
+      if (!window.confirm('Konto und alle Cloud-Daten jetzt endgültig löschen?')) return;
+      const button = form.querySelector('button[type=submit]');
+      button.disabled = true; button.textContent = 'Lösche …';
+      deleteMyAccount(confirmText, Boolean(form.elements.local?.checked)).catch((error) => { button.disabled = false; button.textContent = 'Konto endgültig löschen'; showToast(`Löschen fehlgeschlagen: ${error.message}`); });
+    });
 
     document.addEventListener('submit', (event) => {
       const form = event.target.closest('[data-cloud-form]');
@@ -17793,6 +17971,15 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') msgPoll(); });
     setTimeout(msgPoll, 1500);
     if (ppMode() === 'partner') setTimeout(() => ppOpen('dashboard'), 0);
+    // Offline-Hinweis: Daten bleiben lokal gespeichert, Abgleich folgt automatisch
+    function updateOnlineState() {
+      let banner = document.getElementById('offline-banner');
+      if (navigator.onLine) { banner?.remove(); return; }
+      if (!banner) { banner = document.createElement('div'); banner.id = 'offline-banner'; banner.setAttribute('role', 'status'); banner.innerHTML = `${icon('alert')}<span>Offline – Änderungen bleiben auf diesem Gerät gespeichert und werden abgeglichen, sobald du wieder online bist.</span>`; document.body.appendChild(banner); }
+    }
+    window.addEventListener('online', () => { updateOnlineState(); showToast('Wieder online.'); loadOrgPlan(); });
+    window.addEventListener('offline', updateOnlineState);
+    updateOnlineState();
     loadPlanCatalog();
     setTimeout(loadOrgPlan, 600);
     setInterval(() => { if (document.visibilityState === 'visible') loadOrgPlan(); }, 10 * 60 * 1000);

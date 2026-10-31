@@ -34,6 +34,7 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…1900_partner_service_groups.sql` | Leistungsgruppen Servicearbeiten und Sanierungen (neben Hauskontrolle); Hausfotos lesbar für Partner mit Auftrag zum Haus |
 | `…2000_partner_member_fast.sql` | Schnellere Partner-Prüfung in den RLS-Regeln (gleiche Logik, gezielte Index-Abfrage statt Liste je Zeile) |
 | `…2100_plans_subscriptions.sql` | Tarife FREE/PLUS/PRO/ULTIMATE (`plans`: Preise, Grenzwerte, Funktionen), `subscriptions` je Organisation (Stripe vorbereitet, Schreiben nur service_role), `my_plan()`, Server-Sperre für Partner-Portal ab PRO |
+| `…2200_launch_ops.sql` | Launch: `app_feedback` (Feedback/Fehlerberichte, nur schreibbar, Rate-Limit), Benachrichtigungen bei Auftragsstatus und Rechnungen, `delete_my_account()` / `my_deletion_preview()`, `stripe_events` (Webhook-Idempotenz), Aufbewahrungsfristen per pg_cron |
 | `…1700_partner_portal.sql` | Zugang für Servicepartner: Partner-Organisationen, Einladungen, Mitarbeiterrollen, Kunden, Kontrollvorlagen, 14 Servicearten |
 | `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |
@@ -451,3 +452,29 @@ on conflict (organization_id) do update set plan_id = excluded.plan_id, status =
 ```
 
 Preise und Umfang ändert man in `public.plans` (`price_monthly_cents`, `limits`, `features`, `highlights`) – die App liest sie beim Start. Ohne Eintrag in `subscriptions` gilt FREE; ein Downgrade löscht keine Daten.
+
+## Stripe einrichten (Online-Bezahlung der Tarife)
+
+Der Code liegt bereit in `supabase/functions/stripe-checkout` (Checkout + Kundenportal) und `supabase/functions/stripe-webhook` (Abo-Abgleich). So wird er aktiviert:
+
+1. Im Stripe-Dashboard je Tarif ein Produkt mit monatlichem Preis anlegen (PLUS 7,90 €, PRO 17,90 €, ULTIMATE 34,90 €) und die Preis-IDs eintragen:
+   ```sql
+   update public.plans set stripe_price_id = 'price_…' where id = 'plus';   -- ebenso pro, ultimate
+   ```
+2. Secrets setzen und Funktionen veröffentlichen:
+   ```bash
+   supabase secrets set STRIPE_SECRET_KEY=sk_test_… STRIPE_WEBHOOK_SECRET=whsec_…
+   supabase functions deploy stripe-checkout
+   supabase functions deploy stripe-webhook --no-verify-jwt
+   ```
+3. In Stripe einen Webhook auf `https://<projekt>.supabase.co/functions/v1/stripe-webhook` mit den Ereignissen `checkout.session.completed`, `customer.subscription.created/updated/deleted`, `invoice.payment_failed` anlegen.
+4. Kundenportal in Stripe aktivieren (Kündigen, Tarif wechseln, Zahlungsmittel).
+
+Sobald eine `stripe_price_id` gesetzt ist, zeigt die App statt der E-Mail-Anfrage den Stripe-Checkout; „Abo verwalten“ öffnet das Kundenportal. Erst im Testmodus prüfen, dann auf Live-Schlüssel umstellen.
+
+## Feedback und Fehlerberichte lesen
+
+`public.app_feedback` ist aus der App nur beschreibbar. Auswerten im SQL Editor:
+```sql
+select created_at, kind, message, page, app_version, contact_email from public.app_feedback order by created_at desc limit 100;
+```
