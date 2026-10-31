@@ -2268,6 +2268,10 @@
     .pp-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) 16px 10px; border-bottom: 1px solid var(--line); background: var(--green-dark); color: #fff; }
     .pp-brand { display: flex; gap: 10px; align-items: center; min-width: 0; }
     .pp-brand > div { min-width: 0; }
+    .pp-brand-btn { margin: -4px 0 -4px -8px; padding: 4px 8px 4px 4px; border: 0; border-radius: 12px; color: inherit; background: transparent; font: inherit; text-align: left; cursor: pointer; }
+    .pp-brand-btn:hover, .pp-brand-btn:focus-visible { background: rgba(255, 255, 255, .1); }
+    .pp-brand-back { display: grid; place-items: center; flex: 0 0 auto; width: 18px; margin-right: -4px; color: #fff; opacity: .9; }
+    .pp-brand-back svg { width: 18px; height: 18px; }
     .pp-brand strong { display: block; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pp-brand small { display: block; font-size: 12px; opacity: .78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pp-logo { display: grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: rgba(255, 255, 255, .14); }
@@ -3346,6 +3350,8 @@
   
   
   
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3884,6 +3890,7 @@ html.dark .backup-status.stale { color: #dcc3a2; }
 html.dark .cloud-account { background: #25231a; }
 html.dark .cloud-status.warn { color: #dcc3a2; }
 html.dark .pp-top { background: var(--green-solid-dark); }
+html.dark .pp-brand-btn:hover, html.dark .pp-brand-btn:focus-visible { background: rgba(255, 255, 255, 0.01); }
 html.dark .pp-logo { background: rgba(255, 255, 255, 0.02); }
 html.dark .pp-icon-btn, html.dark .pp-switch { border: 1px solid rgba(255, 255, 255, 0.05); }
 html.dark .pp-dot { background: var(--red-solid); }
@@ -15990,7 +15997,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const scroll = root.querySelector('.pp-main')?.scrollTop || 0;
       const org = ppOrg();
       const signedIn = cloudSignedIn();
-      const head = `<header class="pp-top"><div class="pp-brand"><span class="pp-logo">${icon('users')}</span><div><strong>${escapeHtml(org?.name || 'Husora für Servicepartner')}</strong><small>${org ? `${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())} · ${escapeHtml(cloud.session?.email || '')}` : 'Partner-Portal'}</small></div></div>
+      const head = `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="settings" aria-label="Zurück zu den Einstellungen" title="Zurück zu den Einstellungen"><span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span><span class="pp-logo">${icon('gear')}</span><div><strong>${escapeHtml(org?.name || 'Husora für Servicepartner')}</strong><small>${org ? `${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())} · ${escapeHtml(cloud.session?.email || '')}` : 'Partner-Portal'}</small></div></button>
         <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button>` : ''}<button type="button" class="pp-switch" data-pp-action="close">${icon('home')}<span>Hausbesitzer</span></button></div></header>`;
       let body;
       if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal arbeitet mit dem Husora-Cloud-Speicher.', `<div class="pp-actions" style="justify-content:center"><button type="button" class="primary-btn" data-pp-action="connect-default">Mit Husora verbinden</button></div>`);
@@ -16442,6 +16449,12 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const a = action.dataset.ppAction;
       const id = action.dataset.id;
       if (a === 'close') { ppClose(); return; }
+      if (a === 'settings') {
+        ppClose();
+        currentPage = 'settings'; settingsView = 'settings-data'; render(); window.scrollTo(0, 0);
+        setTimeout(() => document.getElementById('settings-partners')?.scrollIntoView({ block: 'start', behavior: 'smooth' }), 60);
+        return;
+      }
       if (a === 'reload') { ppLoad(); return; }
       if (a === 'back') { pp.detail = pp.prev?.detail && pp.prev.detail.id !== pp.detail?.id ? pp.prev.detail : null; pp.prev = null; pp.form = null; ppRender(); return; }
       if (a === 'cancel-form') { pp.form = null; ppRender(); return; }
