@@ -37,3 +37,9 @@ Unter [`supabase/`](supabase/README.md) liegt die komplette PostgreSQL-Datenbank
 Den Prüfstand zum Launch zeigt [`LAUNCH_CHECKLIST.md`](LAUNCH_CHECKLIST.md).
 
 Installation, Konfiguration und Tests beschreibt [`supabase/README.md`](supabase/README.md).
+
+## Tests
+
+- SQL-Sicherheitstests: `supabase/tests/*.sql` (RLS, Partnerzugang)
+- Browser-Tests (Playwright): `tests/e2e/` – lokal mit `supabase start`, App per `python3 -m http.server 8081`, dann `bash tests/e2e/run.sh` (einzelne Reihen: `bash tests/e2e/run.sh cloud partner`)
+- GitHub Actions führt beides bei jedem Push auf `main` aus (`.github/workflows/tests.yml`); Screenshots liegen als Artefakt am Lauf.

@@ -1,0 +1,52 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Supabase lokal starten (alle Migrationen + Testdaten)
+        run: supabase start -x studio,mailpit,imgproxy,edge-runtime,logflare,vector,realtime,supavisor,postgres-meta
+
+      - name: SQL-Sicherheitstests (RLS, Partnerzugang)
+        run: |
+          for t in supabase/tests/*.sql; do
+            echo "== $t"
+            psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -v ON_ERROR_STOP=1 -q -f "$t"
+          done
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Playwright installieren
+        run: npm install --no-save playwright@1.56 && npx playwright install --with-deps chromium
+
+      - name: App bereitstellen
+        run: (python3 -m http.server 8081 --bind 127.0.0.1 > /dev/null 2>&1 &) && sleep 1
+
+      - name: Browser-Tests
+        run: |
+          export SUPABASE_ANON_KEY="$(supabase status -o env | sed -n 's/^ANON_KEY="\(.*\)"$/\1/p')"
+          export SUPABASE_SERVICE_ROLE_KEY="$(supabase status -o env | sed -n 's/^SERVICE_ROLE_KEY="\(.*\)"$/\1/p')"
+          bash tests/e2e/run.sh
+
+      - name: Screenshots und Protokolle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-ausgabe
+          path: tests/e2e/output
+          retention-days: 7

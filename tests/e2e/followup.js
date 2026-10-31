@@ -1,0 +1,23 @@
+const { chromium } = require('playwright');
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 390, height: 844 } }); const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('dialog', (d) => d.accept());
+  await p.route(/unpkg|cdnjs|openstreetmap|nominatim|paypal|open-meteo|frankfurter|er-api|allorigins|google|jsdelivr|tile/, (r) => r.abort());
+  await p.goto('http://127.0.0.1:8081/index.html'); await p.evaluate(() => { localStorage.clear(); localStorage.setItem('stugliv-onboarding', '{"status":"done"}'); }); await p.reload(); await p.waitForTimeout(400);
+  const r = await p.evaluate(async () => {
+    const out = []; const pid = properties[0].id; inspectionProperty = pid; currentPage = 'inspections'; render();
+    const ids = (Array.isArray(inspectionSelections[pid]) ? inspectionSelections[pid] : absenceChecklist.map((i) => i.id));
+    inspectionChecks = { ...inspectionChecks, [pid]: Object.fromEntries(ids.map((id, n) => [id, n < 2 ? 'issue' : 'ok'])) };
+    inspectionNotes = { ...inspectionNotes, [pid]: { [ids[0]]: 'Wasserfleck', [ids[1]]: 'Riss' } };
+    inspectionManual = true; render(); document.getElementById('inspection-completed-date').value = localDateKey(new Date());
+    finishInspection(); saveInspectionReport();
+    out.push(`1. Kontrolle: ${ids.length} Positionen, Banner: ${document.querySelector('.followup-card')?.innerText.replace(/\s+/g, ' ').slice(0, 90)}`);
+    document.querySelector('[data-followup-start]').click();
+    const shown = document.querySelectorAll('.position-row').length; window.__shot = true;
+    out.push(`Nachkontrolle: ${shown} Positionen sichtbar · ${document.querySelector('.followup-card.active strong')?.textContent}`);
+    inspectionChecks = { ...inspectionChecks, [pid]: { [ids[0]]: 'ok', [ids[1]]: 'ok' } }; inspectionManual = true; render();
+    document.getElementById('inspection-completed-date').value = localDateKey(new Date());
+    finishInspection(); saveInspectionReport();
+    const last = inspectionLogEntries(pid).slice(-1)[0];
+    out.push(`gespeichert: followUp=${last.followUp} · Positionen=${last.checkedItems.length} · Banner danach: ${!!document.querySelector('.followup-card')}`);
+    return out.join('\n'); });
+  await p.screenshot({ path: 'open/followup.png' });
+  console.log(r); console.log(errs.length ? 'JS-Fehler:\n' + errs.join('\n') : 'keine JS-Fehler'); await b.close(); })();

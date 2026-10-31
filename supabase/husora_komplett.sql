@@ -5831,3 +5831,356 @@ exception when others then
   raise notice 'pg_cron nicht verfügbar – Bereinigung bitte manuell ausführen: %', sqlerrm;
 end $$;
 
+-- >>> 20261030002300_owner_members.sql
+-- =============================================================================
+-- HUSORA · Migration 2300 · Mitglieder für Hausbesitzer, Benutzer-Limit je Tarif
+-- =============================================================================
+-- Hausbesitzer laden Familie, Miteigentümer oder Verwaltung per TEAM-Code ein
+-- (create_member_invite / accept_member_invite aus Migration 1700).
+-- Neu: Auswahl der Organisation (wer eingeladen wurde, hat oft zusätzlich eine
+-- eigene, leere Organisation) und eine serverseitige Benutzergrenze je Tarif.
+
+-- Alle Hausbesitzer-Organisationen des Nutzers (für die Auswahl in der App)
+create or replace function public.my_organizations()
+returns jsonb
+language sql stable security definer set search_path = ''
+as $$
+  select coalesce(jsonb_agg(jsonb_build_object(
+           'organization_id', o.id, 'name', o.name, 'role', m.role,
+           'members', (select count(*) from public.organization_members x where x.organization_id = o.id and x.status = 'active'),
+           'joined_at', m.created_at
+         ) order by m.created_at), '[]'::jsonb)
+  from public.organization_members m
+  join public.organizations o on o.id = m.organization_id
+  where m.user_id = private.current_user_id() and m.status = 'active' and o.org_type in ('homeowner', 'both')
+$$;
+grant execute on function public.my_organizations() to authenticated;
+
+-- Mitglieder samt Kontakt (nur für Leser der Organisation)
+create or replace function public.org_members(p_organization_id uuid)
+returns jsonb
+language plpgsql stable security definer set search_path = ''
+as $$
+begin
+  if not private.can_read_org(p_organization_id) then
+    raise exception 'Keine Berechtigung für diese Organisation' using errcode = '42501';
+  end if;
+  return coalesce((
+    select jsonb_agg(jsonb_build_object('id', m.id, 'user_id', m.user_id, 'role', m.role, 'status', m.status,
+             'email', u.email, 'name', nullif(trim(concat_ws(' ', u.first_name, u.last_name)), ''),
+             'is_me', m.user_id = private.current_user_id(), 'created_at', m.created_at) order by m.created_at)
+    from public.organization_members m join public.users u on u.id = m.user_id
+    where m.organization_id = p_organization_id
+  ), '[]'::jsonb);
+end;
+$$;
+grant execute on function public.org_members(uuid) to authenticated;
+
+-- Benutzergrenze: aktive Mitglieder + offene Einladungen dürfen das Tariflimit nicht überschreiten
+create or replace function private.enforce_user_limit()
+returns trigger
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_limit integer;
+  v_used integer;
+  v_plan text;
+begin
+  if auth.uid() is null or coalesce(auth.role(), '') = 'service_role' then return new; end if;
+  if exists (select 1 from public.organizations o where o.id = new.organization_id and o.org_type = 'service_partner') then return new; end if;
+  v_plan := private.org_plan(new.organization_id);
+  select nullif(p.limits ->> 'users', '')::integer into v_limit from public.plans p where p.id = v_plan;
+  if v_limit is null then return new; end if; -- unbegrenzt
+  select (select count(*) from public.organization_members m where m.organization_id = new.organization_id and m.status = 'active')
+       + (select count(*) from public.organization_invites i where i.organization_id = new.organization_id and i.accepted_at is null and i.expires_at > now())
+    into v_used;
+  if v_used >= v_limit then
+    raise exception 'Dein Tarif umfasst % Benutzer – für weitere Mitglieder wechsle in einen größeren Tarif.', v_limit using errcode = 'P0001';
+  end if;
+  return new;
+end;
+$$;
+create trigger organization_invites_user_limit before insert on public.organization_invites
+  for each row execute function private.enforce_user_limit();
+
+-- >>> 20261030002400_order_access.sql
+-- =============================================================================
+-- HUSORA · Migration 2400 · Zugangsdaten zeitlich begrenzt für einen Auftrag freigeben
+-- =============================================================================
+-- Der Hausbesitzer gibt Schlüsselort, Schlüsselbox-Code oder Alarmhinweis gezielt
+-- für EINEN Auftrag frei – mit Ablaufzeit. Der Partner liest die Freigabe nur über
+-- die Funktion order_access() (kein Tabellenzugriff), nur solange sie gültig ist und
+-- der Auftrag angenommen/terminiert/in Arbeit ist. Jeder Abruf wird protokolliert.
+
+create table public.order_access_shares (
+  id               uuid primary key default gen_random_uuid(),
+  organization_id  uuid not null references public.organizations(id) on delete cascade,
+  service_order_id uuid not null,
+  access_text      text not null check (length(trim(access_text)) between 1 and 2000),
+  valid_until      timestamptz not null,
+  revoked_at       timestamptz,
+  created_by       uuid references public.users(id) on delete set null default private.current_user_id(),
+  created_at       timestamptz not null default now(),
+  last_viewed_at   timestamptz,
+  view_count       integer not null default 0,
+  foreign key (organization_id, service_order_id) references public.service_orders (organization_id, id) on delete cascade,
+  check (valid_until > created_at),
+  check (valid_until <= created_at + interval '31 days')
+);
+comment on table public.order_access_shares is 'Zeitlich begrenzte Freigabe von Zugangsdaten für einen Auftrag. Partner lesen nur über order_access().';
+create index order_access_shares_order_idx on public.order_access_shares (service_order_id, valid_until desc);
+
+alter table public.order_access_shares enable row level security;
+-- Nur die Verwaltung des Hausbesitzers sieht und verwaltet Freigaben (nicht „Nur lesen“, nicht Partner)
+create policy order_access_shares_select on public.order_access_shares for select to authenticated using (private.is_org_staff(organization_id));
+create policy order_access_shares_insert on public.order_access_shares for insert to authenticated with check (private.is_org_staff(organization_id));
+create policy order_access_shares_update on public.order_access_shares for update to authenticated using (private.is_org_staff(organization_id)) with check (private.is_org_staff(organization_id));
+create policy order_access_shares_delete on public.order_access_shares for delete to authenticated using (private.is_org_staff(organization_id));
+grant select, insert, update, delete on public.order_access_shares to authenticated;
+grant all on public.order_access_shares to service_role;
+
+-- Partner (oder zugewiesener Mitarbeiter) ruft die gültige Freigabe für seinen Auftrag ab
+create or replace function public.order_access(p_service_order_id uuid)
+returns jsonb
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_order public.service_orders;
+  v_share public.order_access_shares;
+begin
+  select * into v_order from public.service_orders o where o.id = p_service_order_id;
+  if v_order.id is null then return null; end if;
+  if not (private.is_org_staff(v_order.organization_id)
+          or private.is_partner_member(v_order.service_partner_id)
+          or (v_order.assigned_user_id = private.current_user_id() and private.is_partner_employee(v_order.service_partner_id))) then
+    raise exception 'Keine Berechtigung' using errcode = '42501';
+  end if;
+  if v_order.status not in ('accepted', 'scheduled', 'in_progress') and not private.is_org_staff(v_order.organization_id) then
+    return null;
+  end if;
+  select * into v_share from public.order_access_shares s
+  where s.service_order_id = v_order.id and s.revoked_at is null and s.valid_until > now()
+  order by s.created_at desc limit 1;
+  if v_share.id is null then return null; end if;
+  if not private.is_org_staff(v_order.organization_id) then
+    update public.order_access_shares set last_viewed_at = now(), view_count = view_count + 1 where id = v_share.id;
+  end if;
+  return jsonb_build_object('access_text', v_share.access_text, 'valid_until', v_share.valid_until, 'created_at', v_share.created_at);
+end;
+$$;
+revoke all on function public.order_access(uuid) from public, anon;
+grant execute on function public.order_access(uuid) to authenticated;
+
+-- Freigaben enden automatisch mit dem Auftrag
+create or replace function private.revoke_access_on_order_end()
+returns trigger
+language plpgsql security definer set search_path = ''
+as $$
+begin
+  if new.status in ('completed', 'cancelled', 'rejected') and old.status is distinct from new.status then
+    update public.order_access_shares set revoked_at = now() where service_order_id = new.id and revoked_at is null;
+  end if;
+  return new;
+end;
+$$;
+create trigger service_orders_revoke_access after update of status on public.service_orders
+  for each row execute function private.revoke_access_on_order_end();
+
+-- >>> 20261030002500_usage_limits.sql
+-- =============================================================================
+-- HUSORA · Migration 2500 · Monatszähler und serverseitige Tarifgrenzen
+-- =============================================================================
+-- 1) Monatszähler für Inseratimporte und Rechnungsanalysen (atomar, je Organisation)
+-- 2) Häuser- und Dokumentengrenze je Tarif auch in der Datenbank
+--    (bestehende Daten bleiben bei einem Downgrade unangetastet – nur neue Einträge
+--     über dem Limit werden abgelehnt; Partner-Uploads zählen nicht gegen den Kunden)
+
+create table public.usage_counters (
+  organization_id uuid not null references public.organizations(id) on delete cascade,
+  metric          text not null check (metric in ('listing_imports_month', 'invoice_analyses_month')),
+  period          date not null,
+  count           integer not null default 0 check (count >= 0),
+  updated_at      timestamptz not null default now(),
+  primary key (organization_id, metric, period)
+);
+comment on table public.usage_counters is 'Verbrauch je Monat (Inseratimporte, Rechnungsanalysen). Schreiben nur über consume_usage().';
+alter table public.usage_counters enable row level security;
+create policy usage_counters_select on public.usage_counters for select to authenticated using (private.can_read_org(organization_id));
+grant select on public.usage_counters to authenticated;
+grant all on public.usage_counters to service_role;
+
+-- Verbraucht eine Einheit, wenn das Monatslimit des Tarifs es zulässt
+create or replace function public.consume_usage(p_organization_id uuid, p_metric text)
+returns jsonb
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_limit integer;
+  v_used integer;
+  v_period date := date_trunc('month', now())::date;
+begin
+  if not private.is_org_staff(p_organization_id) then
+    raise exception 'Keine Berechtigung für diese Organisation' using errcode = '42501';
+  end if;
+  if p_metric not in ('listing_imports_month', 'invoice_analyses_month') then
+    raise exception 'Unbekannter Zähler' using errcode = '22023';
+  end if;
+  select nullif(p.limits ->> p_metric, '')::integer into v_limit from public.plans p where p.id = private.org_plan(p_organization_id);
+  insert into public.usage_counters (organization_id, metric, period, count) values (p_organization_id, p_metric, v_period, 0)
+  on conflict do nothing;
+  select count into v_used from public.usage_counters where organization_id = p_organization_id and metric = p_metric and period = v_period for update;
+  if v_limit is not null and v_used >= v_limit then
+    return jsonb_build_object('ok', false, 'used', v_used, 'limit', v_limit);
+  end if;
+  update public.usage_counters set count = count + 1, updated_at = now()
+  where organization_id = p_organization_id and metric = p_metric and period = v_period;
+  return jsonb_build_object('ok', true, 'used', v_used + 1, 'limit', v_limit);
+end;
+$$;
+revoke all on function public.consume_usage(uuid, text) from public, anon;
+grant execute on function public.consume_usage(uuid, text) to authenticated;
+
+-- Tarifgrenze für neue Häuser und Dokumente
+create or replace function private.enforce_plan_limit()
+returns trigger
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_key text := case tg_table_name when 'properties' then 'properties' else 'documents' end;
+  v_limit integer;
+  v_used integer;
+begin
+  if auth.uid() is null or coalesce(auth.role(), '') = 'service_role' then return new; end if;
+  if exists (select 1 from public.organizations o where o.id = new.organization_id and o.org_type = 'service_partner') then return new; end if;
+  -- Uploads von Servicepartnern (z. B. Rechnungen, Fotos zum Auftrag) zählen nicht gegen den Kunden
+  if not private.is_org_member(new.organization_id) then return new; end if;
+  select nullif(p.limits ->> v_key, '')::integer into v_limit from public.plans p where p.id = private.org_plan(new.organization_id);
+  if v_limit is null then return new; end if;
+  if tg_table_name = 'properties' then
+    select count(*) into v_used from public.properties where organization_id = new.organization_id;
+  else
+    select count(*) into v_used from public.documents where organization_id = new.organization_id;
+  end if;
+  if v_used >= v_limit then
+    raise exception 'Tariflimit erreicht: höchstens % % in deinem Tarif.', v_limit, case when v_key = 'properties' and v_limit = 1 then 'Haus' when v_key = 'properties' then 'Häuser' when v_limit = 1 then 'Dokument' else 'Dokumente' end using errcode = 'P0001';
+  end if;
+  return new;
+end;
+$$;
+create trigger properties_plan_limit before insert on public.properties
+  for each row execute function private.enforce_plan_limit();
+create trigger documents_plan_limit before insert on public.documents
+  for each row execute function private.enforce_plan_limit();
+
+-- >>> 20261030002600_property_archive.sql
+-- =============================================================================
+-- HUSORA · Migration 2600 · Häuser archivieren statt löschen
+-- =============================================================================
+-- Archivierte Häuser bleiben in der Cloud erhalten (status = 'archived'), samt
+-- Aufträgen, Rechnungen, Fotos und Kontrollen. Die App verschiebt sie lokal in ein
+-- Archiv; der Abgleich der Hausliste löscht archivierte Häuser deshalb nicht mehr.
+-- Wiederhergestellte Häuser werden wieder aktiv. Archivierte zählen nicht gegen
+-- das Häuser-Limit des Tarifs.
+
+create or replace function private.project_app_properties(p_org uuid, p_items jsonb)
+returns integer
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_item  jsonb;
+  v_count integer := 0;
+  v_refs  text[] := '{}';
+  v_addr  text;
+  v_year  numeric;
+begin
+  for v_item in select * from jsonb_array_elements(p_items) loop
+    continue when coalesce(v_item ->> 'id', '') = '' or coalesce(trim(v_item ->> 'name'), '') = '';
+    v_addr := coalesce(v_item ->> 'address', '');
+    v_year := private.app_num(v_item ->> 'yearBuilt');
+    insert into public.properties (organization_id, app_ref, name, description, city, region, country,
+                                   living_area_m2, land_area_m2, bedrooms, max_guests, year_built, property_type, status)
+    values (p_org, v_item ->> 'id', trim(v_item ->> 'name'),
+            nullif(concat_ws(' · ', nullif(v_addr, ''), nullif(v_item ->> 'condition', '')), ''),
+            nullif(trim(split_part(v_addr, ',', 1)), ''),
+            coalesce(nullif(v_item ->> 'region', ''), nullif(trim(split_part(v_addr, ',', 2)), '')),
+            private.app_country(v_addr),
+            private.app_num(v_item ->> 'livingArea'),
+            private.app_num(v_item ->> 'plotSize'),
+            private.app_num(v_item ->> 'rooms')::integer,
+            private.app_num(v_item ->> 'beds')::integer,
+            case when v_year between 1600 and 2100 then v_year::integer end,
+            'holiday_home', 'active')
+    on conflict (organization_id, app_ref) where app_ref is not null do update set
+      name = excluded.name,
+      description = excluded.description,
+      city = excluded.city,
+      region = excluded.region,
+      country = excluded.country,
+      living_area_m2 = excluded.living_area_m2,
+      land_area_m2 = excluded.land_area_m2,
+      bedrooms = excluded.bedrooms,
+      max_guests = excluded.max_guests,
+      year_built = excluded.year_built,
+      status = case when public.properties.status = 'archived' then 'active' else public.properties.status end;
+    v_refs := v_refs || (v_item ->> 'id');
+    v_count := v_count + 1;
+  end loop;
+  -- In der App gelöschte Häuser entfernen (nur aus der App stammende, archivierte bleiben)
+  delete from public.properties p
+  where p.organization_id = p_org and p.app_ref is not null and p.status <> 'archived' and not (p.app_ref = any (v_refs));
+  return v_count;
+end;
+$$;
+
+-- Häuser-Limit: archivierte Häuser zählen nicht
+create or replace function private.enforce_plan_limit()
+returns trigger
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_key text := case tg_table_name when 'properties' then 'properties' else 'documents' end;
+  v_limit integer;
+  v_used integer;
+begin
+  if auth.uid() is null or coalesce(auth.role(), '') = 'service_role' then return new; end if;
+  if exists (select 1 from public.organizations o where o.id = new.organization_id and o.org_type = 'service_partner') then return new; end if;
+  if not private.is_org_member(new.organization_id) then return new; end if;
+  select nullif(p.limits ->> v_key, '')::integer into v_limit from public.plans p where p.id = private.org_plan(new.organization_id);
+  if v_limit is null then return new; end if;
+  if tg_table_name = 'properties' then
+    select count(*) into v_used from public.properties where organization_id = new.organization_id and status <> 'archived';
+  else
+    select count(*) into v_used from public.documents where organization_id = new.organization_id;
+  end if;
+  if v_used >= v_limit then
+    raise exception 'Tariflimit erreicht: höchstens % % in deinem Tarif.', v_limit, case when v_key = 'properties' and v_limit = 1 then 'Haus' when v_key = 'properties' then 'Häuser' when v_limit = 1 then 'Dokument' else 'Dokumente' end using errcode = 'P0001';
+  end if;
+  return new;
+end;
+$$;
+
+-- Haus in der Cloud archivieren / reaktivieren (vor dem lokalen Verschieben aufgerufen)
+create or replace function public.set_property_archived(p_organization_id uuid, p_app_ref text, p_archived boolean)
+returns boolean
+language plpgsql security definer set search_path = ''
+as $$
+begin
+  if not private.is_org_staff(p_organization_id) then
+    raise exception 'Keine Berechtigung für diese Organisation' using errcode = '42501';
+  end if;
+  update public.properties set status = case when p_archived then 'archived' else 'active' end
+  where organization_id = p_organization_id and app_ref = p_app_ref;
+  -- offene, noch nicht angenommene Anfragen zum Haus zurückziehen
+  if p_archived then
+    update public.service_orders o set status = 'cancelled', response_note = 'Zurückgezogen: Haus wurde archiviert.'
+    from public.properties p
+    where p.organization_id = p_organization_id and p.app_ref = p_app_ref and o.property_id = p.id and o.status = 'offered';
+  end if;
+  return found;
+end;
+$$;
+revoke all on function public.set_property_archived(uuid, text, boolean) from public, anon;
+grant execute on function public.set_property_archived(uuid, text, boolean) to authenticated;
+

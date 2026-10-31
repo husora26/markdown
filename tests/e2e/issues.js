@@ -1,0 +1,23 @@
+const { chromium } = require('playwright'); const fs = require('fs');
+const { SP, ANON: ENV_ANON } = require('./env'); const ANON = ENV_ANON;
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 390, height: 844 } }); const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('dialog', (d) => d.accept('Mieter repariert selbst'));
+  await p.route(/unpkg|cdnjs|openstreetmap|nominatim|paypal|open-meteo|frankfurter|er-api|allorigins|google|jsdelivr|tile|supabase\.co/, (r) => r.abort());
+  await p.goto('http://127.0.0.1:8081/index.html'); await p.evaluate(({ key }) => { localStorage.clear(); localStorage.setItem('stugliv-onboarding', '{"status":"done"}'); localStorage.setItem('husora-cloud', JSON.stringify({ url: 'http://127.0.0.1:54321', key })); localStorage.setItem('stugliv-test-plan', 'pro'); }, { key: ANON }); await p.goto('http://127.0.0.1:8081/index.html?test=1'); await p.waitForTimeout(500);
+  const out = [];
+  out.push(await p.evaluate(() => { planOverride = 'pro'; const issue = createIssue({ propertyId: properties[0].id, part: '', text: 'Dachrinne undicht', priority: 'soon', source: 'Test' }); currentPage = 'repairs'; render(); const t = tasks.find((x) => x.issueId === issue.id); window.__iid = issue.id; return `angelegt: ${ISSUE_STATUS[issue.status]} · Reparaturaufgabe: ${!!t}`; }));
+  out.push(await p.evaluate(() => { const t = tasks.find((x) => x.issueId === window.__iid); setTaskStatus(t, 'In Bearbeitung'); persistTasks(); render(); const i = issues.find((x) => x.id === window.__iid); return `Aufgabe in Bearbeitung → Mangel: ${ISSUE_STATUS[i.status]}`; }));
+  await p.click(`[data-issue-cancel="${await p.evaluate(() => window.__iid)}"]`); await p.waitForTimeout(200);
+  out.push(await p.evaluate(() => { const i = issues.find((x) => x.id === window.__iid); return `abgebrochen: ${ISSUE_STATUS[i.status]} · Aufgabe noch da: ${tasks.some((x) => x.issueId === i.id && !x.done)} · Verlauf: ${i.history.map((h) => `${h.to}${h.note ? `(${h.note})` : ''}`).join(' → ')}`; }));
+  await p.evaluate(() => { const d = [...document.querySelectorAll('.issue-history')].pop(); if (d) { d.open = true; d.scrollIntoView(); } }); await p.screenshot({ path: 'open/issue-history.png' });
+  await p.evaluate(() => document.querySelector(`[data-issue-reopen="${window.__iid}"]`).click()); await p.waitForTimeout(200);
+  out.push(await p.evaluate(() => { const i = issues.find((x) => x.id === window.__iid); return `wieder geöffnet: ${ISSUE_STATUS[i.status]} → nach Sync: ${(render(), ISSUE_STATUS[issues.find((x) => x.id === window.__iid).status])}`; }));
+  // Auftragsverlauf
+  await p.evaluate(() => { currentPage = 'settings'; settingsView = 'settings-data'; render(); });
+  await p.fill('[data-cloud-form=signin] [name=email]', 'admin@husora.test'); await p.fill('[data-cloud-form=signin] [name=password]', 'Husora!2026');
+  await p.$eval('[data-cloud-form=signin] button[type=submit]', (e) => e.click()); await p.waitForFunction(() => cloudReady() && !cloudState.busy, null, { timeout: 20000 }); await p.waitForTimeout(1500);
+  await p.evaluate(() => { currentPage = 'partnerHub'; hub.tab = 'orders'; render(); }); await p.evaluate(() => hubRefresh()); await p.waitForTimeout(500);
+  const id = await p.evaluate(() => ownerSide.orders.find((o) => o.status === 'completed')?.id || ownerSide.orders[0].id);
+  await p.evaluate((id) => { const d = document.querySelector(`[data-hub-history="${id}"]`); d.open = true; d.scrollIntoView(); }, id); await p.waitForTimeout(1200);
+  out.push('Auftragsverlauf: ' + await p.evaluate((id) => document.querySelector(`[data-hub-history="${id}"] .hub-history-body`).innerText.replace(/\s+/g, ' ').slice(0, 200), id));
+  await p.screenshot({ path: 'open/order-history.png' });
+  console.log(out.join('\n')); console.log(errs.length ? 'JS-Fehler:\n' + errs.join('\n') : 'keine JS-Fehler'); await b.close(); })();

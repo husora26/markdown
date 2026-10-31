@@ -37,7 +37,7 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 - [x] P0 Property-Mitgliedschaften (`property_users`), serverseitige Prüfung über RLS + security-definer-Funktionen
 - [x] P0 Servicepartner sehen nur Objekte mit eigenem Auftrag, keine fremden Kundendaten
 - [x] P0 RLS auf allen Kundentabellen, Cross-Tenant getestet (`supabase/tests/rls_test.sql` 84 Prüfungen, `partner_portal_test.sql` 53)
-- [ ] P1 Mitglieder in Hausbesitzer-Organisationen einladen (Familie, Verwalter) – UI fehlt (Partnerbetriebe haben es)
+- [x] P1 Mitglieder in Hausbesitzer-Organisationen einladen (Einstellungen → Mitglieder, TEAM-Code, Rollen, Organisationswahl) *neu*
 
 ## 4. Haus / Objektverwaltung
 - [x] P0 Haus anlegen, bearbeiten, löschen; Adresse, Standort (Karte)
@@ -46,7 +46,7 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 - [x] P0 Bauteile/Bereiche (Hausmodell, Mängel je Bauteil)
 - [~] P0 Räume: als Bereiche/Positionen der Kontrolle, nicht als eigene Raumliste
 - [x] P0 Hausbesitzer ↔ Objekt (Organisation), Datenvalidierung (Pflichtfelder, Wertebereiche, DB-Constraints)
-- [ ] P0 Archivieren statt Löschen
+- [x] P0 Archivieren statt Löschen (wiederherstellbar; in der Cloud bleibt das Haus mit Aufträgen erhalten) *neu* · Löschen entfernt alle verknüpften Aufgaben, Mängel, Kosten *neu*
 - [ ] P1 Zustands-Score (im Tarif ULTIMATE als „in Vorbereitung“)
 - [x] P1 Hausmodell
 - [ ] P2 mehrere Eigentümer
@@ -60,14 +60,14 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 - [x] P0 Kontrollplan, Kontrollpunkte, Kategorien, Frequenz, Verantwortlicher (Servicepartner)
 - [x] P0 Status OK / Hinweis (auffällig) / Mangel / nicht geprüft
 - [x] P0 Foto und Notiz je Punkt, Mangel direkt aus der Kontrolle, Bericht speichern, PDF-Prüfbericht, Abschluss
-- [ ] P0 Nachkontrolle (gezielte Wiederholung nur der Mängelpunkte)
+- [x] P0 Nachkontrolle nur der auffälligen Punkte *neu*
 - [~] P1 automatische Folgekontrolle (monatliche Abwesenheitskontrolle als Automatik) · [x] P1 Saison-Checklisten · [x] P1 Partner je Kontrollbereich
 
 ## 7. Mängelmanagement
 - [x] P0 Mangel erstellen, mit Haus/Bauteil/Kontrolle verknüpft, Priorität, Beschreibung, Fotos, Fälligkeit, Servicepartner
-- [~] P0 Status: Gemeldet / Reparatur geplant / Behoben / als Sanierung geplant – „in Arbeit“ und „abgebrochen“ fehlen als eigene Stufen
+- [x] P0 Status: Gemeldet / Reparatur geplant / In Arbeit / Behoben / Abgebrochen / als Sanierung geplant *neu*
 - [x] P0 Automatisch Reparaturaufgabe aus Mangel; mit verbundenem Partner automatisch Auftrag
-- [~] P0 Mangelhistorie (Datum, Quelle, Rechnungen) – kein vollständiges Änderungsprotokoll in der UI
+- [x] P0 Mangelhistorie mit Verlauf aller Statuswechsel *neu*
 - [~] P0 Abschluss nach Bestätigung: Auftrag „erledigt“ hakt die Aufgabe automatisch ab (bewusst so gewünscht); eine zusätzliche Abnahme durch den Hausbesitzer gibt es nicht
 - [ ] P1 Eskalation bei Überfälligkeit (Tarif ULTIMATE, in Vorbereitung)
 
@@ -80,8 +80,8 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 ## 9. Serviceaufträge
 - [x] P0 aus Aufgabe/Mangel erzeugen („SP beauftragen“, automatisch), manuell (Partner-Portal, Mehrfachauswahl), Leistungsbeschreibung, Priorität, Frist/Termin, Statusworkflow, Rückmeldung, Arbeitsfotos, Abschlussnotiz
 - [~] P0 Raum/Mangel-Verknüpfung über die Aufgabe, nicht direkt am Auftrag
-- [ ] P0 Zugangsinformationen sicher an den Partner übermitteln (Notfall & Zugang wird nicht geteilt)
-- [~] P0 Historie/Audit Trail: `audit_logs` in der Datenbank; keine Anzeige in der App
+- [x] P0 Zugangsinformationen zeitlich begrenzt je Auftrag freigeben, Abruf protokolliert, endet mit dem Auftrag *neu*
+- [x] P0 Historie/Audit Trail: Auftragsverlauf aus `audit_logs` in der Auftragskarte (Admins) *neu*
 - [x] P1 Kosten-/Angebotsfeld · [ ] P1 Auftrag als PDF · [ ] P1 E-Mail-Benachrichtigung
 - [x] neu: Benachrichtigung bei angenommen/abgelehnt/terminiert/begonnen/erledigt und zurückgezogen
 
@@ -122,20 +122,20 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 ## 18. Notfall und Zugang
 - [x] P0 Notfallkontakte, Telefonnummern, Hinweise, Zugangsinformationen
 - [~] P0 Zugriff: nur Mitglieder der eigenen Organisation (RLS); innerhalb der Organisation keine Sonderstufe (auch „Nur lesen“-Mitglieder sehen Zugangsdaten)
-- [x] P0 keine öffentlichen Links · [ ] P1 temporärer Zugangslink für Partner
+- [x] P0 keine öffentlichen Links · [x] P1 zeitlich begrenzte Zugangsfreigabe je Auftrag *neu*
 
 ## 20. Listing Import / AI
 - [x] P1 Import mit Prüfung vor Übernahme, Übersetzung, Gebäudehinweise
 - [~] P0 KI-Fehler werden abgefangen; Kennzeichnung „Vorschlag“ vorhanden, aber nicht überall einheitlich
-- [~] P1 Tariflimits: Funktion ab PLUS freigeschaltet; Monatszähler (5/20/∞) noch nicht gezählt
+- [x] P1 Tariflimits inkl. Monatszähler für Inseratimporte und Rechnungsanalysen (`consume_usage`) *neu*
 
 ## 21. Tarife und Entitlements
 - [x] P0 FREE/PLUS/PRO/ULTIMATE aus `public.plans` (Preise nicht im Code), zentrale Prüfung `entitlements.can()/limit()`
 - [x] P0 Limits Häuser, aktive Aufgaben, Servicepartner, Dokumente; Module (Reparatur, Sanierung, Verträge, Zähler, Automatik, Hausmodell, Partner-Portal, Import, Rechnungserkennung)
 - [x] P0 serverseitig: Partner-Portal/Serviceaufträge ab PRO (Trigger), Abo kann nicht aus dem Browser gesetzt werden
-- [~] P0 übrige Limits nur in der App geprüft (Daten werden offline-fähig im Browser geführt) – Server-Prüfung für Häuseranzahl/Dokumente fehlt
+- [x] P0 Häuser-, Dokument- und Benutzergrenzen zusätzlich serverseitig *neu*
 - [x] P0 Downgrade löscht nichts, neue Einträge über dem Limit gesperrt, Bestand bleibt lesbar
-- [ ] P0 Benutzer-Limit (fehlt mangels Mitglieder-Einladung für Hausbesitzer)
+- [x] P0 Benutzer-Limit (Server lehnt Einladungen über dem Limit ab) *neu*
 
 ## 22. Stripe / Bezahlung
 - [x] Code vorbereitet *neu*: `supabase/functions/stripe-checkout` (Checkout + Kundenportal), `stripe-webhook` (Signaturprüfung, Idempotenz über `stripe_events`, Upgrade/Downgrade/Kündigung/Zahlungsfehler → `subscriptions`)
@@ -195,7 +195,7 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 - [x] P0 RLS-Tests (137 Prüfungen), Auth, CRUD, Mangel → Auftrag, Auftrag → Abschluss, Rechnung → Kosten, Tariflimits, Uploads, Mobile E2E (15 Playwright-Testreihen)
 - [ ] P0 Stripe-Webhook mit echtem Testkonto **[ext]** · [~] KI-Fehlerfälle
 - [ ] P0 3 echte Testkonten / externe Tester **[ext]**
-- [~] P1 automatisierte E2E-Tests: vorhanden, liegen aber noch nicht im Repository/CI
+- [x] P1 automatisierte E2E-Tests in `tests/e2e` (22 Testreihen) + GitHub Actions (`.github/workflows/tests.yml`) *neu*
 
 ## 31. Monitoring / Betrieb
 - [x] P0 Produktionsumgebung, *neu* Fehlertracking (`app_feedback`, Art „error“), Edge-Function-Logs, Supabase-Monitoring
@@ -218,11 +218,5 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 
 ---
 
-### Nächste sinnvolle Schritte im Code (P0/P1, nicht extern)
-1. Nachkontrolle (nur Mängelpunkte erneut prüfen)
-2. Mitglieder für Hausbesitzer einladen (+ Benutzer-Limit je Tarif)
-3. Zugangsinformationen gezielt für einen Auftrag freigeben (zeitlich begrenzt)
-4. Mängelstatus „in Arbeit/abgebrochen“ und Auftrags-Historie (aus `audit_logs`) anzeigen
-5. Monatszähler für Inseratimporte/Rechnungsanalysen; Server-Prüfung der Häuser-/Dokumentenlimits
-6. Archivieren statt Löschen für Häuser
-7. E2E-Tests ins Repository + GitHub Actions
+### Nächste sinnvolle Schritte im Code
+Alle zuvor offenen Code-Punkte sind umgesetzt. Offen sind nur noch Punkte mit **[ext]** (Stripe-Konto, Recht, echte Geräte, Tester, Backup-Test) sowie spätere Ausbaustufen (P2/P3).

@@ -485,6 +485,45 @@
     .feedback-kinds input:focus-visible + span { outline: 2px solid var(--green); outline-offset: 2px; }
     #offline-banner { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 950; display: flex; align-items: center; gap: 8px; width: min(560px, calc(100vw - 24px)); padding: 10px 14px; border-radius: 12px; background: #3a2f12; color: #fff3cf; font-size: 13px; line-height: 1.4; transform: translateX(-50%); box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
     #offline-banner svg { flex: 0 0 auto; width: 18px; height: 18px; }
+    .followup-card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; margin-bottom: 14px; border-left: 4px solid #e8b800; }
+    .followup-card.active { border-left-color: var(--green); background: var(--green-soft); }
+    .followup-card > div { flex: 1; min-width: 0; }
+    .followup-card strong { display: block; font-size: 14.5px; }
+    .followup-card p { margin: 3px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .followup-icon { display: grid; place-items: center; flex: 0 0 auto; width: 38px; height: 38px; border-radius: 10px; background: #fff0b3; color: #8a5a00; }
+    .followup-card.active .followup-icon { background: #fff; color: var(--green); }
+    .followup-icon svg { width: 19px; height: 19px; }
+    @media (max-width: 560px) { .followup-card { flex-wrap: wrap; } .followup-card .primary-btn, .followup-card .secondary-btn { width: 100%; } }
+    .team-org { display: block; margin: 0 0 12px; }
+    .team-list { display: grid; gap: 6px; margin: 0 0 12px; padding: 0; list-style: none; }
+    .team-list li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; }
+    .team-avatar { display: grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; background: var(--green-dark); color: #fff; font-weight: 800; }
+    .team-avatar.muted { background: var(--green-soft); color: var(--green); }
+    .team-avatar svg { width: 16px; height: 16px; }
+    .team-main { flex: 1; min-width: 0; }
+    .team-main strong { display: block; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .team-main small { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+    .team-list .filter-select { max-width: 150px; min-height: 36px; }
+    .team-list .secondary-btn { min-height: 34px; padding: 0 10px; }
+    .team-sub { margin: 4px 0 6px; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+    .team-form { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+    .team-join { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .team-join-row { display: flex; gap: 8px; margin-top: 6px; }
+    .team-join-row input { flex: 1; min-width: 0; }
+    @media (max-width: 640px) { .team-form { grid-template-columns: 1fr; } .team-list li { flex-wrap: wrap; } .team-list .filter-select { max-width: none; flex: 1; } }
+    .remove-property-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .archive-list { display: grid; gap: 6px; margin: 0; padding: 0 18px 18px; list-style: none; }
+    .archive-list li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
+    .archive-main { flex: 1; min-width: 0; }
+    .archive-main strong { display: block; font-size: 14px; }
+    .archive-main small { display: block; color: var(--muted); font-size: 12.5px; }
+    .plan-test-note { display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin-bottom: 14px; border-left: 4px solid #e8b800; }
+    .plan-test-note > span { display: grid; place-items: center; flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px; background: #fff0b3; color: #8a5a00; }
+    .plan-test-note > span svg { width: 18px; height: 18px; }
+    .plan-test-note > div { flex: 1; min-width: 0; }
+    .plan-test-note p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+    @media (max-width: 560px) { .plan-test-note { flex-wrap: wrap; } .plan-test-note .secondary-btn { width: 100%; } }
+    .plan-card.current { outline: 3px solid var(--green); outline-offset: -3px; box-shadow: 0 0 0 6px rgba(36, 75, 61, .12), var(--shadow); }
     .plan-grid-4 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)) !important; }
     .plan-limits { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin: 10px 0 4px; padding: 8px; border-radius: 10px; background: var(--green-soft); text-align: center; }
     .plan-limits dt { color: var(--muted); font-size: 10.5px; font-weight: 700; }
@@ -2633,6 +2672,26 @@
     .hub-send-bar { position: sticky; bottom: calc(78px + env(safe-area-inset-bottom)); z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px -4px -4px; padding: 10px 10px 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface, #fffdf8); box-shadow: 0 8px 24px rgba(0, 0, 0, .1); font-size: 13.5px; }
     .hub-send-bar .primary-btn { min-height: 42px; white-space: nowrap; }
     @media (min-width: 900px) { .hub-send-bar { bottom: 12px; } }
+    .hub-access { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 12px; border: 1px solid #c9dccf; border-radius: 12px; background: var(--green-soft); }
+    .hub-access > svg { flex: 0 0 auto; width: 20px; height: 20px; color: var(--green); }
+    .hub-access > span { flex: 1; min-width: 0; }
+    .hub-access strong { display: block; font-size: 14px; }
+    .hub-access small { display: block; color: var(--muted); font-size: 12.5px; }
+    .hub-access-form { display: grid; gap: 10px; margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; }
+    .pp-access { display: flex; gap: 12px; align-items: flex-start; border-left: 4px solid var(--green); }
+    .pp-access > svg { flex: 0 0 auto; width: 22px; height: 22px; margin-top: 2px; color: var(--green); }
+    .pp-access .pp-text { margin: 4px 0; white-space: pre-line; font-size: 15px; font-weight: 650; }
+    .pp-access small { color: var(--muted); font-size: 12px; }
+    .hub-history { margin-top: 10px; font-size: 13px; }
+    .hub-history summary { color: var(--green); font-weight: 700; cursor: pointer; }
+    .hub-history-list, .issue-history ol { display: grid; gap: 6px; margin: 8px 0 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); list-style: none; }
+    .hub-history-list li, .issue-history li { display: grid; gap: 1px; }
+    .hub-history-list time, .issue-history time { color: var(--muted); font-size: 11.5px; }
+    .issue-history { margin-top: 8px; font-size: 13px; }
+    .issue-history summary { color: var(--muted); font-weight: 700; cursor: pointer; }
+    .issue-history li span { color: var(--muted); }
+    .issue-card.in_progress .issue-status { color: #245d96; }
+    .issue-card.cancelled { opacity: .7; }
     .hub-invoice { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--green-soft); }
     .hub-invoice > svg { flex: 0 0 auto; width: 20px; height: 20px; color: var(--green); }
     .hub-invoice > span { flex: 1; min-width: 0; }
@@ -3549,6 +3608,14 @@
   
   
   
+  
+  
+  
+  
+  
+  
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3643,6 +3710,10 @@ html.dark .cloud-danger { border: 1px solid #513d38; }
 html.dark .danger-btn { background: var(--red-solid); }
 html.dark .feedback-kinds input:checked + span { background: var(--green-solid-dark); }
 html.dark #offline-banner { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); }
+html.dark .followup-icon { background: #473e1b; color: #f7d9a1; }
+html.dark .followup-card.active .followup-icon { background: #1c1c1c; }
+html.dark .team-avatar { background: var(--green-solid-dark); }
+html.dark .plan-card.current { box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.31), var(--shadow); }
 html.dark .plan-usage-row i { background: linear-gradient(90deg, var(--green-solid) var(--pct), #2a2d28 var(--pct)); }
 html.dark .plan-usage-row.full i { background: var(--red-solid); }
 html.dark .plan-tag { background: #39321a; color: #edd9ab; }
@@ -4140,6 +4211,8 @@ html.dark .hub-partner-chips button.on { background: var(--green-solid-dark); }
 html.dark .hub-pick { background: var(--surface, #1c1c1c); }
 html.dark .hub-pick input { accent-color: var(--green-solid); }
 html.dark .hub-send-bar { background: var(--surface, #2b2410); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.27); }
+html.dark .hub-access { border: 1px solid #424e45; }
+html.dark .issue-card.in_progress .issue-status { color: #9ebfe0; }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
 html.dark .hub-conv.unread { border-color: #635842; }
@@ -5884,7 +5957,19 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return added.length;
     }
     // Reparaturservice: Auffälligkeiten aus Kontrollen und Serviceaufgaben werden automatisch zu Reparaturaufträgen.
-    const ISSUE_STATUS = { open: 'Gemeldet', planned: 'Reparatur geplant', fixed: 'Behoben', renovation: 'Als Sanierung geplant' };
+    const ISSUE_STATUS = { open: 'Gemeldet', planned: 'Reparatur geplant', in_progress: 'In Arbeit', fixed: 'Behoben', renovation: 'Als Sanierung geplant', cancelled: 'Abgebrochen' };
+    function issueHistoryHtml(issue) {
+      const history = Array.isArray(issue.history) ? issue.history : [];
+      if (!history.length) return '';
+      return `<details class="issue-history"><summary>Verlauf (${history.length})</summary><ol>${[{ at: issue.date, to: 'open', note: issue.source || 'gemeldet' }, ...history].map((h) => `<li><time>${escapeHtml(h.at ? fmtDate(String(h.at).slice(0, 10)) : '')}</time><b>${escapeHtml(ISSUE_STATUS[h.to] || h.to)}</b>${h.note ? `<span>${escapeHtml(h.note)}</span>` : ''}</li>`).join('')}</ol></details>`;
+    }
+    const issueActive = (issue) => ['open', 'planned', 'in_progress'].includes(issue.status);
+    // Statuswechsel mit Verlauf (Mangelhistorie)
+    function setIssueStatus(issue, status, note = '') {
+      if (!issue || issue.status === status) return;
+      issue.history = [...(Array.isArray(issue.history) ? issue.history : []), { at: new Date().toISOString(), from: issue.status || '', to: status, note }].slice(-30);
+      issue.status = status;
+    }
     const REPAIR_DAYS = { urgent: 1, soon: 7, normal: 21 };
     let issues = [];
     try {
@@ -5924,22 +6009,28 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const property = properties.find((item) => item.id === issue.propertyId);
         const index = next.findIndex((task) => task.auto === 'repair' && task.issueId === issue.id);
         const task = index >= 0 ? next[index] : null;
-        if (task && task.done && issue.status !== 'fixed' && issue.status !== 'renovation') {
-          issue.status = 'fixed';
+        if (task && task.done && issue.status !== 'fixed' && issue.status !== 'renovation' && issue.status !== 'cancelled') {
+          setIssueStatus(issue, 'fixed', 'Reparatur erledigt');
           issue.fixedAt = today;
           completed.push(task);
           changed = true;
-        } else if (task && !task.done && (issue.status === 'fixed' || issue.status === 'renovation')) {
+        } else if (task && !task.done && (issue.status === 'fixed' || issue.status === 'renovation' || issue.status === 'cancelled')) {
           next.splice(index, 1);
           changed = true;
-        } else if (!task && property && automation.repairs && (issue.status === 'open' || issue.status === 'planned') && !issue.repairDismissed) {
+        } else if (task && !task.done && taskStatus(task) === 'In Bearbeitung' && issue.status === 'planned') {
+          setIssueStatus(issue, 'in_progress', 'Reparatur begonnen');
+          changed = true;
+        } else if (task && !task.done && taskStatus(task) === 'Offen' && issue.status === 'in_progress') {
+          setIssueStatus(issue, 'planned', 'Reparatur wieder offen');
+          changed = true;
+        } else if (!task && property && automation.repairs && issueActive(issue) && !issue.repairDismissed) {
           const partner = craftsmanFor(property.id);
           const part = partLabel(issue.part);
           const short = issue.text.length > 60 ? `${issue.text.slice(0, 57).trim()}…` : issue.text;
           const repair = { id: newId(), partnerId: issue.partnerId || suggestPartner(property.id, 'repair'), title: `Reparatur${part && !short.toLowerCase().startsWith(part.toLowerCase()) ? ` ${part}` : ''}: ${short}`, property: property.name, date: shiftDateKey(today, REPAIR_DAYS[issue.priority] ?? 7), priority: issue.priority || 'soon', area: part || 'Reparatur', status: 'Offen', done: false, repeat: 'Einmalig', description: `Automatisch aus einer Auffälligkeit (${issue.source || 'Meldung'} vom ${fmtDate(issue.date)}): ${issue.text}${partner ? ` · Vorgeschlagener Betrieb: ${partner.name}` : ' · Noch kein Handwerker zugeordnet.'}`, auto: 'repair', issueId: issue.id, propertyId: property.id };
           next.push(repair);
           added.push(repair);
-          issue.status = 'planned';
+          setIssueStatus(issue, 'planned', 'Reparaturaufgabe angelegt');
           changed = true;
         }
       });
@@ -5990,7 +6081,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       persistIssues();
       return issue;
     }
-    const openIssues = (propertyId) => issues.filter((issue) => (!propertyId || issue.propertyId === propertyId) && (issue.status === 'open' || issue.status === 'planned'));
+    const openIssues = (propertyId) => issues.filter((issue) => (!propertyId || issue.propertyId === propertyId) && issueActive(issue));
     const automationActiveCount = () => [automation.turnover.defaultOn && bookingsEnabled(), automation.vacancyInspection, automation.seasonal, autoTasks.enabled, automation.repairs, automation.renovation, (portalConnected() && portalSync.auto) || (icalSync.auto && icalLinkCount() > 0)].filter(Boolean).length;
     const intervalLabel = (days) => ({ 14: 'alle 2 Wochen', 30: 'monatlich', 90: 'vierteljährlich', 180: 'halbjährlich', 365: 'jährlich' }[days] || `alle ${days} Tage`);
     function templateListHtml() {
@@ -6091,7 +6182,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       { id: 'ultimate', name: 'ULTIMATE', limits: { properties: 20, users: 10, tasks_active: null, service_partners: null, documents: null }, features: [...PLAN_PRO_FEATURES, 'automation_autonomous', 'maintenance_planning', 'partner_auto_assign', 'escalations', 'cost_forecast', 'budget_alerts', 'condition_score', 'portfolio', 'roles_advanced', 'activity_log'] }
     ];
     const FEATURE_LABELS = { automation_basic: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', contracts: 'Verträge & Fristen', meters: 'Zählerstände', house_model: 'Hausmodell', service_portal: 'Servicepartner-Portal', listing_import: 'Inseratimport', invoice_ai: 'Rechnungserkennung', costs_annual: 'Jahreskosten', pdf_reports: 'PDF-Berichte' };
-    const LIMIT_LABELS = { properties: ['Häuser', 'Haus', 'Häuser'], tasks_active: ['Aktive Aufgaben', 'aktive Aufgabe', 'aktive Aufgaben'], service_partners: ['Servicepartner', 'Servicepartner', 'Servicepartner'], documents: ['Dokumente', 'Dokument', 'Dokumente'], users: ['Benutzer', 'Benutzer', 'Benutzer'] };
+    const LIMIT_LABELS = { listing_imports_month: ['Inseratimporte (Monat)', 'Inseratimport', 'Inseratimporte'], invoice_analyses_month: ['Rechnungsanalysen (Monat)', 'Rechnungsanalyse', 'Rechnungsanalysen'], properties: ['Häuser', 'Haus', 'Häuser'], tasks_active: ['Aktive Aufgaben', 'aktive Aufgabe', 'aktive Aufgaben'], service_partners: ['Servicepartner', 'Servicepartner', 'Servicepartner'], documents: ['Dokumente', 'Dokument', 'Dokumente'], users: ['Benutzer', 'Benutzer', 'Benutzer'] };
     const PLANS_CACHE_KEY = 'husora-plans';
     const ORG_PLAN_KEY = 'husora-org-plan';
     let planCatalog = null;
@@ -6114,6 +6205,21 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       minPlanFor: (feature) => planDef(PLAN_ORDER.find((id) => (planDef(id).features || []).includes(feature)) || 'ultimate'),
       minPlanForLimit: (key, count) => planDef(PLAN_ORDER.find((id) => { const v = (planDef(id).limits || {})[key]; return v === null || v === undefined || count < Number(v); }) || 'ultimate')
     };
+    // ----- Monatszähler (Inseratimporte, Rechnungsanalysen): in der Cloud atomar über consume_usage(), sonst lokal -----
+    const USAGE_KEY = 'husora-usage';
+    const usageMonth = () => localDateKey(new Date()).slice(0, 7);
+    function usageLocal() { try { const u = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); return u.month === usageMonth() ? u : { month: usageMonth() }; } catch (error) { return { month: usageMonth() }; } }
+    const usageUsed = (metric) => Number(usageLocal()[metric] || 0);
+    async function consumeUsage(metric, label) {
+      let result = null;
+      try { if (cloudReady() && cloudCanWrite()) result = await cloudFetch('/rest/v1/rpc/consume_usage', { method: 'POST', body: { p_organization_id: cloud.org.id, p_metric: metric } }); } catch (error) { result = null; }
+      const local = usageLocal();
+      if (!result) { const max = entitlements.limit(metric); const used = Number(local[metric] || 0); result = { ok: used < max, used: used < max ? used + 1 : used, limit: Number.isFinite(max) ? max : null }; }
+      local[metric] = result.used;
+      try { localStorage.setItem(USAGE_KEY, JSON.stringify(local)); } catch (error) { /* optional */ }
+      if (!result.ok) { showToast(`${label}: ${result.limit} pro Monat in deinem Tarif ${entitlements.plan().name} sind aufgebraucht – nächsten Monat geht es weiter, oder wechsle den Tarif.`); return false; }
+      return true;
+    }
     // Hinweis, wenn eine Funktion oder ein Limit einen höheren Tarif braucht
     function upgradeNotice(feature, { limitKey = '', count = 0 } = {}) {
       const plan = limitKey ? entitlements.minPlanForLimit(limitKey, count) : entitlements.minPlanFor(feature);
@@ -6353,10 +6459,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         return false;
       }
       const nextProperties = properties.filter((item) => item.id !== propertyId);
-      const nextTasks = tasks.filter((task) => task.property !== property.name && task.property !== property.id && task.propertyId !== propertyId);
+      const linked = propertyLinkedData(property);
+      const nextTasks = tasks.filter((task) => !linked.taskIds.has(task.id));
       const nextBookings = bookings.filter((booking) => booking.propertyId !== propertyId);
       const nextDocuments = documents.filter((document) => document.propertyId !== propertyId);
       const withoutProperty = (record) => Object.fromEntries(Object.entries(record).filter(([id]) => id !== propertyId));
+      const nextIssues = issues.filter((issue) => issue.propertyId !== propertyId);
+      const nextProjects = renovationProjects.filter((project) => project.propertyId !== propertyId);
+      const nextExpenses = expenses.filter((expense) => expense.propertyId !== propertyId);
       const nextCosts = withoutProperty(annualCosts);
       const nextCostSources = withoutProperty(costSources);
       const nextInspectionChecks = withoutProperty(inspectionChecks);
@@ -6377,7 +6487,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         'stugliv-inspection-selections': nextInspectionSelections,
         'stugliv-inspection-cadence': nextInspectionCadence,
         'stugliv-inspection-controls': nextInspectionControls,
-        'stugliv-provider-assignments': nextServicePartnerAssignments
+        'stugliv-provider-assignments': nextServicePartnerAssignments,
+        'stugliv-issues': nextIssues,
+        'stugliv-renovations': nextProjects,
+        'stugliv-expenses': nextExpenses,
+        'stugliv-emergency': withoutProperty(emergencyData),
+        'stugliv-contracts': withoutProperty(contractsData),
+        'stugliv-meters': withoutProperty(metersData),
+        'stugliv-inspection-followup': withoutProperty(inspectionFollowUp)
       };
       const previousValues = Object.fromEntries(Object.keys(updates).map((key) => [key, localStorage.getItem(key)]));
       try {
@@ -6399,6 +6516,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       tasks = nextTasks;
       bookings = nextBookings;
       documents = nextDocuments;
+      issues = nextIssues;
+      renovationProjects = nextProjects;
+      expenses = nextExpenses;
+      emergencyData = updates['stugliv-emergency'];
+      contractsData = updates['stugliv-contracts'];
+      metersData = updates['stugliv-meters'];
+      inspectionFollowUp = updates['stugliv-inspection-followup'];
       if (editingBookingId && !bookings.some((booking) => booking.id === editingBookingId)) resetBookingEditor();
       annualCosts = nextCosts;
       costSources = nextCostSources;
@@ -6424,9 +6548,98 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         currentPage = 'properties';
         render();
       }
-      if (notify) showToast(`${property.name} wurde entfernt.`);
+      if (notify) showToast(`${property.name} wurde entfernt – samt ${linked.taskIds.size} ${linked.taskIds.size === 1 ? 'Aufgabe' : 'Aufgaben'}.`);
       return true;
     }
+    // Alles, was zu einem Haus gehört – auch Aufgaben, die nur über Mangel, Projekt oder Buchung verknüpft sind
+    function propertyLinkedData(property) {
+      const id = property.id;
+      const issueIds = new Set(issues.filter((issue) => issue.propertyId === id).map((issue) => issue.id));
+      const projectIds = new Set(renovationProjects.filter((project) => project.propertyId === id).map((project) => project.id));
+      const bookingIds = new Set(bookings.filter((booking) => booking.propertyId === id).map((booking) => booking.id));
+      const taskIds = new Set(tasks.filter((task) => task.property === property.name || task.property === id || task.propertyId === id
+        || (task.issueId && issueIds.has(task.issueId)) || (task.projectId && projectIds.has(task.projectId)) || (task.bookingId && bookingIds.has(task.bookingId))).map((task) => task.id));
+      return { taskIds, issueIds, projectIds, bookingIds };
+    }
+    // ----- Häuser archivieren: Haus samt Daten ins Archiv, in der Cloud bleibt es (status „archived“) mit Aufträgen erhalten -----
+    const ARCHIVE_KEY = 'stugliv-property-archive';
+    let propertyArchive = loadStore(ARCHIVE_KEY, {});
+    async function archiveProperty(propertyId) {
+      const property = properties.find((item) => item.id === propertyId);
+      if (!property) return;
+      if (properties.length <= 1) { showToast('Das letzte Ferienhaus kann nicht archiviert werden.'); return; }
+      if (cloudReady()) {
+        try { await cloudFetch('/rest/v1/rpc/set_property_archived', { method: 'POST', body: { p_organization_id: cloud.org.id, p_app_ref: propertyId, p_archived: true } }); }
+        catch (error) { showToast(error instanceof TypeError ? 'Zum Archivieren bitte online sein – sonst würde die Cloud das Haus löschen.' : `Archivieren nicht möglich: ${error.message}`); return; }
+      }
+      const linked = propertyLinkedData(property);
+      const pick = (record) => (record && record[propertyId] !== undefined ? record[propertyId] : undefined);
+      const bundle = {
+        archivedAt: new Date().toISOString(), property,
+        tasks: tasks.filter((task) => linked.taskIds.has(task.id)), bookings: bookings.filter((b) => b.propertyId === propertyId), documents: documents.filter((d) => d.propertyId === propertyId),
+        issues: issues.filter((i) => i.propertyId === propertyId), projects: renovationProjects.filter((pr) => pr.propertyId === propertyId), expenses: expenses.filter((e) => e.propertyId === propertyId),
+        records: { 'stugliv-costs': pick(annualCosts), 'stugliv-cost-sources': pick(costSources), 'stugliv-inspection-checks': pick(inspectionChecks), 'stugliv-inspection-log': pick(inspectionLog), 'stugliv-inspection-selections': pick(inspectionSelections), 'stugliv-inspection-cadence': pick(inspectionCadence), 'stugliv-inspection-controls': pick(inspectionControls), 'stugliv-provider-assignments': pick(servicePartnerAssignments), 'stugliv-emergency': pick(emergencyData), 'stugliv-contracts': pick(contractsData), 'stugliv-meters': pick(metersData) }
+      };
+      const nextArchive = { ...propertyArchive, [propertyId]: bundle };
+      if (!saveStore(ARCHIVE_KEY, nextArchive)) return;
+      propertyArchive = nextArchive;
+      if (!removeProperty(propertyId, { renderAfter: true, notify: false })) { const back = { ...propertyArchive }; delete back[propertyId]; propertyArchive = back; saveStore(ARCHIVE_KEY, back); return; }
+      showToast(`„${property.name}“ archiviert – ${bundle.tasks.length} Aufgaben und alle Daten liegen im Archiv. Wiederherstellen unter „Archivierte Häuser“.`);
+    }
+    function restoreProperty(propertyId) {
+      const bundle = propertyArchive[propertyId];
+      if (!bundle) return;
+      if (!entitlements.within('properties', properties.length)) { upgradeNotice('', { limitKey: 'properties', count: properties.length }); return; }
+      const setRecord = (key, current, value) => { if (value === undefined) return current; const next = { ...current, [propertyId]: value }; try { localStorage.setItem(key, JSON.stringify(next)); } catch (error) { /* siehe unten */ } return next; };
+      properties = [...properties, bundle.property];
+      tasks = [...tasks, ...bundle.tasks];
+      bookings = [...bookings, ...bundle.bookings];
+      issues = [...issues, ...bundle.issues];
+      renovationProjects = [...renovationProjects, ...bundle.projects];
+      expenses = [...expenses, ...bundle.expenses];
+      const r = bundle.records || {};
+      annualCosts = setRecord('stugliv-costs', annualCosts, r['stugliv-costs']);
+      costSources = setRecord('stugliv-cost-sources', costSources, r['stugliv-cost-sources']);
+      inspectionChecks = setRecord('stugliv-inspection-checks', inspectionChecks, r['stugliv-inspection-checks']);
+      inspectionLog = setRecord('stugliv-inspection-log', inspectionLog, r['stugliv-inspection-log']);
+      inspectionSelections = setRecord('stugliv-inspection-selections', inspectionSelections, r['stugliv-inspection-selections']);
+      inspectionCadence = setRecord('stugliv-inspection-cadence', inspectionCadence, r['stugliv-inspection-cadence']);
+      inspectionControls = setRecord('stugliv-inspection-controls', inspectionControls, r['stugliv-inspection-controls']);
+      servicePartnerAssignments = setRecord('stugliv-provider-assignments', servicePartnerAssignments, r['stugliv-provider-assignments']);
+      emergencyData = setRecord('stugliv-emergency', emergencyData, r['stugliv-emergency']);
+      contractsData = setRecord('stugliv-contracts', contractsData, r['stugliv-contracts']);
+      metersData = setRecord('stugliv-meters', metersData, r['stugliv-meters']);
+      const ok = saveProperties() && persistDocuments([...documents, ...bundle.documents]);
+      if (!ok) return;
+      persistTasks(); persistIssues(); persistRenovations(); persistExpenses();
+      try { localStorage.setItem('stugliv-bookings', JSON.stringify(bookings)); } catch (error) { /* optional */ }
+      profileData = { ...profileData, houseCount: Math.max(Number(profileData.houseCount) || 1, properties.length) };
+      try { localStorage.setItem('stugliv-profile', JSON.stringify(profileData)); } catch (error) { /* optional */ }
+      const next = { ...propertyArchive }; delete next[propertyId]; propertyArchive = next; saveStore(ARCHIVE_KEY, next);
+      if (cloudReady()) cloudFetch('/rest/v1/rpc/set_property_archived', { method: 'POST', body: { p_organization_id: cloud.org.id, p_app_ref: propertyId, p_archived: false } }).catch(() => {});
+      currentPage = 'properties'; render();
+      showToast(`„${bundle.property.name}“ ist wiederhergestellt – mit allen Aufgaben und Daten.`);
+    }
+    function deleteArchivedProperty(propertyId) {
+      const bundle = propertyArchive[propertyId];
+      if (!bundle || !window.confirm(`„${bundle.property.name}“ endgültig löschen? Aufgaben, Kosten, Dokumente und Kontrolldaten im Archiv werden entfernt.`)) return;
+      const next = { ...propertyArchive }; delete next[propertyId]; propertyArchive = next; saveStore(ARCHIVE_KEY, next);
+      render(); showToast(`„${bundle.property.name}“ endgültig gelöscht.`);
+    }
+    function archivedPropertiesHtml() {
+      const list = Object.entries(propertyArchive);
+      if (!list.length) return '';
+      return `<section class="card archive-card"><div class="card-head"><div><h2 class="card-title">Archivierte Häuser (${list.length})</h2><p class="card-caption">Zählen nicht gegen deinen Tarif. Aufträge und Rechnungen bleiben in der Cloud erhalten.</p></div></div>
+        <ul class="archive-list">${list.map(([id, b]) => `<li><span class="archive-main"><strong>${escapeHtml(b.property.name)}</strong><small>archiviert am ${escapeHtml(fmtDate(b.archivedAt.slice(0, 10)))} · ${b.tasks.length} Aufgaben · ${b.documents.length} Dokumente</small></span><button type="button" class="secondary-btn" data-archive-restore="${escapeHtml(id)}">Wiederherstellen</button><button type="button" class="ap-remove" data-archive-delete="${escapeHtml(id)}" aria-label="${escapeHtml(b.property.name)} endgültig löschen" title="Endgültig löschen">${icon('trash')}</button></li>`).join('')}</ul></section>`;
+    }
+    document.addEventListener('click', (event) => {
+      const archive = event.target.closest('[data-archive-property]');
+      if (archive) { const property = properties.find((item) => item.id === archive.dataset.archiveProperty); if (property && window.confirm(`„${property.name}“ archivieren? Das Haus verschwindet aus den Listen, alle Daten bleiben im Archiv und lassen sich jederzeit wiederherstellen.`)) archiveProperty(property.id); return; }
+      const restore = event.target.closest('[data-archive-restore]');
+      if (restore) { restoreProperty(restore.dataset.archiveRestore); return; }
+      const del = event.target.closest('[data-archive-delete]');
+      if (del) deleteArchivedProperty(del.dataset.archiveDelete);
+    });
     function removePropertiesBeyondProfileCount() {
       const keepCount = Math.max(1, Math.floor(Number(profileData.houseCount) || 1));
       for (const property of properties.slice(keepCount)) {
@@ -6592,7 +6805,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const relative = days === null ? 'ohne Datum' : days === 0 ? 'heute' : days === 1 ? 'morgen' : days > 1 ? `in ${days} Tagen` : `${-days} ${days === -1 ? 'Tag' : 'Tage'} überfällig`;
       const dueBadge = `<span class="task-due-badge ${task.done ? 'done' : overdue ? 'late' : days !== null && days <= 2 ? 'soon' : ''}">${dueDate ? `<span class="tdb-date"><b>${dueDate.getDate()}</b>${escapeHtml(dueDate.toLocaleDateString('de-DE', { month: 'short' }))}</span>` : ''}<small>${escapeHtml(task.done ? 'erledigt' : relative)}</small></span>`;
       const status = taskStatus(task);
-      const openIssues = issues.filter((issue) => issue.taskId === task.id && (issue.status === 'open' || issue.status === 'planned'));
+      const openIssues = issues.filter((issue) => issue.taskId === task.id && issueActive(issue));
       const statusClass = status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open';
       return `<div class="task-row prio-${task.priority || 'normal'} ${task.done ? 'is-done' : ''} ${openIssues.length ? 'has-issue' : ''} ${link ? 'is-link' : ''}" ${link ? `data-goto-task="${task.id}" role="button" tabindex="0" aria-label="${escapeHtml(task.title)} in Serviceaufgaben anzeigen"` : ''}>
         <div class="task-main">${link ? `<span class="task-name ${task.done ? 'completed' : ''}">${escapeHtml(task.title)}</span>` : `<button class="task-name ${task.done ? 'completed' : ''}" type="button" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button>`}<div class="task-meta">${singleHouse() ? '' : `<span>${escapeHtml(task.property)}</span>`}<span class="task-tag ${tagClass}">${priority}</span>${extraTags}${task.area ? `<span>${escapeHtml(task.area)}</span>` : ''}</div>${openIssues.length ? `<div class="task-row-issue">${escapeHtml(openIssues.map((issue) => issue.text).join(' · '))}</div>` : ''}</div>
@@ -6984,21 +7197,21 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const currentId = currentPlanId();
       const loaded = Array.isArray(planCatalog) && planCatalog.length;
       const price = (plan) => (!loaded ? '–' : !plan.price_monthly_cents ? 'Kostenlos' : `${(plan.price_monthly_cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2 })} ${plan.currency === 'EUR' ? '€' : plan.currency}`);
-      const limitText = (plan, key) => { const v = (plan.limits || {})[key]; return v === null || v === undefined ? 'unbegrenzt' : Number(v).toLocaleString('de-DE'); };
-      const supportMail = (plan) => `mailto:${encodeURIComponent(LEGAL_INFO.supportEmail || 'info@husora.de')}?subject=${encodeURIComponent(`Tarifwechsel zu ${plan.name}`)}&body=${encodeURIComponent(`Hallo Husora-Team,\n\nich möchte zum Tarif ${plan.name} wechseln.\n\nE-Mail: ${cloud.session?.email || profileData.email || ''}\nOrganisation: ${cloud.org?.name || ''} (${cloud.org?.id || 'noch nicht in der Cloud'})\nAktueller Tarif: ${entitlements.plan().name}\n\nViele Grüße\n${profileData.name && profileData.name !== 'Max Mustermann' ? profileData.name : ''}`)}`;
+      const limitText = (plan, key) => { const v = (plan.limits || {})[key]; return v === null || v === undefined ? '<span title="unbegrenzt" aria-label="unbegrenzt">∞</span>' : Number(v).toLocaleString('de-DE'); };
+      const supportMail = (plan) => `mailto:${encodeURIComponent(LEGAL_INFO.supportEmail || 'info@husora.de')}?subject=${encodeURIComponent(PLAN_ORDER.indexOf(plan.id) > PLAN_ORDER.indexOf(currentId) ? `Upgrade auf ${plan.name}` : `Wechsel zu ${plan.name}`)}&body=${encodeURIComponent(`Hallo Husora-Team,\n\nich möchte zum Tarif ${plan.name} wechseln.\n\nE-Mail: ${cloud.session?.email || profileData.email || ''}\nOrganisation: ${cloud.org?.name || ''} (${cloud.org?.id || 'noch nicht in der Cloud'})\nAktueller Tarif: ${entitlements.plan().name}\n\nViele Grüße\n${profileData.name && profileData.name !== 'Max Mustermann' ? profileData.name : ''}`)}`;
       const cards = PLAN_ORDER.map((id) => planDef(id)).map((plan) => {
         const isCurrent = plan.id === currentId;
         const higher = PLAN_ORDER.indexOf(plan.id) > PLAN_ORDER.indexOf(currentId);
         const action = isCurrent ? '<button type="button" class="secondary-btn" disabled>Dein Tarif</button>'
-          : plan.stripe_price_id && cloudReady() ? `<button type="button" class="${higher ? 'primary-btn' : 'secondary-btn'}" data-plan-checkout="${escapeHtml(plan.id)}">Zu ${escapeHtml(plan.name)} wechseln</button>`
-          : `<a class="${higher ? 'primary-btn' : 'secondary-btn'}" href="${supportMail(plan)}">Zu ${escapeHtml(plan.name)} wechseln</a>`;
+          : plan.stripe_price_id && cloudReady() ? `<button type="button" class="${higher ? 'primary-btn' : 'secondary-btn'}" data-plan-checkout="${escapeHtml(plan.id)}">${higher ? `Upgrade auf ${escapeHtml(plan.name)}` : `Zu ${escapeHtml(plan.name)} wechseln`}</button>`
+          : `<button type="button" class="${higher ? 'primary-btn' : 'secondary-btn'}" data-plan-test="${escapeHtml(plan.id)}">${higher ? `Upgrade auf ${escapeHtml(plan.name)}` : `Zu ${escapeHtml(plan.name)} wechseln`}</button>`;
         return `<article class="card plan-card ${plan.highlight ? 'highlight' : ''} ${isCurrent ? 'current' : ''}">${isCurrent ? '<span class="plan-current-tag">Dein Tarif</span>' : plan.highlight ? '<span class="plan-current-tag plan-reco">Beliebt</span>' : ''}<h2>${escapeHtml(plan.name)}</h2><p class="plan-tagline">${escapeHtml(plan.tagline || '')}</p>
           <div class="plan-price"><strong>${escapeHtml(price(plan))}</strong><span>${loaded && plan.price_monthly_cents ? 'pro Monat · inkl. MwSt.' : loaded ? 'für immer' : 'Preise werden geladen …'}</span></div>
           <dl class="plan-limits"><div><dt>Häuser</dt><dd>${limitText(plan, 'properties')}</dd></div><div><dt>Benutzer</dt><dd>${limitText(plan, 'users')}</dd></div><div><dt>Aufgaben</dt><dd>${limitText(plan, 'tasks_active')}</dd></div><div><dt>Partner</dt><dd>${limitText(plan, 'service_partners')}</dd></div><div><dt>Dokumente</dt><dd>${limitText(plan, 'documents')}</dd></div></dl>
           <ul class="pro-features">${(plan.highlights || []).map((feature) => `<li>${escapeHtml(feature)}</li>`).join('')}</ul><div class="plan-action">${action}</div></article>`;
       }).join('');
       const activeTasks = tasks.filter((task) => !task.done && taskStatus(task) !== 'Erledigt').length;
-      const usage = [['properties', properties.length], ['tasks_active', activeTasks], ['service_partners', assignedProviderCount()], ['documents', documents.length]].map(([key, used]) => {
+      const usage = [['properties', properties.length], ['tasks_active', activeTasks], ['service_partners', assignedProviderCount()], ['documents', documents.length], ['listing_imports_month', usageUsed('listing_imports_month')], ['invoice_analyses_month', usageUsed('invoice_analyses_month')]].filter(([key]) => !key.endsWith('_month') || entitlements.limit(key) > 0).map(([key, used]) => {
         const max = entitlements.limit(key);
         const pct = Number.isFinite(max) ? Math.min(100, Math.round((used / Math.max(1, max)) * 100)) : 0;
         return `<div class="plan-usage-row ${Number.isFinite(max) && used >= max ? 'full' : ''}"><span>${LIMIT_LABELS[key][0]}</span><b>${used} / ${Number.isFinite(max) ? max : '∞'}</b>${Number.isFinite(max) ? `<i style="--pct:${pct}%"></i>` : '<i class="unlimited"></i>'}</div>`;
@@ -7008,7 +7221,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <section class="card plan-usage"><div class="card-head"><div><h2 class="card-title">Dein Tarif: ${escapeHtml(entitlements.plan().name)}</h2><p class="card-caption">${escapeHtml(status)}${proState?.orderId && currentId === 'pro' ? ' · frühere Pro-Lizenz' : ''}</p></div>${cloudReady() && orgPlan?.status && !['none', 'canceled'].includes(orgPlan.status) && planList().some((plan) => plan.stripe_price_id) ? '<button type="button" class="secondary-btn" data-plan-portal>Abo verwalten</button>' : ''}</div><div class="plan-usage-grid">${usage}</div></section>
         <div class="plan-grid plan-grid-4">${cards}</div>
         ${planMatrixHtml(currentId)}
-        <section class="card plan-note"><p class="settings-hint" style="margin:0"><strong>Wechsel:</strong> ${planList().some((plan) => plan.stripe_price_id) ? 'Bezahlung sicher über Stripe; kündbar jederzeit zum Monatsende im Kundenportal („Abo verwalten“).' : 'Online-Bezahlung (Stripe) ist vorbereitet. Bis sie freigeschaltet ist, schalten wir deinen Tarif nach deiner Anfrage per E-Mail frei – in der Regel am selben Tag.'} Beim Wechsel in einen kleineren Tarif bleiben alle Daten erhalten; nur neue Einträge über dem Limit sind dann gesperrt.</p></section>`;
+        ${PLAN_ORDER.includes(planOverride) ? `<section class="card plan-test-note"><span>${icon('alert')}</span><div><strong>Testmodus: ${escapeHtml(planDef(planOverride).name)} aktiv</strong><p>Nur auf diesem Gerät und ohne Bezahlung. Funktionen, die der Server prüft (z. B. Partner-Portal), richten sich weiter nach deinem echten Tarif.</p></div><button type="button" class="secondary-btn" data-plan-test="">Zurück zum echten Tarif</button></section>` : ''}
+        <section class="card plan-note"><p class="settings-hint" style="margin:0"><strong>Wechsel:</strong> ${planList().some((plan) => plan.stripe_price_id) ? 'Bezahlung sicher über Stripe; kündbar jederzeit zum Monatsende im Kundenportal („Abo verwalten“).' : `Online-Bezahlung (Stripe) ist vorbereitet. Bis dahin schalten die Knöpfe oben die Version zum Testen direkt um. Für eine echte Freischaltung <a href="${supportMail(planDef(PLAN_ORDER[Math.min(PLAN_ORDER.length - 1, PLAN_ORDER.indexOf(currentId) + 1)]))}">schreib uns eine E-Mail</a>.`} Beim Wechsel in einen kleineren Tarif bleiben alle Daten erhalten; nur neue Einträge über dem Limit sind dann gesperrt.</p></section>`;
     }
     // Vergleichstabelle: alle Tarife mit Häkchen je Eigenschaft
     const PLAN_MATRIX = [
@@ -7032,6 +7246,19 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <div class="pm-scroll"><table class="pm-table"><thead><tr><th scope="col">Eigenschaft</th>${plans.map((plan) => `<th scope="col" class="${plan.id === currentId ? 'pm-current' : ''}">${escapeHtml(plan.name)}${plan.id === currentId ? '<small>Dein Tarif</small>' : ''}</th>`).join('')}</tr></thead>
         <tbody>${PLAN_MATRIX.map(([group, rows]) => `<tr class="pm-group"><th scope="rowgroup" colspan="${plans.length + 1}">${escapeHtml(group)}</th></tr>${rows.map(([key, label]) => `<tr><th scope="row">${escapeHtml(label)}${PLAN_PLANNED.has(key) ? ' <em class="pm-soon">in Vorbereitung</em>' : ''}</th>${plans.map((plan) => `<td class="${plan.id === currentId ? 'pm-current' : ''}">${cell(plan, key)}</td>`).join('')}</tr>`).join('')}`).join('')}</tbody></table></div></section>`;
     }
+    // Testmodus: Version ohne Bezahlung auf diesem Gerät umschalten (solange Stripe nicht eingerichtet ist)
+    document.addEventListener('click', (event) => {
+      const test = event.target.closest('[data-plan-test]');
+      if (!test) return;
+      const id = test.dataset.planTest;
+      planOverride = PLAN_ORDER.includes(id) ? id : null;
+      try {
+        if (planOverride) { localStorage.setItem('stugliv-dev', '1'); localStorage.setItem('stugliv-test-plan', planOverride); }
+        else localStorage.removeItem('stugliv-test-plan');
+      } catch (error) { /* optional */ }
+      render(); window.scrollTo(0, 0);
+      showToast(planOverride ? `Testmodus: ${planDef(planOverride).name} ist jetzt aktiv.` : 'Testmodus beendet – es gilt wieder dein echter Tarif.');
+    });
     // Stripe: Checkout bzw. Kundenportal über die Edge Function „stripe-checkout“
     async function startCheckout(body) {
       const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
@@ -7209,7 +7436,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             <label class="switch self-toggle" title="Aufgabe selbst erledigen statt Servicepartner"><input type="checkbox" data-self-task="${task.id}" ${task.selfService ? 'checked' : ''}><span class="switch-track"></span><span>Selbst</span></label>
             ${task.selfService ? `<div class="tcard-field"><span>Umsetzung</span><span class="self-badge">${icon('users')} Eigenleistung</span></div>` : !task.partnerId && !assignedPartnerCount(propertyIdByName(task.property)) ? `<div class="tcard-field"><span>Servicepartner</span>${noPartnerLinkHtml(propertyIdByName(task.property))}</div>` : `<label class="tcard-field"><span>Servicepartner${providerById(task.partnerId) ? ` <i class="tcard-ptype cat-${escapeHtml(providerById(task.partnerId).category)}">${partnerCategoryLabel(providerById(task.partnerId))}</i>` : ''}</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>`}
             <label class="tcard-field"><span>Status</span><select class="filter-select status-select st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></label>
-            <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn ${taskIssues.some((issue) => issue.status === 'open' || issue.status === 'planned') ? 'active' : ''}" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden${taskIssues.length ? ` (${taskIssues.length} gemeldet)` : ''}" title="${taskIssues.length ? `${taskIssues.length} ${taskIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet` : 'Auffälligkeit melden'}">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
+            <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn ${taskIssues.some((issue) => issueActive(issue)) ? 'active' : ''}" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden${taskIssues.length ? ` (${taskIssues.length} gemeldet)` : ''}" title="${taskIssues.length ? `${taskIssues.length} ${taskIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet` : 'Auffälligkeit melden'}">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
           </div>
         </article>`;
       }).join('');
@@ -7349,8 +7576,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const today = localDateKey(new Date());
       const dateText = (date) => (date ? fmtDate(date) : 'offen');
       const propertyName = (id) => properties.find((property) => property.id === id)?.name || 'Ferienhaus entfernt';
-      const activeIssues = issues.filter((issue) => issue.status === 'open' || issue.status === 'planned');
-      const doneIssues = issues.filter((issue) => issue.status === 'fixed').slice(0, 5);
+      const activeIssues = issues.filter((issue) => issueActive(issue));
+      const doneIssues = issues.filter((issue) => issue.status === 'fixed' || issue.status === 'cancelled').slice(0, 5);
       const openProjects = renovationProjects.filter((project) => project.status !== 'done');
       const budget = openProjects.reduce((sum, project) => sum + (Number(project.budget) || 0), 0);
       const issueRow = (issue) => {
@@ -7359,7 +7586,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         return `<article class="issue-card ${issue.status}"><div class="issue-main"><strong>${escapeHtml(issue.text)}</strong><small>${singleHouse() ? '' : `${escapeHtml(propertyName(issue.propertyId))} · `}${partLabel(issue.part) ? `${escapeHtml(partLabel(issue.part))} · ` : ''}${escapeHtml(issue.source || 'Meldung')} · ${escapeHtml(fmtDate(issue.date))}</small>${repair ? `<small class="issue-repair">${repair.done ? 'Reparatur erledigt' : `Reparatur geplant für ${escapeHtml(fmtDate(repair.date))}`}</small>` : ''}${issue.details ? `<small class="issue-details">${escapeHtml(issue.details).replace(/\n/g, '<br>')}</small>` : ''}</div>
           <div class="issue-side"><span class="task-tag ${issue.priority === 'urgent' ? 'urgent' : issue.priority === 'soon' ? 'soon' : ''}">${prio}</span><span class="issue-status">${ISSUE_STATUS[issue.status] || ''}</span></div>
           ${issueExtrasHtml(issue, repair)}
-          ${issue.orderedAt ? `<p class="issue-ordered">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(issue.orderedAt))} bei ${escapeHtml(issue.orderedTo || '')}</p>` : ''}<div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' ? `<button type="button" class="small-action order-btn" data-issue-order="${issue.id}">${icon('document')} ${issue.orderedAt ? 'Erneut beauftragen' : 'Mangel beauftragen'}</button><button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div></article>`;
+          ${issue.orderedAt ? `<p class="issue-ordered">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(issue.orderedAt))} bei ${escapeHtml(issue.orderedTo || '')}</p>` : ''}<div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' ? `<button type="button" class="small-action order-btn" data-issue-order="${issue.id}">${icon('document')} ${issue.orderedAt ? 'Erneut beauftragen' : 'Mangel beauftragen'}</button><button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}${issueActive(issue) ? `<button type="button" class="small-action" data-issue-cancel="${issue.id}">Abbrechen</button>` : issue.status === 'cancelled' ? `<button type="button" class="small-action" data-issue-reopen="${issue.id}">Wieder öffnen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div>${issueHistoryHtml(issue)}</article>`;
       };
       const projectCard = (project) => {
         const linked = tasks.filter((task) => task.auto === 'renovation' && task.projectId === project.id);
@@ -7462,7 +7689,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       ].filter(Boolean);
       return facts.length ? `<dl class="house-facts">${facts.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>` : '<p class="house-facts-empty">Noch keine Gebäudedaten – über „Bearbeiten“ ergänzen.</p>';
     }
-    function propertiesPage() {
+    const propertiesPage = () => propertiesPageInner() + archivedPropertiesHtml();
+    function propertiesPageInner() {
       const statuses = Object.fromEntries(properties.map((property) => [property.id, houseStatus(property)]));
       const conditionClass = (condition) => (/dringend/i.test(condition) ? 'alert' : /sanierungsbedarf|kleinere/i.test(condition) ? 'warn' : /gut/i.test(condition) ? 'ok' : 'neutral');
       const year = new Date().getFullYear();
@@ -7707,7 +7935,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           const query = [address, ...[property.region, 'Schweden'].filter((part) => part && !address.toLocaleLowerCase('de').includes(part.toLocaleLowerCase('de')))].filter(Boolean).join(', ') || property.name;
           return detailSection('map', 'Standort & Servicepartner', escapeHtml(property.address || property.name), `<div class="house-map" id="house-map" data-property="${escapeHtml(property.id)}"><p class="house-map-status">Karte wird geladen …</p></div><div class="house-map-legend" id="house-map-legend" hidden></div>`, `<a class="text-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}" target="_blank" rel="noopener noreferrer">In Google Maps öffnen ↗</a>`).replace('class="card detail-section', 'class="card house-map-card detail-section');
         })()}
-        <section class="remove-property-section" aria-label="Ferienhaus entfernen"><div><strong>Ferienhaus dauerhaft entfernen</strong><p>Das Haus und die zugehörigen Aufgaben, Kosten sowie Hauskontrolldaten werden gelöscht.</p></div><button class="danger-btn" data-action="remove-property" data-property="${escapeHtml(property.id)}">Haus entfernen</button></section>`;
+        <section class="remove-property-section" aria-label="Ferienhaus archivieren oder entfernen"><div><strong>Haus nicht mehr aktiv?</strong><p>Archivieren blendet es aus und behält alle Daten (wiederherstellbar). Entfernen löscht das Haus mit allen zugehörigen Aufgaben, Kosten, Dokumenten und Kontrolldaten.</p></div><div class="remove-property-actions"><button class="secondary-btn" data-archive-property="${escapeHtml(property.id)}">${icon('document')} Archivieren</button><button class="danger-btn" data-action="remove-property" data-property="${escapeHtml(property.id)}">Haus entfernen</button></div></section>`;
     }
     function providersPage() {
       const property = properties.find((item) => item.id === providerProperty) || properties[0];
@@ -8472,6 +8700,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     async function openInvoiceModal({ doc = null, expense = null, propertyId = documentsProperty } = {}) {
       if (doc && !expense && !entitlements.can('invoice_ai')) { upgradeNotice('invoice_ai'); return; }
+      if (doc && !expense && !(await consumeUsage('invoice_analyses_month', 'Rechnungsanalysen'))) return;
       const form = document.getElementById('invoice-form');
       form.reset();
       invoiceDraft = { docId: doc?.id || '', expenseId: expense?.id || '' };
@@ -8614,7 +8843,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const details = POSITION_DETAILS[itemId] || { parts: [], match: /$^/ };
       const related = issues.filter((issue) => issue.propertyId === propertyId && ((issue.part && details.parts.includes(issue.part)) || details.match.test(issue.text) || issue.positionId === itemId));
       const repairs = related.filter((issue) => issue.status === 'fixed').sort((a, b) => String(b.fixedAt || b.date).localeCompare(String(a.fixedAt || a.date)));
-      const open = related.filter((issue) => issue.status === 'open' || issue.status === 'planned');
+      const open = related.filter((issue) => issueActive(issue));
       const projects = renovationProjects.filter((project) => project.propertyId === propertyId && project.status === 'done' && details.parts.includes(project.part));
       const lastChecked = inspectionLogEntries(propertyId).filter((entry) => entry.checkedItems.includes(itemId)).map((entry) => entry.date).sort().pop() || '';
       const services = (details.service || []).map((id) => autoTasks.templates.find((template) => template.id === id && template.selected)).filter(Boolean);
@@ -8705,9 +8934,49 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (!persistControls({ ...inspectionControls, [propertyId]: nextControls }, selectionsForControls(propertyId, nextControls))) return null;
       return control;
     }
+    // ----- Nachkontrolle: nur die Punkte, die bei der letzten Kontrolle auffällig waren -----
+    let inspectionFollowUp = loadStore('stugliv-inspection-followup', {});
+    const persistFollowUp = () => saveStore('stugliv-inspection-followup', inspectionFollowUp);
+    function lastFindingsEntry(propertyId) {
+      const entries = inspectionLogEntries(propertyId).slice().sort((a, b) => (b.completedAt || b.date).localeCompare(a.completedAt || a.date));
+      return entries[0]?.findings?.length ? entries[0] : null;
+    }
+    function followUpItemIds(entry) {
+      return absenceChecklist.filter((item) => (entry.findings || []).some((text) => text.startsWith(`${item.title}:`))).map((item) => item.id);
+    }
+    const activeFollowUp = (propertyId) => { const f = inspectionFollowUp[propertyId]; return f && Array.isArray(f.itemIds) && f.itemIds.length ? f : null; };
+    function followUpBannerHtml(property) {
+      const active = activeFollowUp(property.id);
+      if (active) return `<section class="card followup-card active"><span class="followup-icon">${icon('inspection')}</span><div><strong>Nachkontrolle läuft</strong><p>Geprüft werden nur die ${active.itemIds.length} ${active.itemIds.length === 1 ? 'Position' : 'Positionen'}, die bei der Kontrolle vom ${escapeHtml(fmtDate(active.fromDate))} auffällig waren.</p></div><button type="button" class="secondary-btn" data-followup-stop="${escapeHtml(property.id)}">Abbrechen</button></section>`;
+      const entry = lastFindingsEntry(property.id);
+      if (!entry) return '';
+      const ids = followUpItemIds(entry);
+      if (!ids.length || entry.followUpDone) return '';
+      return `<section class="card followup-card"><span class="followup-icon">${icon('alert')}</span><div><strong>${ids.length} ${ids.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} bei der Kontrolle vom ${escapeHtml(fmtDate(entry.date))}</strong><p>${ids.map((id) => escapeHtml(absenceChecklist.find((item) => item.id === id)?.title || '')).join(' · ')}</p></div><button type="button" class="primary-btn" data-followup-start="${escapeHtml(property.id)}">Nachkontrolle starten</button></section>`;
+    }
+    document.addEventListener('click', (event) => {
+      const start = event.target.closest('[data-followup-start]');
+      if (start) {
+        const propertyId = start.dataset.followupStart;
+        const entry = lastFindingsEntry(propertyId);
+        if (!entry) return;
+        inspectionFollowUp = { ...inspectionFollowUp, [propertyId]: { itemIds: followUpItemIds(entry), fromDate: entry.date, fromCompletedAt: entry.completedAt || '' } };
+        persistFollowUp();
+        inspectionChecks = { ...inspectionChecks, [propertyId]: {} };
+        try { localStorage.setItem('stugliv-inspection-checks', JSON.stringify(inspectionChecks)); } catch (error) { /* optional */ }
+        inspectionProperty = propertyId; inspectionManual = true;
+        render();
+        document.querySelector('.position-row')?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        showToast('Nachkontrolle gestartet – nur die auffälligen Positionen sind zu prüfen.');
+        return;
+      }
+      const stop = event.target.closest('[data-followup-stop]');
+      if (stop) { const next = { ...inspectionFollowUp }; delete next[stop.dataset.followupStop]; inspectionFollowUp = next; persistFollowUp(); render(); showToast('Nachkontrolle abgebrochen.'); }
+    });
     function absenceInspectionView(property) {
       const controls = controlsFor(property.id);
-      const selectedIds = Array.isArray(inspectionSelections[property.id]) ? inspectionSelections[property.id] : absenceChecklist.map((item) => item.id);
+      const followUp = activeFollowUp(property.id);
+      const selectedIds = followUp ? followUp.itemIds : Array.isArray(inspectionSelections[property.id]) ? inspectionSelections[property.id] : absenceChecklist.map((item) => item.id);
       const items = absenceChecklist.filter((item) => selectedIds.includes(item.id));
       const plan = planFor(property.id).items || {};
       const last = lastAbsenceInspection(property.id);
@@ -8731,7 +9000,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           ${inspectionManual ? `<div class="position-result"><div class="result-toggle" role="group" aria-label="Ergebnis ${escapeHtml(item.title)}"><button type="button" class="${result === 'ok' ? 'active ok' : ''}" data-position-result="ok" data-item="${item.id}">${icon('check')} In Ordnung</button><button type="button" class="${result === 'issue' ? 'active issue' : ''}" data-position-result="issue" data-item="${item.id}">${icon('alert')} Auffällig</button></div>${result === 'issue' ? `<input class="form-control" data-position-note="${item.id}" maxlength="200" value="${escapeHtml(note)}" placeholder="Was ist aufgefallen?">${(() => { const linked = manualRepairIssue(property.id, item.id); return linked ? `<button type="button" class="position-repair-btn ordered" data-position-repair="${item.id}">${icon('check')} ${linked.orderedAt ? `Beauftragt am ${escapeHtml(fmtDate(linked.orderedAt))}` : 'Reparaturauftrag angelegt'} · öffnen</button>` : `<button type="button" class="position-repair-btn" data-position-repair="${item.id}">${icon('alert')} Reparaturauftrag schreiben</button>`; })()}` : ''}</div>` : ''}
         </article>`;
       }).join('');
-      return `<section class="card insp-status-card ${last.current ? 'ok' : 'due'}"><div class="insp-status-head"><div><span class="insp-status-label">${last.current ? 'Abwesenheitskontrolle aktuell' : 'Abwesenheitskontrolle fällig'}</span><h2>${last.current ? `Gültig bis ${escapeHtml(formatInspectionDate(last.validUntil))}` : last.entry ? `Seit ${escapeHtml(formatInspectionDate(last.validUntil))} fällig` : 'Noch nie durchgeführt'}</h2><p>${last.entry ? `Letzte Kontrolle am ${escapeHtml(formatInspectionDate(last.entry.date))}` : 'Lege fest, was geprüft wird, und beauftrage deinen Servicepartner.'}</p></div><div class="insp-order order-${order.state}">${order.state === 'done' ? icon('check') : icon('clock')}<div><strong>${escapeHtml(order.short)}</strong><small>${order.state === 'ordered' || order.state === 'done' ? escapeHtml(order.text) : 'Kontrollplan in Schritt 2 senden'}</small></div></div></div>
+      return `${followUpBannerHtml(property)}<section class="card insp-status-card ${last.current ? 'ok' : 'due'}"><div class="insp-status-head"><div><span class="insp-status-label">${last.current ? 'Abwesenheitskontrolle aktuell' : 'Abwesenheitskontrolle fällig'}</span><h2>${last.current ? `Gültig bis ${escapeHtml(formatInspectionDate(last.validUntil))}` : last.entry ? `Seit ${escapeHtml(formatInspectionDate(last.validUntil))} fällig` : 'Noch nie durchgeführt'}</h2><p>${last.entry ? `Letzte Kontrolle am ${escapeHtml(formatInspectionDate(last.entry.date))}` : 'Lege fest, was geprüft wird, und beauftrage deinen Servicepartner.'}</p></div><div class="insp-order order-${order.state}">${order.state === 'done' ? icon('check') : icon('clock')}<div><strong>${escapeHtml(order.short)}</strong><small>${order.state === 'ordered' || order.state === 'done' ? escapeHtml(order.text) : 'Kontrollplan in Schritt 2 senden'}</small></div></div></div>
           <div class="insp-steps">
             ${step(1, 'Prüfpositionen festlegen', `${items.length} Positionen${controls.length ? ` · ${controls.length === 1 ? `Plan „${escapeHtml(controls[0].name)}“` : `${controls.length} Pläne`}` : ' · Standardliste'}`, `<button type="button" class="secondary-btn" data-action="${controls.length ? 'edit-first-control' : 'create-inspection'}" data-property="${escapeHtml(property.id)}">${controls.length ? 'Anpassen' : 'Plan anlegen'}</button>`, controls.length ? 'done' : '')}
             ${step(2, 'Servicepartner beauftragen', order.state === 'ordered' ? escapeHtml(order.text) : partner ? `Vorschlag: ${escapeHtml(partner.name)}` : 'Noch kein Partner für Hauskontrolle zugeordnet', `<button type="button" class="${order.state === 'ordered' ? 'secondary-btn' : 'primary-btn'}" data-action="quick-send-plan" data-property="${escapeHtml(property.id)}">${icon('document')} ${order.state === 'ordered' ? 'Erneut beauftragen' : 'Service beauftragen'}</button>`, order.state === 'ordered' || order.state === 'done' ? 'done' : '')}
@@ -9928,7 +10197,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       document.getElementById('inspection-print-area').innerHTML = `<main class="inspection-print-page">
         <p class="inspection-print-eyebrow">Husora · Hauskontrolle</p>
         <h1>Prüfprotokoll</h1>
-        <p class="inspection-print-meta">Abwesenheitskontrolle · durchgeführt am ${escapeHtml(formatInspectionDate(date))}</p>
+        <p class="inspection-print-meta">${pendingInspection.followUp ? 'Nachkontrolle' : 'Abwesenheitskontrolle'} · durchgeführt am ${escapeHtml(formatInspectionDate(date))}</p>
         ${protocol ? `<h2>Durchführung</h2><dl class="inspection-print-house">${protocol.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>` : ''}
         <h2>Angaben zum Haus</h2>
         <dl class="inspection-print-house">${houseDetails.map(([label, value]) => `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl>
@@ -9941,6 +10210,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     function saveInspectionReport() {
       if (!pendingInspection) return;
       const { property, date, checkedItemIds, checkedItems } = pendingInspection;
+      const followUp = activeFollowUp(property.id);
       const findings = String(document.getElementById('inspection-findings').value || '').split('\n').map((line) => line.trim()).filter(Boolean);
       const entries = inspectionLogEntries(property.id);
       entries.push({
@@ -9948,8 +10218,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         completedAt: new Date().toISOString(),
         checkedItems: checkedItemIds.slice(),
         checkedItemsSnapshot: checkedItems.map((item) => ({ ...item })),
-        property: { ...property }
+        property: { ...property },
+        ...(followUp ? { followUp: true, followUpOf: followUp.fromDate } : {})
       });
+      if (followUp) {
+        const source = entries.find((entry) => (entry.completedAt || '') === followUp.fromCompletedAt && entry.date === followUp.fromDate);
+        if (source) source.followUpDone = true;
+        const next = { ...inspectionFollowUp }; delete next[property.id]; inspectionFollowUp = next; persistFollowUp();
+      }
       const nextLog = { ...inspectionLog, [property.id]: entries };
       try {
         localStorage.setItem('stugliv-inspection-log', JSON.stringify(nextLog));
@@ -9991,7 +10267,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     function finishInspection() {
       const checks = inspectionChecks[inspectionProperty] || {};
-      const selectedIds = Array.isArray(inspectionSelections[inspectionProperty]) ? inspectionSelections[inspectionProperty] : absenceChecklist.map((item) => item.id);
+      const followUp = activeFollowUp(inspectionProperty);
+      const selectedIds = followUp ? followUp.itemIds : Array.isArray(inspectionSelections[inspectionProperty]) ? inspectionSelections[inspectionProperty] : absenceChecklist.map((item) => item.id);
       const selectedItems = absenceChecklist.filter((item) => selectedIds.includes(item.id));
       const completedDate = document.getElementById('inspection-completed-date')?.value;
       if (!selectedItems.length) {
@@ -10025,6 +10302,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         heatingYear: property.heatingYear || ''
       };
       openInspectionConfirmation({
+        followUp: Boolean(followUp),
         property: propertySnapshot,
         houseDetails: inspectionHouseDetails(propertySnapshot),
         date: completedDate,
@@ -10088,7 +10366,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const overdue = !task.done && task.date && task.date < today;
       const days = task.date ? Math.round((new Date(`${task.date}T12:00:00`) - new Date(`${today}T12:00:00`)) / 86400000) : null;
       const relative = days === null ? 'ohne Datum' : days === 0 ? 'heute' : days === 1 ? 'morgen' : days > 1 ? `in ${days} Tagen` : `seit ${-days} ${days === -1 ? 'Tag' : 'Tagen'} überfällig`;
-      const openIssues = issues.filter((issue) => issue.taskId === task.id && (issue.status === 'open' || issue.status === 'planned'));
+      const openIssues = issues.filter((issue) => issue.taskId === task.id && issueActive(issue));
       const area = task.area || '';
       const iconName = task.auto === 'season' ? (task.season === 'spring' ? 'sun' : 'snow') : AUTO_KIND[task.auto]?.[0] || (/reinig|gäste|wechsel/i.test(area) ? 'users' : /schlüssel/i.test(task.title) ? 'home' : 'task');
       const state = openIssues.length ? 'issue' : overdue ? 'overdue' : status === 'In Bearbeitung' ? 'ordered' : 'open';
@@ -10104,7 +10382,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const overdue = status !== 'Erledigt' && task.date && task.date < today;
       const days = task.date ? Math.round((new Date(`${task.date}T12:00:00`) - new Date(`${today}T12:00:00`)) / 86400000) : null;
       const [iconName, kindLabel] = task.auto === 'season' ? [task.season === 'spring' ? 'sun' : 'snow', 'Saison'] : AUTO_KIND[task.auto] || ['bolt', 'Automatisch'];
-      const openIssues = issues.filter((issue) => issue.taskId === task.id && (issue.status === 'open' || issue.status === 'planned'));
+      const openIssues = issues.filter((issue) => issue.taskId === task.id && issueActive(issue));
       const partner = providerById(task.partnerId);
       const state = status === 'Erledigt' ? 'done' : overdue ? 'overdue' : status === 'In Bearbeitung' ? 'ordered' : 'due';
       const when = days === null ? 'ohne Datum' : days === 0 ? 'heute' : days === 1 ? 'morgen' : days > 1 ? `in ${days} Tagen` : `seit ${-days} ${days === -1 ? 'Tag' : 'Tagen'} überfällig`;
@@ -10890,6 +11168,26 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (reportFromList) { openIssueModal({ propertyId: reportFromList.dataset.property, text: reportFromList.dataset.issueText || '', source: reportFromList.dataset.reportIssueSource }); return; }
       const orderButton = event.target.closest('[data-issue-order]');
       if (orderButton) { openRepairOrder(orderButton.dataset.issueOrder); return; }
+      const cancelIssue = event.target.closest('[data-issue-cancel], [data-issue-reopen]');
+      if (cancelIssue) {
+        const id = cancelIssue.dataset.issueCancel || cancelIssue.dataset.issueReopen;
+        const issue = issues.find((item) => item.id === id);
+        if (!issue) return;
+        if (cancelIssue.dataset.issueCancel) {
+          const reason = window.prompt('Warum wird der Mangel nicht weiter verfolgt? (optional)', '') ?? null;
+          if (reason === null) return;
+          setIssueStatus(issue, 'cancelled', reason.trim() || 'abgebrochen');
+          issue.repairDismissed = true;
+          tasks = tasks.filter((task) => !(task.auto === 'repair' && task.issueId === id && !task.done));
+          showToast('Mangel abgebrochen – die offene Reparaturaufgabe wurde entfernt.');
+        } else {
+          setIssueStatus(issue, 'open', 'wieder geöffnet');
+          issue.repairDismissed = false;
+          showToast('Mangel wieder geöffnet.');
+        }
+        persistTasks(); persistIssues(); render();
+        return;
+      }
       if (event.target.closest('[data-close-repair-order]') || event.target.id === 'repair-order-modal') { closeRepairOrder(); return; }
       const issueAction = event.target.closest('[data-issue-fixed], [data-issue-renovation], [data-issue-delete]');
       if (issueAction) {
@@ -10897,7 +11195,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const issue = issues.find((item) => item.id === id);
         if (!issue) return;
         if (issueAction.dataset.issueFixed) {
-          issue.status = 'fixed';
+          setIssueStatus(issue, 'fixed', 'als behoben markiert');
           issue.fixedAt = localDateKey(new Date());
           tasks = tasks.map((task) => (task.auto === 'repair' && task.issueId === id && !task.done ? { ...task, status: 'Erledigt', done: true } : task));
           persistTasks(); persistIssues(); render();
@@ -11078,7 +11376,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       }
       if (action === 'remove-property') {
         const property = properties.find((item) => item.id === event.target.closest('[data-action]').dataset.property);
-        if (property && window.confirm(`Möchtest du „${property.name}“ wirklich entfernen? Zugehörige Aufgaben, Kosten, Dokumente und Hauskontrolldaten werden ebenfalls gelöscht.`)) {
+        if (property && window.confirm(`Möchtest du „${property.name}“ wirklich endgültig entfernen? Alle zugehörigen Aufgaben (${propertyLinkedData(property).taskIds.size}), Mängel, Kosten, Dokumente und Hauskontrolldaten werden ebenfalls gelöscht – auch in der Cloud samt Aufträgen. Tipp: Archivieren behält alles.`)) {
           removeProperty(property.id);
         }
       }
@@ -12680,6 +12978,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     async function runPropertyImport() {
       const run = document.getElementById('import-run');
+      if (!(await consumeUsage('listing_imports_month', 'Inseratimporte'))) return;
       const raw = document.getElementById('import-url').value.trim();
       const full = document.querySelector('input[name="import-mode"]:checked')?.value === 'full';
       let url = null;
@@ -12956,7 +13255,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (!project.title) return;
       renovationProjects = existing ? renovationProjects.map((item) => (item.id === existing.id ? project : item)) : [...renovationProjects, project];
       if (!persistRenovations()) return;
-      if (project.issueId) { const issue = issues.find((item) => item.id === project.issueId); if (issue) { issue.status = 'renovation'; persistIssues(); } }
+      if (project.issueId) { const issue = issues.find((item) => item.id === project.issueId); if (issue) { setIssueStatus(issue, 'renovation', 'als Sanierung geplant'); persistIssues(); } }
       document.getElementById('renovation-modal').classList.remove('open');
       currentPage = 'renovations';
       render();
@@ -13234,7 +13533,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const groups = [
         ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
         ['settings-look', 'Darstellung & Erinnerungen', 'Hell oder dunkel, Schriftgröße, Sprache der Aufträge und was dir die Glocke meldet.', settingsCardBuilders.filter((build) => build !== backupCardHtml && build !== appInfoCardHtml)],
-        ['settings-data', 'Daten & App', 'Cloud-Speicher, Servicepartner, Datensicherung und Informationen zur App.', [cloudCardHtml, ownerPartnerCardHtml, backupCardHtml, appInfoCardHtml]]
+        ['settings-data', 'Daten & App', 'Cloud-Speicher, Servicepartner, Datensicherung und Informationen zur App.', [cloudCardHtml, ownerMembersCardHtml, ownerPartnerCardHtml, backupCardHtml, appInfoCardHtml]]
       ];
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Startseite, Darstellung, Erinnerungen und Datensicherung.</p></div></div>
         <nav class="settings-jump" aria-label="Bereiche der Einstellungen">${groups.map(([id, title]) => `<button type="button" data-settings-jump="${id}">${title}</button>`).join('')}</nav>
@@ -15629,8 +15928,17 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       cloudState.notice = 'Verbunden. Melde dich jetzt an oder erstelle ein Konto.';
     }
     async function cloudLoadOrg() {
-      const rows = await cloudFetch('/rest/v1/rpc/ensure_my_organization', { method: 'POST', body: { p_name: profileData?.name ? `Ferienhäuser ${profileData.name}` : 'Meine Ferienhäuser' } });
-      const row = Array.isArray(rows) ? rows[0] : rows;
+      // Gewählte Organisation (z. B. nach einer Einladung) hat Vorrang vor der eigenen
+      let row = null;
+      try {
+        const orgs = await cloudFetch('/rest/v1/rpc/my_organizations', { method: 'POST', body: {} });
+        cloud.orgs = Array.isArray(orgs) ? orgs : [];
+        row = cloud.orgs.find((org) => org.organization_id === cloud.preferredOrgId) || null;
+      } catch (error) { /* ältere Datenbank ohne my_organizations */ }
+      if (!row) {
+        const rows = await cloudFetch('/rest/v1/rpc/ensure_my_organization', { method: 'POST', body: { p_name: profileData?.name ? `Ferienhäuser ${profileData.name}` : 'Meine Ferienhäuser' } });
+        row = Array.isArray(rows) ? rows[0] : rows;
+      }
       if (!row?.organization_id) throw new Error('Die Organisation konnte nicht angelegt werden.');
       cloud.org = { id: row.organization_id, name: row.name, role: row.role };
       persistCloud();
@@ -16451,6 +16759,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             ppIsAdmin() ? ppQ(`organization_invites?organization_id=eq.${org.id}&accepted_at=is.null&select=*&order=created_at.desc`) : []
           ]);
           pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites };
+          pp.access = {};
         } else {
           pp.data = null;
         }
@@ -16700,6 +17009,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <div><span>Preis</span><strong>${escapeHtml(ppMoney(o.actual_cost ?? o.estimated_cost, o.currency))}</strong>${o.actual_cost != null ? '<small>Ist-Kosten</small>' : '<small>geschätzt</small>'}</div>
           <div><span>Mitarbeiter</span>${lead && !['completed', 'cancelled', 'rejected'].includes(o.status) ? `<select class="form-control" data-pp-assign="${o.id}"><option value="">– nicht zugewiesen –</option>${members.map((m) => `<option value="${m.user_id}" ${m.user_id === o.assigned_user_id ? 'selected' : ''}>${escapeHtml(ppMemberName(m.user_id) || m.user_id)} (${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)})</option>`).join('')}</select>` : `<strong>${escapeHtml(ppMemberName(o.assigned_user_id) || '–')}</strong>`}</div>
         </div>
+        ${['accepted', 'scheduled', 'in_progress'].includes(o.status) ? ppAccessHtml(o) : ''}
         ${o.description ? `<div class="pp-card"><span class="pp-eyebrow">Beschreibung</span><p class="pp-text">${escapeHtml(o.description)}</p></div>` : ''}
         ${o.response_note ? `<div class="pp-card"><span class="pp-eyebrow">Deine Antwort</span><p class="pp-text">${escapeHtml(o.response_note)}</p></div>` : ''}
         ${actions}
@@ -16742,6 +17052,20 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ${facts.length ? `<div class="pp-obj-facts">${facts.map(([l, v]) => `<div><span>${l}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div>` : '<p class="pp-hint" style="grid-column:1/-1;margin:8px 0 0">Baujahr und Fläche hat der Hausbesitzer noch nicht eingetragen.</p>'}
         ${photos.length > 1 ? `<div class="pp-obj-gallery">${photos.slice(1, 12).map((ph, n) => `<button type="button" aria-label="Foto ${n + 2} von ${escapeHtml(p.name)} öffnen" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(p.name)}"><img data-pp-thumb="${ph.id}" alt=""></button>`).join('')}</div>` : ''}
       </div>`;
+    }
+    // Zugangsdaten, die der Hausbesitzer für diesen Auftrag freigegeben hat (über order_access(), protokolliert)
+    function ppAccessHtml(o) {
+      pp.access = pp.access || {};
+      const entry = pp.access[o.id];
+      if (entry === undefined) {
+        pp.access[o.id] = 'loading';
+        // nur das Zugangsfeld nachfüllen – kein Neuzeichnen, damit Eingaben im Formular erhalten bleiben
+        ppRpc('order_access', { p_service_order_id: o.id }).then((r) => { pp.access[o.id] = r || null; }).catch(() => { pp.access[o.id] = null; })
+          .finally(() => { const slot = document.querySelector(`[data-pp-access-slot="${o.id}"]`); if (slot) slot.outerHTML = ppAccessHtml(o); });
+        return `<div data-pp-access-slot="${o.id}" hidden></div>`;
+      }
+      if (!entry || entry === 'loading') return `<div data-pp-access-slot="${o.id}" hidden></div>`;
+      return `<div class="pp-card pp-access" data-pp-access-slot="${o.id}">${icon('key')}<div><span class="pp-eyebrow">Zugang · gültig bis ${escapeHtml(fmtDateTime(entry.valid_until))}</span><p class="pp-text">${escapeHtml(entry.access_text)}</p><small>Nur für diesen Auftrag freigegeben – der Abruf wird dem Hausbesitzer angezeigt.</small></div></div>`;
     }
     const ppBack = () => `<button type="button" class="pp-back" data-pp-action="back">${icon('arrow')}<span>Zurück</span></button>`;
     function ppInspectionCard(i) {
@@ -17352,12 +17676,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const [partners, tasksRows, orders, messages, invites, invoices] = await Promise.all([
         cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status&order=company_name.asc`),
         cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=not.is.null&status=in.(pending,assigned)&select=id,app_ref,title,scheduled_start,assigned_partner_id,property:properties(name)&order=scheduled_start.asc.nullslast&limit=100`),
-        cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,scheduled_at,response_note,actual_cost,currency,service_task_id,service_partner_id,created_at,partner:service_partners(company_name),property:properties(name),task:service_tasks(app_ref)&order=created_at.desc&limit=200`),
+        cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,scheduled_at,response_note,actual_cost,currency,service_task_id,service_partner_id,created_at,partner:service_partners(company_name),property:properties(name,app_ref),task:service_tasks(app_ref)&order=created_at.desc&limit=200`),
         cloudFetch(`/rest/v1/messages?organization_id=eq.${org}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`),
         cloudFetch(`/rest/v1/service_partner_invites?organization_id=eq.${org}&select=service_partner_id,code,expires_at,accepted_at&order=created_at.desc&limit=200`),
         cloudFetch(`/rest/v1/invoices?organization_id=eq.${org}&service_order_id=not.is.null&select=id,invoice_number,amount_gross,currency,status,invoice_date,due_date,service_order_id,partner:service_partners!invoices_organization_id_service_partner_id_fkey(company_name),property:properties!invoices_organization_id_property_id_fkey(app_ref,name),document:documents!invoices_organization_id_document_id_fkey(id,file_name,file_size,storage_bucket,storage_path)&order=created_at.desc&limit=100`).catch(() => [])
       ]);
       Object.assign(ownerSide, { partners, tasks: tasksRows, orders, messages, invites, invoices });
+      ownerSide.shares = await cloudFetch(`/rest/v1/order_access_shares?organization_id=eq.${org}&revoked_at=is.null&valid_until=gt.${encodeURIComponent(new Date().toISOString())}&select=id,service_order_id,valid_until,view_count,last_viewed_at&order=created_at.desc`).catch(() => []);
       ownerImportInvoices().catch((error) => console.warn('Rechnungen nicht übernommen:', error));
       // Fortschritt der Partner in die lokalen Aufgaben übernehmen
       let changed = 0;
@@ -17572,6 +17897,74 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       try { await task(); await ownerLoadPartners(); } catch (error) { ownerSide.error = error instanceof TypeError ? 'Keine Verbindung.' : error.message; }
       finally { ownerSide.busy = ''; rerenderCloud(); }
     }
+    // ===== Mitglieder der Hausbesitzer-Organisation (Familie, Miteigentümer, Verwaltung) =====
+    const OWNER_ROLES = [['admin', 'Admin', 'alles, inkl. Tarif und Mitglieder'], ['property_manager', 'Hausverwaltung', 'darf alles bearbeiten'], ['accounting', 'Buchhaltung', 'sieht alles, Kosten im Blick'], ['viewer', 'Nur lesen', 'sieht alles, ändert nichts']];
+    const roleLabel = (role) => (OWNER_ROLES.find(([id]) => id === role) || [role, role])[1];
+    const team = { orgId: '', members: null, invites: [], busy: '', error: '', code: null };
+    async function teamLoad() {
+      if (!cloudReady()) return;
+      const orgId = cloud.org.id;
+      const admin = cloud.org.role === 'admin';
+      const [members, invites] = await Promise.all([
+        cloudFetch('/rest/v1/rpc/org_members', { method: 'POST', body: { p_organization_id: orgId } }),
+        admin ? cloudFetch(`/rest/v1/organization_invites?organization_id=eq.${orgId}&accepted_at=is.null&select=id,email,role,code,expires_at&order=created_at.desc`) : []
+      ]);
+      Object.assign(team, { orgId, members, invites: invites.filter((invite) => new Date(invite.expires_at) > new Date()) });
+    }
+    async function teamRun(label, task, notice = '') {
+      if (team.busy) return;
+      team.busy = label; team.error = ''; rerenderCloud();
+      try { await task(); await teamLoad(); if (notice) showToast(notice); }
+      catch (error) { team.error = error instanceof TypeError ? 'Keine Verbindung.' : error.message; }
+      finally { team.busy = ''; rerenderCloud(); }
+    }
+    function ownerMembersCardHtml() {
+      if (!cloudReady() || ppMode() === 'partner') return '';
+      if (team.orgId !== cloud.org.id && !team.busy) { team.members = null; team.code = null; teamRun('load', async () => {}); }
+      const admin = cloud.org.role === 'admin';
+      const members = (team.members || []).filter((m) => m.status === 'active');
+      const max = entitlements.limit('users');
+      const used = members.length + team.invites.length;
+      const orgs = cloud.orgs || [];
+      const mail = (invite) => `mailto:${encodeURIComponent(invite.email)}?subject=${encodeURIComponent(`Einladung zu „${cloud.org.name}“ in Husora`)}&body=${encodeURIComponent(`Hallo,\n\nich lade dich zu unseren Ferienhäusern in Husora ein (${roleLabel(invite.role)}).\n\n1. ${location.origin}${location.pathname} öffnen\n2. Einstellungen → Daten & App → mit dieser E-Mail-Adresse (${invite.email}) anmelden oder Konto erstellen\n3. Unter „Mitglieder“ den Einladungscode eingeben: ${invite.code}\n\nViele Grüße`)}`;
+      return `<section class="card settings-card" id="settings-members"><div class="settings-card-head"><span class="settings-icon">${icon('users')}</span><div><h2 class="card-title">Mitglieder</h2><p class="card-caption">Familie, Miteigentümer oder Hausverwaltung mitarbeiten lassen · ${used} von ${Number.isFinite(max) ? max : '∞'} Benutzern (Tarif ${escapeHtml(entitlements.plan().name)})</p></div></div>
+        ${orgs.length > 1 ? `<label class="team-org"><span class="form-label">Organisation</span><select class="form-control" data-team-org>${orgs.map((org) => `<option value="${escapeHtml(org.organization_id)}" ${org.organization_id === cloud.org.id ? 'selected' : ''}>${escapeHtml(org.name)} · ${escapeHtml(roleLabel(org.role))}</option>`).join('')}</select></label>` : ''}
+        ${team.error ? `<p class="cloud-message error">${icon('alert')}<span>${escapeHtml(team.error)}</span></p>` : ''}
+        ${team.members === null ? '<div class="pp-skel"><i></i></div>' : `<ul class="team-list">${members.map((m) => `<li><span class="team-avatar">${escapeHtml((m.name || m.email || '?').slice(0, 1).toUpperCase())}</span><span class="team-main"><strong>${escapeHtml(m.name || m.email)}${m.is_me ? ' (du)' : ''}</strong><small>${escapeHtml(m.email || '')}</small></span>${admin && !m.is_me ? `<select class="filter-select" data-team-role="${escapeHtml(m.id)}" aria-label="Rolle von ${escapeHtml(m.email || '')}">${OWNER_ROLES.map(([id, label]) => `<option value="${id}" ${m.role === id ? 'selected' : ''}>${label}</option>`).join('')}${OWNER_ROLES.some(([id]) => id === m.role) ? '' : `<option selected>${escapeHtml(m.role)}</option>`}</select><button type="button" class="ap-remove" data-team-remove="${escapeHtml(m.id)}" aria-label="${escapeHtml(m.email || '')} entfernen" title="Entfernen">${icon('trash')}</button>` : `<span class="pp-badge muted">${escapeHtml(roleLabel(m.role))}</span>`}</li>`).join('')}</ul>`}
+        ${admin && team.invites.length ? `<p class="team-sub">Offene Einladungen</p><ul class="team-list">${team.invites.map((invite) => `<li><span class="team-avatar muted">${icon('note')}</span><span class="team-main"><strong>${escapeHtml(invite.email)}</strong><small>${escapeHtml(roleLabel(invite.role))} · Code <code>${escapeHtml(invite.code)}</code> · gültig bis ${escapeHtml(fmtDate(invite.expires_at.slice(0, 10)))}</small></span><a class="secondary-btn" href="${mail(invite)}">E-Mail</a><button type="button" class="ap-remove" data-team-revoke="${escapeHtml(invite.id)}" aria-label="Einladung zurückziehen" title="Zurückziehen">${icon('trash')}</button></li>`).join('')}</ul>` : ''}
+        ${admin ? `<form class="team-form" data-team-invite><label><span class="form-label">E-Mail-Adresse</span><input class="form-control" type="email" name="email" required maxlength="120" placeholder="name@beispiel.de"></label><label><span class="form-label">Rolle</span><select class="form-control" name="role">${OWNER_ROLES.map(([id, label, hint]) => `<option value="${id}" ${id === 'property_manager' ? 'selected' : ''}>${label} – ${hint}</option>`).join('')}</select></label><button type="submit" class="primary-btn" ${team.busy || used >= max ? 'disabled' : ''}>${icon('plus')} Einladen</button></form>${used >= max ? `<p class="settings-hint">Alle Benutzerplätze deines Tarifs sind belegt – <button type="button" class="text-btn" data-page="plans">Tarife vergleichen</button></p>` : ''}${team.code ? `<p class="cloud-message">${icon('check')}<span>Einladungscode für ${escapeHtml(team.code.email)}: <code>${escapeHtml(team.code.code)}</code> – per E-Mail senden oder weitergeben.</span></p>` : ''}` : ''}
+        <form class="team-join" data-team-join><label><span class="form-label">Du wurdest eingeladen? Einladungscode eingeben</span><span class="team-join-row"><input class="form-control pp-code" name="code" required placeholder="TEAM-XXXX-XXXX" autocapitalize="characters"><button type="submit" class="secondary-btn" ${team.busy ? 'disabled' : ''}>Beitreten</button></span></label></form>
+      </section>`;
+    }
+    async function teamSwitchOrg(orgId) {
+      cloud.preferredOrgId = orgId;
+      cloud.lastSyncAt = '';
+      await cloudLoadOrg();
+      team.orgId = ''; ownerSide.partners = null; orgPlan = null;
+      persistCloud();
+      showToast(`Organisation „${cloud.org.name}“ gewählt – unter Cloud-Speicher „Aus der Cloud laden“, um ihre Häuser auf dieses Gerät zu holen.`);
+    }
+    document.addEventListener('submit', (event) => {
+      const invite = event.target.closest('[data-team-invite]');
+      const join = event.target.closest('[data-team-join]');
+      if (!invite && !join) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(event.target));
+      if (invite) teamRun('invite', async () => { const code = await cloudFetch('/rest/v1/rpc/create_member_invite', { method: 'POST', body: { p_organization_id: cloud.org.id, p_email: v.email.trim(), p_role: v.role } }); team.code = { email: v.email.trim(), code }; }, 'Einladung erstellt.');
+      if (join) teamRun('join', async () => { const r = await cloudFetch('/rest/v1/rpc/accept_member_invite', { method: 'POST', body: { p_code: v.code } }); await teamSwitchOrg(r.organization_id); }, '');
+    });
+    document.addEventListener('change', (event) => {
+      const role = event.target.closest('[data-team-role]');
+      if (role) { teamRun('role', () => cloudFetch(`/rest/v1/organization_members?id=eq.${role.dataset.teamRole}`, { method: 'PATCH', body: { role: role.value }, headers: { Prefer: 'return=minimal' } }), `Rolle geändert: ${roleLabel(role.value)}.`); return; }
+      const org = event.target.closest('[data-team-org]');
+      if (org) teamRun('switch', () => teamSwitchOrg(org.value));
+    });
+    document.addEventListener('click', (event) => {
+      const remove = event.target.closest('[data-team-remove]');
+      if (remove) { if (!window.confirm('Dieses Mitglied aus der Organisation entfernen? Es verliert sofort den Zugriff.')) return; teamRun('remove', () => cloudFetch(`/rest/v1/organization_members?id=eq.${remove.dataset.teamRemove}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }), 'Mitglied entfernt.'); return; }
+      const revoke = event.target.closest('[data-team-revoke]');
+      if (revoke) teamRun('revoke', () => cloudFetch(`/rest/v1/organization_invites?id=eq.${revoke.dataset.teamRevoke}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }), 'Einladung zurückgezogen.');
+    });
     function ownerPartnerCardHtml() {
       const connected = (ownerSide.partners || []).filter((p) => p.partner_organization_id).length;
       return `<section class="card settings-card" id="settings-partners"><div class="settings-card-head"><span class="settings-icon">${icon('users')}</span><div><h2 class="card-title">Partner-Portal</h2><p class="card-caption">Servicepartner einladen, Aufträge senden und im Messenger direkt mit ihnen schreiben.</p></div></div>
@@ -17710,7 +18103,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       // Aufträge je Servicepartner, darin nach Ferienhaus
       const groups = new Map();
       orders.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
-      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}<div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button></div></div>`; };
+      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubAccessHtml(o)}${cloud.org?.role === 'admin' ? `<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body">${hubHistoryHtml(o.id)}</div></details>` : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${['accepted', 'scheduled', 'in_progress'].includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
       const rank = (o) => ({ in_progress: 0, scheduled: 1, accepted: 2, offered: 3, completed: 4 }[o.status] ?? 5);
       const list = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0], 'de')).map(([name, list]) => {
         const houses = new Map();
@@ -17720,6 +18113,56 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       }).join('');
       return `${send}${orders.length ? `<h2 class="hub-list-title">Aufträge an Partner</h2>${list}` : ''}`;
     }
+    // ----- Auftragsverlauf aus dem Audit-Protokoll (nur Admins der Organisation) -----
+    const hubHistory = {};
+    const ORDER_STATUS_DE = { offered: 'angefragt', accepted: 'angenommen', rejected: 'abgelehnt', scheduled: 'terminiert', in_progress: 'begonnen', completed: 'erledigt', cancelled: 'zurückgezogen', draft: 'Entwurf' };
+    function hubHistoryHtml(orderId) {
+      const rows = hubHistory[orderId];
+      if (!rows) return '<p class="settings-hint">Wird geladen …</p>';
+      if (!rows.length) return '<p class="settings-hint">Noch keine Einträge.</p>';
+      return `<ol class="hub-history-list">${rows.map((r) => { const who = r.user_id && r.user_id === ownerSide.me ? 'Du' : 'Servicepartner'; const text = r.action === 'insert' ? `Auftrag gesendet (${ORDER_STATUS_DE[r.new_status] || r.new_status})` : r.old_status !== r.new_status ? `${ORDER_STATUS_DE[r.new_status] || r.new_status}${r.note ? ` – „${r.note}“` : ''}` : r.new_sched !== r.old_sched && r.new_sched ? `Termin: ${fmtDateTime(r.new_sched)}` : 'Angaben geändert'; return `<li><time>${escapeHtml(fmtDateTime(r.created_at))}</time><span><b>${escapeHtml(text)}</b> · ${who}</span></li>`; }).join('')}</ol>`;
+    }
+    document.addEventListener('toggle', (event) => {
+      const box = event.target.closest?.('[data-hub-history]');
+      if (!box || !box.open) return;
+      const id = box.dataset.hubHistory;
+      cloudFetch(`/rest/v1/audit_logs?entity_type=eq.service_orders&entity_id=eq.${id}&select=action,created_at,user_id,old_status:old_data->>status,new_status:new_data->>status,old_sched:old_data->>scheduled_at,new_sched:new_data->>scheduled_at,note:new_data->>response_note&order=created_at.asc&limit=100`)
+        .then((rows) => { hubHistory[id] = rows; }).catch(() => { hubHistory[id] = []; })
+        .finally(() => { const body = document.querySelector(`[data-hub-history="${id}"] .hub-history-body`); if (body) body.innerHTML = hubHistoryHtml(id); });
+    }, true);
+    // ----- Zugangsdaten zeitlich begrenzt für einen Auftrag freigeben -----
+    function hubAccessDefaultText(o) {
+      const local = properties.find((pr) => pr.id === o.property?.app_ref) || properties.find((pr) => pr.name === o.property?.name);
+      const data = local ? emergencyFor(local.id) : {};
+      return [data.keyLocation && `Schlüssel: ${data.keyLocation}`, data.keyCode && `Code Schlüsselbox: ${data.keyCode}`, data.alarm && `Alarmanlage: ${data.alarm}`].filter(Boolean).join('\n');
+    }
+    function hubAccessHtml(o) {
+      const share = (ownerSide.shares || []).find((sh) => sh.service_order_id === o.id);
+      if (share) return `<div class="hub-access active">${icon('key')}<span><strong>Zugang geteilt bis ${escapeHtml(fmtDateTime(share.valid_until))}</strong><small>${share.view_count ? `${share.view_count}× abgerufen, zuletzt ${escapeHtml(fmtDateTime(share.last_viewed_at))}` : 'noch nicht abgerufen'} · endet automatisch mit dem Auftrag</small></span><button type="button" class="secondary-btn" data-hub-access-revoke="${share.id}">Zurückziehen</button></div>`;
+      if (hub.accessForm !== o.id) return '';
+      const base = o.scheduled_at ? new Date(new Date(o.scheduled_at).getTime() + 86400000) : new Date(Date.now() + 3 * 86400000);
+      return `<form class="hub-access-form" data-hub-access-form="${o.id}"><label><span class="form-label">Zugangsinformationen für ${escapeHtml(o.partner?.company_name || 'den Partner')}</span><textarea class="form-control" name="text" rows="3" maxlength="2000" required placeholder="z. B. Schlüsselbox links neben der Tür, Code 1234">${escapeHtml(hubAccessDefaultText(o))}</textarea></label>
+        <label><span class="form-label">Gültig bis (höchstens 31 Tage)</span><input class="form-control" type="datetime-local" name="until" required value="${ppLocalInput(base.toISOString())}" min="${ppLocalInput(new Date().toISOString())}" max="${ppLocalInput(new Date(Date.now() + 30 * 86400000).toISOString())}"></label>
+        <p class="settings-hint">Der Partner sieht die Angaben nur bei diesem Auftrag und nur bis zum Ablauf; jeder Abruf wird protokolliert. Ist der Auftrag erledigt, endet die Freigabe automatisch.</p>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-hub-access-cancel>Abbrechen</button><button type="submit" class="primary-btn">${icon('key')} Freigeben</button></div></form>`;
+    }
+    document.addEventListener('click', (event) => {
+      if (currentPage !== 'partnerHub') return;
+      const open = event.target.closest('[data-hub-access]');
+      if (open) { hub.accessForm = open.dataset.hubAccess; hubRerender(); return; }
+      if (event.target.closest('[data-hub-access-cancel]')) { hub.accessForm = null; hubRerender(); return; }
+      const revoke = event.target.closest('[data-hub-access-revoke]');
+      if (revoke) ownerRun('access', async () => { await cloudFetch(`/rest/v1/order_access_shares?id=eq.${revoke.dataset.hubAccessRevoke}`, { method: 'PATCH', body: { revoked_at: new Date().toISOString() }, headers: { Prefer: 'return=minimal' } }); showToast('Zugang zurückgezogen – der Partner sieht ihn nicht mehr.'); });
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-hub-access-form]');
+      if (!form) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      const until = new Date(v.until);
+      if (!(until > new Date())) { showToast('Bitte ein Ablaufdatum in der Zukunft wählen.'); return; }
+      ownerRun('access', async () => { await cloudFetch('/rest/v1/order_access_shares', { method: 'POST', body: { organization_id: cloud.org.id, service_order_id: form.dataset.hubAccessForm, access_text: v.text.trim(), valid_until: until.toISOString() }, headers: { Prefer: 'return=minimal' } }); hub.accessForm = null; showToast(`Zugang freigegeben bis ${fmtDateTime(until.toISOString())}.`); });
+    });
     document.addEventListener('click', (event) => {
       if (currentPage !== 'partnerHub') return;
       const chip = event.target.closest('[data-hub-send-partner]');

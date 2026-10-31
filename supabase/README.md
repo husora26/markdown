@@ -35,6 +35,10 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…2000_partner_member_fast.sql` | Schnellere Partner-Prüfung in den RLS-Regeln (gleiche Logik, gezielte Index-Abfrage statt Liste je Zeile) |
 | `…2100_plans_subscriptions.sql` | Tarife FREE/PLUS/PRO/ULTIMATE (`plans`: Preise, Grenzwerte, Funktionen), `subscriptions` je Organisation (Stripe vorbereitet, Schreiben nur service_role), `my_plan()`, Server-Sperre für Partner-Portal ab PRO |
 | `…2200_launch_ops.sql` | Launch: `app_feedback` (Feedback/Fehlerberichte, nur schreibbar, Rate-Limit), Benachrichtigungen bei Auftragsstatus und Rechnungen, `delete_my_account()` / `my_deletion_preview()`, `stripe_events` (Webhook-Idempotenz), Aufbewahrungsfristen per pg_cron |
+| `…2300_owner_members.sql` | Mitglieder für Hausbesitzer: `my_organizations()`, `org_members()`, Benutzer-Limit je Tarif bei Einladungen |
+| `…2400_order_access.sql` | Zugangsdaten je Auftrag zeitlich begrenzt freigeben (`order_access_shares`, `order_access()` mit Abrufprotokoll) |
+| `…2500_usage_limits.sql` | Monatszähler (`usage_counters`, `consume_usage()`), Häuser-/Dokumentgrenze serverseitig |
+| `…2600_property_archive.sql` | Häuser archivieren (`status = archived`, `set_property_archived()`), archivierte zählen nicht ins Limit |
 | `…1700_partner_portal.sql` | Zugang für Servicepartner: Partner-Organisationen, Einladungen, Mitarbeiterrollen, Kunden, Kontrollvorlagen, 14 Servicearten |
 | `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |

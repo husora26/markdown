@@ -1,0 +1,25 @@
+const fs = require('fs'); const { execSync } = require('child_process');
+const ANON = require('./env').ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now() % 100000;
+const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -At -c "${q.replace(/"/g, '\\"')}"`).toString().trim();
+(async () => {
+  const signup = async (email) => (await (await fetch(`${URL_}/auth/v1/signup`, { method: 'POST', headers: { apikey: ANON, 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password: 'Husora!2026' }) })).json()).access_token;
+  const call = async (token, path, body, method = 'POST') => { const r = await fetch(`${URL_}${path}`, { method, headers: { apikey: ANON, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Prefer: 'return=representation' }, body: JSON.stringify(body) }); const t = await r.text(); return { status: r.status, data: t ? JSON.parse(t) : null }; };
+  const t = await signup(`usage${N}@husora.test`);
+  const org = (await call(t, '/rest/v1/rpc/ensure_my_organization', { p_name: 'Zähltest' })).data[0].organization_id;
+  const r = [];
+  r.push(`FREE Inseratimport: ${JSON.stringify((await call(t, '/rest/v1/rpc/consume_usage', { p_organization_id: org, p_metric: 'listing_imports_month' })).data)}`);
+  const p1 = await call(t, '/rest/v1/properties', { organization_id: org, name: 'Haus 1' }); const p2 = await call(t, '/rest/v1/properties', { organization_id: org, name: 'Haus 2' });
+  r.push(`FREE Häuser: 1. HTTP ${p1.status} · 2. HTTP ${p2.status} ${p2.data?.message || ''}`);
+  sql(`insert into subscriptions (organization_id, plan_id, status) values ('${org}', 'plus', 'active')`);
+  const counts = []; for (let n = 0; n < 6; n++) counts.push((await call(t, '/rest/v1/rpc/consume_usage', { p_organization_id: org, p_metric: 'invoice_analyses_month' })).data);
+  r.push(`PLUS Rechnungsanalysen: ${counts.map((c) => `${c.ok ? '✓' : '✗'}${c.used}/${c.limit}`).join(' ')}`);
+  const p3 = await call(t, '/rest/v1/properties', { organization_id: org, name: 'Haus 2' });
+  r.push(`PLUS 2. Haus: HTTP ${p3.status}`);
+  sql(`update subscriptions set plan_id='free' where organization_id='${org}'`);
+  const list = await call(t, `/rest/v1/properties?organization_id=eq.${org}&select=name`, undefined, 'GET');
+  const p4 = await call(t, '/rest/v1/properties', { organization_id: org, name: 'Haus 3' });
+  r.push(`Downgrade FREE: vorhandene Häuser lesbar: ${list.data.map((x) => x.name).join(', ')} · neues Haus: HTTP ${p4.status}`);
+  const other = await call(t, '/rest/v1/rpc/consume_usage', { p_organization_id: 'cccccccc-0000-4000-8000-000000000001', p_metric: 'listing_imports_month' });
+  r.push(`fremde Organisation zählen: HTTP ${other.status} ${other.data?.message || ''}`);
+  console.log(r.join('\n'));
+})();
