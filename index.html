@@ -6404,10 +6404,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const planButton = isPro()
         ? `<button type="button" class="plan-pro" data-page="plans" title="Tarif ansehen">${escapeHtml(entitlements.plan().name)}</button>`
         : '<button type="button" class="plan-buy" data-page="plans">Upgrade</button>';
-      const testSwitch = SHOW_PLAN_TEST_SWITCH
-        ? `<label class="plan-test" title="Nur zum Testen: Tarif umschalten"><span>Test</span><select id="plan-test-toggle" aria-label="Testschalter: Tarif wählen">${['', ...PLAN_ORDER].map((id) => `<option value="${id}" ${(planOverride || '') === id ? 'selected' : ''}>${id ? planDef(id).name : 'echt'}</option>`).join('')}</select></label>`
-        : '';
-      info.innerHTML = planButton + testSwitch;
+      info.innerHTML = planButton;
     }
     function updateProfileSummary() {
       updatePlanInfo();
@@ -12107,14 +12104,6 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       selectedPropertyId = event.target.value;
       render();
       document.getElementById('assigned-property')?.focus();
-    });
-    document.addEventListener('change', (event) => {
-      if (event.target.id !== 'plan-test-toggle') return;
-      planOverride = event.target.value || null;
-      try { if (planOverride) localStorage.setItem('stugliv-test-plan', planOverride); else localStorage.removeItem('stugliv-test-plan'); } catch (error) { console.error(error); }
-      render();
-      document.getElementById('plan-test-toggle')?.focus();
-      showToast(planOverride ? `Testmodus: Tarif ${planDef(planOverride).name} aktiv.` : 'Testmodus aus – es gilt dein echter Tarif.');
     });
     document.getElementById('close-pro-modal').addEventListener('click', closeProModal);
     document.getElementById('pro-modal').addEventListener('click', (event) => {
