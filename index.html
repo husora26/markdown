@@ -1461,9 +1461,19 @@
     .partner-task-head small { color: var(--muted); font-size: 12.5px; }
     .partner-task-head b { color: var(--red); }
     .partner-task-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
-    .partner-task-list li { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #f0ece2; font-size: 13px; }
+    .partner-task-list li { display: grid; grid-template-columns: 22px 52px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #f0ece2; font-size: 13px; }
     .partner-task-list li > span { color: var(--muted); font-size: 12.5px; font-weight: 700; }
     .partner-task-list li.overdue > span { color: var(--red); }
+    .bulk-check { display: grid; place-items: center; align-self: center; cursor: pointer; }
+    .bulk-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--green); cursor: pointer; }
+    .partner-task-head .bulk-check { margin-right: 2px; }
+    .partner-task-list li.picked { background: var(--green-soft); border-radius: 8px; }
+    .bulk-bar { position: sticky; top: 70px; z-index: 6; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font-size: 13.5px; }
+    .bulk-bar.on { border-color: var(--green); box-shadow: 0 8px 24px rgba(0, 0, 0, .1); }
+    .bulk-bar .bulk-count { flex: 1 1 180px; color: var(--muted); }
+    .bulk-bar.on .bulk-count { color: var(--ink); }
+    .bulk-bar .filter-select { flex: 1 1 200px; min-height: 40px; }
+    .bulk-bar .primary-btn { min-height: 40px; }
     .ptask-status { align-self: center; padding: 3px 8px; border-radius: 999px; background: #e3eefa; color: #245d96; font-size: 11px; font-style: normal; font-weight: 700; white-space: nowrap; }
     .ptask-work-count { color: #245d96; font-weight: 700; }
     .primary-btn.sp-commissioned { border-color: #2f6fb0; background: #2f6fb0; color: #fff; }
@@ -1484,6 +1494,11 @@
     .ap-card.cat-renovation { border-top-color: #b7792c; }
     .ap-card.cat-inspection { border-top-color: #3f7a8c; }
     .ap-head { display: flex; align-items: center; gap: 11px; }
+    .ap-head .ap-title { flex: 1; min-width: 0; }
+    .ap-remove { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; align-self: flex-start; min-height: 34px; padding: 0 10px; border: 1px solid #ecd2cc; border-radius: 17px; background: transparent; color: var(--red); font-size: 12.5px; font-weight: 700; cursor: pointer; }
+    .ap-remove svg { width: 14px; height: 14px; }
+    .ap-remove:hover { background: var(--red-soft); }
+    @media (max-width: 420px) { .ap-remove span { display: none; } .ap-remove { width: 34px; justify-content: center; padding: 0; } }
     .ap-card .provider-avatar { width: 38px; height: 38px; flex-shrink: 0; font-size: 13px; }
     .ap-title { min-width: 0; }
     .ap-title h3 { margin: 0 0 4px; font-size: 14.5px; line-height: 1.25; }
@@ -3468,6 +3483,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3806,9 +3822,12 @@ html.dark .view-toggle button.active { background: #1c1c1c; box-shadow: 0 1px 3p
 html.dark .partner-task-card { background: #1c1c1c; }
 html.dark .partner-task-card.unassigned { border-top-color: #50534f; background: #25231b; }
 html.dark .partner-task-list li { border-bottom: 1px solid #484338; }
+html.dark .bulk-check input { accent-color: var(--green-solid); }
+html.dark .bulk-bar.on { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.27); }
 html.dark .ptask-status { background: #192531; color: #9ebfe0; }
 html.dark .ptask-work-count { color: #9ebfe0; }
 html.dark .partner-task-card.commissioned { border-color: #374758; }
+html.dark .ap-remove { border: 1px solid #513d38; }
 html.dark .ap-chip { background: #1c1c1c; }
 html.dark .ap-tasks { background: #28241a; }
 html.dark .ap-tasks em { color: #da9b90; }
@@ -6903,8 +6922,17 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const lines = list.map((task) => `• ${task.date ? fmtDate(task.date) : 'ohne Datum'} · ${task.property}: ${task.title}${task.description ? `\n  ${task.description}` : ''}`);
       return `Hallo ${partner ? partner.name : ''},\n\nhier die anstehenden Aufgaben für unser Ferienhaus:\n\n${lines.join('\n')}\n\nBitte gib kurz Bescheid, wenn eine Aufgabe erledigt ist oder dir dabei etwas auffällt.\n\nViele Grüße\n${profileData.name || ''}`;
     }
+    // Mehrfachauswahl in der Ansicht „nach Servicepartner“: Aufgaben ankreuzen und mit einem Klick zuordnen
+    let bulkTasks = new Set();
+    function bulkPartnerOptions() {
+      const assignedIds = new Set(Object.values(servicePartnerAssignments || {}).flat());
+      const list = providers.filter((provider) => assignedIds.has(provider.id)).sort((a, b) => a.name.localeCompare(b.name, 'de'));
+      return `<option value="">Servicepartner wählen …</option>${list.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === bulkTarget ? 'selected' : ''}>${escapeHtml(provider.name)} · ${escapeHtml(partnerCategoryLabel(provider))}</option>`).join('')}<option value="__self" ${bulkTarget === '__self' ? 'selected' : ''}>Eigenleistung (selbst erledigen)</option><option value="__none" ${bulkTarget === '__none' ? 'selected' : ''}>Zuordnung entfernen</option>`;
+    }
+    let bulkTarget = '';
     function partnerTasksView(visible) {
       const open = visible.filter((task) => taskStatus(task) !== 'Erledigt');
+      bulkTasks = new Set([...bulkTasks].filter((id) => open.some((task) => String(task.id) === id)));
       const groups = new Map();
       open.forEach((task) => { const key = task.selfService ? '__self' : task.partnerId && providerById(task.partnerId) ? task.partnerId : ''; groups.set(key, [...(groups.get(key) || []), task]); });
       const today = localDateKey(new Date());
@@ -6915,11 +6943,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const sorted = [...list].sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
         const inWork = list.filter((task) => taskStatus(task) === 'In Bearbeitung').length;
         const commissioned = Boolean(partner) && inWork > 0 && inWork === list.length;
-        return `<article class="partner-task-card ${partner ? '' : 'unassigned'} ${commissioned ? 'commissioned' : ''}"><div class="partner-task-head"><span class="provider-avatar">${escapeHtml(partner ? partner.initials || partner.name.slice(0, 2).toUpperCase() : partnerId === '__self' ? 'EL' : '?')}</span><div><strong>${escapeHtml(partner ? partner.name : partnerId === '__self' ? 'Eigenleistung' : 'Noch ohne Servicepartner')}</strong><small>${list.length - inWork ? `${list.length - inWork} offen` : ''}${list.length - inWork && inWork ? ' · ' : ''}${inWork ? `<span class="ptask-work-count">${inWork} in Bearbeitung</span>` : ''}${overdue ? ` · <b>${overdue} überfällig</b>` : ''}${partner ? ` · ${escapeHtml(partnerCategoryLabel(partner))}` : ''}</small></div></div>
-          <ul class="partner-task-list">${sorted.map((task) => `<li class="${task.date && task.date < today ? 'overdue' : ''}"><span>${task.date ? escapeHtml(fmtDate(task.date)) : '—'}</span><button type="button" data-edit-task="${task.id}">${escapeHtml(task.title)}<small>${escapeHtml(task.property)}</small></button>${taskStatus(task) === 'In Bearbeitung' ? '<em class="ptask-status">In Bearbeitung</em>' : ''}</li>`).join('')}</ul>
-          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button>${commissioned ? `<button type="button" class="primary-btn sp-commissioned" data-commission-partner="${escapeHtml(partnerId)}" aria-pressed="true" title="Alle Aufgaben sind an ${escapeHtml(partner.name)} übergeben – neue Aufgaben werden beim Antippen nachgesendet">${icon('check')} SP beauftragt</button>` : `<button type="button" class="primary-btn" data-commission-partner="${escapeHtml(partnerId)}">${icon('check')} SP beauftragen</button>`}${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : partnerId === '__self' ? '<span class="partner-hint">Diese Aufgaben erledigst du selbst – kein Servicepartner beauftragt.</span>' : '<span class="partner-hint">In der Liste je Aufgabe einen Servicepartner wählen oder „Selbst“ einschalten.</span>'}</div></article>`;
+        const groupAll = list.every((task) => bulkTasks.has(String(task.id)));
+        return `<article class="partner-task-card ${partner ? '' : 'unassigned'} ${commissioned ? 'commissioned' : ''}"><div class="partner-task-head"><label class="bulk-check" title="Alle Aufgaben dieser Gruppe auswählen"><input type="checkbox" data-bulk-group="${escapeHtml(partnerId || '__none')}" ${groupAll ? 'checked' : ''} aria-label="Alle Aufgaben von ${escapeHtml(partner ? partner.name : partnerId === '__self' ? 'Eigenleistung' : 'ohne Servicepartner')} auswählen"></label><span class="provider-avatar">${escapeHtml(partner ? partner.initials || partner.name.slice(0, 2).toUpperCase() : partnerId === '__self' ? 'EL' : '?')}</span><div><strong>${escapeHtml(partner ? partner.name : partnerId === '__self' ? 'Eigenleistung' : 'Noch ohne Servicepartner')}</strong><small>${list.length - inWork ? `${list.length - inWork} offen` : ''}${list.length - inWork && inWork ? ' · ' : ''}${inWork ? `<span class="ptask-work-count">${inWork} in Bearbeitung</span>` : ''}${overdue ? ` · <b>${overdue} überfällig</b>` : ''}${partner ? ` · ${escapeHtml(partnerCategoryLabel(partner))}` : ''}</small></div></div>
+          <ul class="partner-task-list">${sorted.map((task) => `<li class="${task.date && task.date < today ? 'overdue' : ''} ${bulkTasks.has(String(task.id)) ? 'picked' : ''}"><label class="bulk-check"><input type="checkbox" data-bulk-task="${task.id}" ${bulkTasks.has(String(task.id)) ? 'checked' : ''} aria-label="${escapeHtml(task.title)} auswählen"></label><span>${task.date ? escapeHtml(fmtDate(task.date)) : '—'}</span><button type="button" data-edit-task="${task.id}">${escapeHtml(task.title)}<small>${escapeHtml(task.property)}</small></button>${taskStatus(task) === 'In Bearbeitung' ? '<em class="ptask-status">In Bearbeitung</em>' : ''}</li>`).join('')}</ul>
+          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button>${commissioned ? `<button type="button" class="primary-btn sp-commissioned" data-commission-partner="${escapeHtml(partnerId)}" aria-pressed="true" title="Alle Aufgaben sind an ${escapeHtml(partner.name)} übergeben – neue Aufgaben werden beim Antippen nachgesendet">${icon('check')} SP beauftragt</button>` : `<button type="button" class="primary-btn" data-commission-partner="${escapeHtml(partnerId)}">${icon('check')} SP beauftragen</button>`}${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : partnerId === '__self' ? '<span class="partner-hint">Diese Aufgaben erledigst du selbst – kein Servicepartner beauftragt.</span>' : '<span class="partner-hint">Aufgaben ankreuzen und oben mit einem Klick einem Servicepartner zuordnen.</span>'}</div></article>`;
       }).join('');
-      return cards ? `<div class="partner-task-grid">${cards}</div>` : '<div class="empty">Keine offenen Aufgaben für diese Auswahl.</div>';
+      const bar = `<div class="bulk-bar ${bulkTasks.size ? 'on' : ''}"><span class="bulk-count">${bulkTasks.size ? `<b>${bulkTasks.size}</b> Aufgabe${bulkTasks.size === 1 ? '' : 'n'} ausgewählt` : 'Aufgaben ankreuzen, um sie einem Servicepartner zuzuordnen'}</span>${bulkTasks.size ? `<select class="filter-select" data-bulk-target aria-label="Servicepartner für die ausgewählten Aufgaben">${bulkPartnerOptions()}</select><button type="button" class="primary-btn" data-bulk-assign ${bulkTarget ? '' : 'disabled'}>${icon('check')} Zuordnen</button><button type="button" class="text-btn" data-bulk-clear>Auswahl aufheben</button>` : `<button type="button" class="text-btn" data-bulk-all>Alle auswählen</button>`}</div>`;
+      return cards ? `${bar}<div class="partner-task-grid">${cards}</div>` : '<div class="empty">Keine offenen Aufgaben für diese Auswahl.</div>';
     }
     function tasksPage() {
       const rank = { urgent: 0, soon: 1, normal: 2 };
@@ -7278,7 +7308,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ].filter(Boolean).join('');
         const uploadButton = `<label class="ap-upload">${icon('plus')} Dokument<input type="file" data-provider-document-upload="${escapeHtml(provider.id)}" data-provider-property="${escapeHtml(property.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label>`;
         return `<article class="card assigned-provider-card ap-card cat-${escapeHtml(provider.category)}">
-          <div class="ap-head"><div class="provider-avatar">${escapeHtml(provider.initials)}</div><div class="ap-title"><h3>${escapeHtml(provider.name)}</h3><div class="ap-tags">${provider.custom ? '<span class="custom-provider-tag">Eigener Partner</span>' : ''}<span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${partnerCategoryLabel(provider)}</span>${provider.specialty ? `<span class="ap-specialty">${escapeHtml(provider.specialty)}</span>` : ''}</div></div></div>
+          <div class="ap-head"><div class="provider-avatar">${escapeHtml(provider.initials)}</div><div class="ap-title"><h3>${escapeHtml(provider.name)}</h3><div class="ap-tags">${provider.custom ? '<span class="custom-provider-tag">Eigener Partner</span>' : ''}<span class="provider-type ${provider.category === 'renovation' ? 'renovation' : ''}">${partnerCategoryLabel(provider)}</span>${provider.specialty ? `<span class="ap-specialty">${escapeHtml(provider.specialty)}</span>` : ''}</div></div><button type="button" class="ap-remove" data-action="toggle-provider-assignment" data-property="${escapeHtml(property.id)}" data-provider="${escapeHtml(provider.id)}" aria-label="${escapeHtml(provider.name)} von ${escapeHtml(property.name)} entfernen" title="Von diesem Ferienhaus entfernen">${icon('trash')}<span>Entfernen</span></button></div>
           ${provider.services ? `<p class="ap-services">${escapeHtml(provider.services)}</p>` : ''}
           ${provider.custom ? `<div class="custom-provider-meta">${provider.contact ? `<span>${icon('users')} ${escapeHtml(provider.contact)}</span>` : ''}${provider.notes ? `<span class="custom-provider-notes">${escapeHtml(provider.notes)}</span>` : ''}<button type="button" class="text-btn" data-custom-provider-edit="${escapeHtml(provider.id)}">${icon('edit')} Bearbeiten</button></div>` : ''}
           <div class="ap-meta"><span>${escapeHtml(provider.town || '')}${Number.isFinite(distance) ? ` · ${distance} km` : ''}</span>${contacts ? `<span class="ap-contacts">${contacts}</span>` : ''}</div>
@@ -17097,6 +17127,32 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     function markTaskCommissioned(task) {
       if (task && taskStatus(task) === 'Offen') setTaskStatus(task, 'In Bearbeitung');
     }
+    function bulkRender() { const y = window.scrollY; render(); window.scrollTo(0, y); }
+    document.addEventListener('change', (event) => {
+      const one = event.target.closest('[data-bulk-task]');
+      if (one) { if (one.checked) bulkTasks.add(one.dataset.bulkTask); else bulkTasks.delete(one.dataset.bulkTask); bulkRender(); return; }
+      const group = event.target.closest('[data-bulk-group]');
+      if (group) { group.closest('.partner-task-card').querySelectorAll('[data-bulk-task]').forEach((box) => (group.checked ? bulkTasks.add(box.dataset.bulkTask) : bulkTasks.delete(box.dataset.bulkTask))); bulkRender(); return; }
+      const target = event.target.closest('[data-bulk-target]');
+      if (target) { bulkTarget = target.value; bulkRender(); }
+    });
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('[data-bulk-clear]')) { bulkTasks.clear(); bulkRender(); return; }
+      if (event.target.closest('[data-bulk-all]')) { document.querySelectorAll('[data-bulk-task]').forEach((box) => bulkTasks.add(box.dataset.bulkTask)); bulkRender(); return; }
+      if (!event.target.closest('[data-bulk-assign]') || !bulkTarget || !bulkTasks.size) return;
+      const chosen = tasks.filter((task) => bulkTasks.has(String(task.id)));
+      const provider = providerById(bulkTarget);
+      chosen.forEach((task) => {
+        if (bulkTarget === '__self') { task.selfService = true; task.partnerId = ''; }
+        else if (bulkTarget === '__none') { task.selfService = false; task.partnerId = ''; }
+        else { task.selfService = false; task.partnerId = bulkTarget; }
+      });
+      persistTasks();
+      const n = chosen.length;
+      bulkTasks.clear(); bulkTarget = '';
+      bulkRender();
+      showToast(provider ? `${n} Aufgabe${n === 1 ? '' : 'n'} ${provider.name} zugeordnet – mit „SP beauftragen“ direkt senden.` : `${n} Aufgabe${n === 1 ? '' : 'n'} ${chosen[0]?.selfService ? 'als Eigenleistung markiert' : 'ohne Servicepartner'}.`);
+    });
     // „SP beauftragen“: offene Aufgaben einer Partnergruppe ins Partner-Portal des Partners senden
     async function commissionPartner(providerId, button) {
       const provider = providerById(providerId);
