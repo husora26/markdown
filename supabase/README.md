@@ -33,6 +33,7 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…1800_partner_messenger.sql` | Messenger: Gespräch je Servicepartner (`messages.service_partner_id`), Lesebestätigung, Benachrichtigung bei Partner-Nachrichten |
 | `…1900_partner_service_groups.sql` | Leistungsgruppen Servicearbeiten und Sanierungen (neben Hauskontrolle); Hausfotos lesbar für Partner mit Auftrag zum Haus |
 | `…2000_partner_member_fast.sql` | Schnellere Partner-Prüfung in den RLS-Regeln (gleiche Logik, gezielte Index-Abfrage statt Liste je Zeile) |
+| `…2100_plans_subscriptions.sql` | Tarife FREE/PLUS/PRO/ULTIMATE (`plans`: Preise, Grenzwerte, Funktionen), `subscriptions` je Organisation (Stripe vorbereitet, Schreiben nur service_role), `my_plan()`, Server-Sperre für Partner-Portal ab PRO |
 | `…1700_partner_portal.sql` | Zugang für Servicepartner: Partner-Organisationen, Einladungen, Mitarbeiterrollen, Kunden, Kontrollvorlagen, 14 Servicearten |
 | `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |
@@ -438,3 +439,15 @@ Die vier Teilwerte entstehen so:
 - **Verfügbarkeit:** Zahl der offenen Aufträge, dazu Terminkonflikte am Wunschtag.
 - **Bewertung:** Wert von 0 bis 5.
 - **Preis:** im Verhältnis zum günstigsten Anbieter.
+
+## Tarife freischalten
+
+Bis die Stripe-Zahlung angebunden ist, wird ein Tarif im SQL Editor (service_role) gesetzt:
+
+```sql
+insert into public.subscriptions (organization_id, plan_id, status, note)
+values ('<organization_id>', 'pro', 'active', 'manuell freigeschaltet')
+on conflict (organization_id) do update set plan_id = excluded.plan_id, status = excluded.status, note = excluded.note;
+```
+
+Preise und Umfang ändert man in `public.plans` (`price_monthly_cents`, `limits`, `features`, `highlights`) – die App liest sie beim Start. Ohne Eintrag in `subscriptions` gilt FREE; ein Downgrade löscht keine Daten.

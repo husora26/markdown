@@ -391,3 +391,8 @@ insert into public.messages (organization_id, sender_user_id, recipient_user_id,
    '0d000000-0000-4000-8000-000000000002', 'Hallo Pelle, kannst du dir die Dachrinne morgen ansehen? Fotos sind im Auftrag.'),
   ('cccccccc-0000-4000-8000-000000000001', 'bbbbbbbb-0000-4000-8000-000000000003', 'bbbbbbbb-0000-4000-8000-000000000001',
    '0d000000-0000-4000-8000-000000000002', 'Ja, ich komme gegen 9 Uhr vorbei.');
+
+-- Tarif der Testorganisation (Migration 2100): ULTIMATE, damit Partner-Portal und alle Module testbar sind
+insert into public.subscriptions (organization_id, plan_id, status, note) values
+  ('cccccccc-0000-4000-8000-000000000001', 'ultimate', 'active', 'Testdaten')
+on conflict (organization_id) do nothing;

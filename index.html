@@ -447,6 +447,47 @@
     .pro-hint { margin: 4px 18px 0; padding: 10px 13px; border-radius: 9px; color: #745a35; background: #fff8e9; font-size: 12.5px; line-height: 1.55; }
     .pro-hint[hidden], .house-settings-actions [hidden] { display: none !important; }
     [data-pro-only][hidden] { display: none !important; }
+    .plan-matrix .card-head { padding-bottom: 8px; }
+    .pm-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 0 6px; }
+    .pm-table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 13px; }
+    .pm-table th, .pm-table td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: center; vertical-align: middle; }
+    .pm-table thead th { position: sticky; top: 0; background: var(--paper); font-size: 13px; letter-spacing: .04em; }
+    .pm-table thead th small { display: block; color: var(--green); font-size: 10.5px; font-weight: 700; letter-spacing: 0; }
+    .pm-table tbody th[scope=row], .pm-table thead th:first-child { position: sticky; left: 0; z-index: 1; min-width: 170px; background: var(--paper); text-align: left; font-weight: 600; }
+    .pm-table tr.pm-group th { padding-top: 14px; background: var(--green-soft); color: var(--green); font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-align: left; text-transform: uppercase; }
+    .pm-table .pm-current { background: rgba(36, 75, 61, .06); }
+    .pm-yes { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--green); color: #fff; }
+    .pm-yes svg { width: 13px; height: 13px; }
+    .pm-no { color: #b5bbb5; font-weight: 700; }
+    .pm-unl { color: var(--green); font-size: 17px; font-weight: 800; line-height: 1; }
+    @media (max-width: 560px) {
+      .pm-table { min-width: 0; font-size: 12px; table-layout: fixed; }
+      .pm-table th, .pm-table td { padding: 7px 3px; }
+      .pm-table tbody th[scope=row], .pm-table thead th:first-child { width: 38%; min-width: 0; padding-left: 10px; font-size: 12px; line-height: 1.3; overflow-wrap: anywhere; }
+      .pm-table thead th { font-size: 10.5px; letter-spacing: 0; }
+      .pm-table thead th small { font-size: 9px; }
+      .pm-yes { width: 20px; height: 20px; }
+      .pm-soon { display: block; width: max-content; margin: 2px 0 0; }
+    }
+    .pm-soon { display: inline-block; margin-left: 4px; padding: 0 6px; border-radius: 8px; background: #fbf2d3; color: #7a5a10; font-size: 10px; font-style: normal; font-weight: 700; }
+    .plan-grid-4 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)) !important; }
+    .plan-limits { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin: 10px 0 4px; padding: 8px; border-radius: 10px; background: var(--green-soft); text-align: center; }
+    .plan-limits dt { color: var(--muted); font-size: 10.5px; font-weight: 700; }
+    .plan-limits dd { margin: 2px 0 0; font-size: 12.5px; font-weight: 800; overflow-wrap: anywhere; }
+    .plan-reco { background: #c48a1d !important; }
+    .plan-usage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; padding: 0 18px 18px; }
+    .plan-usage-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; }
+    .plan-usage-row i { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--green) var(--pct), #e5e8e2 var(--pct)); }
+    .plan-usage-row i.unlimited { background: linear-gradient(90deg, var(--green-soft), var(--green-soft)); }
+    .plan-usage-row.full b { color: var(--red); }
+    .plan-usage-row.full i { background: var(--red); }
+    .plan-locked { display: flex; gap: 16px; align-items: flex-start; padding: 20px; }
+    .plan-locked-icon { display: grid; place-items: center; flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px; background: var(--green-soft); color: var(--green); }
+    .plan-locked-icon svg { width: 22px; height: 22px; }
+    .plan-locked .card-caption { margin-top: 8px; line-height: 1.6; }
+    .plan-tag { margin-left: auto; padding: 1px 6px; border-radius: 8px; background: #fbf2d3; color: #7a5a10; font-size: 10px; font-style: normal; font-weight: 800; letter-spacing: .03em; }
+    .plan-locked-nav { opacity: .72; }
+    .plan-test select { min-height: 26px; padding: 0 4px; border: 1px solid rgba(255, 255, 255, .45); border-radius: 8px; background: rgba(20, 35, 27, .45); color: #fff; font-size: 11px; }
     .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
     .plan-card { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 20px; }
     .plan-card h2 { margin: 0; font-size: 18px; }
@@ -3488,6 +3529,9 @@
   
   
   
+  
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3576,6 +3620,11 @@ html.dark .remove-property-section { border: 1px solid #4d3d3a; background: #2b1
 html.dark .danger-btn { border: 1px solid #694e4a; color: #d8a59e; background: #1c1c1c; }
 html.dark .photo-thumb { background: #252525; }
 html.dark .pro-hint { color: #d7c7b1; background: #312813; }
+html.dark .pm-yes { background: var(--green-solid); }
+html.dark .pm-soon { background: #39321a; color: #edd9ab; }
+html.dark .plan-usage-row i { background: linear-gradient(90deg, var(--green-solid) var(--pct), #2a2d28 var(--pct)); }
+html.dark .plan-usage-row.full i { background: var(--red-solid); }
+html.dark .plan-tag { background: #39321a; color: #edd9ab; }
 html.dark .plan-card.highlight { box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.82); }
 html.dark .plan-card.current { background: #1f251a; }
 html.dark .plan-current-tag { color: #b5e4ca; background: #212e26; }
@@ -5609,7 +5658,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     }
     function runAutoTasks(announce) {
-      if (!autoTasks.enabled) return 0;
+      if (!autoTasks.enabled || !entitlements.can('automation_basic')) return 0;
       const today = new Date();
       const todayIso = localIsoDate(today);
       const dueDate = localIsoDate(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7));
@@ -5727,6 +5776,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       automation.log = [{ at: new Date().toISOString(), text }, ...automation.log].slice(0, 20);
     }
     function syncAutomation() {
+      if (!entitlements.can('automation_basic')) return 0;
       const today = localDateKey(new Date());
       let nextId = tasks.reduce((max, task) => Math.max(max, Number(task.id) || 0), Date.now());
       const added = [];
@@ -6005,12 +6055,81 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     })();
     let planOverride = null;
     try { planOverride = SHOW_PLAN_TEST_SWITCH ? localStorage.getItem('stugliv-test-plan') || null : null; } catch (error) { planOverride = null; }
-    const currentPlan = () => {
-      if (planOverride === 'pro') return planById('pro');
-      if (planOverride === 'free') return PLANS.find((plan) => !plan.paid);
-      return proState && proState.orderId ? planById(proState.planId || 'pro') : PLANS.find((plan) => !plan.paid);
+    // ===== Tarife FREE / PLUS / PRO / ULTIMATE =====
+    // Preise, Grenzwerte und Funktionen kommen aus der Tabelle public.plans (Husora Cloud).
+    // Der Fallback unten enthält nur Grenzwerte/Funktionen für den Offline-Start – keine Preise.
+    // Freischaltungen werden ausschließlich über entitlements.can()/limit() geprüft.
+    const PLAN_ORDER = ['free', 'plus', 'pro', 'ultimate'];
+    const PLAN_BASE_FEATURES = ['calendar', 'tasks', 'inspection', 'seasons', 'costs_basic', 'emergency', 'bookings'];
+    const PLAN_PLUS_FEATURES = [...PLAN_BASE_FEATURES, 'repairs', 'renovations', 'contracts', 'meters', 'costs_annual', 'automation_basic', 'house_model', 'listing_import', 'invoice_ai', 'pdf_reports', 'ai_basic'];
+    const PLAN_PRO_FEATURES = [...PLAN_PLUS_FEATURES, 'service_portal', 'service_orders', 'repair_orders_auto', 'renovations_full', 'budget', 'automation_advanced', 'ai_advanced', 'cost_trends', 'annual_report', 'priority_support'];
+    const PLAN_FALLBACK = [
+      { id: 'free', name: 'FREE', limits: { properties: 1, users: 1, tasks_active: 5, service_partners: 2, documents: 25 }, features: PLAN_BASE_FEATURES },
+      { id: 'plus', name: 'PLUS', limits: { properties: 2, users: 2, tasks_active: 25, service_partners: 10, documents: 250 }, features: PLAN_PLUS_FEATURES },
+      { id: 'pro', name: 'PRO', limits: { properties: 5, users: 5, tasks_active: null, service_partners: null, documents: 2000 }, features: PLAN_PRO_FEATURES },
+      { id: 'ultimate', name: 'ULTIMATE', limits: { properties: 20, users: 10, tasks_active: null, service_partners: null, documents: null }, features: [...PLAN_PRO_FEATURES, 'automation_autonomous', 'maintenance_planning', 'partner_auto_assign', 'escalations', 'cost_forecast', 'budget_alerts', 'condition_score', 'portfolio', 'roles_advanced', 'activity_log'] }
+    ];
+    const FEATURE_LABELS = { automation_basic: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', contracts: 'Verträge & Fristen', meters: 'Zählerstände', house_model: 'Hausmodell', service_portal: 'Servicepartner-Portal', listing_import: 'Inseratimport', invoice_ai: 'Rechnungserkennung', costs_annual: 'Jahreskosten', pdf_reports: 'PDF-Berichte' };
+    const LIMIT_LABELS = { properties: ['Häuser', 'Haus', 'Häuser'], tasks_active: ['Aktive Aufgaben', 'aktive Aufgabe', 'aktive Aufgaben'], service_partners: ['Servicepartner', 'Servicepartner', 'Servicepartner'], documents: ['Dokumente', 'Dokument', 'Dokumente'], users: ['Benutzer', 'Benutzer', 'Benutzer'] };
+    const PLANS_CACHE_KEY = 'husora-plans';
+    const ORG_PLAN_KEY = 'husora-org-plan';
+    let planCatalog = null;
+    let orgPlan = null;
+    try { planCatalog = JSON.parse(localStorage.getItem(PLANS_CACHE_KEY) || 'null'); } catch (error) { planCatalog = null; }
+    try { orgPlan = JSON.parse(localStorage.getItem(ORG_PLAN_KEY) || 'null'); } catch (error) { orgPlan = null; }
+    const planList = () => (Array.isArray(planCatalog) && planCatalog.length ? planCatalog : PLAN_FALLBACK);
+    const planDef = (id) => planList().find((plan) => plan.id === id) || PLAN_FALLBACK.find((plan) => plan.id === id) || PLAN_FALLBACK[0];
+    function currentPlanId() {
+      if (PLAN_ORDER.includes(planOverride)) return planOverride;
+      try { if (cloudReady() && orgPlan?.organization_id === cloud.org?.id && PLAN_ORDER.includes(orgPlan.plan_id)) return orgPlan.plan_id; } catch (error) { /* Cloud-Modul noch nicht geladen */ }
+      if (proState && proState.orderId) return 'pro'; // früher gekaufte Pro-Lizenz bleibt gültig
+      return 'free';
+    }
+    const entitlements = {
+      plan: () => planDef(currentPlanId()),
+      can: (feature) => (entitlements.plan().features || []).includes(feature),
+      limit: (key) => { const value = (entitlements.plan().limits || {})[key]; return value === null || value === undefined ? Infinity : Number(value); },
+      within: (key, count) => count < entitlements.limit(key),
+      minPlanFor: (feature) => planDef(PLAN_ORDER.find((id) => (planDef(id).features || []).includes(feature)) || 'ultimate'),
+      minPlanForLimit: (key, count) => planDef(PLAN_ORDER.find((id) => { const v = (planDef(id).limits || {})[key]; return v === null || v === undefined || count < Number(v); }) || 'ultimate')
     };
-    const isPro = () => currentPlan().paid;
+    // Hinweis, wenn eine Funktion oder ein Limit einen höheren Tarif braucht
+    function upgradeNotice(feature, { limitKey = '', count = 0 } = {}) {
+      const plan = limitKey ? entitlements.minPlanForLimit(limitKey, count) : entitlements.minPlanFor(feature);
+      const [, one, many] = LIMIT_LABELS[limitKey] || [];
+      const max = limitKey ? entitlements.limit(limitKey) : 0;
+      showToast(limitKey ? `Dein Tarif ${entitlements.plan().name} umfasst ${max} ${max === 1 ? one : many}. Für mehr wechsle zu ${plan.name} – vorhandene Daten bleiben erhalten.` : `${FEATURE_LABELS[feature] || 'Diese Funktion'} ist ab dem Tarif ${plan.name} verfügbar.`);
+    }
+    // Tarife aus der Cloud laden (öffentlich lesbar, auch ohne Anmeldung)
+    async function loadPlanCatalog() {
+      try {
+        const base = cloud.url || CLOUD_DEFAULT.url;
+        const key = cloud.key || CLOUD_DEFAULT.key;
+        const response = await fetch(`${base.replace(/\/$/, '')}/rest/v1/plans?select=id,name,tagline,price_monthly_cents,currency,sort,highlight,limits,features,highlights&order=sort.asc`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
+        if (!response.ok) return;
+        const rows = await response.json();
+        if (!Array.isArray(rows) || !rows.length) return;
+        const changed = JSON.stringify(rows) !== JSON.stringify(planCatalog);
+        planCatalog = rows;
+        try { localStorage.setItem(PLANS_CACHE_KEY, JSON.stringify(rows)); } catch (error) { /* optional */ }
+        if (changed && currentPage === 'plans') render();
+      } catch (error) { /* offline: Fallback bzw. letzter Stand */ }
+    }
+    // Tarif der eigenen Organisation (serverseitig ermittelt, nicht vom Browser behauptet)
+    async function loadOrgPlan() {
+      if (!cloudReady()) return;
+      try {
+        const result = await cloudFetch('/rest/v1/rpc/my_plan', { method: 'POST', body: { p_organization_id: cloud.org.id } });
+        const next = { ...result, organization_id: cloud.org.id, loadedAt: new Date().toISOString() };
+        const changed = next.plan_id !== orgPlan?.plan_id || next.organization_id !== orgPlan?.organization_id;
+        orgPlan = next;
+        try { localStorage.setItem(ORG_PLAN_KEY, JSON.stringify(next)); } catch (error) { /* optional */ }
+        if (changed) render();
+      } catch (error) { /* offline: letzter bekannter Tarif */ }
+    }
+    // Kompatibilität für ältere Stellen
+    const currentPlan = () => { const plan = entitlements.plan(); return { ...plan, paid: plan.id !== 'free', houseLimit: entitlements.limit('properties') }; };
+    const isPro = () => currentPlanId() !== 'free';
     try {
       const savedProfile = localStorage.getItem('stugliv-profile');
       if (savedProfile) profileData = { ...profileData, ...JSON.parse(savedProfile) };
@@ -6155,10 +6274,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const info = document.getElementById('plan-info');
       if (!info) return;
       const planButton = isPro()
-        ? `<button type="button" class="plan-pro" data-page="plans" title="Versionen ansehen">${escapeHtml(currentPlan().name)}</button>`
-        : '<button type="button" class="plan-buy" data-page="plans">Pro Version erwerben</button>';
+        ? `<button type="button" class="plan-pro" data-page="plans" title="Tarif ansehen">${escapeHtml(entitlements.plan().name)}</button>`
+        : '<button type="button" class="plan-buy" data-page="plans">Upgrade</button>';
       const testSwitch = SHOW_PLAN_TEST_SWITCH
-        ? `<label class="plan-test" title="Nur zum Testen: zwischen Husora Free und Pro wechseln"><span>Free</span><input type="checkbox" role="switch" id="plan-test-toggle" aria-label="Testschalter: zwischen kostenloser Version und Pro wechseln" ${isPro() ? 'checked' : ''}><span class="plan-test-track" aria-hidden="true"></span><span>Pro</span></label>`
+        ? `<label class="plan-test" title="Nur zum Testen: Tarif umschalten"><span>Test</span><select id="plan-test-toggle" aria-label="Testschalter: Tarif wählen">${['', ...PLAN_ORDER].map((id) => `<option value="${id}" ${(planOverride || '') === id ? 'selected' : ''}>${id ? planDef(id).name : 'echt'}</option>`).join('')}</select></label>`
         : '';
       info.innerHTML = planButton + testSwitch;
     }
@@ -6299,7 +6418,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     function openAddChoice() {
       if (!canAddProperty()) {
-        showToast(`Für mehr als ${FREE_HOUSE_LIMIT} Ferienhaus brauchst du Husora Pro – du kannst es unter „Versionen“ erwerben.`);
+        upgradeNotice('', { limitKey: 'properties', count: properties.length });
         currentPage = 'plans';
         render();
         return;
@@ -6310,7 +6429,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     function closeAddChoice() { document.getElementById('add-choice-modal').classList.remove('open'); }
     function openPropertyModal(property = null) {
       if (!property && !canAddProperty()) {
-        showToast(`Für mehr als ${FREE_HOUSE_LIMIT} Ferienhaus brauchst du Husora Pro – du kannst es unter „Versionen“ erwerben.`);
+        upgradeNotice('', { limitKey: 'properties', count: properties.length });
         currentPage = 'plans';
         render();
         return;
@@ -6812,36 +6931,92 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <div class="form-actions"><button type="button" class="secondary-btn" data-action="cancel-booking-edit">Zur Buchungsübersicht</button></div>`;
     }
     function proProfileCard() {
-      const plan = currentPlan();
-      return `<section class="card profile-form pro-profile-card"><div class="card-head"><div><h2 class="card-title">Deine Version</h2><p class="card-caption">${isPro() ? `${escapeHtml(plan.name)} ist freigeschaltet.` : `Du nutzt Husora Free – kostenlos, mit ${FREE_HOUSE_LIMIT} Ferienhaus.`}</p></div>${isPro() ? `<span class="plan-pro" style="color:#5a4310;background:#fbeec4;box-shadow:inset 0 0 0 1px #d9b24c">${escapeHtml(plan.name)}</span>` : '<span class="pro-badge off">Kostenlose Version</span>'}</div>
-        <div style="padding:4px 18px 18px"><button type="button" class="secondary-btn" data-page="plans">Versionen ansehen</button></div></section>`;
+      const plan = entitlements.plan();
+      return `<section class="card profile-form pro-profile-card"><div class="card-head"><div><h2 class="card-title">Dein Tarif</h2><p class="card-caption">Husora ${escapeHtml(plan.name)}${plan.tagline ? ` – ${escapeHtml(plan.tagline)}` : ''}.</p></div><span class="plan-pro">${escapeHtml(plan.name)}</span></div>
+        <div style="padding:4px 18px 18px"><button type="button" class="secondary-btn" data-page="plans">Tarife vergleichen</button></div></section>`;
+    }
+    // Bereiche, die einen bestimmten Tarif brauchen
+    const PAGE_GATES = { automation: 'automation_basic', repairs: 'repairs', renovations: 'renovations', contracts: 'contracts', meters: 'meters', house3d: 'house_model', partnerHub: 'service_portal' };
+    const PAGE_TITLES = { automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', contracts: 'Verträge & Fristen', meters: 'Zählerstände', house3d: 'Hausmodell', partnerHub: 'Partner-Portal' };
+    function lockedPageHtml(page) {
+      const feature = PAGE_GATES[page];
+      const plan = entitlements.minPlanFor(feature);
+      return `<div class="welcome"><div><p class="eyebrow">Ab Tarif ${escapeHtml(plan.name)}</p><h1>${escapeHtml(PAGE_TITLES[page] || '')}</h1><p class="subtitle">Dieser Bereich ist in deinem Tarif ${escapeHtml(entitlements.plan().name)} nicht enthalten.</p></div></div>
+        <section class="card plan-locked"><span class="plan-locked-icon">${icon('shield')}</span><div><h2 class="card-title">${escapeHtml(PAGE_TITLES[page] || '')} ist ab ${escapeHtml(plan.name)} verfügbar</h2>
+        <p class="card-caption">${(plan.highlights || []).slice(0, 4).map((line) => `• ${escapeHtml(line)}`).join('<br>') || 'Mehr Funktionen für deine Ferienhäuser.'}</p>
+        <p class="settings-hint">Bereits erfasste Daten bleiben erhalten und sind nach dem Wechsel sofort wieder da.</p>
+        <div class="settings-actions"><button type="button" class="primary-btn" data-page="plans">Tarife vergleichen</button></div></div></section>
+        ${!cloudReady() ? `<p class="settings-hint" style="margin:14px 0 8px"><strong>Du hast bereits einen größeren Tarif?</strong> Melde dich mit deinem Husora-Konto an – dein Tarif wird automatisch erkannt.</p>${cloudCardHtml()}` : ''}`;
+    }
+    function markLockedNav() {
+      document.querySelectorAll('.nav [data-page], .top-tabs [data-page], .tab-bar [data-page]').forEach((button) => {
+        const feature = PAGE_GATES[button.dataset.page];
+        const locked = Boolean(feature) && !entitlements.can(feature);
+        button.classList.toggle('plan-locked-nav', locked);
+        let tag = button.querySelector('.plan-tag');
+        if (!locked) { tag?.remove(); return; }
+        if (!tag) { tag = document.createElement('i'); tag.className = 'plan-tag'; button.appendChild(tag); }
+        tag.textContent = entitlements.minPlanFor(feature).name;
+      });
     }
     function plansPage() {
-      const current = currentPlan();
-      const dateText = (iso) => fmtDateFull(new Date(iso));
-      const billingText = (plan) => (plan.billing === 'once' ? 'einmalig · inkl. gesetzlicher MwSt.' : '');
-      const cards = PLANS.map((plan) => {
-        const isCurrent = plan.id === current.id;
-        const action = isCurrent
-          ? '<button type="button" class="secondary-btn" disabled>Aktuelle Version</button>'
-          : plan.paid
-            ? `<button type="button" class="primary-btn" data-action="open-pro" data-plan="${escapeHtml(plan.id)}">${escapeHtml(plan.name)} erwerben</button>`
-            : '<button type="button" class="secondary-btn" disabled>Im Funktionsumfang enthalten</button>';
-        return `<article class="card plan-card ${plan.highlight ? 'highlight' : ''} ${isCurrent ? 'current' : ''}">${isCurrent ? '<span class="plan-current-tag">Deine Version</span>' : ''}<h2>${escapeHtml(plan.name)}</h2><p class="plan-tagline">${escapeHtml(plan.tagline)}</p>
-          <div class="plan-price"><strong>${plan.paid ? escapeHtml(formatMoney(plan.price)) : 'Kostenlos'}</strong><span>${escapeHtml(billingText(plan))}</span></div>
-          <ul class="pro-features">${plan.features.map((feature) => `<li>${escapeHtml(feature)}</li>`).join('')}</ul><div class="plan-action">${action}</div></article>`;
+      const currentId = currentPlanId();
+      const loaded = Array.isArray(planCatalog) && planCatalog.length;
+      const price = (plan) => (!loaded ? '–' : !plan.price_monthly_cents ? 'Kostenlos' : `${(plan.price_monthly_cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2 })} ${plan.currency === 'EUR' ? '€' : plan.currency}`);
+      const limitText = (plan, key) => { const v = (plan.limits || {})[key]; return v === null || v === undefined ? 'unbegrenzt' : Number(v).toLocaleString('de-DE'); };
+      const supportMail = (plan) => `mailto:${encodeURIComponent(LEGAL_INFO.supportEmail || 'info@husora.de')}?subject=${encodeURIComponent(`Tarifwechsel zu ${plan.name}`)}&body=${encodeURIComponent(`Hallo Husora-Team,\n\nich möchte zum Tarif ${plan.name} wechseln.\n\nE-Mail: ${cloud.session?.email || profileData.email || ''}\nOrganisation: ${cloud.org?.name || ''} (${cloud.org?.id || 'noch nicht in der Cloud'})\nAktueller Tarif: ${entitlements.plan().name}\n\nViele Grüße\n${profileData.name && profileData.name !== 'Max Mustermann' ? profileData.name : ''}`)}`;
+      const cards = PLAN_ORDER.map((id) => planDef(id)).map((plan) => {
+        const isCurrent = plan.id === currentId;
+        const higher = PLAN_ORDER.indexOf(plan.id) > PLAN_ORDER.indexOf(currentId);
+        const action = isCurrent ? '<button type="button" class="secondary-btn" disabled>Dein Tarif</button>'
+          : `<a class="${higher ? 'primary-btn' : 'secondary-btn'}" href="${supportMail(plan)}">${higher ? `Zu ${escapeHtml(plan.name)} wechseln` : `Zu ${escapeHtml(plan.name)} wechseln`}</a>`;
+        return `<article class="card plan-card ${plan.highlight ? 'highlight' : ''} ${isCurrent ? 'current' : ''}">${isCurrent ? '<span class="plan-current-tag">Dein Tarif</span>' : plan.highlight ? '<span class="plan-current-tag plan-reco">Beliebt</span>' : ''}<h2>${escapeHtml(plan.name)}</h2><p class="plan-tagline">${escapeHtml(plan.tagline || '')}</p>
+          <div class="plan-price"><strong>${escapeHtml(price(plan))}</strong><span>${loaded && plan.price_monthly_cents ? 'pro Monat · inkl. MwSt.' : loaded ? 'für immer' : 'Preise werden geladen …'}</span></div>
+          <dl class="plan-limits"><div><dt>Häuser</dt><dd>${limitText(plan, 'properties')}</dd></div><div><dt>Benutzer</dt><dd>${limitText(plan, 'users')}</dd></div><div><dt>Aufgaben</dt><dd>${limitText(plan, 'tasks_active')}</dd></div><div><dt>Partner</dt><dd>${limitText(plan, 'service_partners')}</dd></div><div><dt>Dokumente</dt><dd>${limitText(plan, 'documents')}</dd></div></dl>
+          <ul class="pro-features">${(plan.highlights || []).map((feature) => `<li>${escapeHtml(feature)}</li>`).join('')}</ul><div class="plan-action">${action}</div></article>`;
       }).join('');
-      const license = isPro() ? `<section class="card plan-license"><div class="card-head"><div><h2 class="card-title">Deine Lizenz</h2><p class="card-caption">${escapeHtml(current.name)} · ${properties.length} von ${Math.max(properties.length, Number(profileData.houseCount) || 1)} Ferienhäusern angelegt</p></div></div>
-        <dl class="pro-summary" style="padding:4px 18px 18px">${!proState ? '<div><dt>Status</dt><dd>Testmodus – Pro über den Schalter aktiviert</dd></div>' : proState.legacy ? '<div><dt>Status</dt><dd>Freigeschaltet (bestehende Nutzung)</dd></div>' : `<div><dt>Bestellnummer</dt><dd>${escapeHtml(proState.orderId)}</dd></div><div><dt>Gekauft am</dt><dd>${escapeHtml(dateText(proState.purchasedAt))}</dd></div><div><dt>Betrag</dt><dd>${escapeHtml(formatMoney(proState.amount || current.price))}</dd></div>${proState.testMode ? '<div><dt>Modus</dt><dd>Test (kein echtes Geld)</dd></div>' : ''}`}</dl></section>` : '';
-      return `<div class="welcome"><div><p class="eyebrow">Husora</p><h1>Versionen</h1><p class="subtitle">Wähle die Version, die zu dir und deinen Ferienhäusern passt.</p></div></div>
-        <div class="plan-grid">${cards}<article class="card plan-card plan-soon"><h2>Weitere Versionen</h2><p class="plan-tagline">Folgen später. Hier erscheinen neue Angebote, sobald sie verfügbar sind.</p></article></div>${license}`;
+      const activeTasks = tasks.filter((task) => !task.done && taskStatus(task) !== 'Erledigt').length;
+      const usage = [['properties', properties.length], ['tasks_active', activeTasks], ['service_partners', assignedProviderCount()], ['documents', documents.length]].map(([key, used]) => {
+        const max = entitlements.limit(key);
+        const pct = Number.isFinite(max) ? Math.min(100, Math.round((used / Math.max(1, max)) * 100)) : 0;
+        return `<div class="plan-usage-row ${Number.isFinite(max) && used >= max ? 'full' : ''}"><span>${LIMIT_LABELS[key][0]}</span><b>${used} / ${Number.isFinite(max) ? max : '∞'}</b>${Number.isFinite(max) ? `<i style="--pct:${pct}%"></i>` : '<i class="unlimited"></i>'}</div>`;
+      }).join('');
+      const status = orgPlan && cloudReady() && orgPlan.organization_id === cloud.org?.id ? (orgPlan.status === 'none' ? 'ohne Abo (kostenlos)' : `${orgPlan.status === 'active' ? 'aktiv' : orgPlan.status === 'trialing' ? 'Testphase' : orgPlan.status}${orgPlan.current_period_end ? ` · bis ${fmtDateFull(new Date(orgPlan.current_period_end))}` : ''}${orgPlan.cancel_at_period_end ? ' · gekündigt zum Laufzeitende' : ''}`) : cloudReady() ? 'wird geladen …' : 'ohne Cloud-Anmeldung – Tarif gilt für dieses Gerät';
+      return `<div class="welcome"><div><p class="eyebrow">Husora</p><h1>Versionen</h1><p class="subtitle">FREE, PLUS, PRO oder ULTIMATE – wähle den Umfang, der zu deinen Ferienhäusern passt. Monatlich kündbar.</p></div></div>
+        <section class="card plan-usage"><div class="card-head"><div><h2 class="card-title">Dein Tarif: ${escapeHtml(entitlements.plan().name)}</h2><p class="card-caption">${escapeHtml(status)}${proState?.orderId && currentId === 'pro' ? ' · frühere Pro-Lizenz' : ''}</p></div></div><div class="plan-usage-grid">${usage}</div></section>
+        <div class="plan-grid plan-grid-4">${cards}</div>
+        ${planMatrixHtml(currentId)}
+        <section class="card plan-note"><p class="settings-hint" style="margin:0"><strong>Wechsel:</strong> Online-Bezahlung (Stripe) ist vorbereitet. Bis sie freigeschaltet ist, schalten wir deinen Tarif nach deiner Anfrage per E-Mail frei – in der Regel am selben Tag. Beim Wechsel in einen kleineren Tarif bleiben alle Daten erhalten; nur neue Einträge über dem Limit sind dann gesperrt.</p></section>`;
     }
+    // Vergleichstabelle: alle Tarife mit Häkchen je Eigenschaft
+    const PLAN_MATRIX = [
+      ['Grenzen', [['limit:properties', 'Häuser'], ['limit:users', 'Benutzer'], ['limit:tasks_active', 'Aktive Aufgaben'], ['limit:service_partners', 'Servicepartner'], ['limit:documents', 'Dokumente'], ['limit:inspection_reports_month', 'Kontrollberichte pro Monat'], ['limit:listing_imports_month', 'Inseratimporte pro Monat'], ['limit:invoice_analyses_month', 'Rechnungsanalysen pro Monat']]],
+      ['Grundfunktionen', [['calendar', 'Kalender'], ['tasks', 'Serviceaufgaben'], ['inspection', 'Hauskontrolle'], ['seasons', 'Saison-Checklisten'], ['bookings', 'Buchungen & Eigennutzung'], ['costs_basic', 'Kostenübersicht'], ['emergency', 'Notfall & Zugang']]],
+      ['Haus & Verwaltung', [['repairs', 'Reparatur & Instandhaltung'], ['renovations', 'Sanierungsprojekte'], ['renovations_full', 'Vollständiges Sanierungsmanagement'], ['budget', 'Budgetverwaltung'], ['contracts', 'Verträge & Fristen'], ['meters', 'Zählerstände'], ['costs_annual', 'Jahreskosten'], ['house_model', 'Hausmodell']]],
+      ['Servicepartner', [['service_portal', 'Servicepartner-Portal mit Messenger'], ['service_orders', 'Serviceaufträge senden'], ['repair_orders_auto', 'Automatische Reparaturaufträge'], ['partner_auto_assign', 'Automatische Servicepartner-Zuordnung']]],
+      ['Automatisierung', [['automation_basic', 'Automatische Aufgaben (Basis)'], ['automation_advanced', 'Erweiterte Automatisierung'], ['automation_autonomous', 'Automatische Aufgabenplanung'], ['maintenance_planning', 'Intelligente Wartungsplanung & -warnungen'], ['escalations', 'Automatische Eskalationen']]],
+      ['Import, KI & Berichte', [['listing_import', 'Inseratimport'], ['invoice_ai', 'Rechnungserkennung'], ['ai_basic', 'KI-Textanalyse'], ['ai_advanced', 'Erweiterte KI'], ['pdf_reports', 'PDF-Berichte'], ['cost_trends', 'Kostenentwicklung'], ['annual_report', 'Jahresauswertung & -bericht']]],
+      ['Portfolio & Profis', [['cost_forecast', 'Kostenprognosen'], ['budget_alerts', 'Budgetwarnungen'], ['condition_score', 'Hauszustands-Score'], ['portfolio', 'Portfolioübersicht'], ['roles_advanced', 'Erweiterte Rollen & Rechte'], ['activity_log', 'Aktivitätsprotokoll'], ['priority_support', 'Prioritätssupport']]]
+    ];
+    // Funktionen, die im Tarif enthalten sind, in der App aber noch gebaut werden
+    const PLAN_PLANNED = new Set(['automation_advanced', 'automation_autonomous', 'maintenance_planning', 'escalations', 'ai_advanced', 'cost_forecast', 'budget_alerts', 'condition_score', 'portfolio', 'roles_advanced', 'activity_log']);
+    function planMatrixHtml(currentId) {
+      const plans = PLAN_ORDER.map((id) => planDef(id));
+      const cell = (plan, key) => {
+        if (key.startsWith('limit:')) { const v = (plan.limits || {})[key.slice(6)]; return v === null || v === undefined ? '<span class="pm-unl" title="unbegrenzt" aria-label="unbegrenzt">∞</span>' : Number(v) === 0 ? '<span class="pm-no" aria-label="nicht enthalten">–</span>' : `<b>${Number(v).toLocaleString('de-DE')}</b>`; }
+        return (plan.features || []).includes(key) ? `<span class="pm-yes" aria-label="enthalten">${icon('check')}</span>` : '<span class="pm-no" aria-label="nicht enthalten">–</span>';
+      };
+      return `<section class="card plan-matrix"><div class="card-head"><div><h2 class="card-title">Alle Tarife im Vergleich</h2><p class="card-caption">Häkchen = enthalten · ∞ = unbegrenzt · „in Vorbereitung“ = enthalten, Funktion folgt</p></div></div>
+        <div class="pm-scroll"><table class="pm-table"><thead><tr><th scope="col">Eigenschaft</th>${plans.map((plan) => `<th scope="col" class="${plan.id === currentId ? 'pm-current' : ''}">${escapeHtml(plan.name)}${plan.id === currentId ? '<small>Dein Tarif</small>' : ''}</th>`).join('')}</tr></thead>
+        <tbody>${PLAN_MATRIX.map(([group, rows]) => `<tr class="pm-group"><th scope="rowgroup" colspan="${plans.length + 1}">${escapeHtml(group)}</th></tr>${rows.map(([key, label]) => `<tr><th scope="row">${escapeHtml(label)}${PLAN_PLANNED.has(key) ? ' <em class="pm-soon">in Vorbereitung</em>' : ''}</th>${plans.map((plan) => `<td class="${plan.id === currentId ? 'pm-current' : ''}">${cell(plan, key)}</td>`).join('')}</tr>`).join('')}`).join('')}</tbody></table></div></section>`;
+    }
+    const assignedProviderCount = () => new Set(Object.values(servicePartnerAssignments || {}).flat().filter((id) => providerById(id))).size;
     // Kacheln der Startseite: zu jedem Menüpunkt eine Kachel, im Profil frei wählbar (höchstens 10).
     const DASHBOARD_TILES = [
       ['properties', 'Mein Haus / Ferienhäuser'], ['tasks', 'Serviceaufgaben'], ['bookings', 'Buchungen', () => bookingsEnabled(), 'nur bei Vermietung'], ['calendar', 'Kalender'],
       ['inspections', 'Hauskontrolle'], ['repairs', 'Reparatur & Instandhaltung'], ['renovations', 'Sanierung & Renovierung'], ['partners', 'Zugeordnete Servicepartner'],
       ['providers', 'Servicepartner finden'], ['documents', 'Dokumente'], ['costs', 'Kosten'], ['automation', 'Automatisierung'],
-      ['house3d', 'Hausmodell (3D)', () => isPro(), 'nur mit Pro'], ['plans', 'Versionen'], ['profile', 'Benutzerprofil']
+      ['house3d', 'Hausmodell (3D)', () => entitlements.can('house_model'), 'ab PLUS'], ['plans', 'Versionen'], ['profile', 'Benutzerprofil']
     ];
     const DASHBOARD_TILE_LIMIT = 10;
     const DEFAULT_DASHBOARD_TILES = ['properties', 'tasks', 'bookings', 'inspections', 'partners', 'costs', 'automation', 'house3d'];
@@ -7185,14 +7360,15 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     const renovationsPage = () => repairPlanningPage('renovations');
     function houseSettingsCard() {
       const desired = Math.max(1, Math.floor(Number(profileData.desiredHouseCount || profileData.houseCount)) || 1);
-      const needsPro = !isPro() && desired > FREE_HOUSE_LIMIT;
-      return `<section class="card house-settings-card"><div class="card-head"><div><h2 class="card-title">Nutzung & Anzahl</h2><p class="card-caption">${isPro() ? 'Husora Pro ist aktiv – du kannst mehrere Ferienhäuser verwalten.' : `Kostenlos ist ${FREE_HOUSE_LIMIT} Ferienhaus enthalten. Für mehr Häuser brauchst du Husora Pro.`}</p></div></div>
+      const maxHouses = entitlements.limit('properties');
+      const needsPro = desired > maxHouses;
+      return `<section class="card house-settings-card"><div class="card-head"><div><h2 class="card-title">Nutzung & Anzahl</h2><p class="card-caption">Dein Tarif ${escapeHtml(entitlements.plan().name)} umfasst ${Number.isFinite(maxHouses) ? `${maxHouses} ${maxHouses === 1 ? 'Ferienhaus' : 'Ferienhäuser'}` : 'beliebig viele Ferienhäuser'}.</p></div></div>
         <form id="house-settings-form"><div class="house-settings-grid">
           <label><span class="form-label">Nutzung der Immobilie</span><select class="form-control" name="usage"><option value="self" ${profileData.usage === 'self' ? 'selected' : ''}>Nur Eigennutzung</option><option value="rental" ${profileData.usage !== 'self' ? 'selected' : ''}>Eigennutzung und Vermietung</option></select></label>
           <label><span class="form-label">Anzahl Ferienhäuser</span><input class="form-control" name="houseCount" id="house-count-input" type="number" min="1" max="50" required value="${desired}"></label>
         </div>
-        <p class="pro-hint" id="pro-hint" ${needsPro ? '' : 'hidden'}>Für mehr als ${FREE_HOUSE_LIMIT} Ferienhaus brauchst du Husora Pro. Alle Versionen findest du unter <button type="button" class="text-btn" data-page="plans" style="padding:0">Versionen</button>.</p>
-        <div class="house-settings-actions"><button type="submit" class="secondary-btn">Übernehmen</button><button type="button" class="primary-btn" id="buy-pro-btn" data-action="open-pro" data-plan="pro" ${needsPro ? '' : 'hidden'}>Husora Pro erwerben</button></div></form></section>`;
+        <p class="pro-hint" id="pro-hint" ${needsPro ? '' : 'hidden'}>Für mehr Ferienhäuser brauchst du einen größeren Tarif (PLUS: 2, PRO: 5, ULTIMATE: 20).</p>
+        <div class="house-settings-actions"><button type="submit" class="secondary-btn">Übernehmen</button><button type="button" class="primary-btn" id="buy-pro-btn" data-page="plans" ${needsPro ? '' : 'hidden'}>Tarife vergleichen</button></div></form></section>`;
     }
     // Status eines Hauses auf einen Blick: Belegung, Aufgaben, Hauskontrolle, Mängel, Saison und Kosten.
     function houseStatus(property) {
@@ -8257,6 +8433,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       form.elements.note.value = form.elements.note.value ? `${reference} · ${form.elements.note.value}` : reference;
     }
     async function openInvoiceModal({ doc = null, expense = null, propertyId = documentsProperty } = {}) {
+      if (doc && !expense && !entitlements.can('invoice_ai')) { upgradeNotice('invoice_ai'); return; }
       const form = document.getElementById('invoice-form');
       form.reset();
       invoiceDraft = { docId: doc?.id || '', expenseId: expense?.id || '' };
@@ -8317,6 +8494,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
       const added = [];
       for (const file of files) {
+        if (!entitlements.within('documents', documents.length + added.length)) { upgradeNotice('', { limitKey: 'documents', count: documents.length + added.length }); break; }
         if (!allowedTypes.includes(file.type)) { showToast(`„${file.name}“: bitte PDF, JPG, PNG oder WebP verwenden.`); continue; }
         const isImage = file.type.startsWith('image/');
         if (!isImage && file.size > 1.5 * 1024 * 1024) { showToast(`„${file.name}“ ist größer als 1,5 MB.`); continue; }
@@ -10187,7 +10365,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       // Saison-Checklisten sind ein eigener Bereich; alte Verweise auf die Hauskontrolle führen dorthin.
       if (lastRenderedPage === 'seasons' && currentPage !== 'seasons' && SEASON_CHECKLISTS[inspectionView]) { lastSeasonView = inspectionView; inspectionView = 'absence'; }
       if (currentPage === 'inspections' && SEASON_CHECKLISTS[inspectionView]) currentPage = 'seasons';
-      document.querySelectorAll('[data-pro-only]').forEach((node) => { node.hidden = !isPro(); });
+      document.querySelectorAll('[data-pro-only]').forEach((node) => { node.hidden = !entitlements.can('house_model'); });
+      markLockedNav();
       const plannedCount = syncAutomation();
       if (plannedCount) setTimeout(() => {
         const toast = document.getElementById('toast');
@@ -10195,10 +10374,6 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const prefix = toast.classList.contains('show') ? `${toast.textContent} ` : '';
         showToast(`${prefix}${plannedCount} ${plannedCount === 1 ? 'Aufgabe' : 'Aufgaben'} automatisch geplant.`);
       }, 0);
-      if (currentPage === 'house3d' && !isPro()) {
-        showToast('Das 3D-Hausmodell ist Teil von Husora Pro.');
-        currentPage = 'plans';
-      }
       const pages = { dashboard, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
       const labels = { dashboard: 'Übersicht', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' };
       if (currentPage !== lastRenderedPage) {
@@ -10220,7 +10395,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       updateProfileSummary();
       updateNotifyBadge();
       renderTabbar();
-      pageContent.innerHTML = pages[currentPage]() + appFooterHtml();
+      pageContent.innerHTML = (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()) + appFooterHtml();
       ensureBackButton();
       if (currentPage === 'dashboard') { enhanceDashboardSections(); applySimpleHome(); }
       enhanceWorkPages();
@@ -10838,6 +11013,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const { property: propertyId, provider: providerId } = button.dataset;
         const currentAssignments = servicePartnerAssignments[propertyId] || [];
         const isAssigned = currentAssignments.includes(providerId);
+        const alreadyCounted = Object.values(servicePartnerAssignments || {}).flat().includes(providerId);
+        if (!isAssigned && !alreadyCounted && !entitlements.within('service_partners', assignedProviderCount())) { upgradeNotice('', { limitKey: 'service_partners', count: assignedProviderCount() }); return; }
         const nextMapping = {
           ...servicePartnerAssignments,
           [propertyId]: isAssigned
@@ -11596,11 +11773,11 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     });
     document.addEventListener('change', (event) => {
       if (event.target.id !== 'plan-test-toggle') return;
-      planOverride = event.target.checked ? 'pro' : 'free';
-      try { localStorage.setItem('stugliv-test-plan', planOverride); } catch (error) { console.error(error); }
+      planOverride = event.target.value || null;
+      try { if (planOverride) localStorage.setItem('stugliv-test-plan', planOverride); else localStorage.removeItem('stugliv-test-plan'); } catch (error) { console.error(error); }
       render();
       document.getElementById('plan-test-toggle')?.focus();
-      showToast(event.target.checked ? 'Testmodus: Husora Pro aktiv.' : 'Testmodus: Husora Free aktiv.');
+      showToast(planOverride ? `Testmodus: Tarif ${planDef(planOverride).name} aktiv.` : 'Testmodus aus – es gilt dein echter Tarif.');
     });
     document.getElementById('close-pro-modal').addEventListener('click', closeProModal);
     document.getElementById('pro-modal').addEventListener('click', (event) => {
@@ -11612,7 +11789,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     document.addEventListener('input', (event) => {
       if (event.target.id !== 'house-count-input') return;
       const count = Math.floor(Number(event.target.value)) || 1;
-      const needsPro = !isPro() && count > FREE_HOUSE_LIMIT;
+      const needsPro = count > entitlements.limit('properties');
       const hint = document.getElementById('pro-hint');
       const buy = document.getElementById('buy-pro-btn');
       if (hint) hint.hidden = !needsPro;
@@ -11626,9 +11803,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const requested = Math.min(50, Math.max(1, Math.floor(Number(formData.get('houseCount'))) || 1));
       const next = { ...profileData, usage };
       let message = 'Einstellungen wurden gespeichert.';
-      if (!isPro() && requested > FREE_HOUSE_LIMIT) {
+      if (requested > entitlements.limit('properties')) {
         next.desiredHouseCount = requested;
-        message = `Für ${requested} Ferienhäuser brauchst du Husora Pro. Deine Einstellung ist gemerkt.`;
+        message = `Für ${requested} Ferienhäuser brauchst du den Tarif ${entitlements.minPlanForLimit('properties', requested - 1).name}. Deine Einstellung ist gemerkt.`;
       } else {
         if (requested < properties.length && !window.confirm(`Mit ${requested} Ferienhaus/Ferienhäusern werden ${properties.length - requested} Haus/Häuser samt Daten gelöscht. Fortfahren?`)) return;
         next.houseCount = requested;
@@ -11650,6 +11827,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
       const isEditing = editingTaskId !== null;
+      const activeCount = tasks.filter((task) => !task.done && taskStatus(task) !== 'Erledigt').length;
+      if (!isEditing && !entitlements.within('tasks_active', activeCount)) { upgradeNotice('', { limitKey: 'tasks_active', count: activeCount }); return; }
       const previousTasks = tasks;
       const updatedTask = {
         ...(isEditing ? tasks.find((task) => task.id === editingTaskId) : {}),
@@ -12569,6 +12748,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (!choice) return;
       closeAddChoice();
       if (choice === 'manual') openPropertyModal();
+      else if (!entitlements.can('listing_import')) { upgradeNotice('listing_import'); openPropertyModal(); }
       else openImportModal();
     });
     document.getElementById('close-import-modal').addEventListener('click', closeImportModal);
@@ -15344,6 +15524,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (!row?.organization_id) throw new Error('Die Organisation konnte nicht angelegt werden.');
       cloud.org = { id: row.organization_id, name: row.name, role: row.role };
       persistCloud();
+      loadOrgPlan();
     }
     async function cloudSignIn(email, password) {
       let data;
@@ -17049,7 +17230,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return withdrawn;
     }
     async function ownerDispatchOrders({ providerId = '' } = {}) {
-      if (!cloudReady() || ppMode() === 'partner' || ownerSide.dispatching) return 0;
+      if (!cloudReady() || ppMode() === 'partner' || ownerSide.dispatching || !entitlements.can('service_portal')) return 0;
       const open = tasks.filter((t) => t.partnerId && (!providerId || t.partnerId === providerId) && !t.done && !t.selfService && taskStatus(t) !== 'Erledigt');
       ownerSide.dispatching = true;
       const org = cloud.org.id;
@@ -17181,6 +17362,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     async function commissionPartner(providerId, button) {
       const provider = providerById(providerId);
       if (!provider) return;
+      if (!entitlements.can('service_portal')) { upgradeNotice('service_portal'); return; }
       if (!cloudReady()) { showToast('Zum Beauftragen über das Partner-Portal melde dich mit dem Husora Cloud-Speicher an.'); currentPage = 'partnerHub'; render(); window.scrollTo(0, 0); return; }
       const label = button?.innerHTML;
       if (button) { button.disabled = true; button.textContent = 'Sende …'; }
@@ -17540,7 +17722,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     window.addEventListener('online', () => { if (currentPage === 'partnerHub') hubRefresh({ quiet: true }); });
     // ----- Nachrichten von Servicepartnern oben rechts in der Hauptleiste -----
     const msgTop = { seen: null, loading: false };
-    const msgActive = () => cloudReady() && ppMode() !== 'partner';
+    const msgActive = () => cloudReady() && ppMode() !== 'partner' && entitlements.can('service_portal');
     const msgIncoming = (m) => m.sender_user_id !== hubMyId();
     function msgUpdateBadge() {
       const wrap = document.getElementById('msg-wrap');
@@ -17580,7 +17762,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       msgTop.loading = true;
       try {
         // alle 2 Minuten vollständig abgleichen: Partner-Fortschritt (angenommen, erledigt) in die Aufgaben übernehmen
-        if (ownerSide.partners === null || Date.now() - (msgTop.fullAt || 0) > 120000) { await ownerLoadPartners(); msgTop.fullAt = Date.now(); }
+        if (ownerSide.partners === null || Date.now() - (msgTop.fullAt || 0) > 120000) { await ownerLoadPartners(); msgTop.fullAt = Date.now(); loadOrgPlan(); }
         else {
           ownerSide.messages = await cloudFetch(`/rest/v1/messages?organization_id=eq.${cloud.org.id}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`);
           const known = new Set([...(ownerSide.partners || []).filter((p) => p.partner_organization_id).map((p) => p.id), ...(ownerSide.orders || []).map((o) => o.id)]);
@@ -17611,6 +17793,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') msgPoll(); });
     setTimeout(msgPoll, 1500);
     if (ppMode() === 'partner') setTimeout(() => ppOpen('dashboard'), 0);
+    loadPlanCatalog();
+    setTimeout(loadOrgPlan, 600);
+    setInterval(() => { if (document.visibilityState === 'visible') loadOrgPlan(); }, 10 * 60 * 1000);
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
     if (isEuro()) refreshFxRate();
