@@ -16151,7 +16151,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const scroll = root.querySelector('.pp-main')?.scrollTop || 0;
       const org = ppOrg();
       const signedIn = cloudSignedIn();
-      const head = `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="settings" aria-label="Zurück zu den Einstellungen" title="Zurück zu den Einstellungen"><span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span><span class="pp-logo">${icon('gear')}</span><div><strong>${escapeHtml(org?.name || 'Husora für Servicepartner')}</strong><small>${org ? `${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())} · ${escapeHtml(cloud.session?.email || '')}` : 'Partner-Portal'}</small></div></button>
+      const head = `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="home" aria-label="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}" title="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}">${org ? '' : `<span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span>`}<span class="pp-logo">${icon(org ? 'home' : 'gear')}</span><div><strong>${escapeHtml(org?.name || 'Husora für Servicepartner')}</strong><small>${org ? `${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())} · ${escapeHtml(cloud.session?.email || '')}` : 'Partner-Portal'}</small></div></button>
         <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button>` : ''}<button type="button" class="pp-switch" data-pp-action="close">${icon('home')}<span>Hausbesitzer</span></button></div></header>`;
       let body;
       if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal arbeitet mit dem Husora-Cloud-Speicher.', `<div class="pp-actions" style="justify-content:center"><button type="button" class="primary-btn" data-pp-action="connect-default">Mit Husora verbinden</button></div>`);
@@ -16746,9 +16746,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       }
       const action = event.target.closest('[data-pp-action]');
       if (!action) return;
-      const a = action.dataset.ppAction;
+      let a = action.dataset.ppAction;
       const id = action.dataset.id;
       if (a === 'close') { ppClose(); return; }
+      // Symbol oben links: immer zum Start des Partner-Portals (vor der Einrichtung zurück zu den Einstellungen)
+      if (a === 'home') {
+        if (ppOrg() && cloudSignedIn()) { pp.view = 'dashboard'; pp.detail = null; pp.form = null; pp.prev = null; ppRender(); document.querySelector('.pp-main')?.scrollTo(0, 0); return; }
+        a = 'settings';
+      }
       if (a === 'settings') {
         ppClose();
         currentPage = 'settings'; settingsView = 'settings-data'; render(); window.scrollTo(0, 0);
