@@ -2340,12 +2340,16 @@
     .pp-pdf-pick > span { flex: 1; min-width: 0; }
     .pp-pdf-pick strong { display: block; font-size: 14px; }
     .pp-pdf-pick small { display: block; color: var(--muted); font-size: 12.5px; }
-    .pp-nav { display: flex; gap: 2px; overflow-x: auto; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); scrollbar-width: none; }
+    .pp-nav { display: flex; gap: 2px; overflow: hidden; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); scrollbar-width: none; }
     .pp-nav::-webkit-scrollbar { display: none; }
-    .pp-nav button { position: relative; display: flex; flex: 1 0 74px; flex-direction: column; align-items: center; gap: 3px; min-height: 52px; padding: 6px 4px; border: 0; border-radius: 11px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 650; cursor: pointer; }
+    .pp-nav button { position: relative; display: flex; flex: 1 1 0; min-width: 0; flex-direction: column; align-items: center; gap: 3px; min-height: 52px; padding: 6px 4px; border: 0; border-radius: 11px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 650; cursor: pointer; }
     .pp-nav button svg { width: 21px; height: 21px; }
     .pp-nav button.active { color: var(--green); background: var(--green-soft); }
-    .pp-dot { position: absolute; top: 3px; right: 16px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--red); color: #fff; font-size: 10.5px; line-height: 17px; }
+    .pp-nav button span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10.5px; letter-spacing: -.01em; }
+    .pp-nav button { padding-left: 1px; padding-right: 1px; }
+    .pp-nav .pp-nav-short { display: none; }
+    @media (max-width: 359px) { .pp-nav .pp-nav-long { display: none; } .pp-nav .pp-nav-short { display: block; } }
+    .pp-dot { position: absolute; top: 3px; right: calc(50% - 24px); min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--red); color: #fff; font-size: 10.5px; line-height: 17px; }
     .pp-hero { margin: 18px auto 16px; text-align: center; }
     .pp-hero svg { width: 42px; height: 42px; color: var(--green); }
     .pp-hero h1 { margin: 8px 0 6px; font-size: 22px; }
@@ -3434,6 +3438,9 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
+  
+  
   
   
   
@@ -15949,8 +15956,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     const PP_INSPECTION_STATUS = { scheduled: ['Geplant', 'amber'], in_progress: ['Läuft', 'blue'], completed: ['Abgeschlossen', 'done'], cancelled: ['Abgesagt', 'muted'] };
     const PP_INVOICE_STATUS = { draft: ['Entwurf', 'muted'], received: ['Eingereicht', 'amber'], approved: ['Freigegeben', 'green'], paid: ['Bezahlt', 'done'], overdue: ['Überfällig', 'red'], cancelled: ['Storniert', 'muted'] };
     const PP_QUOTE_STATUS = { requested: ['Angefragt', 'amber'], received: ['Eingereicht', 'amber'], approved: ['Angenommen', 'done'], rejected: ['Abgelehnt', 'red'], expired: ['Abgelaufen', 'muted'] };
-    const PP_NAV = [['dashboard', 'Start', 'home'], ['orders', 'Aufträge', 'task'], ['customers', 'Kunden & Objekte', 'property'], ['calendar', 'Kalender', 'calendar'], ['inspections', 'Kontrollen', 'inspection'], ['messages', 'Nachrichten', 'note'], ['documents', 'Dokumente', 'document'], ['more', 'Mehr', 'menu']];
-    const PP_MORE_VIEWS = ['finance', 'services', 'team', 'company'];
+    // Untere Leiste: genau fünf Symbole – alles Weitere unter „Mehr“
+    const PP_NAV = [['dashboard', 'Start', 'home'], ['orders', 'Aufträge', 'task'], ['calendar', 'Kalender', 'calendar'], ['messages', 'Nachrichten', 'note', 'Chat'], ['more', 'Mehr', 'menu']];
+    const PP_MORE_VIEWS = ['customers', 'inspections', 'documents', 'finance', 'services', 'team', 'company'];
     const pp = { open: false, view: 'dashboard', detail: null, filter: 'active', busy: '', error: '', notice: '', ctx: null, data: null, loadedAt: '', thumbs: {}, form: null };
     try { const cached = JSON.parse(localStorage.getItem(PP_CACHE_KEY) || 'null'); if (cached?.ctx) Object.assign(pp, { ctx: cached.ctx, data: cached.data, loadedAt: cached.loadedAt }); } catch (error) { /* kein Cache */ }
     const ppMode = () => { try { return localStorage.getItem(PP_MODE_KEY) || ''; } catch (error) { return ''; } };
@@ -16141,7 +16149,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       else if (!org) body = ppOnboardingHtml();
       else body = ppViewHtml();
       const messages = `${pp.error ? `<p class="pp-msg error" role="alert">${icon('alert')}<span>${escapeHtml(pp.error)}</span></p>` : ''}`;
-      const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${PP_NAV.map(([id, label, ic]) => `<button type="button" class="${pp.view === id ? 'active' : ''}" data-pp-view="${id}" aria-current="${pp.view === id ? 'page' : 'false'}">${icon(ic)}<span>${label}</span>${id === 'orders' && ppD('orders').some((o) => o.status === 'offered') ? `<b class="pp-dot">${ppD('orders').filter((o) => o.status === 'offered').length}</b>` : ''}</button>`).join('')}</nav>` : '';
+      const navActive = (id) => pp.view === id || (id === 'more' && !PP_NAV.some(([v]) => v === pp.view));
+      const navBadge = (id) => { const n = id === 'orders' ? ppD('orders').filter((o) => o.status === 'offered').length : id === 'messages' ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : id === 'more' ? ppD('inspections').filter((i) => i.status === 'in_progress').length : 0; return n ? `<b class="pp-dot">${n > 9 ? '9+' : n}</b>` : ''; };
+      const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${PP_NAV.map(([id, label, ic, short]) => `<button type="button" class="${navActive(id) ? 'active' : ''}" data-pp-view="${id}" aria-label="${label}" aria-current="${navActive(id) ? 'page' : 'false'}">${icon(ic)}<span class="${short ? 'pp-nav-long' : ''}">${label}</span>${short ? `<span class="pp-nav-short">${short}</span>` : ''}${navBadge(id)}</button>`).join('')}</nav>` : '';
       root.innerHTML = `${head}<main class="pp-main" id="pp-main">${messages}${body}</main>${nav}`;
       const main = root.querySelector('.pp-main');
       if (main && pp.keepScroll) main.scrollTop = scroll;
@@ -16339,7 +16349,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const active = ppD('inspections').filter((i) => ['scheduled', 'in_progress'].includes(i.status));
       const done = ppD('inspections').filter((i) => i.status === 'completed');
       const props = ppD('properties');
-      return `<div class="pp-page-head"><h1>Kontrollen</h1></div>
+      return `${ppBack()}<div class="pp-page-head"><h1>Kontrollen</h1></div>
         <form class="pp-card pp-form pp-compact" data-pp-form="inspection-start"><h3>Neue Kontrolle</h3><div class="pp-grid">
           <label><span class="form-label">Objekt</span><select class="form-control" name="property_id">${props.map((p) => `<option value="${p.id}">${escapeHtml(p.name)} – ${escapeHtml(ppCustomerName(p.organization_id) === 'Eigener Kunde' ? ppCustomerLabel(ppOwnCustomer(p)) || 'eigenes Objekt' : ppCustomerName(p.organization_id))}</option>`).join('')}</select></label>
           <label><span class="form-label">Vorlage</span><select class="form-control" name="template_id">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)} (${t.items?.[0]?.count ?? 0})</option>`).join('')}</select></label>
@@ -16377,7 +16387,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const own = customers.filter((c) => !c.linked_organization_id);
       const propsOf = (c) => ppD('properties').filter((p) => (c.linked_organization_id ? p.organization_id === c.linked_organization_id : p.owner_customer_id === c.id));
       const card = (c) => `<button type="button" class="pp-item" data-pp-open="customer:${c.id}"><span class="pp-item-main"><strong>${escapeHtml(ppCustomerLabel(c))}</strong><small>${c.linked_organization_id ? 'Husora-Kunde · verbunden' : escapeHtml([c.city, c.email].filter(Boolean).join(' · ') || 'Eigener Kunde')}</small><small>${propsOf(c).length} Objekt${propsOf(c).length === 1 ? '' : 'e'} · ${ppD('orders').filter((o) => propsOf(c).some((p) => p.id === o.property_id)).length} Aufträge</small></span>${icon('arrow')}</button>`;
-      return `<div class="pp-page-head"><h1>Kunden & Objekte</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-customer">${icon('plus')} Kunde</button>` : ''}</div>
+      return `${ppBack()}<div class="pp-page-head"><h1>Kunden & Objekte</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-customer">${icon('plus')} Kunde</button>` : ''}</div>
         ${ppIsLead() ? `<form class="pp-card pp-form pp-compact" data-pp-form="invite-code"><h3>Einladung eines Hausbesitzers</h3><div class="pp-inline"><input class="form-control pp-code" name="code" placeholder="HUS-XXXX-XXXX" autocapitalize="characters" required><button class="primary-btn" type="submit" ${ppDisabled()}>Verbinden</button></div><p class="pp-hint">Den Code erzeugt dein Kunde in seiner Husora-App. Danach siehst du seine Aufträge und die betroffenen Häuser.</p></form>` : ''}
         ${pp.form === 'new-customer' ? `<form class="pp-card pp-form" data-pp-form="customer"><h3>Eigener Kunde</h3><div class="pp-grid">
           <label class="full"><span class="form-label">Firma (optional)</span><input class="form-control" name="company_name" maxlength="120"></label>
@@ -16496,14 +16506,20 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       // nur Dokumente (PDF, Rechnungen, Berichte) – Fotos der Häuser stehen beim jeweiligen Objekt bzw. Auftrag
       const docs = ppD('documents').filter((d) => !/^image\//.test(d.file_type || ''));
       const where = (x) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); const p = ppD('properties').find((y) => y.id === x.property_id); return [o?.title, p?.name].filter(Boolean).join(' · '); };
-      return `<div class="pp-page-head"><h1>Dokumente</h1></div>
+      return `${ppBack()}<div class="pp-page-head"><h1>Dokumente</h1></div>
         ${ppSection(`Dokumente (${docs.length})`, docs.map((d) => `<button type="button" class="pp-doc" data-pp-file="${d.storage_bucket}|${d.storage_path}|${escapeHtml(d.file_name)}">${icon('document')}<span>${escapeHtml(d.file_name)}<small>${escapeHtml(where(d))}</small></span><small>${escapeHtml(ppDate(d.created_at))}</small></button>`).join('') || '<p class="pp-muted">Noch keine Dokumente. Lade PDFs direkt im Auftrag hoch.</p>')}
 `;
     }
     function ppMoreHtml() {
       const item = (view, label, caption, ic) => `<button type="button" class="pp-item" data-pp-view="${view}"><span class="pp-item-icon">${icon(ic)}</span><span class="pp-item-main"><strong>${label}</strong><small>${caption}</small></span>${icon('arrow')}</button>`;
+      const custCount = ppD('customers').length;
+      const openInsp = ppD('inspections').filter((i) => ['scheduled', 'in_progress'].includes(i.status)).length;
       return `<div class="pp-page-head"><h1>Mehr</h1></div><div class="pp-list">
-        ${item('finance', 'Angebote & Rechnungen', `${ppD('invoices').length} Rechnungen · ${ppD('quotes').length} Angebote`, 'cost')}
+        ${item('customers', 'Kunden & Objekte', `${custCount} Kunde${custCount === 1 ? '' : 'n'} · ${ppD('properties').length} Objekt${ppD('properties').length === 1 ? '' : 'e'}`, 'property')}
+        ${item('inspections', 'Kontrollen', openInsp ? `${openInsp} offen` : 'Keine offenen Kontrollen', 'inspection')}
+        ${item('documents', 'Dokumente', ((n) => `${n} Dokument${n === 1 ? '' : 'e'}`)(ppD('documents').filter((d) => !/^image\//.test(d.file_type || '')).length), 'document')}
+        </div><div class="pp-list" style="margin-top:12px">
+        ${item('finance', 'Angebote & Rechnungen', `${ppD('invoices').length} Rechnung${ppD('invoices').length === 1 ? '' : 'en'} · ${ppD('quotes').length} Angebot${ppD('quotes').length === 1 ? '' : 'e'}`, 'cost')}
         ${item('services', 'Leistungen', ppD('services').filter((s) => s.active && PP_SERVICE_GROUPS.some(([code]) => ppD('types').find((t) => t.id === s.service_type_id)?.code === code)).map((s) => ppD('types').find((t) => t.id === s.service_type_id)?.name).join(' · ') || 'Hauskontrolle, Servicearbeiten, Sanierungen', 'check')}
         ${item('team', 'Mitarbeiter', `${ppD('members').length} im Team`, 'users')}
         ${item('company', 'Firma', 'Firmendaten, Bank, Öffnungszeiten', 'gear')}
