@@ -32,6 +32,7 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…1600_app_files.sql` | Fotos/Dokumente aus Storage in `documents`/`photos`, `my_cloud_usage` (Speicheranzeige) |
 | `…1800_partner_messenger.sql` | Messenger: Gespräch je Servicepartner (`messages.service_partner_id`), Lesebestätigung, Benachrichtigung bei Partner-Nachrichten |
 | `…1900_partner_service_groups.sql` | Leistungsgruppen Servicearbeiten und Sanierungen (neben Hauskontrolle); Hausfotos lesbar für Partner mit Auftrag zum Haus |
+| `…2000_partner_member_fast.sql` | Schnellere Partner-Prüfung in den RLS-Regeln (gleiche Logik, gezielte Index-Abfrage statt Liste je Zeile) |
 | `…1700_partner_portal.sql` | Zugang für Servicepartner: Partner-Organisationen, Einladungen, Mitarbeiterrollen, Kunden, Kontrollvorlagen, 14 Servicearten |
 | `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |

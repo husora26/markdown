@@ -2506,6 +2506,39 @@
     .msg-item small { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     .msg-item .msg-time { float: right; margin-left: 8px; color: var(--muted); font-size: 12px; font-weight: 600; }
     .msg-item .msg-badge { display: inline-grid; place-items: center; min-width: 18px; height: 18px; margin-left: 6px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; vertical-align: middle; }
+    .hub-order small svg, .hub-conv small svg { width: 13px; height: 13px; margin-right: 2px; vertical-align: -2px; }
+    .hub-group .hub-section-title { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .hub-group .hub-section-title svg { width: 15px; height: 15px; }
+    .hub-group .hub-section-title small { margin-left: auto; color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+    .hub-list-title { margin: 22px 0 4px; font-size: 18px; }
+    .hub-house-label { display: flex; align-items: center; gap: 6px; margin: 10px 2px 6px; color: var(--muted); font-size: 12.5px; font-weight: 700; }
+    .hub-house-label svg { width: 14px; height: 14px; }
+    .hub-dispatch { padding: 16px; }
+    .hub-dispatch > * { min-width: 0; }
+    .hub-pick .pp-badge { flex: 0 0 auto; }
+    .hub-send-head .card-caption { margin-top: 2px; }
+    .hub-partner-chips { display: flex; gap: 8px; margin: 12px 0 4px; overflow-x: auto; padding-bottom: 4px; }
+    .hub-partner-chips button { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px 0 6px; border: 1px solid var(--line); border-radius: 21px; background: transparent; color: var(--ink); font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+    .hub-partner-chips button .hub-avatar { width: 30px; height: 30px; font-size: 13px; }
+    .hub-partner-chips button.on { border-color: var(--green); background: var(--green-dark); color: #fff; }
+    .hub-house { margin-top: 14px; }
+    .hub-house-head { display: flex; align-items: center; gap: 8px; padding: 0 2px 6px; }
+    .hub-house-head svg { width: 16px; height: 16px; color: var(--green); }
+    .hub-house-head strong { font-size: 14.5px; }
+    .hub-house-head small { color: var(--muted); font-size: 12.5px; }
+    .hub-house-head .text-btn { margin-left: auto; }
+    .hub-picks { display: grid; gap: 6px; }
+    .hub-pick { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface, #fff); cursor: pointer; transition: border-color .15s, background .15s; }
+    .hub-pick input { flex: 0 0 auto; width: 20px; height: 20px; accent-color: var(--green); }
+    .hub-pick.on { border-color: var(--green); background: var(--green-soft); }
+    .hub-pick.done { opacity: .65; cursor: default; }
+    .hub-pick-main { flex: 1; min-width: 0; }
+    .hub-pick-main strong { display: block; font-size: 14px; line-height: 1.35; }
+    .hub-pick-main small { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-top: 2px; color: var(--muted); font-size: 12.5px; }
+    .hub-pick-main small svg { width: 12px; height: 12px; }
+    .hub-send-bar { position: sticky; bottom: calc(78px + env(safe-area-inset-bottom)); z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px -4px -4px; padding: 10px 10px 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface, #fffdf8); box-shadow: 0 8px 24px rgba(0, 0, 0, .1); font-size: 13.5px; }
+    .hub-send-bar .primary-btn { min-height: 42px; white-space: nowrap; }
+    @media (min-width: 900px) { .hub-send-bar { bottom: 12px; } }
     .hub-invoice { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--green-soft); }
     .hub-invoice > svg { flex: 0 0 auto; width: 20px; height: 20px; color: var(--green); }
     .hub-invoice > span { flex: 1; min-width: 0; }
@@ -3405,6 +3438,10 @@
   
   
   
+  
+  
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3977,6 +4014,10 @@ html.dark .hub-count { background: var(--red-solid); }
 html.dark .msg-item { border-left-color: #6d614a; }
 html.dark .msg-item.unread strong::after { background: var(--red-solid); }
 html.dark .msg-item .msg-badge { background: var(--red-solid); }
+html.dark .hub-partner-chips button.on { background: var(--green-solid-dark); }
+html.dark .hub-pick { background: var(--surface, #1c1c1c); }
+html.dark .hub-pick input { accent-color: var(--green-solid); }
+html.dark .hub-send-bar { background: var(--surface, #2b2410); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.27); }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
 html.dark .hub-conv.unread { border-color: #635842; }
@@ -6842,7 +6883,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const sorted = [...list].sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
         return `<article class="partner-task-card ${partner ? '' : 'unassigned'}"><div class="partner-task-head"><span class="provider-avatar">${escapeHtml(partner ? partner.initials || partner.name.slice(0, 2).toUpperCase() : partnerId === '__self' ? 'EL' : '?')}</span><div><strong>${escapeHtml(partner ? partner.name : partnerId === '__self' ? 'Eigenleistung' : 'Noch ohne Servicepartner')}</strong><small>${list.length} offen${overdue ? ` · <b>${overdue} überfällig</b>` : ''}${partner ? ` · ${escapeHtml(partnerCategoryLabel(partner))}` : ''}</small></div></div>
           <ul class="partner-task-list">${sorted.map((task) => `<li class="${task.date && task.date < today ? 'overdue' : ''}"><span>${task.date ? escapeHtml(fmtDate(task.date)) : '—'}</span><button type="button" data-edit-task="${task.id}">${escapeHtml(task.title)}<small>${escapeHtml(task.property)}</small></button></li>`).join('')}</ul>
-          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button>${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : partnerId === '__self' ? '<span class="partner-hint">Diese Aufgaben erledigst du selbst – kein Servicepartner beauftragt.</span>' : '<span class="partner-hint">In der Liste je Aufgabe einen Servicepartner wählen oder „Selbst“ einschalten.</span>'}</div></article>`;
+          <div class="partner-task-actions">${partner ? `${partner.email ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Aufgaben für ${singleHouse() ? properties[0]?.name || 'unser Ferienhaus' : 'unsere Ferienhäuser'}`)}&body=${encodeURIComponent(partnerTaskListText(partner, sorted))}">${icon('note')} Liste per E-Mail</a>` : ''}<button type="button" class="secondary-btn" data-copy-partner-tasks="${escapeHtml(partnerId)}">Liste kopieren</button><button type="button" class="primary-btn" data-commission-partner="${escapeHtml(partnerId)}">${icon('check')} SP beauftragen</button>${partner.phone ? `<a class="secondary-btn" href="tel:${encodeURIComponent(partner.phone.replace(/[^\d+]/g, ''))}">Anrufen</a>` : ''}` : partnerId === '__self' ? '<span class="partner-hint">Diese Aufgaben erledigst du selbst – kein Servicepartner beauftragt.</span>' : '<span class="partner-hint">In der Liste je Aufgabe einen Servicepartner wählen oder „Selbst“ einschalten.</span>'}</div></article>`;
       }).join('');
       return cards ? `<div class="partner-task-grid">${cards}</div>` : '<div class="empty">Keine offenen Aufgaben für diese Auswahl.</div>';
     }
@@ -16827,7 +16868,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const [partners, tasksRows, orders, messages, invites, invoices] = await Promise.all([
         cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status&order=company_name.asc`),
         cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=not.is.null&status=in.(pending,assigned)&select=id,app_ref,title,scheduled_start,assigned_partner_id,property:properties(name)&order=scheduled_start.asc.nullslast&limit=100`),
-        cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,scheduled_at,response_note,actual_cost,currency,service_task_id,partner:service_partners(company_name),task:service_tasks(app_ref)&order=created_at.desc&limit=30`),
+        cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,scheduled_at,response_note,actual_cost,currency,service_task_id,service_partner_id,created_at,partner:service_partners(company_name),property:properties(name),task:service_tasks(app_ref)&order=created_at.desc&limit=200`),
         cloudFetch(`/rest/v1/messages?organization_id=eq.${org}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`),
         cloudFetch(`/rest/v1/service_partner_invites?organization_id=eq.${org}&select=service_partner_id,code,expires_at,accepted_at&order=created_at.desc&limit=200`),
         cloudFetch(`/rest/v1/invoices?organization_id=eq.${org}&service_order_id=not.is.null&select=id,invoice_number,amount_gross,currency,status,invoice_date,due_date,service_order_id,partner:service_partners!invoices_organization_id_service_partner_id_fkey(company_name),property:properties!invoices_organization_id_property_id_fkey(app_ref,name),document:documents!invoices_organization_id_document_id_fkey(id,file_name,file_size,storage_bucket,storage_path)&order=created_at.desc&limit=100`).catch(() => [])
@@ -16836,15 +16877,23 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       ownerImportInvoices().catch((error) => console.warn('Rechnungen nicht übernommen:', error));
       // Fortschritt der Partner in die lokalen Aufgaben übernehmen
       let changed = 0;
+      const completedNow = new Set();
       orders.forEach((order) => {
         const ref = order.task?.app_ref;
         if (!ref) return;
         const task = tasks.find((t) => String(t.id) === ref);
         if (!task) return;
-        const target = order.status === 'completed' ? 'Erledigt' : ['accepted', 'scheduled', 'in_progress'].includes(order.status) ? 'In Bearbeitung' : null;
-        if (target && taskStatus(task) !== target && !(target === 'In Bearbeitung' && task.done)) { setTaskStatus(task, target); changed += 1; }
+        let target = order.status === 'completed' ? 'Erledigt' : ['accepted', 'scheduled', 'in_progress'].includes(order.status) ? 'In Bearbeitung' : null;
+        // abgelehnt und kein anderer Partner dran → wieder offen
+        if (['rejected', 'cancelled'].includes(order.status) && taskStatus(task) === 'In Bearbeitung' && !orders.some((other) => other.task?.app_ref === ref && ['offered', 'accepted', 'scheduled', 'in_progress', 'completed'].includes(other.status))) target = 'Offen';
+        if (target && taskStatus(task) !== target && !(target === 'In Bearbeitung' && task.done)) { if (target === 'Erledigt') completedNow.add(ref); setTaskStatus(task, target); changed += 1; }
       });
-      if (changed) { persistTasks(); showToast(`${changed} Aufgabe${changed === 1 ? '' : 'n'} mit dem Stand deiner Servicepartner aktualisiert.`); }
+      if (changed) {
+        persistTasks();
+        const doneNow = orders.filter((order) => order.status === 'completed' && completedNow.has(order.task?.app_ref));
+        showToast(doneNow.length ? `${doneNow.length} Aufgabe${doneNow.length === 1 ? '' : 'n'} vom Servicepartner als erledigt gemeldet – automatisch abgehakt.` : `${changed} Aufgabe${changed === 1 ? '' : 'n'} mit dem Stand deiner Servicepartner aktualisiert.`);
+        if (currentPage === 'partnerHub') hubRerender(); else if (['tasks', 'dashboard', 'calendar'].includes(currentPage)) render();
+      }
     }
     // Verbundener Cloud-Partner zu einem Servicepartner der App (eigener Partner oder Verzeichnis)
     function cloudPartnerOf(providerId, partners = ownerSide.partners) {
@@ -16856,9 +16905,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     // Offene Aufgaben, die in der App einem verbundenen Partner zugeordnet sind, als Auftrag ins Partner-Portal senden.
     // Jede Aufgabe geht nur einmal an denselben Partner (auch nach einer Ablehnung kein erneutes Senden).
-    async function ownerDispatchOrders() {
+    async function ownerDispatchOrders({ providerId = '' } = {}) {
       if (!cloudReady() || ppMode() === 'partner' || ownerSide.dispatching) return 0;
-      const open = tasks.filter((t) => t.partnerId && !t.done && !t.selfService && taskStatus(t) !== 'Erledigt');
+      const open = tasks.filter((t) => t.partnerId && (!providerId || t.partnerId === providerId) && !t.done && !t.selfService && taskStatus(t) !== 'Erledigt');
       if (!open.length) return 0;
       ownerSide.dispatching = true;
       const org = cloud.org.id;
@@ -16883,10 +16932,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: taskId, p_service_partner_id: sp.id } });
           done.add(`${taskId}:${sp.id}`);
           sent.set(sp.company_name, (sent.get(sp.company_name) || 0) + 1);
+          markTaskCommissioned(t);
         }
       } finally { ownerSide.dispatching = false; }
       const total = [...sent.values()].reduce((a, b) => a + b, 0);
       if (total) {
+        persistTasks();
+        if (['tasks', 'dashboard', 'calendar'].includes(currentPage)) render();
         const names = [...sent.keys()].join(', ');
         showToast(`${total} Aufgabe${total === 1 ? '' : 'n'} an ${names} gesendet – jetzt im Partner-Portal des Betriebs sichtbar.`);
         try { await ownerLoadPartners(); } catch (error) { /* nächster Abgleich holt den Stand */ }
@@ -16913,10 +16965,42 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         }
         if (added.length && persistDocuments([...documents, ...added])) {
           showToast(added.length === 1 ? `Rechnung von ${added[0].partnerName || 'deinem Servicepartner'} erhalten – unter Dokumente beim Ferienhaus abgelegt.` : `${added.length} Rechnungen erhalten – unter Dokumente bei den Ferienhäusern abgelegt.`);
-          if (['documents', 'propertyDetail', 'partnerHub'].includes(currentPage)) render();
+          if (currentPage === 'partnerHub') hubRerender(); else if (['documents', 'propertyDetail'].includes(currentPage)) render();
         }
       } finally { ownerImporting = false; }
     }
+    // Beauftragte Aufgabe: lokal auf „In Bearbeitung“ (lehnt der Partner ab, geht sie wieder auf „Offen“)
+    function markTaskCommissioned(task) {
+      if (task && taskStatus(task) === 'Offen') setTaskStatus(task, 'In Bearbeitung');
+    }
+    // „SP beauftragen“: offene Aufgaben einer Partnergruppe ins Partner-Portal des Partners senden
+    async function commissionPartner(providerId, button) {
+      const provider = providerById(providerId);
+      if (!provider) return;
+      if (!cloudReady()) { showToast('Zum Beauftragen über das Partner-Portal melde dich mit dem Husora Cloud-Speicher an.'); currentPage = 'partnerHub'; render(); window.scrollTo(0, 0); return; }
+      const label = button?.innerHTML;
+      if (button) { button.disabled = true; button.textContent = 'Sende …'; }
+      try {
+        const partners = await cloudFetch(`/rest/v1/service_partners?organization_id=eq.${cloud.org.id}&partner_organization_id=not.is.null&select=id,company_name,partner_organization_id`);
+        if (!cloudPartnerOf(providerId, partners)) {
+          if (provider.custom && confirm(`${provider.name} ist noch nicht mit dem Husora Partner-Portal verbunden.\n\nJetzt einen Einladungscode erstellen? Sobald ${provider.name} den Code eingibt, gehen die Aufgaben automatisch an den Betrieb.`)) { customProviderInvite(provider); return; }
+          showToast(`${provider.name} ist noch nicht im Partner-Portal verbunden – lade den Betrieb dort zuerst ein.`);
+          currentPage = 'partnerHub'; hub.tab = 'partners'; hub.thread = null; render(); window.scrollTo(0, 0);
+          return;
+        }
+        await cloudUpload({ full: false, keys: new Set(['stugliv-tasks']) });
+        const sent = await ownerDispatchOrders({ providerId });
+        if (!sent) showToast(`Alle offenen Aufgaben sind bereits an ${provider.name} gesendet.`);
+      } catch (error) {
+        showToast(error instanceof TypeError ? 'Keine Verbindung – bitte später erneut versuchen.' : `Beauftragen fehlgeschlagen: ${error.message}`);
+      } finally {
+        if (button?.isConnected) { button.disabled = false; button.innerHTML = label; }
+      }
+    }
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-commission-partner]');
+      if (button) commissionPartner(button.dataset.commissionPartner, button);
+    });
     async function ownerRun(label, task) {
       if (ownerSide.busy) return;
       ownerSide.busy = label; ownerSide.error = '';
@@ -16962,7 +17046,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     function hubConversations() {
       const partners = (ownerSide.partners || []).filter((p) => p.partner_organization_id);
       const partnerThreads = partners.map((p) => ({ kind: 'partner', id: p.id, title: p.company_name, subtitle: 'Gespräch', partner: p, messages: hubThreadMessages({ kind: 'partner', id: p.id }) }));
-      const orderThreads = (ownerSide.orders || []).map((o) => ({ kind: 'order', id: o.id, title: o.title, subtitle: `${o.partner?.company_name || ''} · ${o.order_number}`, order: o, messages: hubThreadMessages({ kind: 'order', id: o.id }) })).filter((t) => t.messages.length);
+      const orderThreads = (ownerSide.orders || []).map((o) => ({ kind: 'order', id: o.id, title: o.title, subtitle: `${o.property?.name ? `${o.property.name} · ` : ''}${o.order_number}`, order: o, messages: hubThreadMessages({ kind: 'order', id: o.id }) })).filter((t) => t.messages.length);
       const last = (t) => (t.messages.length ? new Date(t.messages[t.messages.length - 1].created_at).getTime() : 0);
       return [...partnerThreads.sort((a, b) => last(b) - last(a)), ...orderThreads.sort((a, b) => last(b) - last(a))];
     }
@@ -17007,10 +17091,17 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const convs = hubConversations();
       if (!convs.length) return `<div class="pp-empty">${icon('note')}<strong>Noch keine Gespräche</strong><p>Sobald ein eingeladener Servicepartner verbunden ist, kannst du ihm hier schreiben.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`;
       const row = (t) => { const last = t.messages[t.messages.length - 1]; const unread = hubUnread(t.messages); return `<button type="button" class="hub-conv ${unread ? 'unread' : ''}" data-hub-chat="${t.kind}:${t.id}"><span class="hub-avatar">${escapeHtml((t.partner?.company_name || t.order?.partner?.company_name || '?').slice(0, 1).toUpperCase())}</span><span class="hub-conv-main"><strong>${escapeHtml(t.title)}</strong><small>${escapeHtml(t.kind === 'order' ? t.subtitle : last ? `${last.sender_user_id === hubMyId() ? 'Du: ' : ''}${last.message}` : 'Noch keine Nachrichten – schreib die erste.')}</small></span><span class="hub-conv-meta">${last ? `<small>${escapeHtml(ppDate(last.created_at))}</small>` : ''}${unread ? `<b class="hub-count">${unread}</b>` : ''}</span></button>`; };
-      const partnerConvs = convs.filter((t) => t.kind === 'partner');
-      const orderConvs = convs.filter((t) => t.kind === 'order');
-      return `${partnerConvs.length ? `<section class="hub-section"><h3 class="hub-section-title">Servicepartner</h3><div class="hub-convs">${partnerConvs.map(row).join('')}</div></section>` : ''}
-        ${orderConvs.length ? `<section class="hub-section"><h3 class="hub-section-title">Zu Aufträgen</h3><div class="hub-convs">${orderConvs.map(row).join('')}</div></section>` : ''}`;
+      // je Servicepartner: allgemeines Gespräch, darunter die Gespräche zu Aufträgen (mit Ferienhaus)
+      const groups = new Map();
+      convs.forEach((t) => {
+        const key = t.kind === 'partner' ? t.id : t.order?.service_partner_id || t.order?.partner?.company_name || '?';
+        const name = t.kind === 'partner' ? t.title : t.order?.partner?.company_name || 'Servicepartner';
+        if (!groups.has(key)) groups.set(key, { name, list: [] });
+        groups.get(key).list.push(t);
+      });
+      const lastAt = (list) => Math.max(0, ...list.flatMap((t) => t.messages.map((m) => new Date(m.created_at).getTime())));
+      return [...groups.values()].sort((a, b) => hubUnread(b.list.flatMap((t) => t.messages)) - hubUnread(a.list.flatMap((t) => t.messages)) || lastAt(b.list) - lastAt(a.list) || a.name.localeCompare(b.name, 'de'))
+        .map((g) => { const unread = hubUnread(g.list.flatMap((t) => t.messages)); return `<section class="hub-section hub-group"><h3 class="hub-section-title">${icon('users')} ${escapeHtml(g.name)}${unread ? ` <b class="hub-count">${unread}</b>` : ''}</h3><div class="hub-convs">${g.list.sort((a, b) => (a.kind === 'partner' ? -1 : b.kind === 'partner' ? 1 : lastAt([b]) - lastAt([a]))).map(row).join('')}</div></section>`; }).join('');
     }
     function hubThreadHtml() {
       const t = hub.thread;
@@ -17028,13 +17119,79 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     function hubOrdersHtml() {
       const connected = (ownerSide.partners || []).filter((p) => p.partner_organization_id);
+      const orders = ownerSide.orders || [];
+      if (!connected.length && !orders.length) return `<div class="pp-empty">${icon('task')}<strong>Noch kein verbundener Partner</strong><p>Lade zuerst einen Servicepartner ein.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`;
+      const partner = connected.find((p) => p.id === hub.partner) || connected[0];
+      const active = (o) => ['offered', 'accepted', 'scheduled', 'in_progress', 'completed'].includes(o.status);
+      const sentTo = (taskId) => orders.filter((o) => o.service_task_id === taskId && active(o));
+      const picked = hub.picked || (hub.picked = new Set());
       const tasksOpen = ownerSide.tasks || [];
-      return `${connected.length ? `<section class="card hub-card"><h2 class="card-title">Aufgabe an Partner senden</h2>${tasksOpen.length ? `<form class="hub-form" data-owner-form="send">
-          <label><span class="form-label">Aufgabe</span><select class="form-control" name="task">${tasksOpen.map((t) => `<option value="${t.id}">${escapeHtml(t.title)}${t.property?.name ? ` – ${escapeHtml(t.property.name)}` : ''}${t.scheduled_start ? ` (${escapeHtml(fmtDate(t.scheduled_start.slice(0, 10)))})` : ''}</option>`).join('')}</select></label>
-          <label><span class="form-label">Servicepartner</span><select class="form-control" name="partner">${connected.map((p) => `<option value="${p.id}" ${hub.partner === p.id ? 'selected' : ''}>${escapeHtml(p.company_name)}</option>`).join('')}</select></label>
-          <div class="pp-actions"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Auftrag senden</button></div></form>` : '<p class="settings-hint">Offene Aufgaben erscheinen hier, sobald sie per Cloud-Speicher abgeglichen sind (Einstellungen → Daten & App).</p>'}</section>` : `<div class="pp-empty">${icon('task')}<strong>Noch kein verbundener Partner</strong><p>Lade zuerst einen Servicepartner ein.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`}
-        ${(ownerSide.orders || []).length ? `<section class="hub-section"><h3 class="hub-section-title">Aufträge an Partner</h3>${ownerSide.orders.map((o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.partner?.company_name || '')} · ${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}<div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button></div></div>`; }).join('')}</section>` : ''}`;
+      const byHouse = new Map();
+      tasksOpen.forEach((t) => { const name = t.property?.name || 'Ohne Ferienhaus'; byHouse.set(name, [...(byHouse.get(name) || []), t]); });
+      const taskRow = (t) => {
+        const already = partner ? sentTo(t.id).find((o) => o.service_partner_id === partner.id) : null;
+        const other = sentTo(t.id).find((o) => o.service_partner_id !== partner?.id);
+        const local = tasks.find((x) => String(x.id) === t.app_ref);
+        const due = t.scheduled_start ? t.scheduled_start.slice(0, 10) : '';
+        return `<label class="hub-pick ${already ? 'done' : ''} ${picked.has(t.id) && !already ? 'on' : ''}"><input type="checkbox" data-hub-pick="${t.id}" ${already ? 'disabled' : picked.has(t.id) ? 'checked' : ''}><span class="hub-pick-main"><strong>${escapeHtml(t.title)}</strong><small>${due ? `${icon('calendar')} ${escapeHtml(fmtDate(due))}` : 'ohne Termin'}${local?.area ? ` · ${escapeHtml(local.area)}` : ''}${local?.priority === 'urgent' ? ' · <b class="pp-red">dringend</b>' : ''}</small></span>${already ? '<span class="pp-badge ok">gesendet</span>' : other ? `<span class="pp-badge muted" title="bereits an ${escapeHtml(other.partner?.company_name || '')}">bei ${escapeHtml(other.partner?.company_name || 'anderem')}</span>` : ''}</label>`;
+      };
+      const count = partner ? [...picked].filter((id) => !sentTo(id).some((o) => o.service_partner_id === partner.id)).length : 0;
+      const send = connected.length ? `<section class="card hub-card hub-dispatch">
+          <div class="hub-send-head"><h2 class="card-title">Aufgaben an Partner senden</h2><p class="card-caption">Partner wählen, Aufgaben ankreuzen – sie erscheinen sofort in dessen Partner-Portal.</p></div>
+          <div class="hub-partner-chips" role="radiogroup" aria-label="Servicepartner">${connected.map((p) => `<button type="button" role="radio" aria-checked="${p.id === partner.id}" class="${p.id === partner.id ? 'on' : ''}" data-hub-send-partner="${p.id}"><span class="hub-avatar">${escapeHtml(p.company_name.slice(0, 1).toUpperCase())}</span>${escapeHtml(p.company_name)}</button>`).join('')}</div>
+          ${tasksOpen.length ? [...byHouse.entries()].map(([house, list]) => { const free = list.filter((t) => !sentTo(t.id).some((o) => o.service_partner_id === partner.id)); const all = free.length && free.every((t) => picked.has(t.id)); return `<div class="hub-house"><div class="hub-house-head">${icon('property')}<strong>${escapeHtml(house)}</strong><small>${list.length} offen</small>${free.length ? `<button type="button" class="text-btn" data-hub-pick-house="${escapeHtml(house)}">${all ? 'Keine' : 'Alle'} wählen</button>` : ''}</div><div class="hub-picks">${list.map(taskRow).join('')}</div></div>`; }).join('')
+            : '<p class="settings-hint">Offene Aufgaben erscheinen hier, sobald sie per Cloud-Speicher abgeglichen sind (Einstellungen → Daten & App).</p>'}
+          ${tasksOpen.length ? `<div class="hub-send-bar"><span>${count ? `<b>${count}</b> Aufgabe${count === 1 ? '' : 'n'} ausgewählt` : 'Noch keine Aufgabe ausgewählt'}</span><button type="button" class="primary-btn" data-hub-send-picked ${count && !ownerSide.busy ? '' : 'disabled'}>${ownerSide.busy === 'send' ? 'Sende …' : `${icon('check')} An ${escapeHtml(partner.company_name)} senden`}</button></div>` : ''}
+        </section>` : '';
+      // Aufträge je Servicepartner, darin nach Ferienhaus
+      const groups = new Map();
+      orders.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
+      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}<div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button></div></div>`; };
+      const rank = (o) => ({ in_progress: 0, scheduled: 1, accepted: 2, offered: 3, completed: 4 }[o.status] ?? 5);
+      const list = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0], 'de')).map(([name, list]) => {
+        const houses = new Map();
+        list.sort((x, y) => rank(x) - rank(y) || new Date(x.scheduled_at || x.created_at) - new Date(y.scheduled_at || y.created_at)).forEach((o) => { const h = o.property?.name || 'Ohne Ferienhaus'; houses.set(h, [...(houses.get(h) || []), o]); });
+        const openCount = list.filter((o) => !['completed', 'rejected', 'cancelled'].includes(o.status)).length;
+        return `<section class="hub-section hub-group"><h3 class="hub-section-title">${icon('users')} ${escapeHtml(name)} <small>${openCount} offen · ${list.length} gesamt</small></h3>${[...houses.entries()].map(([h, os]) => `<div class="hub-house-label">${icon('property')} ${escapeHtml(h)}</div>${os.map(orderCard).join('')}`).join('')}</section>`;
+      }).join('');
+      return `${send}${orders.length ? `<h2 class="hub-list-title">Aufträge an Partner</h2>${list}` : ''}`;
     }
+    document.addEventListener('click', (event) => {
+      if (currentPage !== 'partnerHub') return;
+      const chip = event.target.closest('[data-hub-send-partner]');
+      if (chip) { hub.partner = chip.dataset.hubSendPartner; hubRerender(); return; }
+      const house = event.target.closest('[data-hub-pick-house]');
+      if (house) {
+        const partnerId = hub.partner || (ownerSide.partners || []).find((p) => p.partner_organization_id)?.id;
+        const free = (ownerSide.tasks || []).filter((t) => (t.property?.name || 'Ohne Ferienhaus') === house.dataset.hubPickHouse && !(ownerSide.orders || []).some((o) => o.service_task_id === t.id && o.service_partner_id === partnerId && o.status !== 'rejected' && o.status !== 'cancelled'));
+        const picked = hub.picked || (hub.picked = new Set());
+        const all = free.every((t) => picked.has(t.id));
+        free.forEach((t) => (all ? picked.delete(t.id) : picked.add(t.id)));
+        hubRerender(); return;
+      }
+      if (event.target.closest('[data-hub-send-picked]')) {
+        const partner = (ownerSide.partners || []).filter((p) => p.partner_organization_id).find((p) => p.id === hub.partner) || (ownerSide.partners || []).find((p) => p.partner_organization_id);
+        const ids = [...(hub.picked || [])].filter((id) => !(ownerSide.orders || []).some((o) => o.service_task_id === id && o.service_partner_id === partner?.id && !['rejected', 'cancelled'].includes(o.status)));
+        if (!partner || !ids.length) return;
+        ownerRun('send', async () => {
+          for (const id of ids) {
+            await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: id, p_service_partner_id: partner.id } });
+            const ref = (ownerSide.tasks || []).find((t) => t.id === id)?.app_ref;
+            markTaskCommissioned(tasks.find((t) => String(t.id) === ref));
+          }
+          persistTasks();
+          hub.picked = new Set();
+          showToast(`${ids.length} Aufgabe${ids.length === 1 ? '' : 'n'} an ${partner.company_name} gesendet.`);
+        });
+      }
+    });
+    document.addEventListener('change', (event) => {
+      const box = event.target.closest('[data-hub-pick]');
+      if (!box) return;
+      const picked = hub.picked || (hub.picked = new Set());
+      if (box.checked) picked.add(box.dataset.hubPick); else picked.delete(box.dataset.hubPick);
+      hubRerender();
+    });
     function partnerHubPage() {
       const tabs = [['partners', 'Partner & Codes'], ['chat', 'Messenger'], ['orders', 'Aufträge']];
       const head = `<div class="welcome"><div><p class="eyebrow">Servicepartner</p><h1>Partner-Portal</h1><p class="subtitle">Servicepartner einladen, Aufträge senden und direkt mit ihnen schreiben.</p></div></div>`;
@@ -17054,7 +17211,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const draft = document.querySelector('[data-hub-send] textarea')?.value || '';
       const focused = document.activeElement?.matches?.('[data-hub-send] textarea');
       const scroll = window.scrollY;
+      // Eingaben in Formularen (z. B. Firmenname beim Einladen) über das Neuzeichnen retten
+      const fields = [...document.querySelectorAll('#page-content [data-owner-form] [name]')].map((el) => [el.closest('[data-owner-form]').dataset.ownerForm, el.name, el.type === 'checkbox' ? el.checked : el.value, document.activeElement === el]);
       render();
+      fields.forEach(([form, name, value, focused]) => { const el = document.querySelector(`#page-content [data-owner-form="${form}"] [name="${name}"]`); if (!el) return; if (el.type === 'checkbox') el.checked = value; else el.value = value; if (focused) el.focus(); });
       window.scrollTo(0, scroll);
       const area = document.querySelector('[data-hub-send] textarea');
       if (area) { area.value = draft; if (focused) area.focus(); }
@@ -17212,7 +17372,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (!msgActive() || msgTop.loading || currentPage === 'partnerHub' || ownerSide.busy) return;
       msgTop.loading = true;
       try {
-        if (ownerSide.partners === null) await ownerLoadPartners();
+        // alle 2 Minuten vollständig abgleichen: Partner-Fortschritt (angenommen, erledigt) in die Aufgaben übernehmen
+        if (ownerSide.partners === null || Date.now() - (msgTop.fullAt || 0) > 120000) { await ownerLoadPartners(); msgTop.fullAt = Date.now(); }
         else {
           ownerSide.messages = await cloudFetch(`/rest/v1/messages?organization_id=eq.${cloud.org.id}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`);
           const known = new Set([...(ownerSide.partners || []).filter((p) => p.partner_organization_id).map((p) => p.id), ...(ownerSide.orders || []).map((o) => o.id)]);
