@@ -121,6 +121,9 @@
     .stat-icon.red { color: var(--red); background: var(--red-soft); }
     .stat-note .stat-alert { color: #ff9b8a; }
     .stat-icon svg { width: 15px; height: 15px; }
+    .stat-progress { margin-left: 10px; padding-left: 10px; border-left: 1px solid currentColor; border-left-color: rgba(127,127,127,.35); color: #9ccbf5; }
+    .stat-progress { white-space: nowrap; }
+    @media (max-width: 560px) { .stat-progress { display: block; margin: 2px 0 0; padding: 0; border: 0; font-size: .62em; } .stat-progress .stat-open-word { font-size: 1em; } }
     .stat-open-word { font-size: .62em; font-weight: 400; }
     .stat-value { margin-top: 13px; color: #fff; font-size: 19px; font-weight: 730; letter-spacing: -.2px; text-shadow: 0 1px 3px rgba(0,0,0,.55); }
     .stat-note { margin-top: 3px; color: #d1d5d2; font-size: 13px; font-weight: 400; text-shadow: 0 1px 2px rgba(0,0,0,.65); }
@@ -3617,6 +3620,9 @@
   
   
   
+  
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -6874,7 +6880,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const openProjects = renovationProjects.filter((project) => project.status !== 'done');
         const tileHtml = {
           properties: `<button class="stat ${singleHouse() ? 'stat-wide' : ''}" data-page="properties"><img class="stat-art" src="${escapeHtml((singleHouse() && properties[0]?.photo) || properties.find((item) => item.photo)?.photo || 'assets/meine-haeuser.jpg')}" alt="" aria-hidden="true"><div class="stat-head"><span>${singleHouse() ? 'Mein Haus' : 'Meine Häuser'}</span><span class="stat-icon">${icon('property')}</span></div><div class="stat-value">${singleHouse() ? escapeHtml(properties[0]?.name || '1') : properties.length}</div><div class="stat-note"><em>${singleHouse() ? escapeHtml(properties[0]?.region || 'Schweden') : 'Värmland · Dalarna · Bohuslän'}</em></div></button>`,
-          tasks: `<button class="stat" data-page="tasks"><img class="stat-art" src="assets/hausservice.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Serviceaufgaben</span><span class="stat-icon amber">${icon('task')}</span></div><div class="stat-value">${open.filter((task) => taskStatus(task) !== 'In Bearbeitung').length} <span class="stat-open-word">offen</span></div><div class="stat-note"><em class="stat-urgent">${overdueCount ? `${overdueCount} überfällig` : `${open.filter((task) => task.priority === 'urgent').length} dringend`}</em></div></button>`,
+          tasks: `<button class="stat" data-page="tasks"><img class="stat-art" src="assets/hausservice.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Serviceaufgaben</span><span class="stat-icon amber">${icon('task')}</span></div><div class="stat-value">${open.filter((task) => taskStatus(task) !== 'In Bearbeitung').length} <span class="stat-open-word">offen</span><span class="stat-progress">${open.filter((task) => taskStatus(task) === 'In Bearbeitung').length} <span class="stat-open-word">in Bearbeitung</span></span></div><div class="stat-note"><em class="stat-urgent">${overdueCount ? `${overdueCount} überfällig` : `${open.filter((task) => task.priority === 'urgent').length} dringend`}</em></div></button>`,
           bookings: bookingsEnabled() ? `<button class="stat" data-page="bookings"><img class="stat-art" src="assets/booking-planer.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Buchungen</span><span class="stat-icon">${icon('calendar')}</span></div><div class="stat-value">${upcomingChanges.length} <span class="stat-open-word">kommend</span></div><div class="stat-note">${guestInHouseCount(today) ? `<em>${guestInHouseCount(today)} ${guestInHouseCount(today) === 1 ? 'Haus' : 'Häuser'} belegt</em>` : `${bookings.length} gesamt · <em>verwalten</em>`}</div></button>` : '',
           inspections: `<button class="stat stat-inspection" data-page="inspections"><img class="stat-art" src="assets/hauskontrolle.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hauskontrolle</span><span class="stat-icon">${icon('inspection')}</span></div><div class="stat-value">${properties.length - currentInspections} <span class="stat-open-word">offen</span></div></button>`,
           partners: (() => { const assignedCount = new Set(properties.flatMap((property) => servicePartnerAssignments[property.id] || []).filter((id) => providerById(id))).size; const missing = [['house', 'Hausservice'], ['inspection', 'Hauskontrolle'], ['renovation', 'Sanierung']].filter(([category]) => !properties.some((property) => (servicePartnerAssignments[property.id] || []).some((id) => providerById(id)?.category === category))).map(([, label]) => label); return `<button class="stat" data-page="assignedProviders"><img class="stat-art" src="assets/schweden-landschaft.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Servicepartner</span><span class="stat-icon">${icon('users')}</span></div><div class="stat-value">${assignedCount} <span class="stat-open-word">zugeordnet</span></div><div class="stat-note">${assignedCount ? (missing.length ? `<em>Es fehlt:</em> ${escapeHtml(missing.join(', '))}` : '<em>Alle Bereiche</em> abgedeckt') : '<em>Jetzt</em> Partner in der Nähe finden'}</div></button>`; })(),
