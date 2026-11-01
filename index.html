@@ -4745,7 +4745,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <label><span class="form-label">Anschreiben</span><textarea class="form-control" id="send-plan-body"></textarea></label>
       </div>
       <p class="send-plan-note ok">Der Anhang ist eine PDF mit den Angaben zum Gebäude und allen Prüfpositionen. Vor jeder Position steht ein Kästchen, das sich digital ankreuzen lässt.</p>
-      <div class="form-actions"><button type="button" class="secondary-btn" id="send-plan-cancel">Abbrechen</button><button type="button" class="secondary-btn" id="send-plan-pdf">Nur PDF laden</button><button type="button" class="secondary-btn" id="send-plan-share">Teilen (WhatsApp, SMS …)</button><button type="button" class="primary-btn send-order-btn" id="send-plan-send">Auftrag senden</button></div>
+      <div class="form-actions"><button type="button" class="secondary-btn" id="send-plan-cancel">Abbrechen</button><button type="button" class="secondary-btn" id="send-plan-pdf">Nur PDF laden</button><button type="button" class="secondary-btn" id="send-plan-share">Teilen (WhatsApp, SMS …)</button><button type="button" class="primary-btn send-order-btn" id="send-plan-send">Auftrag senden</button><button type="button" class="primary-btn send-order-btn" id="send-plan-portal" hidden>Über Partner-Portal beauftragen (PDF wird mitgeschickt)</button></div>
+      <p class="send-plan-note" id="send-plan-portal-note" hidden></p>
     </section>
   </div>
   <div class="modal-backdrop" id="auto-task-modal" role="dialog" aria-modal="true" aria-labelledby="auto-task-title">
@@ -10973,6 +10974,7 @@ Morgen|Tomorrow|Imorgon
         : 'Es ist noch kein Mailkonto verbunden. Du kannst im Benutzerprofil unter „E-Mail-Konto verbinden“ deine Absender-Adresse hinterlegen. Der Versand ist trotzdem möglich.';
       document.getElementById('send-plan-subject').value = orderLang() === 'en' ? `Inspection plan "${control.name}" – ${property.name}` : `Kontrollplan „${control.name}“ – ${property.name}`;
       updatePlanLetter();
+      updatePlanPortalButton();
       document.getElementById('send-plan-modal').classList.add('open');
     }
     function selectedPlanRecipient() {
@@ -11046,6 +11048,49 @@ Morgen|Tomorrow|Imorgon
         closeSendPlan();
         render();
       } catch (error) { if (error?.name !== 'AbortError') showToast('Teilen nicht möglich.'); }
+    }
+    // Ist der gewählte Empfänger über das Partner-Portal verbunden, kann die Hauskontrolle dort beauftragt werden – der Kontrollplan hängt als PDF am Auftrag.
+    function planPortalProvider() {
+      const recipient = selectedPlanRecipient();
+      return providers.find((provider) => provider.email && provider.email === recipient.email) || providerById(sendPlanState.control?.providerId) || null;
+    }
+    async function updatePlanPortalButton() {
+      const button = document.getElementById('send-plan-portal');
+      const note = document.getElementById('send-plan-portal-note');
+      button.hidden = true; note.hidden = true;
+      if (!cloudReady() || !entitlements.can('service_portal')) return;
+      const provider = planPortalProvider();
+      if (!provider) return;
+      try {
+        const partners = await cloudFetch(`/rest/v1/service_partners?organization_id=eq.${cloud.org.id}&partner_organization_id=not.is.null&select=id,company_name,partner_organization_id`);
+        if (!cloudPartnerOf(provider.id, partners) || planPortalProvider()?.id !== provider.id) return;
+        button.hidden = false; note.hidden = false;
+        note.textContent = `${provider.name} ist mit dem Partner-Portal verbunden: Der Auftrag kommt dort direkt an, mit dem Kontrollplan als PDF – ganz ohne E-Mail.`;
+      } catch (error) { /* offline: nur E-Mail */ }
+    }
+    async function sendPlanViaPortal() {
+      const provider = planPortalProvider();
+      const { property, control } = sendPlanState;
+      if (!provider || !property) return;
+      const button = document.getElementById('send-plan-portal');
+      button.disabled = true;
+      try {
+        let task = tasks.find((t) => isInspectionTask(t) && !t.done && (t.propertyId === property.id || t.property === property.name) && (!t.partnerId || t.partnerId === provider.id) && taskStatus(t) !== 'Erledigt');
+        if (!task) {
+          task = { id: Date.now(), partnerId: provider.id, title: `Hauskontrolle: ${control?.name || 'Abwesenheitskontrolle'}`, property: property.name, propertyId: property.id, date: localDateKey(new Date(Date.now() + 3 * 86400000)), priority: 'normal', area: 'Kontrolle', status: 'Offen', done: false, repeat: 'Einmalig' };
+          tasks.push(task);
+        }
+        task.partnerId = provider.id; task.selfService = false;
+        persistTasks();
+        await cloudUpload({ full: false, keys: new Set(['stugliv-tasks']) });
+        const sent = await ownerDispatchOrders({ providerId: provider.id, only: task.id });
+        recordInspectionOrder(property, control, provider.name, 'Partner-Portal');
+        closeSendPlan();
+        render();
+        showToast(sent ? `Hauskontrolle an ${provider.name} beauftragt – der Kontrollplan liegt als PDF im Auftrag.` : `Der Auftrag lag bei ${provider.name} schon vor – der Kontrollplan ist als PDF angehängt.`);
+      } catch (error) {
+        showToast(error instanceof TypeError ? 'Keine Verbindung – bitte später erneut versuchen.' : `Beauftragen fehlgeschlagen: ${error.message}`);
+      } finally { button.disabled = false; }
     }
     // Auftrag senden: am Handy über die Mail-App mit PDF-Anhang, am Computer im Mailprogramm/Mailkonto.
     async function sendPlanOrder() {
@@ -14384,6 +14429,8 @@ Morgen|Tomorrow|Imorgon
     document.getElementById('send-plan-cancel').addEventListener('click', closeSendPlan);
     document.getElementById('send-plan-provider').addEventListener('change', updatePlanLetter);
     document.getElementById('send-plan-send').addEventListener('click', sendPlanOrder);
+    document.getElementById('send-plan-portal').addEventListener('click', sendPlanViaPortal);
+    document.getElementById('send-plan-provider').addEventListener('change', () => updatePlanPortalButton());
     document.getElementById('send-plan-share').addEventListener('click', sharePlan);
     document.getElementById('send-plan-pdf').addEventListener('click', () => {
       const { property, items, control } = sendPlanState;
@@ -18096,7 +18143,7 @@ Morgen|Tomorrow|Imorgon
         ${o.response_note ? `<div class="pp-card"><span class="pp-eyebrow">Deine Antwort</span><p class="pp-text">${escapeHtml(o.response_note)}</p></div>` : ''}
         ${actions}
         ${ppSection('Fotos & Dokumente', `<div class="pp-gallery">${photos.map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(ph.caption || 'Foto')}"><img data-pp-thumb="${ph.id}" alt="${escapeHtml(ph.caption || 'Foto')}"></button>`).join('')}</div>
-          ${docs.map((d) => `<button type="button" class="pp-doc" data-pp-file="${d.storage_bucket}|${d.storage_path}|${escapeHtml(d.file_name)}">${icon('document')}<span>${escapeHtml(d.file_name)}</span><small>${escapeHtml(formatBytes(d.file_size || 0))}</small></button>`).join('')}
+          ${docs.map((d) => `<button type="button" class="pp-doc" data-pp-doc="view" data-id="${d.id}" title="In der App öffnen">${icon('document')}<span>${escapeHtml(d.file_name)}${/^Kontrollplan/.test(d.file_name || '') ? '<small>Kontrollplan vom Hausbesitzer</small>' : ''}</span><small>${escapeHtml(formatBytes(d.file_size || 0))}</small></button>`).join('')}
           <div class="pp-actions"><label class="primary-btn pp-file">${icon('plus')} Foto aufnehmen<input type="file" accept="image/*" capture="environment" multiple hidden data-pp-upload="order:${o.id}"></label><label class="secondary-btn pp-file">Dokument<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" multiple hidden data-pp-upload="order:${o.id}"></label></div>`)}
         ${ppSection('Kontrolle', `${ppD('inspections').filter((i) => i.property_id === o.property_id && i.status !== 'cancelled').slice(0, 3).map(ppInspectionCard).join('')}
           ${ppD('templates').length ? `<div class="pp-inline"><select class="form-control" data-pp-field="tpl">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-action="start-inspection" data-property="${o.property_id}" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}`)}
@@ -19412,9 +19459,32 @@ Morgen|Tomorrow|Imorgon
       if (withdrawn) showToast(`${withdrawn} offene Anfrage${withdrawn === 1 ? '' : 'n'} beim bisherigen Servicepartner zurückgezogen.`);
       return withdrawn;
     }
-    async function ownerDispatchOrders({ providerId = '' } = {}) {
+    // ----- Hauskontrolle über das Partner-Portal: Kontrollplan (PDF) wird an den Auftrag angehängt -----
+    const isInspectionTask = (task) => task?.auto === 'inspection' || /kontrolle/i.test(String(task?.title || ''));
+    function inspectionPlanFor(property, partnerId = '') {
+      const controls = controlsFor(property.id);
+      const control = controls.find((c) => partnerId && c.providerId === partnerId) || controls[controls.length - 1] || null;
+      const items = control ? controlItems(control) : absenceChecklist;
+      return { control, items: items.length ? items : absenceChecklist };
+    }
+    async function ownerAttachInspectionPlan(task, orderId) {
+      if (!orderId || !cloudReady()) return false;
+      const property = properties.find((p) => p.id === task.propertyId) || properties.find((p) => p.name === task.property);
+      if (!property) return false;
+      const [order] = await cloudFetch(`/rest/v1/service_orders?id=eq.${orderId}&select=id,organization_id,property_id`);
+      if (!order) return false;
+      const existing = await cloudFetch(`/rest/v1/documents?service_order_id=eq.${orderId}&file_name=like.Kontrollplan*&select=id`);
+      if (existing.length) return true;
+      const { control, items } = inspectionPlanFor(property, task.partnerId);
+      const bytes = buildPlanPdf(property, items, 'monthly', control);
+      const path = `organization/${order.organization_id}/property/${order.property_id}/documents/${window.crypto?.randomUUID ? crypto.randomUUID() : Date.now()}.pdf`;
+      await cloudPutFile('husora-documents', path, ppBytesToDataUrl(bytes, 'application/pdf'), 'application/pdf');
+      await cloudFetch('/rest/v1/documents', { method: 'POST', body: { organization_id: order.organization_id, property_id: order.property_id, service_order_id: order.id, file_name: planFileName(property), file_type: 'application/pdf', file_size: bytes.length, storage_bucket: 'husora-documents', storage_path: path, document_type: 'other', description: `Kontrollplan${control?.name ? ` „${control.name}“` : ''} · ${items.length} Prüfpositionen` }, headers: { Prefer: 'return=minimal' } });
+      return true;
+    }
+    async function ownerDispatchOrders({ providerId = '', only = null } = {}) {
       if (!cloudReady() || ppMode() === 'partner' || ownerSide.dispatching || !entitlements.can('service_portal')) return 0;
-      const open = tasks.filter((t) => t.partnerId && (!providerId || t.partnerId === providerId) && !t.done && !t.selfService && taskStatus(t) !== 'Erledigt');
+      const open = tasks.filter((t) => t.partnerId && (!providerId || t.partnerId === providerId) && (only === null || String(t.id) === String(only)) && !t.done && !t.selfService && taskStatus(t) !== 'Erledigt');
       ownerSide.dispatching = true;
       const org = cloud.org.id;
       const sent = new Map();
@@ -19433,15 +19503,19 @@ Morgen|Tomorrow|Imorgon
         }
         const ids = [...byRef.values()];
         const existing = [];
-        for (let i = 0; i < ids.length; i += 50) existing.push(...await cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&service_task_id=in.(${ids.slice(i, i + 50).join(',')})&select=service_task_id,service_partner_id,status`));
+        for (let i = 0; i < ids.length; i += 50) existing.push(...await cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&service_task_id=in.(${ids.slice(i, i + 50).join(',')})&select=id,service_task_id,service_partner_id,status`));
         const done = new Set(existing.map((o) => `${o.service_task_id}:${o.service_partner_id}`));
         const running = new Set(existing.filter((o) => ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)).map((o) => `${o.service_task_id}:${o.service_partner_id}`));
         for (const { t, sp } of wanted) {
           const taskId = byRef.get(String(t.id));
           // schon früher gesendet und noch aktiv → Status nachziehen
           if (taskId && running.has(`${taskId}:${sp.id}`) && taskStatus(t) === 'Offen') { markTaskCommissioned(t); restated += 1; }
+          // bereits laufende Hauskontrolle ohne Kontrollplan: PDF nachreichen
+          if (taskId && running.has(`${taskId}:${sp.id}`) && isInspectionTask(t)) { const running0 = existing.find((o) => o.service_task_id === taskId && o.service_partner_id === sp.id && ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)); if (running0) await ownerAttachInspectionPlan(t, running0.id).catch(() => {}); }
           if (!taskId || done.has(`${taskId}:${sp.id}`)) continue; // noch nicht in der Cloud oder schon gesendet
-          await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: taskId, p_service_partner_id: sp.id } });
+          const orderId = await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: taskId, p_service_partner_id: sp.id } });
+          // Hauskontrolle: Kontrollplan als PDF an den Auftrag hängen
+          if (isInspectionTask(t)) await ownerAttachInspectionPlan(t, orderId).catch((error) => console.warn('Kontrollplan nicht angehängt:', error));
           done.add(`${taskId}:${sp.id}`);
           sent.set(sp.company_name, (sent.get(sp.company_name) || 0) + 1);
           markTaskCommissioned(t);
