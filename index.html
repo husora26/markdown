@@ -7557,11 +7557,16 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     function profilePage() {
       return `<div class="welcome"><div><p class="eyebrow">Persönliche Einstellungen</p><h1>Benutzerprofil</h1><p class="subtitle">Verwalte die Angaben für dein Husora-Konto.</p></div></div>
-        <section class="card profile-form"><div class="profile-heading"><div class="profile-large-avatar">${escapeHtml(initialsFor(profileData.name))}</div><div><strong>${escapeHtml(profileData.name)}</strong><small>@${escapeHtml(profileData.username)}</small></div></div>
+        <section class="card profile-form"><div class="profile-heading"><div class="profile-large-avatar">${escapeHtml(initialsFor(profileData.name))}</div><div><strong>${escapeHtml(profileData.name)}</strong><small>@${escapeHtml(profileData.username)}</small>${[profileData.phone, [profileData.zip, profileData.city].filter(Boolean).join(' ')].filter(Boolean).length ? `<small>${escapeHtml([profileData.phone, [profileData.zip, profileData.city].filter(Boolean).join(' ')].filter(Boolean).join(' · '))}</small>` : ''}</div></div>
           <form id="profile-form" style="padding-top:18px"><div class="profile-grid">
             <label><span class="form-label">Name</span><input class="form-control" name="name" required maxlength="80" value="${escapeHtml(profileData.name)}"></label>
             <label><span class="form-label">Username</span><input class="form-control" name="username" required maxlength="40" value="${escapeHtml(profileData.username)}"></label>
-            <label class="full"><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120" value="${escapeHtml(profileData.email)}"></label>
+            <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120" autocomplete="email" value="${escapeHtml(profileData.email)}"></label>
+            <label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" inputmode="tel" maxlength="40" autocomplete="tel" placeholder="+49 170 1234567" value="${escapeHtml(profileData.phone || '')}"></label>
+            <label class="full"><span class="form-label">Straße und Hausnummer</span><input class="form-control" name="street" maxlength="120" autocomplete="street-address" value="${escapeHtml(profileData.street || '')}"></label>
+            <label><span class="form-label">PLZ</span><input class="form-control" name="zip" maxlength="12" inputmode="numeric" autocomplete="postal-code" value="${escapeHtml(profileData.zip || '')}"></label>
+            <label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" autocomplete="address-level2" value="${escapeHtml(profileData.city || '')}"></label>
+            <label class="full"><span class="form-label">Land</span><input class="form-control" name="country" maxlength="60" autocomplete="country-name" list="profile-countries" placeholder="Deutschland" value="${escapeHtml(profileData.country || '')}"><datalist id="profile-countries"><option value="Deutschland"><option value="Schweden"><option value="Österreich"><option value="Schweiz"><option value="Niederlande"><option value="Dänemark"><option value="Norwegen"></datalist></label>
             <div class="full profile-notice" style="margin-top:0">Nutzung der Immobilie und Anzahl der Ferienhäuser stellst du jetzt unter <button type="button" class="text-btn" data-page="properties" style="padding:0">Mein Ferienhaus</button> ein.</div>
 </div><div class="profile-notice">Diese App speichert ihre Daten nur lokal auf diesem Gerät. Sichere sie regelmäßig unter <button type="button" class="text-btn" data-page="settings" style="padding:0">Einstellungen → Datensicherung</button>.</div><div class="form-actions"><button type="submit" class="primary-btn">Benutzerprofil speichern</button></div></form>
         </section>
@@ -12204,7 +12209,14 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       event.preventDefault();
       const isMailForm = event.target.id === 'mail-form';
       const formData = new FormData(event.target);
+      const field = (key, max) => (isMailForm ? (profileData[key] || '') : String(formData.get(key) || '').trim().slice(0, max));
       const updatedProfile = {
+        ...profileData,
+        phone: field('phone', 40),
+        street: field('street', 120),
+        zip: field('zip', 12),
+        city: field('city', 80),
+        country: field('country', 60),
         name: isMailForm ? profileData.name : String(formData.get('name')).trim(),
         username: isMailForm ? profileData.username : String(formData.get('username')).trim(),
         email: isMailForm ? profileData.email : String(formData.get('email')).trim(),
@@ -12222,6 +12234,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         if (detected && updatedProfile.mailProvider !== detected) updatedProfile.mailProvider = detected;
       }
       if (updatedProfile.mailAccount) updatedProfile.mailConnectedAt = (mailAction === 'connect' || !profileData.mailConnectedAt) ? new Date().toISOString() : profileData.mailConnectedAt;
+      if (!isMailForm && updatedProfile.phone && !/^\+?[\d\s()\/.-]{5,}$/.test(updatedProfile.phone)) {
+        showToast('Bitte eine gültige Telefonnummer eintragen (Ziffern, Leerzeichen, +, -, /).');
+        return;
+      }
       if (mailAction === 'connect' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updatedProfile.mailAccount)) {
         showToast('Bitte eine gültige Absender-Adresse eintragen.');
         return;
