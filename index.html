@@ -17096,7 +17096,10 @@ Morgen|Tomorrow|Imorgon
       await cloudLoadUsage().catch(() => {});
       cloudState.notice = cloudState.summary?.count ? 'Angemeldet. In der Cloud liegen bereits Daten – wähle unten, welche gelten sollen.' : 'Angemeldet. Lade jetzt deine Daten hoch.';
     }
-    const cloudRedirect = () => encodeURIComponent(location.origin + location.pathname);
+    // Rücksprung aus Bestätigungs-/Passwort-Mail: zur App, im Partner-Portal mit ?partner.
+    // Supabase nutzt die Adresse nur, wenn sie im Projekt unter Authentication → URL Configuration freigegeben ist.
+    const cloudRedirect = () => encodeURIComponent(location.origin + location.pathname + (pp?.open || /[?&]partner\b/.test(location.search) ? '?partner' : ''));
+    const CONFIRM_HINT = 'Falls nach dem Tippen auf den Link eine Fehlerseite (z. B. „localhost“) erscheint: Die E-Mail ist trotzdem bestätigt – komm hierher zurück und melde dich mit E-Mail und Passwort an.';
     // Supabase meldet bei bereits registrierter E-Mail aus Sicherheitsgründen keinen Fehler,
     // sondern einen Benutzer ohne Identitäten – das wird hier erkannt.
     async function cloudRegister(email, password, meta = {}) {
@@ -17131,7 +17134,7 @@ Morgen|Tomorrow|Imorgon
         await cloudLoadSummary();
         cloudState.notice = 'Konto erstellt. Lade jetzt deine Daten hoch.';
       } else {
-        cloudState.notice = `Fast geschafft: Wir haben eine Bestätigungs-Mail an ${email.trim()} geschickt. Öffne den Link darin – danach bist du automatisch angemeldet. Keine Mail? Auch im Spam-Ordner nachsehen.`;
+        cloudState.notice = `Fast geschafft: Wir haben eine Bestätigungs-Mail an ${email.trim()} geschickt. Öffne den Link darin – danach bist du automatisch angemeldet. ${CONFIRM_HINT} Keine Mail? Auch im Spam-Ordner nachsehen.`;
       }
     }
     function cloudSignOut() {
@@ -19216,7 +19219,7 @@ Morgen|Tomorrow|Imorgon
         cloudState.draftEmail = values.email;
         ppRun('signup', async () => {
           const data = await cloudRegister(values.email, values.password);
-          if (!data?.access_token) pp.notice = `Fast geschafft: Wir haben eine Bestätigungs-Mail an ${values.email.trim()} geschickt. Öffne den Link darin – danach bist du automatisch angemeldet. Keine Mail? Auch im Spam-Ordner nachsehen.`;
+          if (!data?.access_token) pp.notice = `Fast geschafft: Wir haben eine Bestätigungs-Mail an ${values.email.trim()} geschickt. Öffne den Link darin – danach bist du automatisch angemeldet. ${CONFIRM_HINT} Keine Mail? Auch im Spam-Ordner nachsehen.`;
         }, { reload: true });
         return;
       }
