@@ -604,6 +604,55 @@
     .pp-archive summary { display: flex; align-items: center; gap: 8px; padding: 10px 2px; cursor: pointer; color: var(--muted); font-weight: 700; }
     .pp-archive summary svg { width: 16px; height: 16px; }
     .pp-muted svg { width: 14px; height: 14px; vertical-align: -2px; }
+    /* Partner-Portal: Kopfleiste wie beim Hausbesitzer, eigener Hintergrund */
+    .pp-top { position: relative; isolation: isolate; min-height: 65px; padding: calc(8px + env(safe-area-inset-top)) 13px 8px; border-bottom: 1px solid rgba(255,253,248,.2); background: #14302f; }
+    .pp-top::before { position: absolute; inset: 0; z-index: -1; background: url("assets/hausservice.jpg") center 42% / cover no-repeat; content: ""; opacity: .38; }
+    .pp-top .pp-brand-btn { gap: 9px; }
+    .pp-top .pp-brand-btn:hover, .pp-top .pp-brand-btn:focus-visible { background: rgba(255, 254, 250, .12); }
+    .pp-top-logo { display: block; width: 38px; height: 35px; object-fit: contain; flex: none; }
+    .pp-top .brand-wordmark { display: flex; flex-direction: column; gap: 1px; }
+    .pp-top .pp-icon-btn { width: 40px; height: 40px; min-height: 40px; padding: 0; justify-content: center; border: 1px solid rgba(255,253,248,.45); border-radius: 50%; background: rgba(20, 35, 27, .25); color: #fff9eb; }
+    .pp-top .pp-icon-btn .pp-count { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #c0503f; color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; }
+    .pp-top .pp-icon-btn { position: relative; }
+    /* Kopf der Startseite: Betrieb und Rolle */
+    .pp-company { display: flex; align-items: center; gap: 12px; margin: 2px 0 14px; }
+    .pp-company-mark { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 14px; background: var(--green); color: #fff; font-size: 17px; font-weight: 800; }
+    .pp-company h1 { margin: 0; font-size: 21px; line-height: 1.2; overflow-wrap: anywhere; }
+    .pp-company p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .pp-company p b { color: var(--green); font-weight: 700; }
+    /* Kacheln der Startseite */
+    .pp-home-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+    .pp-home-tile { position: relative; isolation: isolate; display: flex; flex-direction: column; gap: 4px; min-height: 118px; padding: 12px 12px 11px; overflow: hidden; border: 0; border-radius: 16px; background: #1d3b33; color: #fff; text-align: left; cursor: pointer; box-shadow: 0 4px 14px rgba(20, 40, 30, .12); }
+    .pp-home-tile img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+    .pp-home-tile::after { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(15, 30, 24, .55), rgba(15, 30, 24, .82)); content: ""; }
+    .pp-home-tile-head { display: flex; justify-content: space-between; gap: 6px; font-size: 13.5px; font-weight: 700; }
+    .pp-home-tile-icon { display: grid; place-items: center; flex: 0 0 28px; height: 28px; border-radius: 9px; background: rgba(255, 255, 255, .18); }
+    .pp-home-tile-icon svg { width: 15px; height: 15px; }
+    .pp-home-tile-value { margin-top: auto; font-size: 26px; font-weight: 800; line-height: 1.05; }
+    .pp-home-tile-value small { font-size: 13px; font-weight: 500; opacity: .9; }
+    .pp-home-tile-note { font-size: 12px; opacity: .88; }
+    .pp-home-tile.amber .pp-home-tile-note, .pp-home-tile.red .pp-home-tile-note { color: #ffd38a; font-weight: 700; opacity: 1; }
+    .pp-home-tile.red .pp-home-tile-note { color: #ffb4a6; }
+    @media (min-width: 720px) { .pp-home-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    /* Einstellungen */
+    .pp-settings-card { display: grid; gap: 10px; margin-bottom: 14px; }
+    .pp-settings-head { display: flex; gap: 10px; align-items: flex-start; }
+    .pp-settings-head h2 { margin: 0; font-size: 16px; }
+    .pp-settings-head p { margin: 2px 0 0; color: var(--muted); font-size: 12.5px; }
+    .pp-settings-icon { display: grid; place-items: center; flex: 0 0 34px; height: 34px; border-radius: 10px; background: var(--green-soft); color: var(--green); }
+    .pp-settings-icon svg { width: 17px; height: 17px; }
+    .pp-tile-picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .pp-tile-pick { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; font-size: 13.5px; font-weight: 600; }
+    .pp-tile-pick.on { border-color: var(--green); background: var(--green-soft); }
+    .pp-tile-pick input { width: 18px; height: 18px; accent-color: var(--green); }
+    .pp-tile-pick span { display: inline-flex; align-items: center; gap: 6px; }
+    .pp-tile-pick svg { width: 15px; height: 15px; }
+    .pp-embed { display: grid; gap: 12px; }
+    .pp-embed .card { margin: 0; box-shadow: none; }
+    .pp-actions.flat { margin: 0; }
+    html.ts-large .pp-main { zoom: 1.12; }
+    html.ts-xlarge .pp-main { zoom: 1.25; }
+    #legal-modal { z-index: 960; }
     .pf-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
     .pf-kpi { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); border-left: 4px solid var(--green); }
     .pf-kpi > span { color: var(--muted); font-size: 12.5px; }
@@ -3756,6 +3805,8 @@
   
   
   
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3860,6 +3911,13 @@ html.dark .pp-batch-x { border: 1px solid rgba(255, 255, 255, 0.08); }
 html.dark .pp-batch-bar .secondary-btn { border-color: rgba(255, 255, 255, 0.09); }
 html.dark .pp-batch-bar .primary-btn { background: #1c1c1c; border-color: #383838; }
 html.dark .hub-status.proposed { background: #413719; color: #f7d9a1; }
+html.dark .pp-top { border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+html.dark .pp-top .pp-brand-btn:hover, html.dark .pp-top .pp-brand-btn:focus-visible { background: rgba(255, 255, 255, 0.01); }
+html.dark .pp-top .pp-icon-btn { border: 1px solid rgba(255, 255, 255, 0.08); }
+html.dark .pp-company-mark { background: var(--green-solid); }
+html.dark .pp-home-tile { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.31); }
+html.dark .pp-home-tile-icon { background: rgba(255, 255, 255, 0.02); }
+html.dark .pp-tile-pick input { accent-color: var(--green-solid); }
 html.dark .pf-facts em, html.dark .pf-over { color: #d09288; }
 html.dark .pf-reasons b { color: #d09288; }
 html.dark .pf-fine { color: #a5dabe; }
@@ -4846,6 +4904,708 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
   <nav class="tabbar" id="tabbar" aria-label="Schnellnavigation"></nav>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
+    const I18N_SOURCE = `
+Abbrechen|Cancel|Avbryt
+Abgelaufen|Expired|Utgången
+Abgelehnt|Declined|Avböjd
+Abgerechnet|Invoiced|Fakturerad
+Abgesagt|Cancelled|Inställd
+Abgeschlossen|Completed|Avslutad
+Ablehnen|Decline|Avböj
+Abmelden|Sign out|Logga ut
+Abrechnen|Invoice|Fakturera
+Abrechnung|Billing|Debitering
+Abschluss|Completion|Avslut
+Abschlussnotiz|Completion note|Avslutsanteckning
+Abwesenheits-, Saison- und Ferienhauskontrollen|Absence, seasonal and holiday home inspections|Tillsyn vid frånvaro, säsong och fritidshus
+Admin – volle Rechte|Admin – full rights|Admin – fullständiga rättigheter
+Adresse|Address|Adress
+Adresse nicht hinterlegt|No address stored|Ingen adress angiven
+Aktiv|Active|Aktiv
+Aktive Verträge|Active agreements|Aktiva avtal
+Alle|All|Alla
+Allgemein|General|Allmänt
+Als erledigt melden|Mark as done|Markera som klar
+An diesem Tag sind keine Aufträge oder Kontrollen geplant.|No orders or inspections are planned for this day.|Inga uppdrag eller tillsyner är planerade denna dag.
+Anfrage beantworten|Respond to request|Svara på förfrågan
+Angebot|Quote|Offert
+Angebot & Rechnung|Quote & invoice|Offert & faktura
+Angebot gesendet.|Quote sent.|Offert skickad.
+Angebot senden|Send quote|Skicka offert
+Angebote|Quotes|Offerter
+Angebote & Rechnungen|Quotes & invoices|Offerter & fakturor
+Angebotene Leistungen|Services offered|Erbjudna tjänster
+Angebotsnummer|Quote number|Offertnummer
+Angefragt|Requested|Förfrågad
+Angenommen|Accepted|Accepterad
+Anmelden|Sign in|Logga in
+Annehmen|Accept|Acceptera
+Ansprechpartner|Contact person|Kontaktperson
+Archivieren|Archive|Arkivera
+Archiv|Archive|Arkiv
+Auch Hausbesitzer?|Also a homeowner?|Även husägare?
+Aufgabe|Task|Uppgift
+Aufgaben|Tasks|Uppgifter
+Aufgaben im Vertrag *|Tasks in the agreement *|Uppgifter i avtalet *
+Auftrag|Order|Uppdrag
+Auftrag abgelehnt.|Order declined.|Uppdraget avböjt.
+Auftrag abschließen|Complete order|Avsluta uppdrag
+Auftrag angelegt.|Order created.|Uppdrag skapat.
+Auftrag angenommen – der Kunde sieht es sofort.|Order accepted – the customer sees it right away.|Uppdraget accepterat – kunden ser det direkt.
+Auftrag anlegen|Create order|Skapa uppdrag
+Auftrag erledigt – der Kunde wird informiert.|Order done – the customer is notified.|Uppdraget klart – kunden informeras.
+Auftrag gestartet.|Order started.|Uppdraget påbörjat.
+Auftrag nicht gefunden|Order not found|Uppdraget hittades inte
+Auftrag starten|Start order|Starta uppdrag
+Aufträge|Orders|Uppdrag
+Aus dem Archiv holen|Restore from archive|Hämta från arkivet
+Bank|Bank|Bank
+Baujahr|Year built|Byggår
+Baujahr und Fläche hat der Hausbesitzer noch nicht eingetragen.|The homeowner has not entered the year built and area yet.|Husägaren har ännu inte angett byggår och yta.
+Beenden|End|Avsluta
+Beendet|Ended|Avslutad
+Beginn *|Start *|Start *
+Beginn|Start|Start
+Bereich *|Category *|Område *
+Beschreibung|Description|Beskrivning
+Bestätigungs-Mail erneut senden|Resend confirmation e-mail|Skicka bekräftelsemejl igen
+Betrag|Amount|Belopp
+Betrag brutto|Gross amount|Belopp brutto
+Betrieb anlegen und starten|Create company and start|Skapa företag och starta
+Betten|Beds|Bäddar
+Bezahlt|Paid|Betald
+Bitte Firma oder Namen angeben.|Please enter a company or name.|Ange företag eller namn.
+Bitte eine gültige E-Mail-Adresse eintragen.|Please enter a valid e-mail address.|Ange en giltig e-postadress.
+Bitte eine gültige Telefonnummer eintragen.|Please enter a valid phone number.|Ange ett giltigt telefonnummer.
+Bitte einen Namen für das Paket angeben.|Please enter a name for the package.|Ange ett namn för paketet.
+Bitte einen Termin wählen.|Please choose a date.|Välj en tid.
+Bitte mindestens eine Aufgabe eintragen.|Please enter at least one task.|Ange minst en uppgift.
+Bitte wähle die Rechnung als PDF aus.|Please select the invoice as a PDF.|Välj fakturan som PDF.
+Buchhaltung|Accounting|Bokföring
+Buchhaltung – Angebote und Rechnungen|Accounting – quotes and invoices|Bokföring – offerter och fakturor
+Bäder|Bathrooms|Badrum
+Chat|Chat|Chatt
+Code eingeben|Enter code|Ange kod
+Dach|Roof|Tak
+Dach, Fassade, Fenster, Bad, Heizung und Technik|Roof, facade, windows, bathroom, heating and technology|Tak, fasad, fönster, badrum, värme och teknik
+Das Partner-Portal arbeitet mit dem Husora-Cloud-Speicher.|The partner portal works with the Husora cloud storage.|Partnerportalen använder Husoras molnlagring.
+Das Vertragsende muss nach dem Beginn liegen.|The end of the agreement must be after the start.|Avtalets slut måste ligga efter starten.
+Dein Betrieb ist angelegt. Willkommen bei Husora!|Your company has been created. Welcome to Husora!|Ditt företag är skapat. Välkommen till Husora!
+Deine Antwort|Your reply|Ditt svar
+Deine fertige Rechnung aus dem eigenen Programm (max. 10 MB).|Your finished invoice from your own software (max. 10 MB).|Din färdiga faktura från ditt eget program (max 10 MB).
+Deutschland|Germany|Tyskland
+Die Leitung des Betriebs legt die Leistungen fest.|The company management defines the services.|Företagsledningen bestämmer tjänsterna.
+Die Verbindung zu diesem Kunden besteht nicht mehr.|The connection to this customer no longer exists.|Kopplingen till denna kund finns inte längre.
+Dieses Dateiformat lässt sich nicht als PDF anzeigen.|This file format cannot be shown as a PDF.|Detta filformat kan inte visas som PDF.
+Disposition|Dispatch|Planering
+Disposition – alle Aufträge, Mitarbeiter einteilen|Dispatch – all orders, assign staff|Planering – alla uppdrag, fördela personal
+Dokument|Document|Dokument
+Dokumente|Documents|Dokument
+Dringende Mängel|Urgent defects|Akuta brister
+Dänemark|Denmark|Danmark
+E-Mail|E-mail|E-post
+Eigene Rechnung (PDF)|Own invoice (PDF)|Egen faktura (PDF)
+Eigene Rechnung als PDF (optional)|Own invoice as PDF (optional)|Egen faktura som PDF (valfritt)
+Eigener Kunde|Own customer|Egen kund
+Eigentümer|Owner|Ägare
+Eine Sammelrechnung geht nur an einen Kunden.|A combined invoice can only go to one customer.|En samlingsfaktura kan bara gå till en kund.
+Eingereicht|Submitted|Inskickad
+Einladung eines Hausbesitzers|Invitation from a homeowner|Inbjudan från en husägare
+Einladung erstellen|Create invitation|Skapa inbjudan
+Einladung zurückgezogen.|Invitation withdrawn.|Inbjudan återkallad.
+Einladungscode|Invitation code|Inbjudningskod
+Einsatzradius (km)|Service radius (km)|Arbetsradie (km)
+Einsätze|Visits|Besök
+Einsätze pro Jahr|Visits per year|Besök per år
+Elektro|Electrical|El
+Ende *|End *|Slut *
+Entfernen|Remove|Ta bort
+Entwurf|Draft|Utkast
+Ergänzung|Additional info|Tillägg
+Erledigt|Done|Klar
+Euro (€)|Euro (€)|Euro (€)
+Fassade|Facade|Fasad
+Fenster|Windows|Fönster
+Ferienhaus|Holiday home|Fritidshus
+Ferienhauskontrolle|Holiday home inspection|Fritidshustillsyn
+Finnland|Finland|Finland
+Firma|Company|Företag
+Firma (optional)|Company (optional)|Företag (valfritt)
+Firmendaten gespeichert.|Company details saved.|Företagsuppgifter sparade.
+Firmendaten, Bank, Öffnungszeiten|Company details, bank, opening hours|Företagsuppgifter, bank, öppettider
+Firmenname|Company name|Företagsnamn
+Firmenname *|Company name *|Företagsnamn *
+Foto|Photo|Foto
+Fotos|Photos|Foton
+Fotos & Dokumente|Photos & documents|Foton & dokument
+Freigegeben|Approved|Godkänd
+Fällig am|Due on|Förfaller
+Gartenpflege|Garden care|Trädgårdsskötsel
+Geplant|Planned|Planerad
+Gesamtbetrag|Total|Totalt
+Gespräch nicht gefunden|Conversation not found|Konversationen hittades inte
+Grundstück|Plot|Tomt
+Gültig bis|Valid until|Giltig till
+Handelsregister / Org.-Nr.|Company register / Org. no.|Organisationsnummer
+Haus|House|Hus
+Haus *|House *|Hus *
+Hausbesitzer|Homeowner|Husägare
+Hauskontrolle|House inspection|Hustillsyn
+Hauskontrolle, Servicearbeiten, Sanierungen|House inspection, service work, renovations|Hustillsyn, servicearbeten, renoveringar
+Hausservice, Reinigung, Garten, Winterdienst, kleine Reparaturen|House service, cleaning, garden, winter service, small repairs|Husservice, städning, trädgård, vinterunderhåll, mindre reparationer
+Heizung|Heating|Värme
+Heute|Today|Idag
+Heute stehen keine Termine an.|No appointments today.|Inga tider idag.
+Hinweis|Note|Obs
+Hinweise|Notes|Anteckningar
+Husora für Servicepartner|Husora for service partners|Husora för servicepartner
+Husora-Kunde|Husora customer|Husora-kund
+Husora-Kunde · verbunden|Husora customer · connected|Husora-kund · ansluten
+Häuser dieses Kunden erscheinen, sobald er dir einen Auftrag gibt.|This customer's houses appear as soon as they give you an order.|Kundens hus visas så snart du får ett uppdrag.
+Höchstens 20 Aufgaben je Vertrag.|At most 20 tasks per agreement.|Högst 20 uppgifter per avtal.
+IBAN|IBAN|IBAN
+Ich wurde als Mitarbeiter eingeladen|I was invited as an employee|Jag har bjudits in som anställd
+In Arbeit|In progress|Pågår
+In Bearbeitung|In progress|Pågår
+In dieser Ansicht gibt es keine Aufträge.|There are no orders in this view.|Det finns inga uppdrag i denna vy.
+Info|Info|Info
+Inhaber / Admin|Owner / admin|Ägare / admin
+Ist-Kosten|Actual costs|Faktiska kostnader
+Jahrespreis|Annual price|Årspris
+Jahresrechnung|Annual invoice|Årsfaktura
+Jahresrechnung möglich, sobald der erste Auftrag im Vertrag ist|Annual invoice possible once the first order is in the agreement|Årsfaktura möjlig när det första uppdraget ingår i avtalet
+Jahresrechnung senden|Send annual invoice|Skicka årsfaktura
+Jahresrechnung stellen|Create annual invoice|Skapa årsfaktura
+Jahresvertrag|Annual agreement|Årsavtal
+Jahresvertrag beendet.|Annual agreement ended.|Årsavtalet avslutat.
+Jahresvertrag gelöscht.|Annual agreement deleted.|Årsavtalet raderat.
+Jahresvertrag gespeichert.|Annual agreement saved.|Årsavtalet sparat.
+Jahresvertrag vorschlagen|Propose annual agreement|Föreslå årsavtal
+Jahresverträge|Annual agreements|Årsavtal
+Kalender|Calendar|Kalender
+Keine Aufträge|No orders|Inga uppdrag
+Keine Cloud-Verbindung|No cloud connection|Ingen molnanslutning
+Keine Nachrichten|No messages|Inga meddelanden
+Keine Verbindung – bitte später erneut versuchen.|No connection – please try again later.|Ingen anslutning – försök igen senare.
+Keine neuen Anfragen.|No new requests.|Inga nya förfrågningar.
+Keine offenen Kontrollen|No open inspections|Inga öppna tillsyner
+Kontakt|Contact|Kontakt
+Kontakt bearbeiten|Edit contact|Redigera kontakt
+Kontakt gespeichert.|Contact saved.|Kontakt sparad.
+Kontrolle|Inspection|Tillsyn
+Kontrolle angelegt.|Inspection created.|Tillsyn skapad.
+Kontrolle anlegen|Create inspection|Skapa tillsyn
+Kontrolle nicht gefunden|Inspection not found|Tillsynen hittades inte
+Kontrolle starten|Start inspection|Starta tillsyn
+Kontrollen|Inspections|Tillsyner
+Kontrolleur|Inspector|Inspektör
+Kontrolleur – zugewiesene Aufträge und Kontrollen|Inspector – assigned orders and inspections|Inspektör – tilldelade uppdrag och tillsyner
+Kunde|Customer|Kund
+Kunde angelegt.|Customer created.|Kund skapad.
+Kunde anlegen|Create customer|Skapa kund
+Kunde nicht gefunden|Customer not found|Kunden hittades inte
+Kunden|Customers|Kunder
+Kunden & Objekte|Customers & properties|Kunder & objekt
+Kunden verbinden|Connect customers|Anslut kunder
+Kundennummer|Customer number|Kundnummer
+Land|Country|Land
+Laufzeit|Term|Löptid
+Leistung|Service|Tjänst
+Leistungen|Services|Tjänster
+Leistungen gespeichert.|Services saved.|Tjänster sparade.
+Leistungspaket bearbeiten|Edit service package|Redigera tjänstepaket
+Leistungspaket gelöscht.|Service package deleted.|Tjänstepaketet raderat.
+Leistungspaket gespeichert.|Service package saved.|Tjänstepaketet sparat.
+Leistungspaket hinzufügen|Add service package|Lägg till tjänstepaket
+Leistungspaket hinzugefügt.|Service package added.|Tjänstepaket tillagt.
+Letzte Aktivität|Recent activity|Senaste aktivitet
+Läuft|Running|Pågår
+Löschen|Delete|Radera
+Mangel|Defect|Brist
+Mängel|Defects|Brister
+Mehr|More|Mer
+Mit Husora verbinden|Connect with Husora|Anslut till Husora
+Mitarbeiter|Staff|Personal
+Mitarbeiter einladen|Invite staff|Bjud in personal
+Mitarbeiter entfernt.|Staff member removed.|Personen har tagits bort.
+Mitarbeiter gespeichert.|Staff member saved.|Personen har sparats.
+MwSt. %|VAT %|Moms %
+Nachname|Last name|Efternamn
+Nachricht an den Kunden|Message to the customer|Meddelande till kunden
+Nachrichten|Messages|Meddelanden
+Name|Name|Namn
+Name *|Name *|Namn *
+Name des Pakets *|Package name *|Paketets namn *
+Netto|Net|Netto
+Nettobetrag|Net amount|Nettobelopp
+Neue Anfrage|New request|Ny förfrågan
+Neue Anfragen|New requests|Nya förfrågningar
+Neue Kontrolle|New inspection|Ny tillsyn
+Neuen Betrieb anlegen|Create new company|Skapa nytt företag
+Neuer Auftrag für eigenen Kunden|New order for own customer|Nytt uppdrag för egen kund
+Neues Konto|New account|Nytt konto
+Neueste zuerst|Newest first|Nyaste först
+Niederlande|Netherlands|Nederländerna
+Noch kein Hausbesitzer verbunden.|No homeowner connected yet.|Ingen husägare ansluten ännu.
+Noch kein Kunde verbunden|No customer connected yet|Ingen kund ansluten ännu
+Noch keine Angebote.|No quotes yet.|Inga offerter ännu.
+Noch keine Jahresverträge|No annual agreements yet|Inga årsavtal ännu
+Noch keine Leistungen|No services yet|Inga tjänster ännu
+Noch keine Nachrichten.|No messages yet.|Inga meddelanden ännu.
+Noch keine eigenen Kunden.|No own customers yet.|Inga egna kunder ännu.
+Norwegen|Norway|Norge
+Notizen|Notes|Anteckningar
+Nummer|Number|Nummer
+Nur als erledigt melden|Only mark as done|Markera bara som klar
+Nur lesen|Read only|Endast läsa
+Objekt|Property|Objekt
+Objekt hinzufügen|Add property|Lägg till objekt
+Objekt speichern|Save property|Spara objekt
+Offen|Open|Öppen
+Offene Angebote|Open quotes|Öppna offerter
+Offene Aufträge|Open orders|Öppna uppdrag
+Offene Einladungen|Open invitations|Öppna inbjudningar
+Offene Vorschläge|Open proposals|Öppna förslag
+Ort|City|Ort
+PLZ|Postcode|Postnummer
+Paket hinzufügen|Add package|Lägg till paket
+Partner-Portal|Partner portal|Partnerportal
+Passwort|Password|Lösenord
+Passwort vergessen?|Forgot password?|Glömt lösenordet?
+Preis|Price|Pris
+Preis auf Anfrage|Price on request|Pris på förfrågan
+Rechnung|Invoice|Faktura
+Rechnung erstellen|Create invoice|Skapa faktura
+Rechnung senden|Send invoice|Skicka faktura
+Rechnungen|Invoices|Fakturor
+Rechnungen erstellst du im jeweiligen Auftrag.|You create invoices in the respective order.|Fakturor skapar du i respektive uppdrag.
+Rechnungsdatum|Invoice date|Fakturadatum
+Rechnungsnummer|Invoice number|Fakturanummer
+Rechtsform|Legal form|Bolagsform
+Reinigung|Cleaning|Städning
+Reparatur|Repair|Reparation
+Rhythmus|Frequency|Intervall
+Rolle|Role|Roll
+Sammelrechnung|Combined invoice|Samlingsfaktura
+Sanierungen|Renovations|Renoveringar
+Sanitär|Plumbing|VVS
+Schweden|Sweden|Sverige
+Schwedische Kronen (kr)|Swedish kronor (kr)|Svenska kronor (kr)
+Schweiz|Switzerland|Schweiz
+Senden|Send|Skicka
+Servicearbeiten|Service work|Servicearbeten
+Sonstiges|Other|Övrigt
+Sortieren|Sort|Sortera
+Speichern|Save|Spara
+Start|Home|Start
+Storniert|Cancelled|Makulerad
+Straße|Street|Gata
+Straße und Hausnummer|Street and number|Gatuadress
+Team beitreten|Join team|Gå med i teamet
+Techniker|Technician|Tekniker
+Techniker – nur zugewiesene Aufträge|Technician – assigned orders only|Tekniker – endast tilldelade uppdrag
+Telefon|Phone|Telefon
+Termin|Appointment|Tid
+Termin & Start|Appointment & start|Tid & start
+Termin (optional)|Appointment (optional)|Tid (valfritt)
+Termin gespeichert.|Appointment saved.|Tiden sparad.
+Termin speichern|Save appointment|Spara tid
+Terminiert|Scheduled|Schemalagd
+Titel *|Title *|Titel *
+Verbinden|Connect|Anslut
+Vertrag bearbeiten|Edit agreement|Redigera avtal
+Verwaltung|Management|Förvaltning
+Vorgeschlagen|Proposed|Föreslagen
+Vorlage|Template|Mall
+Vorname|First name|Förnamn
+Vorschlag abgelehnt.|Proposal declined.|Förslaget avböjt.
+Vorschlag senden|Send proposal|Skicka förslag
+Wartet auf Zustimmung des Kunden|Waiting for the customer's approval|Väntar på kundens godkännande
+Webseite|Website|Webbplats
+Weitere Jahresrechnung|Another annual invoice|Ytterligare årsfaktura
+Wiederherstellen|Restore|Återställ
+Winterdienst|Winter service|Vinterunderhåll
+Wohnfläche|Living area|Boyta
+Währung|Currency|Valuta
+Zahlbar bis|Payable by|Betalas senast
+Zimmer|Rooms|Rum
+Zu Aufträgen|To orders|Till uppdrag
+Zum Start|To home|Till start
+Zur Hausbesitzer-Ansicht|To the homeowner view|Till husägarvyn
+Zurück|Back|Tillbaka
+Zurück zu den Einstellungen|Back to settings|Tillbaka till inställningar
+Zurückgezogen|Withdrawn|Återkallad
+Zurückziehen|Withdraw|Återkalla
+Zusammenfassung|Summary|Sammanfattning
+Zusammenfassung für den Kunden|Summary for the customer|Sammanfattning för kunden
+alle 2 Wochen|every 2 weeks|varannan vecka
+bezahlt|paid|betalt
+monatlich|monthly|månadsvis
+nach Bedarf|as needed|vid behov
+saisonal|seasonal|säsongsvis
+vierteljährlich|quarterly|kvartalsvis
+wöchentlich|weekly|veckovis
+Änderung speichern|Save changes|Spara ändringar
+Öffnungszeiten|Opening hours|Öppettider
+Österreich|Austria|Österrike
+Überfällig|Overdue|Förfallen
+– nicht zugewiesen –|– not assigned –|– ej tilldelad –
+Bearbeiten|Edit|Redigera
+Weitere Aufgabe|Another task|Ytterligare uppgift
+Einstellungen|Settings|Inställningar
+Startseite|Home screen|Startsida
+Darstellung|Appearance|Utseende
+Darstellung & Sprache|Appearance & language|Utseende & språk
+Erscheinungsbild|Theme|Tema
+Hell|Light|Ljust
+Dunkel|Dark|Mörkt
+Automatisch|Automatic|Automatiskt
+Schriftgröße|Font size|Textstorlek
+Normal|Normal|Normal
+Groß|Large|Stor
+Sehr groß|Extra large|Mycket stor
+Sprache|Language|Språk
+Daten & App|Data & app|Data & app
+Über Husora|About Husora|Om Husora
+Impressum|Legal notice|Juridisk information
+Datenschutzerklärung|Privacy policy|Integritetspolicy
+Datenschutz|Privacy|Integritet
+AGB|Terms|Villkor
+Hinweis zu Partnerdaten|Note on partner data|Information om partnerdata
+Lizenzen & Datenquellen|Licences & data sources|Licenser & datakällor
+Datensicherung|Backup|Säkerhetskopia
+Kacheln der Startseite|Home screen tiles|Startsidans rutor
+Übersicht|Overview|Översikt
+Serviceaufgaben|Service tasks|Serviceuppgifter
+Buchungen|Bookings|Bokningar
+Kosten|Costs|Kostnader
+Verträge & Fristen|Contracts & deadlines|Avtal & frister
+Zählerstände|Meter readings|Mätarställningar
+Reparatur & Instandhaltung|Repair & maintenance|Reparation & underhåll
+Sanierung & Renovierung|Renovation & refurbishment|Sanering & renovering
+Automatisierung|Automation|Automatisering
+Saison-Checklisten|Seasonal checklists|Säsongschecklistor
+Servicepartner finden|Find service partners|Hitta servicepartner
+Zugeordnete Servicepartner|Assigned service partners|Tilldelade servicepartner
+Notfall & Zugang|Emergency & access|Nödfall & åtkomst
+Benutzerprofil|User profile|Användarprofil
+Versionen|Plans|Abonnemang
+Hilfe & Support|Help & support|Hjälp & support
+Rechtliches|Legal|Juridiskt
+Hausmodell|House model|Husmodell
+Portfolio|Portfolio|Portfölj
+Menü|Menu|Meny
+Ferienhäuser|Holiday homes|Fritidshus
+Mein Ferienhaus|My holiday home|Mitt fritidshus
+Objektübersicht|Property overview|Objektöversikt
+Hauskontrolle|House inspection|Hustillsyn
+Zur Übersicht|To overview|Till översikt
+Smart House Care|Smart House Care|Smart House Care
+Upgrade|Upgrade|Uppgradera
+Kein Mangel|No defect|Ingen brist
+Keine offenen Mängel|No open defects|Inga öppna brister
+Offene Mängel|Open defects|Öppna brister
+Mängel aus Kontrollen|Defects from inspections|Brister från tillsyner
+Firma und Rolle|Company and role|Företag och roll
+Kacheln auswählen|Choose tiles|Välj rutor
+Hausbesitzer-Ansicht|Homeowner view|Husägarvy
+Rechnungen & Angebote|Invoices & quotes|Fakturor & offerter
+Absender für Nachrichten an deine Servicepartner|Sender for messages to your service partners|Avsändare för meddelanden till dina servicepartner
+Aktivitätsprotokoll|Activity log|Aktivitetslogg
+Alle Daten löschen|Delete all data|Radera all data
+Angaben zum Haus|House details|Uppgifter om huset
+Anreisen der nächsten Tage|Arrivals in the next days|Ankomster de närmaste dagarna
+Anreisen und Gästewechsel|Arrivals and guest changeovers|Ankomster och gästbyten
+Antworten auf häufige Fragen, Erste Schritte und Kontakt.|Answers to frequent questions, first steps and contact.|Svar på vanliga frågor, första steg och kontakt.
+Anzahl Ferienhäuser|Number of holiday homes|Antal fritidshus
+Archiv der Prüfprotokolle|Inspection report archive|Arkiv över tillsynsprotokoll
+Art der Dokumente|Document type|Dokumenttyp
+Art der Meldung|Type of message|Typ av meddelande
+Auch die Daten auf diesem Gerät löschen|Also delete the data on this device|Radera även data på denna enhet
+Auf der Karte anzeigen|Show on map|Visa på kartan
+Auffälligkeit|Finding|Anmärkning
+Auffälligkeit melden|Report a finding|Rapportera anmärkning
+Aufgabe bearbeiten|Edit task|Redigera uppgift
+Aufgabe erstellen|Create task|Skapa uppgift
+Aufgabe löschen|Delete task|Radera uppgift
+Aufgabe selbst erledigen statt Servicepartner|Do the task yourself instead of a service partner|Gör uppgiften själv istället för servicepartner
+Aufgabenpaket aus Vorlage wählen|Choose a task package from a template|Välj uppgiftspaket från mall
+Aus der Cloud laden|Load from cloud|Hämta från molnet
+Automatisch alle 15 Minuten abgleichen, solange die App geöffnet ist|Sync automatically every 15 minutes while the app is open|Synka automatiskt var 15:e minut medan appen är öppen
+Automatische Reparaturaufträge|Automatic repair orders|Automatiska reparationsuppdrag
+Basis-Hauskontrolle und Saison-Checklisten|Basic house inspection and seasonal checklists|Grundläggande hustillsyn och säsongschecklistor
+Bei längerer Abwesenheit|During longer absences|Vid längre frånvaro
+Belegung heute|Occupancy today|Beläggning idag
+Bereiche auf der Startseite|Sections on the home screen|Avsnitt på startsidan
+Bereiche der Einstellungen|Settings sections|Inställningsavsnitt
+Betrag pro Jahr|Amount per year|Belopp per år
+Beträge in Euro anzeigen|Show amounts in euro|Visa belopp i euro
+Buchungen und datierte Serviceaufgaben im Monatsüberblick.|Bookings and dated service tasks in a monthly overview.|Bokningar och daterade serviceuppgifter i månadsöversikt.
+Buchungen, Stugapflege und Serviceeinsätze für dein Ferienhaus.|Bookings, cottage care and service visits for your holiday home.|Bokningar, stugskötsel och serviceinsatser för ditt fritidshus.
+Budget je Monat aus dem Jahresplan|Monthly budget from the annual plan|Budget per månad från årsplanen
+Cloud-Speicher und Datensicherung.|Cloud storage and backup.|Molnlagring och säkerhetskopia.
+Code Schlüsselbox|Key box code|Kod till nyckelskåp
+Die Reihenfolge folgt dem Menü.|The order follows the menu.|Ordningen följer menyn.
+Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.|No service partners are assigned to this holiday home yet.|Inga servicepartner är tilldelade detta fritidshus ännu.
+Dieses Gerät|This device|Denna enhet
+Direkt an das Husora-Team – ohne E-Mail-Programm.|Directly to the Husora team – no e-mail app needed.|Direkt till Husora-teamet – utan e-postprogram.
+E-Mail für Rückfragen (optional)|E-mail for questions (optional)|E-post för frågor (valfritt)
+Einfache Darstellung der Startseite|Simple home screen layout|Enkel startsida
+Entfernt sämtliche Husora-Daten von diesem Gerät.|Removes all Husora data from this device.|Tar bort all Husora-data från denna enhet.
+Erinnerung an die Datensicherung|Backup reminder|Påminnelse om säkerhetskopia
+Erinnerungen|Reminders|Påminnelser
+Ferienhaus-Kosten|Holiday home costs|Fritidshuskostnader
+Frost-, Sturm- und Unwetterhinweise|Frost, storm and severe weather alerts|Varningar för frost, storm och oväder
+Frühjahrsöffnung|Spring opening|Vårstart
+Fällig|Due|Förfaller
+Fällige und überfällige Aufgaben|Due and overdue tasks|Förfallna och försenade uppgifter
+Für Eigentümer mit mehr Überblick|For owners who want more overview|För ägare som vill ha mer överblick
+Für Portfolios und Profis|For portfolios and professionals|För portföljer och proffs
+Für dein erstes Ferienhaus|For your first holiday home|För ditt första fritidshus
+Für diesen Tag sind keine Termine eingetragen.|No appointments for this day.|Inga tider denna dag.
+Für dieses Ferienhaus sind noch keine Dokumente gespeichert.|No documents saved for this holiday home yet.|Inga dokument sparade för detta fritidshus ännu.
+Für dieses Ferienhaus sind noch keine Prüfprotokolle archiviert.|No inspection reports archived for this holiday home yet.|Inga tillsynsprotokoll arkiverade för detta fritidshus ännu.
+Gäste|Guests|Gäster
+Haus & Verwaltung|House & management|Hus & förvaltning
+Haus, Nutzung und erste Schritte einrichten|Set up house, use and first steps|Ställ in hus, användning och första steg
+Hauskontrolle und Saison-Checklisten|House inspection and seasonal checklists|Hustillsyn och säsongschecklistor
+Hausservice und Sanierungsunternehmen im Umkreis deines Ferienhauses.|House service and renovation companies near your holiday home.|Husservice- och renoveringsföretag nära ditt fritidshus.
+Hell oder dunkel, Schriftgröße und Sprache der App.|Light or dark, font size and app language.|Ljust eller mörkt, textstorlek och appens språk.
+Hinzufügen|Add|Lägg till
+Husora · Das Managementsystem für deine Stuga|Husora · The management system for your cottage|Husora · Förvaltningssystemet för din stuga
+Häufige Fragen|Frequently asked questions|Vanliga frågor
+Häuser|Houses|Hus
+Idee oder Feedback|Idea or feedback|Idé eller feedback
+In welcher Sprache gehen Aufträge an Servicepartner?|In which language are orders sent to service partners?|På vilket språk skickas uppdrag till servicepartner?
+Kacheln auf der Startseite|Tiles on the home screen|Rutor på startsidan
+Kalender, Aufgaben und Kostenübersicht|Calendar, tasks and cost overview|Kalender, uppgifter och kostnadsöversikt
+Keine Mängel|No defects|Inga brister
+Konto endgültig löschen|Delete account permanently|Radera kontot permanent
+Konto und Cloud-Daten löschen|Delete account and cloud data|Radera konto och molndata
+Kontrollpläne|Inspection plans|Tillsynsplaner
+Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.|Coordinate cleaning, key handovers and seasonal cottage care.|Samordna städning, nyckelöverlämningar och säsongsskötsel.
+Kostenübersicht|Cost overview|Kostnadsöversikt
+Kumulierte Kosten gegenüber dem Jahresplan|Cumulative costs against the annual plan|Ackumulerade kostnader mot årsplanen
+Kündigungsfristen und Termine|Notice periods and dates|Uppsägningstider och datum
+Lade jetzt alle Daten dieses Geräts in die Cloud.|Upload all data of this device to the cloud now.|Ladda upp all data från denna enhet till molnet nu.
+Lege fest, was geprüft wird, und beauftrage deinen Servicepartner.|Define what is checked and commission your service partner.|Bestäm vad som kontrolleras och ge din servicepartner uppdraget.
+Mein Haus|My house|Mitt hus
+Mein Haus / Ferienhäuser|My house / holiday homes|Mitt hus / fritidshus
+Menü und Benutzerprofil|Menu and user profile|Meny och användarprofil
+Menü und Benutzerprofil öffnen|Open menu and user profile|Öppna meny och användarprofil
+Mitteilungen auf diesem Gerät|Notifications on this device|Aviseringar på denna enhet
+Monat|Month|Månad
+Mängel und Reparaturen|Defects and repairs|Brister och reparationer
+Mängel, die du bei Kontrollen meldest, erscheinen hier.|Defects you report during inspections appear here.|Brister som du rapporterar vid tillsyn visas här.
+Nach Priorität filtern|Filter by priority|Filtrera efter prioritet
+Noch kein Abgleich mit diesem Gerät.|Not synced with this device yet.|Ännu inte synkad med denna enhet.
+Noch kein Servicepartner zugeordnet|No service partner assigned yet|Ingen servicepartner tilldelad ännu
+Noch kein eigenes Objekt|No own property yet|Inget eget objekt ännu
+Noch keine Buchungen oder Eigennutzung eingetragen.|No bookings or own use entered yet.|Inga bokningar eller egen användning inlagda ännu.
+Noch keine Nachrichten – schreib deinem Kunden.|No messages yet – write to your customer.|Inga meddelanden ännu – skriv till din kund.
+Noch nicht bewertet|Not rated yet|Inte bedömd ännu
+Noch nie durchgeführt|Never carried out|Aldrig utförd
+Nur Überschriften zeigen|Show headings only|Visa endast rubriker
+Nutzung & Anzahl der Ferienhäuser|Use & number of holiday homes|Användning & antal fritidshus
+Nutzung der Immobilie|Use of the property|Användning av fastigheten
+Nächste Buchungen|Upcoming bookings|Kommande bokningar
+Nächster Monat|Next month|Nästa månad
+Offene Mängel ohne Auftrag|Open defects without an order|Öppna brister utan uppdrag
+Optionale Hinweise zur Aufgabe|Optional notes on the task|Valfria anteckningar om uppgiften
+Partner in der Nähe finden|Find partners nearby|Hitta partner i närheten
+Partner-Portal öffnen|Open partner portal|Öppna partnerportalen
+Persönliche Einstellungen|Personal settings|Personliga inställningar
+Plan Jahr|Annual plan|Plan år
+Plan bis heute|Plan to date|Plan hittills
+Plan pro Jahr|Plan per year|Plan per år
+Plan pro Monat|Plan per month|Plan per månad
+Plan und Ist je Position|Plan and actual per item|Plan och utfall per post
+Portfolioübersicht|Portfolio overview|Portföljöversikt
+Prioritätssupport|Priority support|Prioriterad support
+Prüfen|Check|Kontrollera
+Prüfpositionen festlegen|Define inspection items|Bestäm kontrollpunkter
+Prüfprotokoll vom Servicepartner|Inspection report from the service partner|Tillsynsprotokoll från servicepartnern
+Prüfprotokoll-Vorlagen|Inspection report templates|Mallar för tillsynsprotokoll
+Rechnungen noch nicht übernommen|Invoices not yet imported|Fakturor ännu inte överförda
+Reinigung & Gästewechsel|Cleaning & guest changeover|Städning & gästbyte
+Schließen|Close|Stäng
+Schlüssel – Ort / Übergabe|Key – location / handover|Nyckel – plats / överlämning
+Serviceaufträge senden|Send service orders|Skicka serviceuppdrag
+Servicepartner|Service partners|Servicepartner
+Servicepartner-Portal mit Messenger|Service partner portal with messenger|Servicepartnerportal med chatt
+Speicher auf diesem Gerät|Storage on this device|Lagring på denna enhet
+Speichern und abgleichen|Save and sync|Spara och synka
+Sprache für Aufträge|Language for orders|Språk för uppdrag
+Sprache für Aufträge und Anschreiben|Language for orders and letters|Språk för uppdrag och brev
+Startseite, Darstellung, Erinnerungen und Datensicherung.|Home screen, appearance, reminders and backup.|Startsida, utseende, påminnelser och säkerhetskopia.
+Startseite, Darstellung, Sprache, Daten & App, Über Husora|Home screen, appearance, language, data & app, about Husora|Startsida, utseende, språk, data & app, om Husora
+Status prüfen|Check status|Kontrollera status
+Straße, Postleitzahl und Ort|Street, postcode and city|Gata, postnummer och ort
+Tippe ein Dokument an, um es in der App zu öffnen.|Tap a document to open it in the app.|Tryck på ett dokument för att öppna det i appen.
+Unterlagen für dein Ferienhaus|Documents for your holiday home|Handlingar för ditt fritidshus
+Unterstützte Seiten|Supported sites|Webbplatser som stöds
+Verwalte die Angaben für dein Husora-Konto.|Manage the details of your Husora account.|Hantera uppgifterna för ditt Husora-konto.
+Vor- und Nachname|First and last name|För- och efternamn
+Vorheriger Monat|Previous month|Föregående månad
+Warum bekomme ich keine Erinnerungen, wenn die App geschlossen ist?|Why don't I get reminders when the app is closed?|Varför får jag inga påminnelser när appen är stängd?
+Was Husora dir oben über die Glocke meldet.|What Husora reports to you via the bell at the top.|Vad Husora meddelar dig via klockan högst upp.
+Was ist dir aufgefallen, was sollen wir verbessern?|What did you notice, what should we improve?|Vad har du märkt, vad ska vi förbättra?
+Was ist enthalten?|What is included?|Vad ingår?
+Was passiert mit Mängeln aus der Kontrolle?|What happens to defects from the inspection?|Vad händer med brister från tillsynen?
+Welche Kacheln die Startseite zeigt.|Which tiles the home screen shows.|Vilka rutor startsidan visar.
+Wie übertrage ich meine Daten auf ein anderes Gerät?|How do I transfer my data to another device?|Hur flyttar jag mina data till en annan enhet?
+Woche|Week|Vecka
+Wähle bis zu 10 Kacheln, die auf der Übersicht erscheinen.|Choose up to 10 tiles to show on the overview.|Välj upp till 10 rutor som visas på översikten.
+Zur Bestätigung|To confirm|För att bekräfta
+Zurück zur vorherigen Seite|Back to the previous page|Tillbaka till föregående sida
+Zusätzlich zur Cloud: eine Sicherungsdatei zum Aufbewahren.|In addition to the cloud: a backup file to keep.|Utöver molnet: en säkerhetskopia att spara.
+Zählerstände ablesen|Read meters|Läs av mätare
+nicht enthalten|not included|ingår inte
+noch leer|still empty|ännu tom
+noch nie protokolliert|never recorded|aldrig protokollfört
+pro Jahr|per year|per år
+pro Monat|per month|per månad
+pro Monat · inkl. MwSt.|per month · incl. VAT|per månad · inkl. moms
+z. B. Rasen mähen|e.g. mow the lawn|t.ex. klippa gräset
+z. B. Winterdienst Einfahrt, Gästewechsel komplett|e.g. driveway snow clearing, full guest changeover|t.ex. snöröjning infart, komplett gästbyte
+z. B. erreichbar ab 17 Uhr, Schlüssel beim Nachbarn|e.g. reachable from 5 pm, key with the neighbour|t.ex. nåbar efter kl. 17, nyckel hos grannen
+Übernehmen|Apply|Använd
+„Automatisch“ folgt der Einstellung deines Geräts.|“Automatic” follows your device setting.|”Automatiskt” följer enhetens inställning.
+Standard wiederherstellen|Restore default|Återställ standard
+Startseite gestalten|Customise home screen|Anpassa startsidan
+Darstellung & Erinnerungen|Appearance & reminders|Utseende & påminnelser
+Cloud-Speicher (Supabase)|Cloud storage (Supabase)|Molnlagring (Supabase)
+Wiederkehrende Aufgaben (z. B. Rasen mähen, monatliche Kontrolle) zum festen Jahrespreis – einmal im Jahr abrechnen statt jeden Einsatz einzeln.|Recurring tasks (e.g. mowing, monthly inspection) at a fixed annual price – invoice once a year instead of every visit.|Återkommande uppgifter (t.ex. gräsklippning, månatlig tillsyn) till fast årspris – fakturera en gång per år istället för varje besök.
+Offene Mängel aus deinen Kontrollen – tippe einen Mangel an, um die Kontrolle zu öffnen.|Open defects from your inspections – tap a defect to open the inspection.|Öppna brister från dina tillsyner – tryck på en brist för att öppna tillsynen.
+Gilt für die ganze App (Hausbesitzer- und Partner-Ansicht) auf diesem Gerät. Eigene Einträge wie Namen, Adressen und Notizen werden nicht übersetzt.|Applies to the whole app (homeowner and partner view) on this device. Your own entries such as names, addresses and notes are not translated.|Gäller hela appen (husägar- och partnervy) på denna enhet. Egna uppgifter som namn, adresser och anteckningar översätts inte.
+Deine Leistungspakete mit Preis je Arbeitspaket, Stunde oder Einsatz. Husora nutzt die Bereiche, um dich Hausbesitzern in deiner Region passend vorzuschlagen.|Your service packages with a price per job, hour or visit. Husora uses the categories to suggest you to homeowners in your region.|Dina tjänstepaket med pris per arbete, timme eller besök. Husora använder områdena för att föreslå dig för husägare i din region.
+Startseite, Darstellung, Sprache, Daten & App, Über Husora|Home screen, appearance, language, data & app, about Husora|Startsida, utseende, språk, data & app, om Husora
+Stand|As of|Per
+Hausbesitzer-Ansicht|Homeowner view|Husägarvy
+Mit demselben Konto verwaltest du in der Hausbesitzer-Ansicht deine eigenen Ferienhäuser.|With the same account you manage your own holiday homes in the homeowner view.|Med samma konto hanterar du dina egna fritidshus i husägarvyn.
+Kunden & Objekte|Customers & properties|Kunder & objekt
+Angebote & Rechnungen|Quotes & invoices|Offerter & fakturor
+Firmendaten, Bank, Öffnungszeiten|Company details, bank, opening hours|Företagsuppgifter, bank, öppettider
+Keine offenen Kontrollen|No open inspections|Inga öppna tillsyner
+in Bearbeitung|in progress|pågår
+Jetzt|Now|Nu
+Planwerte|Planned values|Planvärden
+geplante Schritte|planned steps|planerade steg
+verwalten|manage|hantera
+gesamt ·|total ·|totalt ·
+Noch keine Aufträge. Sobald ein Kunde dich beauftragt, erscheint der Auftrag hier.|No orders yet. As soon as a customer commissions you, the order appears here.|Inga uppdrag ännu. Så snart en kund ger dig ett uppdrag visas det här.
+Heute im Ferienhaus|Today at the holiday home|Idag i fritidshuset
+Frei|Free|Ledigt
+Keine Buchungen|No bookings|Inga bokningar
+Kein Projekt|No project|Inget projekt
+Noch keiner zugeordnet|None assigned yet|Ingen tilldelad ännu
+Alle aufklappen|Expand all|Visa alla
+Alle zuklappen|Collapse all|Dölj alla
+Bereiche|Sections|Avsnitt
+Neue Aufgabe|New task|Ny uppgift
+Aufgabe|Task|Uppgift
+Ferienhaus hinzufügen|Add holiday home|Lägg till fritidshus
+Ferienhäuser|Holiday homes|Fritidshus
+Wetter|Weather|Väder
+Notfall|Emergency|Nödfall
+Schnellaktionen|Quick actions|Snabbval
+Zu den Kosten|To costs|Till kostnader
+Kontrolle beauftragen|Commission inspection|Beställ tillsyn
+Liste kopieren|Copy list|Kopiera lista
+SP beauftragen|Commission SP|Beställ SP
+SP beauftragt|SP commissioned|SP beställd
+Erledigt|Done|Klar
+Offen|Open|Öppen
+Dringend|Urgent|Brådskande
+Wichtig|Important|Viktigt
+Fällig heute|Due today|Förfaller idag
+Morgen|Tomorrow|Imorgon
+`;
+    // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
+    // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
+    // Eigene Einträge (Namen, Adressen, Notizen) bleiben, wie sie sind.
+    const APP_LANGS = [['de', 'Deutsch'], ['en', 'English'], ['sv', 'Svenska']];
+    const APP_LANG_KEY = 'husora-lang';
+    let appLang = (() => { try { const v = localStorage.getItem(APP_LANG_KEY); return ['en', 'sv'].includes(v) ? v : 'de'; } catch (error) { return 'de'; } })();
+    const I18N = new Map(I18N_SOURCE.trim().split('\n').map((line) => { const [de, en, sv] = line.split('|'); return [de, { en, sv }]; }));
+    // Texte mit Zahlen
+    const I18N_PATTERNS = [
+      [/^(\d+) offen$/, { en: '$1 open', sv: '$1 öppna' }],
+      [/^(\d+) neue Anfragen?$/, { en: '$1 new request(s)', sv: '$1 nya förfrågningar' }],
+      [/^(\d+) in Bearbeitung$/, { en: '$1 in progress', sv: '$1 pågår' }],
+      [/^(\d+) abgeschlossen$/, { en: '$1 completed', sv: '$1 avslutade' }],
+      [/^(\d+) Objekte$/, { en: '$1 properties', sv: '$1 objekt' }],
+      [/^(\d+) Vorschläge$/, { en: '$1 proposals', sv: '$1 förslag' }],
+      [/^(\d+) offene Angebote$/, { en: '$1 open quotes', sv: '$1 öppna offerter' }],
+      [/^(\d+) ausgewählt$/, { en: '$1 selected', sv: '$1 valda' }],
+      [/^(\d+) gemeinsam beenden$/, { en: 'Complete $1 together', sv: 'Avsluta $1 samtidigt' }],
+      [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
+      [/^(\d+) überfällig$/, { en: '$1 overdue', sv: '$1 försenade' }],
+      [/^(\d+) % erledigt$/, { en: '$1 % done', sv: '$1 % klart' }],
+      [/^(.*), (\d{1,2}:\d{2}) Uhr$/, { en: '$1, $2', sv: '$1, $2' }],
+      [/^(\d+) Tage? überfällig$/, { en: '$1 day(s) overdue', sv: '$1 dag(ar) försenad' }],
+      [/^(\d+) offen · (\d+) (erledigt|überfällig)$/, { en: '$1 open · $2 $3', sv: '$1 öppna · $2 $3' }],
+      [/^Überfällig · seit (\d+) Tagen$/, { en: 'Overdue · for $1 days', sv: 'Försenad · sedan $1 dagar' }],
+      [/^(\d+) Häuser? · (\d+) Benutzer$/, { en: '$1 house(s) · $2 users', sv: '$1 hus · $2 användare' }],
+      [/^Kosten (\d{4})$/, { en: 'Costs $1', sv: 'Kostnader $1' }],
+      [/^offen \((\d+)\)$/, { en: 'open ($1)', sv: 'öppna ($1)' }],
+      [/^(.+) ist ab (FREE|PLUS|PRO|ULTIMATE) verfügbar$/, null],
+      [/^(.+) \((\d+)\)$/, null] // Überschrift mit Anzahl: Teil vor der Klammer übersetzen
+    ];
+    const I18N_UNITS = { offen: ['open', 'öppna'], Mangel: ['defect', 'brist'], 'Mängel': ['defects', 'brister'], Termin: ['appointment', 'tid'], Termine: ['appointments', 'tider'], Kunde: ['customer', 'kund'], Kunden: ['customers', 'kunder'], ungelesen: ['unread', 'olästa'], aktiv: ['active', 'aktiva'], Dokumente: ['documents', 'dokument'], heute: ['today', 'idag'], 'keine neuen Anfragen': ['no new requests', 'inga nya förfrågningar'], 'aus Kontrollen gemeldet': ['reported in inspections', 'rapporterade vid tillsyn'], 'alles in Ordnung': ['all fine', 'allt i ordning'], 'ohne Archiv': ['excluding archive', 'utan arkiv'], 'zugeordnet': ['assigned', 'tilldelade'], 'kommend': ['upcoming', 'kommande'] };
+    function i18nString(text) {
+      if (appLang === 'de' || !text) return text;
+      const trimmed = text.trim();
+      if (!trimmed || !/[A-Za-zÄÖÜäöüß]/.test(trimmed)) return text;
+      const index = appLang === 'en' ? 0 : 1;
+      let out = I18N.get(trimmed)?.[appLang];
+      if (!out && I18N_UNITS[trimmed]) out = I18N_UNITS[trimmed][index];
+      if (!out) {
+        for (const [re, map] of I18N_PATTERNS) {
+          const m = trimmed.match(re);
+          if (!m) continue;
+          if (map) { out = trimmed.replace(re, map[appLang]); break; }
+          const head = I18N.get(m[1].trim())?.[appLang];
+          if (head && /verfügbar$/.test(trimmed)) { out = appLang === 'en' ? `${head} is available from ${m[2]}` : `${head} finns från ${m[2]}`; break; }
+          if (head) { out = `${head} (${m[2]})`; break; }
+        }
+      }
+      if (!out) return text;
+      if (appLang !== 'de') out = out.replace(/\berledigt\b/g, appLang === 'en' ? 'done' : 'klara').replace(/überfällig/g, appLang === 'en' ? 'overdue' : 'försenade');
+      return text.replace(trimmed, out);
+    }
+    const I18N_ATTRS = ['placeholder', 'title', 'aria-label'];
+    function i18nApply(root) {
+      if (appLang === 'de' || !root) return;
+      if (root.nodeType === 3) { if (!root.parentElement?.closest('[data-no-i18n], script, style, textarea')) { const t = i18nString(root.nodeValue); if (t !== root.nodeValue) root.nodeValue = t; } return; }
+      if (root.nodeType !== 1 || root.closest?.('[data-no-i18n], script, style')) return;
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: (node) => (node.parentElement?.closest('[data-no-i18n], script, style, textarea') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT) });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => { const t = i18nString(node.nodeValue); if (t !== node.nodeValue) node.nodeValue = t; });
+      [root, ...root.querySelectorAll('[placeholder], [title], [aria-label]')].forEach((el) => I18N_ATTRS.forEach((attr) => { const v = el.getAttribute?.(attr); if (v) { const t = i18nString(v); if (t !== v) el.setAttribute(attr, t); } }));
+    }
+    if (appLang !== 'de') {
+      document.documentElement.lang = appLang;
+      const pending = new Set();
+      let scheduled = false;
+      const flush = () => { scheduled = false; const list = [...pending]; pending.clear(); list.forEach((node) => { if (node.isConnected) i18nApply(node); }); };
+      new MutationObserver((mutations) => {
+        mutations.forEach((m) => { if (m.type === 'characterData') pending.add(m.target); else m.addedNodes.forEach((node) => pending.add(node)); });
+        if (!scheduled) { scheduled = true; queueMicrotask(flush); }
+      }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+      document.addEventListener('DOMContentLoaded', () => i18nApply(document.body));
+      if (document.body) i18nApply(document.body);
+    }
+    function setAppLanguage(lang) {
+      if (!['de', 'en', 'sv'].includes(lang) || lang === appLang) return;
+      try { localStorage.setItem(APP_LANG_KEY, lang); } catch (error) { /* optional */ }
+      location.reload();
+    }
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-app-lang]');
+      if (button) setAppLanguage(button.dataset.appLang);
+    });
     const icon = (name) => {
       const paths = {
         check: '<path d="m5 12 4 4L19 6"/>',
@@ -16984,7 +17744,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     const PP_QUOTE_STATUS = { requested: ['Angefragt', 'amber'], received: ['Eingereicht', 'amber'], approved: ['Angenommen', 'done'], rejected: ['Abgelehnt', 'red'], expired: ['Abgelaufen', 'muted'] };
     // Untere Leiste: genau fünf Symbole – alles Weitere unter „Mehr“
     const PP_NAV = [['dashboard', 'Start', 'home'], ['orders', 'Aufträge', 'task'], ['calendar', 'Kalender', 'calendar'], ['messages', 'Nachrichten', 'note', 'Chat'], ['more', 'Mehr', 'menu']];
-    const PP_MORE_VIEWS = ['customers', 'inspections', 'documents', 'finance', 'agreements', 'services', 'team', 'company'];
+    const PP_MORE_VIEWS = ['customers', 'inspections', 'defects', 'documents', 'finance', 'agreements', 'services', 'team', 'company', 'settings'];
     const pp = { open: false, view: 'dashboard', detail: null, filter: 'active', busy: '', error: '', notice: '', ctx: null, data: null, loadedAt: '', thumbs: {}, form: null };
     try { const cached = JSON.parse(localStorage.getItem(PP_CACHE_KEY) || 'null'); if (cached?.ctx) Object.assign(pp, { ctx: cached.ctx, data: cached.data, loadedAt: cached.loadedAt }); } catch (error) { /* kein Cache */ }
     const ppMode = () => { try { return localStorage.getItem(PP_MODE_KEY) || ''; } catch (error) { return ''; } };
@@ -17170,8 +17930,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const scroll = root.querySelector('.pp-main')?.scrollTop || 0;
       const org = ppOrg();
       const signedIn = cloudSignedIn();
-      const head = `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="home" aria-label="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}" title="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}">${org ? '' : `<span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span>`}<span class="pp-logo">${icon(org ? 'home' : 'gear')}</span><div><strong>${escapeHtml(org?.name || 'Husora für Servicepartner')}</strong><small>${org ? `${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())} · ${escapeHtml(cloud.session?.email || '')}` : 'Partner-Portal'}</small></div></button>
-        <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button>` : ''}</div></header>`;
+      const unreadCount = signedIn && org ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : 0;
+      const head = `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="home" aria-label="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}" title="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}">${org ? '' : `<span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span>`}<img class="pp-top-logo" src="assets/logo.png" alt="" aria-hidden="true"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></button>
+        <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-view="messages" aria-label="Nachrichten" title="Nachrichten">${icon('note')}${unreadCount ? `<span class="pp-count">${unreadCount > 9 ? '9+' : unreadCount}</span>` : ''}</button><button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button><button type="button" class="pp-icon-btn" data-pp-view="settings" aria-label="Einstellungen" title="Einstellungen">${icon('gear')}</button>` : ''}</div></header>`;
       let body;
       if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal arbeitet mit dem Husora-Cloud-Speicher.', `<div class="pp-actions" style="justify-content:center"><button type="button" class="primary-btn" data-pp-action="connect-default">Mit Husora verbinden</button></div>`);
       else if (!signedIn) body = ppLoginHtml();
@@ -17244,7 +18005,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (pp.detail?.type === 'inspection') return ppInspectionDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'customer') return ppCustomerDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'chat') return ppChatHtml(pp.detail.id);
-      return ({ dashboard: ppDashboardHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, agreements: ppAgreementsHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
+      return ({ dashboard: ppDashboardHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, agreements: ppAgreementsHtml, defects: ppDefectsHtml, settings: ppSettingsHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
     }
     function ppOrderCard(o) {
       return `<button type="button" class="pp-item" data-pp-open="order:${o.id}"><span class="pp-item-main"><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.property?.name || 'Objekt')} · ${escapeHtml(ppCustomerName(o.organization_id))}</small><small>${icon('calendar')} ${escapeHtml(ppDateTime(o.scheduled_at))}${o.assigned_user_id ? ` · ${escapeHtml(ppMemberName(o.assigned_user_id) || 'zugewiesen')}` : ''}</small></span>${ppBadge(PP_ORDER_STATUS, o.status)}</button>`;
@@ -17260,9 +18021,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const quotes = ppD('quotes').filter((q) => ['requested', 'received'].includes(q.status));
       const unread = ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe());
       const tile = (label, value, view, tone = '') => `<button type="button" class="pp-tile ${tone}" data-pp-view="${view}"><b>${value}</b><span>${label}</span></button>`;
-      const first = ppD('members').find((m) => m.user_id === ppMe())?.user?.first_name || ppOrg()?.contact_name?.split(/\s+/)[0] || '';
-      return `<div class="pp-welcome"><h1>Hallo${first ? `, ${escapeHtml(first)}` : ''}!</h1><p>${pp.loadedAt ? `Stand ${escapeHtml(fmtDateTime(pp.loadedAt))}` : ''}</p></div>
-        <div class="pp-tiles">${tile('Offene Aufträge', open.length, 'orders')}${tile('Neue Anfragen', offered.length, 'orders', offered.length ? 'amber' : '')}${tile('Heute', todayItems.length, 'calendar')}${tile('Kontrollen', upcoming.length, 'inspections')}${tile('Dringende Mängel', urgent.length, 'inspections', urgent.length ? 'red' : '')}${tile('Unbezahlte Rechnungen', unpaid.length, 'finance')}${tile('Offene Angebote', quotes.length, 'finance')}${tile('Nachrichten', unread.length, 'messages', unread.length ? 'amber' : '')}</div>
+      const org = ppOrg();
+      const initials = String(org?.name || '?').split(/\s+/).filter((w) => /[\p{L}\d]/u.test(w)).slice(0, 2).map((w) => [...w][0]).join('').toUpperCase();
+      return `<div class="pp-company"><span class="pp-company-mark" aria-hidden="true">${escapeHtml(initials)}</span><div><h1 data-no-i18n>${escapeHtml(org?.name || '')}</h1><p><b>${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())}</b>${pp.loadedAt ? ` · <span>Stand</span> ${escapeHtml(fmtDateTime(pp.loadedAt))}` : ''}</p></div></div>
+        ${ppTilesHtml()}
         ${offered.length ? ppSection('Neue Anfragen', `<div class="pp-list">${offered.map(ppOrderCard).join('')}</div>`) : ''}
         ${ppSection('Heute', todayItems.length ? `<div class="pp-list">${todayItems.map((x) => (x.order_number ? ppOrderCard(x) : ppInspectionCard(x))).join('')}</div>` : '<p class="pp-muted">Heute stehen keine Termine an.</p>')}
         ${urgent.length ? ppSection('Dringende Mängel', `<div class="pp-list">${urgent.slice(0, 6).map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.inspection.property?.name || '')}${item.notes ? ` · ${escapeHtml(item.notes)}` : ''}</small></span><span class="pp-badge red">Mangel</span></button>`).join('')}</div>`) : ''}
@@ -17900,6 +18662,81 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         pp.sel.clear(); pp.form = null;
       }, { notice: `${orders.length === 1 ? 'Rechnung' : `Sammelrechnung über ${orders.length} Aufträge`} an ${ppCustomerName(first.organization_id)} gesendet.` });
     });
+    // ----- Startseite des Partner-Portals: Kacheln (wählbar), Einstellungen -----
+    const PP_TILES = [
+      ['orders', 'Aufträge', 'task', 'assets/hausservice.jpg'],
+      ['inspections', 'Kontrollen', 'inspection', 'assets/hauskontrolle.jpg'],
+      ['defects', 'Mängel', 'alert', 'assets/ferienhaus.jpg'],
+      ['finance', 'Angebote & Rechnungen', 'cost', 'assets/kosten.jpg'],
+      ['calendar', 'Kalender', 'calendar', 'assets/booking-planer.jpg'],
+      ['customers', 'Kunden & Objekte', 'property', 'assets/meine-haeuser.jpg'],
+      ['messages', 'Nachrichten', 'note', 'assets/gaestewechsel.jpg'],
+      ['agreements', 'Jahresverträge', 'calendar', 'assets/schweden-landschaft.jpg'],
+      ['documents', 'Dokumente', 'document', 'assets/dokumente.jpg']
+    ];
+    const PP_TILES_DEFAULT = ['orders', 'inspections', 'defects', 'finance', 'calendar', 'customers'];
+    const PP_TILES_KEY = 'husora-pp-tiles';
+    const ppTiles = () => { try { const saved = JSON.parse(localStorage.getItem(PP_TILES_KEY) || 'null'); if (Array.isArray(saved)) return saved.filter((id) => PP_TILES.some(([t]) => t === id)); } catch (error) { /* Standard */ } return [...PP_TILES_DEFAULT]; };
+    // offene Mängel aus Kontrollen (je Prüfpunkt), neueste zuerst
+    const ppOpenDefects = () => ppD('inspections').filter((i) => i.status !== 'cancelled').flatMap((i) => (i.items || []).filter((item) => item.status === 'defect').map((item) => ({ ...item, inspection: i })))
+      .sort((a, b) => String(b.checked_at || b.inspection.completed_at || '').localeCompare(String(a.checked_at || a.inspection.completed_at || '')));
+    function ppTileInfo(id) {
+      const today = ppToday();
+      if (id === 'orders') { const open = ppOpenOrders(); const offered = ppD('orders').filter((o) => o.status === 'offered').length; return { value: open.length, unit: 'offen', note: offered ? `${offered} neue Anfrage${offered === 1 ? '' : 'n'}` : 'keine neuen Anfragen', tone: offered ? 'amber' : '' }; }
+      if (id === 'inspections') { const list = ppD('inspections'); const open = list.filter((i) => i.status === 'scheduled').length; const running = list.filter((i) => i.status === 'in_progress').length; return { value: open + running, unit: 'offen', note: running ? `${running} in Bearbeitung` : `${list.filter((i) => i.status === 'completed').length} abgeschlossen` }; }
+      if (id === 'defects') { const n = ppOpenDefects().length; return { value: n, unit: n === 1 ? 'Mangel' : 'Mängel', note: n ? 'aus Kontrollen gemeldet' : 'alles in Ordnung', tone: n ? 'red' : '' }; }
+      if (id === 'finance') { const unpaid = ppD('invoices').filter((i) => ['received', 'approved', 'overdue'].includes(i.status)); const sum = unpaid.reduce((s, x) => s + Number(x.amount_gross || 0), 0); return { value: unpaid.length, unit: 'offen', note: unpaid.length ? ppMoney(sum, unpaid[0]?.currency) : `${ppD('quotes').filter((q) => ['requested', 'received'].includes(q.status)).length} offene Angebote` }; }
+      if (id === 'calendar') { const n = [...ppD('orders').filter((o) => ppDayKey(o.scheduled_at) === today && !['completed', 'cancelled', 'rejected'].includes(o.status)), ...ppD('inspections').filter((i) => ppDayKey(i.scheduled_at) === today && i.status !== 'cancelled')].length; return { value: n, unit: n === 1 ? 'Termin' : 'Termine', note: 'heute' }; }
+      if (id === 'customers') { const c = ppD('customers').length; return { value: c, unit: c === 1 ? 'Kunde' : 'Kunden', note: `${ppD('properties').length} Objekte` }; }
+      if (id === 'messages') { const n = ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length; return { value: n, unit: 'ungelesen', note: 'Nachrichten', tone: n ? 'amber' : '' }; }
+      if (id === 'agreements') { const list = ppD('agreements'); return { value: list.filter((a) => a.status === 'active').length, unit: 'aktiv', note: `${list.filter((a) => a.status === 'proposed').length} Vorschläge` }; }
+      if (id === 'documents') { const archived = new Set(ppD('docArchive').map((x) => x.document_id)); const n = ppD('documents').filter((d) => !/^image\//.test(d.file_type || '') && !archived.has(d.id)).length; return { value: n, unit: 'Dokumente', note: 'ohne Archiv' }; }
+      return { value: '', unit: '', note: '' };
+    }
+    function ppTilesHtml() {
+      return `<div class="pp-home-tiles">${ppTiles().map((id) => { const [, label, ic, img] = PP_TILES.find(([t]) => t === id); const info = ppTileInfo(id); return `<button type="button" class="pp-home-tile ${info.tone || ''}" data-pp-view="${id}"><img src="${img}" alt="" aria-hidden="true"><span class="pp-home-tile-head"><span>${escapeHtml(label)}</span><span class="pp-home-tile-icon">${icon(ic)}</span></span><span class="pp-home-tile-value">${escapeHtml(String(info.value))} <small>${escapeHtml(info.unit)}</small></span><span class="pp-home-tile-note">${escapeHtml(info.note)}</span></button>`; }).join('')}</div>`;
+    }
+    function ppDefectsHtml() {
+      const list = ppOpenDefects();
+      return `${ppBack()}<div class="pp-page-head"><h1>Mängel</h1></div>
+        <p class="pp-muted">Offene Mängel aus deinen Kontrollen – tippe einen Mangel an, um die Kontrolle zu öffnen.</p>
+        <div class="pp-list">${list.map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml([item.inspection.property?.name || ppPropertyName(item.inspection.property_id), ppOwnerName(item.inspection.organization_id, item.inspection.property_id)].filter(Boolean).join(' · '))}</small>${item.notes ? `<small>${escapeHtml(item.notes)}</small>` : ''}</span>${item.estimated_cost ? `<span class="pp-amount">${escapeHtml(ppMoney(item.estimated_cost))}</span>` : ''}${ppBadge(PP_INSPECTION_STATUS, item.inspection.status)}</button>`).join('') || ppEmpty('Keine offenen Mängel', 'Mängel, die du bei Kontrollen meldest, erscheinen hier.')}</div>`;
+    }
+    // Einstellungen des Partner-Portals
+    function ppSettingsHtml() {
+      const tiles = ppTiles();
+      const sizes = [['normal', 'Normal'], ['large', 'Groß'], ['xlarge', 'Sehr groß']];
+      const themes = [['light', 'Hell', 'sun'], ['dark', 'Dunkel', 'moon'], ['system', 'Automatisch', 'gear']];
+      const card = (title, caption, ic, body, id = '') => `<section class="pp-card pp-settings-card" ${id ? `id="${id}"` : ''}><div class="pp-settings-head"><span class="pp-settings-icon">${icon(ic)}</span><div><h2>${title}</h2><p>${caption}</p></div></div>${body}</section>`;
+      return `${ppBack()}<div class="pp-page-head"><h1>Einstellungen</h1></div>
+        ${card('Startseite', 'Welche Kacheln die Startseite zeigt.', 'home', `<div class="pp-tile-picks">${PP_TILES.map(([id, label, ic]) => `<label class="pp-tile-pick ${tiles.includes(id) ? 'on' : ''}"><input type="checkbox" data-pp-tile-toggle="${id}" ${tiles.includes(id) ? 'checked' : ''}><span>${icon(ic)} ${escapeHtml(label)}</span></label>`).join('')}</div><div class="pp-actions flat"><button type="button" class="secondary-btn" data-pp-tile-reset>Standard wiederherstellen</button></div>`)}
+        ${card('Darstellung & Sprache', 'Hell oder dunkel, Schriftgröße und Sprache der App.', 'text', `<span class="form-label">Erscheinungsbild</span>
+          <div class="segmented" role="radiogroup" aria-label="Erscheinungsbild">${themes.map(([id, label, ic]) => `<button type="button" role="radio" aria-checked="${displaySettings.theme === id}" class="${displaySettings.theme === id ? 'active' : ''}" data-display-theme="${id}">${icon(ic)} ${label}</button>`).join('')}</div>
+          <span class="form-label" style="margin-top:14px;display:block">Schriftgröße</span>
+          <div class="segmented" role="radiogroup" aria-label="Schriftgröße">${sizes.map(([id, label]) => `<button type="button" role="radio" aria-checked="${displaySettings.textSize === id}" class="${displaySettings.textSize === id ? 'active' : ''}" data-display-size="${id}">${label}</button>`).join('')}</div>
+          <span class="form-label" style="margin-top:14px;display:block">Sprache</span>
+          <div class="segmented" role="radiogroup" aria-label="Sprache">${APP_LANGS.map(([id, label]) => `<button type="button" role="radio" aria-checked="${appLang === id}" class="${appLang === id ? 'active' : ''}" data-app-lang="${id}" data-no-i18n>${label}</button>`).join('')}</div>
+          <p class="pp-hint">Gilt für die ganze App (Hausbesitzer- und Partner-Ansicht) auf diesem Gerät. Eigene Einträge wie Namen, Adressen und Notizen werden nicht übersetzt.</p>`)}
+        ${card('Daten & App', 'Cloud-Speicher und Datensicherung.', 'document', `<div class="pp-embed">${cloudCardHtml()}${backupCardHtml()}</div>`)}
+        ${card('Über Husora', `Version ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}`, 'help', `<div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}" data-legal-modal><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>`)}`;
+    }
+    document.addEventListener('change', (event) => {
+      const box = event.target.closest?.('#partner-portal [data-pp-tile-toggle]');
+      if (!box) return;
+      const id = box.dataset.ppTileToggle;
+      const current = ppTiles();
+      const next = box.checked ? PP_TILES.map(([t]) => t).filter((t) => current.includes(t) || t === id) : current.filter((t) => t !== id);
+      if (!next.length) { box.checked = true; showToast('Mindestens eine Kachel bleibt auf der Startseite.'); return; }
+      try { localStorage.setItem(PP_TILES_KEY, JSON.stringify(next)); } catch (error) { /* optional */ }
+      pp.keepScroll = true; ppRender();
+    });
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('#partner-portal [data-pp-tile-reset]')) { try { localStorage.removeItem(PP_TILES_KEY); } catch (error) { /* optional */ } pp.keepScroll = true; ppRender(); showToast('Standard-Kacheln wiederhergestellt.'); return; }
+      // Erscheinungsbild/Schriftgröße: die App-weite Einstellung greift, das Portal zeichnet sich neu
+      if (event.target.closest('#partner-portal [data-display-theme], #partner-portal [data-display-size]')) setTimeout(() => { pp.keepScroll = true; ppRender(); }, 0);
+      // Cloud- und Sicherungskarten im Portal: nach Aktionen neu zeichnen
+      if (event.target.closest('#partner-portal .pp-embed button')) setTimeout(() => { if (pp.view === 'settings') { pp.keepScroll = true; ppRender(); } }, 400);
+    });
     function ppMoreHtml() {
       const item = (view, label, caption, ic) => `<button type="button" class="pp-item" data-pp-view="${view}"><span class="pp-item-icon">${icon(ic)}</span><span class="pp-item-main"><strong>${label}</strong><small>${caption}</small></span>${icon('arrow')}</button>`;
       const custCount = ppD('customers').length;
@@ -17907,6 +18744,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return `<div class="pp-page-head"><h1>Mehr</h1></div><div class="pp-list">
         ${item('customers', 'Kunden & Objekte', `${custCount} Kunde${custCount === 1 ? '' : 'n'} · ${ppD('properties').length} Objekt${ppD('properties').length === 1 ? '' : 'e'}`, 'property')}
         ${item('inspections', 'Kontrollen', openInsp ? `${openInsp} offen` : 'Keine offenen Kontrollen', 'inspection')}
+        ${item('defects', 'Mängel', ((n) => (n ? `${n} offen` : 'Keine offenen Mängel'))(ppOpenDefects().length), 'alert')}
         ${item('documents', 'Dokumente', ((n) => `${n} Dokument${n === 1 ? '' : 'e'}`)(ppD('documents').filter((d) => !/^image\//.test(d.file_type || '')).length), 'document')}
         </div><div class="pp-list" style="margin-top:12px">
         ${item('agreements', 'Jahresverträge', ((list) => { const open = list.filter((a) => a.status === 'proposed' && a.proposed_by === 'owner').length; const act = list.filter((a) => a.status === 'active').length; return `${act} aktiv${open ? ` · ${open} neuer Vorschlag` : ''}`; })(ppD('agreements')), 'calendar')}
@@ -17914,6 +18752,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ${item('services', 'Leistungen', ppD('services').filter((s) => s.active && PP_SERVICE_GROUPS.some(([code]) => ppD('types').find((t) => t.id === s.service_type_id)?.code === code)).map((s) => ppD('types').find((t) => t.id === s.service_type_id)?.name).join(' · ') || 'Hauskontrolle, Servicearbeiten, Sanierungen', 'check')}
         ${item('team', 'Mitarbeiter', `${ppD('members').length} im Team`, 'users')}
         ${item('company', 'Firma', 'Firmendaten, Bank, Öffnungszeiten', 'gear')}
+        </div><div class="pp-list" style="margin-top:12px">
+        ${item('settings', 'Einstellungen', 'Startseite, Darstellung, Sprache, Daten & App, Über Husora', 'gear')}
         </div>
         <div class="pp-card pp-tip">${icon('home')}<div><strong>Auch Hausbesitzer?</strong><p>Mit demselben Konto verwaltest du in der Hausbesitzer-Ansicht deine eigenen Ferienhäuser.</p><button type="button" class="secondary-btn" data-pp-action="close">Zur Hausbesitzer-Ansicht</button></div></div>
         <div class="pp-actions"><button type="button" class="secondary-btn danger" data-pp-action="signout">Abmelden</button></div>`;
