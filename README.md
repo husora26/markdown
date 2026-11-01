@@ -4,6 +4,17 @@ Kopie der Husora-App (Stand 30.10.2026, Quelle: `husora26/claude-version`, Commi
 
 Husora hilft beim Verwalten von Ferienhäusern in Schweden: Serviceaufgaben, Hauskontrolle mit Kontrollplänen und Prüfprotokollen, Saison-Checklisten, Reparaturen und Sanierungen, Servicepartner, Buchungen, Kosten mit Finanzierung und Jahresarchiv, Dokumente, Verträge, Zählerstände, Notfall & Zugang.
 
+## Lokal starten
+
+Kein Build nötig – die App ist eine einzelne `index.html`. Voraussetzung: Node.js (für `npx`).
+
+```bash
+npm run dev            # App unter http://localhost:8080 (Hausbesitzer)
+npm run dev:partner    # direkt im Partner-Portal (/?partner)
+npm run db:start       # optional: lokale Supabase (Docker), sonst nutzt die App das Husora-Cloud-Projekt
+npm run test:e2e       # Browser-Tests (lokale Supabase + App auf Port 8081)
+```
+
 ## Aufbau
 
 - `index.html` – die komplette App (HTML, CSS und JavaScript in einer Datei)

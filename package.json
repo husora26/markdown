@@ -1,0 +1,13 @@
+{
+  "name": "husora",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Husora – Smart House Care (Web-App in index.html, Daten in Supabase)",
+  "scripts": {
+    "dev": "npx --yes http-server@14 . -p 8080 -c-1 -o /",
+    "dev:partner": "npx --yes http-server@14 . -p 8080 -c-1 -o /?partner",
+    "db:start": "npx --yes supabase@2 start",
+    "db:reset": "npx --yes supabase@2 db reset",
+    "test:e2e": "bash tests/e2e/run.sh"
+  }
+}
