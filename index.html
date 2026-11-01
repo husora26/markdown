@@ -560,6 +560,15 @@
     .hub-status.proposed { background: #fff0c2; color: #8a5a00; }
     .hub-status.declined, .hub-status.ended, .hub-status.cancelled { background: rgba(127,127,127,.15); color: var(--muted); }
     @media (max-width: 560px) { .hub-agreement-form .pp-grid { grid-template-columns: 1fr; } }
+    .ag-tasks { display: grid; gap: 8px; }
+    .ag-task-list { display: grid; gap: 8px; }
+    .ag-task-row { display: flex; gap: 8px; align-items: center; }
+    .ag-task-row input { flex: 1; min-width: 0; }
+    .ag-task-x { display: grid; place-items: center; flex: 0 0 38px; height: 38px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--muted); cursor: pointer; }
+    .ag-add-task { justify-self: start; display: inline-flex; align-items: center; gap: 6px; padding: 0; font-weight: 600; }
+    .ag-add-task svg { width: 16px; height: 16px; }
+    .ag-hint { color: var(--muted); font-size: 12px; }
+    .pp-ag-facts .wide { grid-column: 1 / -1; }
     .pf-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
     .pf-kpi { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); border-left: 4px solid var(--green); }
     .pf-kpi > span { color: var(--muted); font-size: 12.5px; }
@@ -3655,6 +3664,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
   
   
@@ -17554,6 +17564,47 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>Rechnung senden</button></div></form>`;
     }
     // ----- Jahresverträge -----
+    // ----- Jahresvertrag: mehrere Aufgaben und frei wählbare Laufzeit (Partner- und Hausbesitzer-Formular) -----
+    const agEndDefault = (start) => { const d = new Date(`${start || localDateKey(new Date())}T12:00:00`); d.setFullYear(d.getFullYear() + 1); d.setDate(d.getDate() - 1); return localDateKey(d); };
+    function agTaskFieldsHtml(listId, options) {
+      return `<div class="ag-tasks full"><span class="form-label">Aufgaben im Vertrag *</span>
+        <div class="ag-task-list"><div class="ag-task-row"><input class="form-control" name="task" required maxlength="160" list="${listId}" placeholder="z. B. Rasen mähen" aria-label="Aufgabe 1"></div></div>
+        <datalist id="${listId}">${options.map((t) => `<option value="${escapeHtml(t)}">`).join('')}</datalist>
+        <button type="button" class="text-btn ag-add-task" data-ag-add-task>${icon('plus')} Weitere Aufgabe</button>
+        <small class="ag-hint">Aufträge, deren Titel mit einer dieser Aufgaben beginnt, gehören automatisch zum Vertrag.</small></div>`;
+    }
+    const agDateFieldsHtml = () => `<label><span class="form-label">Beginn *</span><input class="form-control" name="start" type="date" required value="${localDateKey(new Date())}" data-ag-start></label>
+        <label><span class="form-label">Ende *</span><input class="form-control" name="end" type="date" required value="${agEndDefault(localDateKey(new Date()))}" data-ag-end></label>`;
+    function agReadForm(form) {
+      const fd = new FormData(form);
+      const tasks = [...new Set(fd.getAll('task').map((t) => String(t).trim()).filter(Boolean))];
+      const start = String(fd.get('start') || ''), end = String(fd.get('end') || '');
+      if (!tasks.length) throw new Error('Bitte mindestens eine Aufgabe eintragen.');
+      if (start && end && end <= start) throw new Error('Das Vertragsende muss nach dem Beginn liegen.');
+      return { tasks, start: start || null, end: end || null };
+    }
+    document.addEventListener('click', (event) => {
+      const add = event.target.closest('[data-ag-add-task]');
+      const remove = event.target.closest('[data-ag-remove-task]');
+      if (remove) { remove.closest('.ag-task-row')?.remove(); return; }
+      if (!add) return;
+      const list = add.closest('.ag-tasks').querySelector('.ag-task-list');
+      if (list.children.length >= 20) { showToast('Höchstens 20 Aufgaben je Vertrag.'); return; }
+      const first = list.querySelector('input');
+      const row = document.createElement('div');
+      row.className = 'ag-task-row';
+      row.innerHTML = `<input class="form-control" name="task" maxlength="160" list="${first.getAttribute('list')}" placeholder="weitere Aufgabe" aria-label="Aufgabe ${list.children.length + 1}"><button type="button" class="ag-task-x" data-ag-remove-task aria-label="Aufgabe entfernen" title="Entfernen">✕</button>`;
+      list.appendChild(row);
+      row.querySelector('input').focus();
+    });
+    document.addEventListener('input', (event) => {
+      if (event.target.matches?.('[data-ag-end]')) { event.target.dataset.touched = '1'; return; }
+      if (!event.target.matches?.('[data-ag-start]')) return;
+      const end = event.target.form?.querySelector('[data-ag-end]');
+      if (end && !end.dataset.touched && event.target.value) end.value = agEndDefault(event.target.value);
+      if (end) end.min = event.target.value;
+    });
+    const agTasksText = (a) => (a.task_titles?.length ? a.task_titles : [a.task_title]).join(', ');
     function ppAgreementForm() {
       const links = pp.ctx?.links || [];
       if (!links.length) return `<div class="pp-card">${ppEmpty('Noch kein Kunde verbunden', 'Jahresverträge vereinbarst du mit Hausbesitzern, die dich über Husora beauftragen.')}</div>`;
@@ -17562,11 +17613,11 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return `<form class="pp-card pp-form" data-pp-form="agreement"><h3>Jahresvertrag vorschlagen</h3>
         <p class="pp-hint">Wiederkehrende Aufgabe zum festen Jahrespreis: Aufträge mit diesem Titel für das Haus werden automatisch zugeordnet und nicht einzeln abgerechnet. Der Kunde muss zustimmen.</p>
         <div class="pp-grid"><label class="full"><span class="form-label">Haus *</span><select class="form-control" name="property" required>${props.map((p) => { const link = links.find((l) => l.organization_id === p.organization_id); return `<option value="${p.id}|${link.service_partner_id}">${escapeHtml(p.name)} – ${escapeHtml(link.organization_name)}</option>`; }).join('')}</select></label>
-        <label class="full"><span class="form-label">Aufgabe *</span><input class="form-control" name="task" required maxlength="160" list="pp-ag-titles" placeholder="z. B. Rasen mähen"><datalist id="pp-ag-titles">${titles.map((t) => `<option value="${escapeHtml(t)}">`).join('')}</datalist></label>
+        ${agTaskFieldsHtml('pp-ag-titles', titles)}
         <label><span class="form-label">Rhythmus</span><select class="form-control" name="interval"><option>wöchentlich</option><option>alle 2 Wochen</option><option selected>monatlich</option><option>vierteljährlich</option><option>saisonal</option><option>nach Bedarf</option></select></label>
         <label><span class="form-label">Einsätze pro Jahr</span><input class="form-control" name="visits" type="number" min="1" max="366" value="12"></label>
         <label><span class="form-label">Jahrespreis brutto (${escapeHtml(ppOrg().currency)}) *</span><input class="form-control" name="price" type="number" min="0" step="0.01" required></label>
-        <label><span class="form-label">Beginn</span><input class="form-control" name="start" type="date" value="${ppToday()}"></label>
+        ${agDateFieldsHtml()}
         <label class="full"><span class="form-label">Hinweise</span><textarea class="form-control" name="notes" rows="2" maxlength="2000" placeholder="Leistungsumfang, Ausnahmen …"></textarea></label></div>
         <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>Vorschlag senden</button></div></form>`;
     }
@@ -17591,10 +17642,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           incoming && ppIsLead() ? `<button type="button" class="primary-btn" data-pp-ag="accept" data-id="${a.id}" ${ppDisabled()}>Annehmen</button><button type="button" class="secondary-btn" data-pp-ag="decline" data-id="${a.id}" ${ppDisabled()}>Ablehnen</button>` : '',
           a.status === 'proposed' && a.proposed_by === 'partner' ? '<small class="pp-hint">Wartet auf Zustimmung des Kunden</small>' : '',
           ['active', 'ended'].includes(a.status) && ppCanBill() && a.organization_id !== ppOrg().id ? (orders.length ? `<button type="button" class="${invoices.length ? 'secondary-btn' : 'primary-btn'}" data-pp-ag="bill" data-id="${a.id}">${icon('cost')} ${invoices.length ? 'Weitere Jahresrechnung' : 'Jahresrechnung stellen'}</button>` : '<small class="pp-hint">Jahresrechnung möglich, sobald der erste Auftrag im Vertrag ist</small>') : '',
-          ['proposed', 'active'].includes(a.status) && ppIsLead() ? `<button type="button" class="secondary-btn danger" data-pp-ag="end" data-id="${a.id}" ${ppDisabled()}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''
+ (a.status === 'active' || (a.status === 'proposed' && a.proposed_by === 'partner')) && ppIsLead() ? `<button type="button" class="secondary-btn danger" data-pp-ag="end" data-id="${a.id}" ${ppDisabled()}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''
         ].join('');
-        return `<article class="pp-card pp-agreement"><div class="pp-ag-head"><div><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.property?.name || '')} · ${escapeHtml(ppCustomerName(a.organization_id))}</small></div>${ppBadge(PP_AGREEMENT_STATUS, a.status)}</div>
-          <dl class="pp-ag-facts"><div><dt>Aufgabe</dt><dd>${escapeHtml(a.task_title)}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(ppMoney(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}${orders.length > done ? ` · ${orders.length - done} offen` : ''}</dd></div>${invoices.length ? `<div><dt>Abgerechnet</dt><dd>${invoices.map((i) => `${escapeHtml(i.invoice_number || '')} (${escapeHtml(ppMoney(i.amount_gross, i.currency))})`).join(', ')}</dd></div>` : ''}</dl>
+        return `<article class="pp-card pp-agreement"><div class="pp-ag-head"><div><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.property?.name || a.property_label || 'Haus')} · ${escapeHtml(ppCustomerName(a.organization_id))}</small></div>${ppBadge(PP_AGREEMENT_STATUS, a.status)}</div>
+          <dl class="pp-ag-facts"><div class="wide"><dt>${(a.task_titles || []).length > 1 ? 'Aufgaben' : 'Aufgabe'}</dt><dd>${escapeHtml(agTasksText(a))}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(ppMoney(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}${orders.length > done ? ` · ${orders.length - done} offen` : ''}</dd></div>${invoices.length ? `<div><dt>Abgerechnet</dt><dd>${invoices.map((i) => `${escapeHtml(i.invoice_number || '')} (${escapeHtml(ppMoney(i.amount_gross, i.currency))})`).join(', ')}</dd></div>` : ''}</dl>
           ${a.notes ? `<p class="pp-hint">${escapeHtml(a.notes)}</p>` : ''}
           ${pp.form === `agreement-bill:${a.id}` ? ppAgreementBillForm(a) : actions ? `<div class="pp-actions">${actions}</div>` : ''}</article>`;
       };
@@ -17646,7 +17697,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const split = (gross, vatRate) => { const net = Math.round((gross / (1 + vatRate / 100)) * 100) / 100; return { net, tax: Math.round((gross - net) * 100) / 100 }; };
       if (kind === 'agreement') {
         const [propertyId, spId] = String(v.property || '').split('|');
-        ppRun('agreement', async () => { await ppRpc('propose_service_agreement', { p_service_partner_id: spId, p_property_id: propertyId, p_task_title: v.task, p_annual_price: Number(v.price), p_starts_on: v.start || null, p_interval_label: v.interval || null, p_visits_per_year: v.visits ? Number(v.visits) : null, p_notes: v.notes || null }); pp.form = null; }, { notice: 'Vorschlag gesendet – der Kunde muss den Jahresvertrag noch annehmen.' });
+        let ag; try { ag = agReadForm(form); } catch (error) { pp.error = error.message; ppRender(); return; }
+        ppRun('agreement', async () => { await ppRpc('propose_service_agreement', { p_service_partner_id: spId, p_property_id: propertyId, p_task_title: ag.tasks[0], p_task_titles: ag.tasks, p_annual_price: Number(v.price), p_starts_on: ag.start, p_ends_on: ag.end, p_interval_label: v.interval || null, p_visits_per_year: v.visits ? Number(v.visits) : null, p_notes: v.notes || null }); pp.form = null; }, { notice: 'Vorschlag gesendet – der Kunde muss den Jahresvertrag noch annehmen.' });
         return;
       }
       if (kind === 'agreement-bill') {
@@ -18714,21 +18766,21 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const billed = (ownerSide.invoices || []).filter((i) => i.agreement_id === a.id);
         const incoming = a.status === 'proposed' && a.proposed_by === 'partner';
         const busy = ownerSide.busy ? 'disabled' : '';
-        return `<article class="card hub-agreement"><div class="hub-partner-head"><div><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.partner?.company_name || 'Servicepartner')} · ${escapeHtml(a.property?.name || '')}</small></div><span class="hub-status ${a.status}">${AG_STATUS[a.status] || a.status}</span></div>
-          <dl class="pp-ag-facts"><div><dt>Aufgabe</dt><dd>${escapeHtml(a.task_title)}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(money(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}</dd></div>${billed.length ? `<div><dt>Abgerechnet</dt><dd>${billed.map((i) => escapeHtml(money(i.amount_gross, i.currency))).join(', ')}</dd></div>` : ''}</dl>
+        return `<article class="card hub-agreement"><div class="hub-partner-head"><div><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.partner?.company_name || 'Servicepartner')} · ${escapeHtml(a.property?.name || a.property_label || '')}</small></div><span class="hub-status ${a.status}">${AG_STATUS[a.status] || a.status}</span></div>
+          <dl class="pp-ag-facts"><div class="wide"><dt>${(a.task_titles || []).length > 1 ? 'Aufgaben' : 'Aufgabe'}</dt><dd>${escapeHtml(agTasksText(a))}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(money(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}</dd></div>${billed.length ? `<div><dt>Abgerechnet</dt><dd>${billed.map((i) => escapeHtml(money(i.amount_gross, i.currency))).join(', ')}</dd></div>` : ''}</dl>
           ${a.notes ? `<p class="settings-hint">${escapeHtml(a.notes)}</p>` : ''}
-          <div class="settings-actions">${incoming ? `<button type="button" class="primary-btn" data-owner-ag="accept" data-id="${a.id}" ${busy}>Annehmen</button><button type="button" class="secondary-btn" data-owner-ag="decline" data-id="${a.id}" ${busy}>Ablehnen</button>` : ''}${a.status === 'proposed' && a.proposed_by === 'owner' ? '<small class="settings-hint">Wartet auf Zustimmung des Partners</small>' : ''}${['proposed', 'active'].includes(a.status) ? `<button type="button" class="secondary-btn" data-owner-ag="end" data-id="${a.id}" ${busy}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''}</div></article>`;
+          <div class="settings-actions">${incoming ? `<button type="button" class="primary-btn" data-owner-ag="accept" data-id="${a.id}" ${busy}>Annehmen</button><button type="button" class="secondary-btn" data-owner-ag="decline" data-id="${a.id}" ${busy}>Ablehnen</button>` : ''}${a.status === 'proposed' && a.proposed_by === 'owner' ? '<small class="settings-hint">Wartet auf Zustimmung des Partners</small>' : ''} ${a.status === 'active' || (a.status === 'proposed' && a.proposed_by === 'owner') ? `<button type="button" class="secondary-btn" data-owner-ag="end" data-id="${a.id}" ${busy}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''}</div></article>`;
       };
       const form = partners.length && props.length ? `<form class="card hub-agreement-form" data-owner-form="agreement"><h3 class="card-title">Jahresvertrag vorschlagen</h3>
         <p class="settings-hint">Wiederkehrende Aufgabe zum festen Jahrespreis: Aufträge mit diesem Titel für das Haus gehen automatisch in den Vertrag und werden nicht einzeln, sondern einmal im Jahr abgerechnet. Der Partner muss zustimmen.</p>
         <div class="pp-grid">
           <label><span class="form-label">Servicepartner</span><select class="form-control" name="partner" required>${partners.map((p) => `<option value="${p.id}">${escapeHtml(p.company_name)}</option>`).join('')}</select></label>
           <label><span class="form-label">Haus</span><select class="form-control" name="property" required>${props.map((p) => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')}</select></label>
-          <label class="full"><span class="form-label">Aufgabe</span><input class="form-control" name="task" required maxlength="160" list="hub-ag-titles" placeholder="z. B. Rasen mähen"><datalist id="hub-ag-titles">${recurring.map((t) => `<option value="${escapeHtml(t)}">`).join('')}</datalist></label>
+          ${agTaskFieldsHtml('hub-ag-titles', recurring)}
           <label><span class="form-label">Rhythmus</span><select class="form-control" name="interval"><option>wöchentlich</option><option>alle 2 Wochen</option><option selected>monatlich</option><option>vierteljährlich</option><option>saisonal</option><option>nach Bedarf</option></select></label>
           <label><span class="form-label">Einsätze pro Jahr</span><input class="form-control" name="visits" type="number" min="1" max="366" value="12"></label>
           <label><span class="form-label">Jahrespreis brutto (${escapeHtml(isEuro() ? 'EUR' : 'SEK')})</span><input class="form-control" name="price" type="number" min="0" step="0.01" required></label>
-          <label><span class="form-label">Beginn</span><input class="form-control" name="start" type="date" value="${localDateKey(new Date())}"></label>
+          ${agDateFieldsHtml()}
           <label class="full"><span class="form-label">Hinweise</span><textarea class="form-control" name="notes" rows="2" maxlength="2000"></textarea></label>
         </div><div class="settings-actions"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Vorschlag senden</button></div></form>`
         : '<p class="settings-hint">Verbinde zuerst einen Servicepartner (Reiter „Partner &amp; Codes“), dann kannst du mit ihm einen Jahresvertrag vereinbaren.</p>';
@@ -18748,8 +18800,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const form = event.target.closest('[data-owner-form="agreement"]');
       if (!form) return;
       const v = Object.fromEntries(new FormData(form));
+      let ag; try { ag = agReadForm(form); } catch (error) { showToast(error.message); return; }
       ownerRun('agreement', async () => {
-        await cloudFetch('/rest/v1/rpc/propose_service_agreement', { method: 'POST', body: { p_service_partner_id: v.partner, p_property_id: v.property, p_task_title: v.task, p_annual_price: Number(v.price), p_starts_on: v.start || null, p_interval_label: v.interval || null, p_visits_per_year: v.visits ? Number(v.visits) : null, p_notes: v.notes || null } });
+        await cloudFetch('/rest/v1/rpc/propose_service_agreement', { method: 'POST', body: { p_service_partner_id: v.partner, p_property_id: v.property, p_task_title: ag.tasks[0], p_task_titles: ag.tasks, p_annual_price: Number(v.price), p_starts_on: ag.start, p_ends_on: ag.end, p_interval_label: v.interval || null, p_visits_per_year: v.visits ? Number(v.visits) : null, p_notes: v.notes || null } });
         showToast('Vorschlag gesendet – der Partner muss den Jahresvertrag noch annehmen.');
       });
     });

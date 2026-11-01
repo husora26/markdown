@@ -33,7 +33,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     CODE = await H.evaluate(() => ownerSide.code?.code || ownerSide.error);
     const box = await H.evaluate(() => [...document.querySelectorAll('.hub-code-actions > *')].map((e) => e.textContent.trim()).join('/'));
     if (!/^HUS-/.test(CODE)) throw new Error(CODE);
-    const card = await H.$$('.hub-partner'); for (const c of card) { if ((await c.textContent()).includes(FIRM)) { await c.screenshot({ path: OUT + '/2-code.png' }); } }
+    const card = await H.$$('.hub-partner'); for (const c of card) { if ((await c.textContent().catch(() => '')).includes(FIRM)) { await c.screenshot({ path: OUT + '/2-code.png' }).catch(() => {}); } }
     await H.screenshot({ path: OUT + '/2-partner-tab.png' });
     return `${CODE} · ${box} · Status: ${await H.evaluate((f) => [...document.querySelectorAll('.hub-partner')].find((c) => c.textContent.includes(f))?.querySelector('.pp-badge')?.textContent, FIRM)}`;
   });
@@ -52,14 +52,18 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
 
 
   const spId = () => sql(`select id from service_partners where company_name='${FIRM}' and organization_id=(select id from organizations where name='Husora Testorganisation')`);
-  const RASEN = `Rasen mähen ${N}`;
+  const RASEN = `Rasen mähen ${N}`, LAUB = `Laub rechen ${N}`;
+  const END = new Date(Date.now() + 180 * 86400000).toISOString().slice(0, 10);
   await step('Hausbesitzer: Jahresvertrag vorschlagen (Reiter „Jahresverträge“)', async () => {
     await H.evaluate(() => { hub.tab = 'agreements'; ownerLoadPartners().then(() => render()); }); await H.waitForFunction(() => ownerSide.cloudProperties?.length && document.querySelector('[data-owner-form=agreement]'), null, { timeout: 20000 });
     await H.selectOption('[data-owner-form=agreement] [name=partner]', spId());
-    await H.fill('[data-owner-form=agreement] [name=task]', RASEN); await H.fill('[data-owner-form=agreement] [name=price]', '6000');
+    await H.fill('[data-owner-form=agreement] [name=task]', RASEN);
+    await H.click('[data-owner-form=agreement] [data-ag-add-task]'); await H.fill('[data-owner-form=agreement] .ag-task-row:nth-child(2) input', LAUB);
+    await H.fill('[data-owner-form=agreement] [name=end]', END); await H.fill('[data-owner-form=agreement] [name=price]', '6000');
     await H.$eval('[data-owner-form=agreement] button[type=submit]', (e) => e.click()); await H.waitForFunction(() => !ownerSide.busy, null, { timeout: 20000 }); await H.waitForTimeout(400);
     await H.screenshot({ path: OUT + '/1-vorschlag.png', fullPage: true });
-    return sql(`select status||' · '||proposed_by||' · '||annual_price from service_agreements where task_title='${RASEN}'`);
+    const r = sql(`select status||' · '||proposed_by||' · '||annual_price||' · '||array_to_string(task_titles, ' + ')||' · bis '||ends_on from service_agreements where task_title='${RASEN}'`);
+    if (!r.includes(LAUB) || !r.includes(END)) throw new Error(r); return r;
   });
   await step('Partner: Vorschlag unter Mehr → Jahresverträge annehmen', async () => {
     await P.evaluate(() => { pp.view = 'agreements'; ppLoad(); }); await P.waitForFunction(() => !pp.busy && document.querySelector('[data-pp-ag=accept]'), null, { timeout: 20000 });
@@ -68,19 +72,19 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const st = sql(`select status from service_agreements where task_title='${RASEN}'`); if (st !== 'active') throw new Error(st); return st;
   });
   await step('Hausbesitzer beauftragt 3 Aufgaben – „Rasen mähen“ geht automatisch in den Vertrag', async () => {
-    await H.evaluate(({ firm, rasen }) => {
+    await H.evaluate(({ firm, rasen, laub }) => {
       const id = 'custom-b' + Date.now(); providers.push({ id, name: firm, category: 'house', custom: true, initials: 'MT', distances: {} }); persistCustomProviders();
       const d = localDateKey(new Date(Date.now() + 3 * 86400000));
-      [rasen, 'Hecke schneiden B', 'Fenster putzen B'].forEach((title, i) => tasks.push({ id: Date.now() + i, partnerId: id, title, property: properties[0].name, date: d, priority: 'normal', area: 'Außen', status: 'Offen', done: false, repeat: i ? 'Einmalig' : 'Monatlich' }));
+      [rasen, 'Hecke schneiden B', 'Fenster putzen B', laub].forEach((title, i) => tasks.push({ id: Date.now() + i, partnerId: id, title, property: properties[0].name, date: d, priority: 'normal', area: 'Außen', status: 'Offen', done: false, repeat: i % 3 ? 'Einmalig' : 'Monatlich' }));
       try { localStorage.setItem('stugliv-tasks', JSON.stringify(tasks)); } catch (e) {}
-    }, { firm: FIRM, rasen: RASEN });
+    }, { firm: FIRM, rasen: RASEN, laub: LAUB });
     await H.evaluate((firm) => commissionPartner(providers.find((p) => p.name === firm).id), FIRM); await H.waitForTimeout(1200);
     const r = sql(`select string_agg(title||':'||(agreement_id is not null), ', ' order by title) from service_orders where service_partner_id='${spId()}'`);
-    if (!r.includes(`${RASEN}:true`) || !r.includes('Hecke schneiden B:false')) throw new Error(r); return r;
+    if (!r.includes(`${RASEN}:true`) || !r.includes(`${LAUB}:true`) || !r.includes('Hecke schneiden B:false')) throw new Error(r); return r;
   });
   await step('Partner: drei Aufträge annehmen, zwei anhaken → Sammelrechnung mit Abschluss', async () => {
     await P.evaluate(async () => { await ppLoad(); for (const o of ppD('orders').filter((x) => x.status === 'offered')) await ppPatch('service_orders', o.id, { status: 'accepted' }); await ppLoad(); pp.view = 'orders'; pp.filter = 'active'; pp.detail = null; ppRender(); });
-    await P.waitForFunction(() => !pp.busy && document.querySelectorAll('[data-pp-select]').length >= 3, null, { timeout: 20000 });
+    await P.waitForFunction(() => !pp.busy && document.querySelectorAll('[data-pp-select]').length >= 4, null, { timeout: 20000 });
     for (const t of ['Hecke schneiden B', 'Fenster putzen B']) { const id = await P.evaluate((t) => ppD('orders').find((o) => o.title === t).id, t); await P.check(`[data-pp-select="${id}"]`); }
     const bar = await P.textContent('.pp-batch-bar'); await P.screenshot({ path: OUT + '/3-auswahl.png' });
     await P.$eval('[data-pp-batch=invoice]', (e) => e.click()); await P.waitForSelector('[data-pp-form=batch-invoice]');
