@@ -7,7 +7,9 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 
 > **Architektur-Hinweis:** Husora läuft als eine Web-App (`index.html`, GitHub Pages) mit Supabase (Postgres, Auth, Storage, RLS) statt Next.js/Vercel. Die Daten liegen offline-fähig im Browser und werden mit der Cloud abgeglichen (`app_data`); Häuser, Buchungen und Aufgaben werden zusätzlich in die Fachtabellen übernommen. Geschäftsregeln mit Fremdzugriff (Partner, Aufträge, Rechnungen, Tarife) prüft die Datenbank selbst.
 
-**Mit diesem Durchgang neu umgesetzt:** Feedback-Kanal in der App · automatische Fehlerberichte (abschaltbar) · Konto- und Cloud-Daten selbst löschen · Benachrichtigungen bei Auftragsstatus und Rechnungen in der Glocke · Offline-Hinweis · Stripe Checkout/Webhook/Kundenportal vorbereitet · Aufbewahrungsfristen per pg_cron · API-Schlüssel der Buchungsportale verlassen das Gerät nicht mehr (Sicherheitslücke geschlossen) · Datenschutzerklärung ergänzt.
+**Durchgang 01.11.2026:** Portfolio-Seite (ULTIMATE) mit Hauszustands-Score, Eskalationen, Kostenprognose, Budgetwarnungen und Aktivitätsprotokoll · AGB und Datenschutzerklärung auf Abo-Tarife, Stripe und Husora Cloud umgestellt (Entwurf – rechtliche Prüfung offen) · Bestätigung von AGB/Widerrufsverzicht vor dem Bezahlen, serverseitig erzwungen · Fehler behoben: doppelte Rechnungsnummer beim Abschluss mit Rechnung (Auftrag wurde erledigt, Rechnung abgelehnt).
+
+**Vorheriger Durchgang:** Feedback-Kanal in der App · automatische Fehlerberichte (abschaltbar) · Konto- und Cloud-Daten selbst löschen · Benachrichtigungen bei Auftragsstatus und Rechnungen in der Glocke · Offline-Hinweis · Stripe Checkout/Webhook/Kundenportal vorbereitet · Aufbewahrungsfristen per pg_cron · API-Schlüssel der Buchungsportale verlassen das Gerät nicht mehr (Sicherheitslücke geschlossen) · Datenschutzerklärung ergänzt.
 
 ---
 
@@ -47,14 +49,14 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 - [~] P0 Räume: als Bereiche/Positionen der Kontrolle, nicht als eigene Raumliste
 - [x] P0 Hausbesitzer ↔ Objekt (Organisation), Datenvalidierung (Pflichtfelder, Wertebereiche, DB-Constraints)
 - [x] P0 Archivieren statt Löschen (wiederherstellbar; in der Cloud bleibt das Haus mit Aufträgen erhalten) *neu* · Löschen entfernt alle verknüpften Aufgaben, Mängel, Kosten *neu*
-- [ ] P1 Zustands-Score (im Tarif ULTIMATE als „in Vorbereitung“)
+- [x] P1 Zustands-Score 0–100 je Haus mit Begründung (ULTIMATE, Seite „Portfolio“)
 - [x] P1 Hausmodell
 - [ ] P2 mehrere Eigentümer
 
 ## 5. Dashboard
 - [x] P0 Gewähltes Haus, offene/überfällige Aufgaben, kommende Kontrollen, offene Mängel, Verträge/Fristen, Kosten, Notfall, Schnellaktionen, leere Zustände
 - [~] P0 Offene Serviceaufträge: im Partner-Portal und als Aufgabenstatus „In Bearbeitung“, nicht als eigene Dashboard-Kachel
-- [ ] P1 Zustandsscore · [~] P1 Handlungsempfehlungen (Erinnerungen in der Glocke)
+- [x] P1 Zustandsscore (Portfolio) · [~] P1 Handlungsempfehlungen (Erinnerungen in der Glocke)
 
 ## 6. Hauskontrolle
 - [x] P0 Kontrollplan, Kontrollpunkte, Kategorien, Frequenz, Verantwortlicher (Servicepartner)
@@ -69,7 +71,7 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 - [x] P0 Automatisch Reparaturaufgabe aus Mangel; mit verbundenem Partner automatisch Auftrag
 - [x] P0 Mangelhistorie mit Verlauf aller Statuswechsel *neu*
 - [~] P0 Abschluss nach Bestätigung: Auftrag „erledigt“ hakt die Aufgabe automatisch ab (bewusst so gewünscht); eine zusätzliche Abnahme durch den Hausbesitzer gibt es nicht
-- [ ] P1 Eskalation bei Überfälligkeit (Tarif ULTIMATE, in Vorbereitung)
+- [x] P1 Eskalation bei Überfälligkeit: Stufen 1/7/14 Tage, Glocke ab Stufe 2, Partner-Erinnerung per E-Mail (ULTIMATE)
 
 ## 8. Servicepartner
 - [x] P0 Registrierung, Unternehmensprofil, Ansprechpartner, Kontakt, Leistungen (Hauskontrolle/Servicearbeiten/Sanierungen mit Preis je Paket/Stunde)
@@ -112,7 +114,7 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 - [x] P0 manuell erfassen, hochladen, Betrag, Datum, Anbieter, Kategorie, Hausbezug, speichern, verknüpfen
 - [x] P0 Partner-Rechnungen werden automatisch als Ist-Kosten gebucht
 - [x] P0 KI/OCR-Ergebnis wird vor dem Speichern zur Prüfung angezeigt
-- [x] P1 Jahreskosten · [x] P1 Kostenentwicklung · [ ] P2 Prognose
+- [x] P1 Jahreskosten · [x] P1 Kostenentwicklung · [x] P2 Prognose Jahresende/Folgejahr + Budgetwarnungen (ULTIMATE)
 
 ## 16. Verträge und Fristen · 17. Zähler · 19. Buchungen
 - [x] P1 Verträge mit Art, Anbieter, Beginn/Ende, Kündigungsfrist, Erinnerung, Fristberechnung · [~] Dokumentverknüpfung
@@ -176,7 +178,7 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 - [x] P0 keine Tracking-Cookies (nur lokaler Speicher für die App-Funktion)
 - [ ] P0 AVV mit Supabase abschließen **[ext]** (Supabase Dashboard → Legal → DPA), ebenso Stripe
 - [x] P0 Löschkonzept *neu* (Selbst-Löschen, Fristen per pg_cron), Datenexport (Datensicherung), Datenschutzeinstellung (Fehlerberichte aus)
-- [~] P0 Einwilligungen dokumentieren: AGB-Bestätigung beim Kauf; bei der Registrierung kein gespeicherter Nachweis
+- [~] P0 Einwilligungen dokumentieren: vor dem Stripe-Checkout Pflicht-Häkchen für AGB/Datenschutz und Widerrufsverzicht, Nachweis (Zeitpunkt, Konto) am Abo in Stripe; bei der Registrierung kein gespeicherter Nachweis
 - [~] P0 KI-Datenverarbeitung: Hinweis beim Import (Übersetzungsdienst), nicht zentral erklärt
 - [ ] P1 rechtliche Prüfung durch Fachperson **[ext]**
 
@@ -220,3 +222,25 @@ Legende: **[x]** erledigt · **[~]** teilweise / mit Einschränkung · **[ ]** o
 
 ### Nächste sinnvolle Schritte im Code
 Alle zuvor offenen Code-Punkte sind umgesetzt. Offen sind nur noch Punkte mit **[ext]** (Stripe-Konto, Recht, echte Geräte, Tester, Backup-Test) sowie spätere Ausbaustufen (P2/P3).
+
+---
+
+## Analyse 01.11.2026 – was vor dem Start noch fehlt
+
+**Blocker (ohne diese Punkte kein öffentlicher Start)**
+1. Stripe einrichten **[ext]**: Konto, Produkte/Preise je Tarif, `stripe_price_id` in `plans`, Secrets setzen, Edge Functions `stripe-checkout`/`stripe-webhook` deployen, Webhook-Endpunkt eintragen, Testkauf + Kündigung + Up-/Downgrade durchspielen. Bis dahin können Kunden nicht bezahlen.
+2. Rechtstexte prüfen lassen **[ext]**: AGB, Datenschutzerklärung und Widerrufsbelehrung sind an das Abo-Modell angepasst, aber ein Entwurf. Eine eigene Widerrufsbelehrung mit Muster-Widerrufsformular fehlt noch.
+3. Impressum vervollständigen: Telefonnummer (oder zweiter schneller Kontaktweg) und – falls vorhanden – USt-IdNr. in `LEGAL_INFO` eintragen.
+4. AVV mit Supabase und Stripe abschließen **[ext]**; „Leaked Password Protection“ in Supabase Auth einschalten **[ext]**.
+5. Backup-Wiederherstellung einmal real testen **[ext]**.
+
+**Sollte vor dem Start erledigt sein**
+6. Eigene Domain statt GitHub-Pages-Adresse **[ext]**, danach Auth-Redirect-URLs in Supabase anpassen.
+7. Favicon/App-Icon und Web-App-Manifest (Startbildschirm-Icon) – fehlen noch.
+8. Echte Geräte testen (iPhone Safari, Android, Tablet) und 3–5 externe Tester **[ext]**.
+9. Branch-Schutz für `main` und Staging-Projekt **[ext]**.
+10. Einstellungen: Felder „Projekt-URL/Schlüssel“ (eigenes Supabase-Projekt) für normale Nutzer ausblenden.
+11. Alter PayPal-Kaufdialog („Husora Pro“) ist nicht mehr erreichbar, liegt aber noch im Code – entfernen.
+
+**Kann nach dem Start folgen**
+- E-Mail-Benachrichtigungen (Auftrag, Rechnung) · Uptime-/Performance-Monitoring · Bewertungen/Zertifikate für Partner · Unteraufgaben/Anhänge · Erweiterte Automatisierung, KI und Rollen (ULTIMATE, weiterhin „in Vorbereitung“).

@@ -66,9 +66,14 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     for (const a of ['accept', 'start']) { await P.click(`[data-pp-action=${a}]`); await P.waitForFunction(() => !pp.busy, null, { timeout: 15000 }); await P.waitForTimeout(300); }
     await P.fill('[data-pp-form=complete-invoice] [name=gross]', '1500'); await P.fill('[data-pp-form=complete-invoice] [name=note]', 'Hecke geschnitten, Schnittgut entsorgt.');
     await P.evaluate(() => document.querySelector('[data-pp-form=complete-invoice]').scrollIntoView()); await P.screenshot({ path: OUT + '/1-abschluss.png' });
+    // Regression: vorgeschlagene Nummer ist beim Kunden schon vergeben (früher HTTP 409 + Auftrag ohne Rechnung)
+    const proposed = await P.$eval('[data-pp-form=complete-invoice] [name=number]', (e) => e.value);
+    sql(`insert into invoices (organization_id, property_id, service_partner_id, invoice_number, amount_net, tax_amount, amount_gross, currency, status) select organization_id, property_id, service_partner_id, '${proposed}', 1, 0, 1, currency, 'received' from service_orders where title='Hecke schneiden' and service_partner_id in (select id from service_partners where company_name='${FIRM}')`);
     await P.$eval('[data-pp-form=complete-invoice] button[type=submit]', (e) => e.click()); await P.waitForFunction(() => !pp.busy, null, { timeout: 20000 }); await P.waitForTimeout(300);
+    const orphans = sql(`select count(*) from documents d where d.document_type='invoice' and d.service_order_id in (select id from service_orders where title='Hecke schneiden' and service_partner_id in (select id from service_partners where company_name='${FIRM}')) and not exists (select 1 from invoices i where i.document_id=d.id)`);
+    if (orphans !== '0') throw new Error(`verwaiste Rechnungs-PDFs: ${orphans}`);
     const r = sql(`select o.status||' '||o.actual_cost||' · '||i.invoice_number||' '||i.amount_net||'+'||i.tax_amount||'='||i.amount_gross||' · '||d.file_name from service_orders o join invoices i on i.service_order_id=o.id join documents d on d.id=i.document_id where o.title='Hecke schneiden' and o.service_partner_id in (select id from service_partners where company_name='${FIRM}')`);
-    if (!r.startsWith('completed')) throw new Error(r || await P.evaluate(() => pp.error)); return r;
+    if (!r.startsWith('completed')) throw new Error(r || await P.evaluate(() => pp.error)); if (r.includes(` ${proposed} `)) throw new Error('doppelte Nummer: ' + r); return `${r} · vergebene Nummer ${proposed} übersprungen`;
   });
   await step('Hausbesitzer: Aufgabe erledigt, Rechnung unter Dokumente und als Ist-Kosten gebucht', async () => {
     await H.evaluate(() => { currentPage = 'dashboard'; render(); msgTop.fullAt = 0; }); await H.evaluate(() => msgPoll()); await H.waitForTimeout(2500);

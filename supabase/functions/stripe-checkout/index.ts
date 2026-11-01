@@ -64,6 +64,10 @@ Deno.serve(async (req) => {
       return json({ url: portal.url });
     }
 
+    // AGB + Widerrufshinweis müssen vor dem Bezahlfenster bestätigt sein; der Nachweis wird am Abo in Stripe gespeichert.
+    const consent = body.consent || {};
+    if (consent.terms !== true || consent.waiver !== true) return json({ error: 'Bitte AGB und Widerrufshinweis bestätigen.' }, 400);
+    const consentAt = new Date().toISOString();
     const [plan] = await rest(`/rest/v1/plans?id=eq.${encodeURIComponent(String(body.plan_id || ''))}&active=eq.true&select=id,stripe_price_id`);
     if (!plan?.stripe_price_id) return json({ error: 'Für diesen Tarif ist noch kein Stripe-Preis hinterlegt.' }, 400);
     const session = await stripe('checkout/sessions', {
@@ -76,6 +80,9 @@ Deno.serve(async (req) => {
       client_reference_id: orgId,
       'subscription_data[metadata][organization_id]': orgId,
       'subscription_data[metadata][plan_id]': plan.id,
+      'subscription_data[metadata][terms_accepted_at]': consentAt,
+      'subscription_data[metadata][withdrawal_waiver_at]': consentAt,
+      'subscription_data[metadata][accepted_by]': String(user.email || user.id || ''),
       allow_promotion_codes: 'true'
     });
     return json({ url: session.url });

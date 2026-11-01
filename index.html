@@ -520,6 +520,50 @@
     .archive-main { flex: 1; min-width: 0; }
     .archive-main strong { display: block; font-size: 14px; }
     .archive-main small { display: block; color: var(--muted); font-size: 12.5px; }
+    .pf-card > :not(.card-head) { margin: 14px 19px 18px; }
+    .pf-card .pf-fine { margin-top: 14px; }
+    .checkout-consent { width: min(520px, 100%); }
+    .checkout-consent form { display: grid; gap: 12px; padding: 18px 20px 20px; }
+    .consent-row { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.45; }
+    .consent-row input { margin-top: 3px; width: 18px; height: 18px; flex: none; }
+    .consent-row .text-btn { display: inline; min-height: 0; padding: 0; border: 0; font: inherit; line-height: inherit; vertical-align: baseline; text-decoration: underline; }
+    .pf-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .pf-kpi { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); border-left: 4px solid var(--green); }
+    .pf-kpi > span { color: var(--muted); font-size: 12.5px; }
+    .pf-kpi strong { font-size: 24px; line-height: 1.1; }
+    .pf-kpi strong small { font-size: 13px; font-weight: 500; color: var(--muted); }
+    .pf-kpi > small { color: var(--muted); font-size: 12px; }
+    .pf-kpi.pf-ok { border-left-color: #2f8a5b; } .pf-kpi.pf-good { border-left-color: #6aa84f; } .pf-kpi.pf-mid { border-left-color: #d9a21b; } .pf-kpi.pf-bad { border-left-color: #c0503f; }
+    .pf-houses { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .pf-house { padding: 14px; border: 1px solid var(--line); border-radius: 14px; }
+    .pf-house-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .pf-house-head small { display: block; color: var(--muted); font-size: 12.5px; }
+    .pf-name { padding: 0; font-size: 16px; font-weight: 700; text-align: left; }
+    .pf-score { display: grid; place-items: center; flex: 0 0 auto; width: 48px; height: 48px; border-radius: 50%; color: #fff; font-size: 17px; font-weight: 800; }
+    .pf-score.pf-ok { background: #2f8a5b; } .pf-score.pf-good { background: #6aa84f; } .pf-score.pf-mid { background: #c98f0c; } .pf-score.pf-bad { background: #c0503f; }
+    .pf-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin: 0; }
+    .pf-facts dt { color: var(--muted); font-size: 11.5px; }
+    .pf-facts dd { margin: 0; font-weight: 600; font-size: 14px; }
+    .pf-facts em, .pf-over { color: #c0503f; font-style: normal; }
+    .pf-reasons { margin-top: 10px; font-size: 13px; }
+    .pf-reasons summary { cursor: pointer; color: var(--green); font-weight: 600; }
+    .pf-reasons ul { margin: 8px 0 0; padding: 0; list-style: none; }
+    .pf-reasons li { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+    .pf-reasons b { color: #c0503f; }
+    .pf-fine { margin: 8px 0 0; color: #2f8a5b; font-size: 13px; font-weight: 600; }
+    .pf-alerts, .pf-esc { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+    .pf-alerts li, .pf-esc li { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 12px; border-radius: 10px; border-left: 4px solid #d9a21b; background: rgba(217, 162, 27, .08); }
+    .pf-alerts li.over { border-left-color: #c0503f; background: rgba(192, 80, 63, .07); }
+    .pf-alerts small, .pf-esc small { display: block; color: var(--muted); font-size: 12.5px; }
+    .pf-alerts li > span { font-weight: 600; font-size: 13.5px; }
+    .pf-esc li.stage-2 { border-left-color: #d9731b; background: rgba(217, 115, 27, .08); }
+    .pf-esc li.stage-3 { border-left-color: #c0503f; background: rgba(192, 80, 63, .08); }
+    .pf-stage { display: block; margin-bottom: 2px; font-size: 11px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--muted); }
+    .pf-esc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .activity-list { margin: 0; padding: 0; list-style: none; max-height: 420px; overflow: auto; }
+    .activity-list li { display: grid; grid-template-columns: 130px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+    .activity-list time { color: var(--muted); font-size: 12.5px; }
+    @media (max-width: 560px) { .activity-list li { grid-template-columns: 1fr; gap: 2px; } .pf-facts { grid-template-columns: 1fr 1fr; } }
     .plan-test-note { display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin-bottom: 14px; border-left: 4px solid #e8b800; }
     .plan-test-note > span { display: grid; place-items: center; flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px; background: #fff0b3; color: #8a5a00; }
     .plan-test-note > span svg { width: 18px; height: 18px; }
@@ -3623,6 +3667,12 @@
   
   
   
+  
+  
+  
+  
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3720,6 +3770,9 @@ html.dark #offline-banner { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); }
 html.dark .followup-icon { background: #473e1b; color: #f7d9a1; }
 html.dark .followup-card.active .followup-icon { background: #1c1c1c; }
 html.dark .team-avatar { background: var(--green-solid-dark); }
+html.dark .pf-facts em, html.dark .pf-over { color: #d09288; }
+html.dark .pf-reasons b { color: #d09288; }
+html.dark .pf-fine { color: #a5dabe; }
 html.dark .plan-card.current { box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.31), var(--shadow); }
 html.dark .plan-usage-row i { background: linear-gradient(90deg, var(--green-solid) var(--pct), #2a2d28 var(--pct)); }
 html.dark .plan-usage-row.full i { background: var(--red-solid); }
@@ -4400,6 +4453,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             <button data-page="contracts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h5M8 17h8"/></svg><span>Verträge & Fristen</span></button>
             <button data-page="meters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18a8 8 0 1 1 16 0"/><path d="m12 18 4-6M4 18h16"/></svg><span>Zählerstände</span></button>
             <button data-page="costs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h14a2 2 0 0 1 2 2v11H5a2 2 0 0 1-2-2V6a3 3 0 0 1 3-3h12"/><path d="M3 7h17v5h-5a2 2 0 0 0 0 4h5"/><path d="M15.5 14.5h.01"/></svg><span>Jahreskosten</span></button>
+            <button data-page="portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Portfolio</span></button>
             <div class="nav-divider" role="separator"></div>
             <button data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><span>Einstellungen</span></button>
             <button data-page="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/></svg><span>Hilfe & Support</span></button>
@@ -7174,8 +7228,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <div style="padding:4px 18px 18px"><button type="button" class="secondary-btn" data-page="plans">Tarife vergleichen</button></div></section>`;
     }
     // Bereiche, die einen bestimmten Tarif brauchen
-    const PAGE_GATES = { automation: 'automation_basic', repairs: 'repairs', renovations: 'renovations', contracts: 'contracts', meters: 'meters', house3d: 'house_model', partnerHub: 'service_portal' };
-    const PAGE_TITLES = { automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', contracts: 'Verträge & Fristen', meters: 'Zählerstände', house3d: 'Hausmodell', partnerHub: 'Partner-Portal' };
+    const PAGE_GATES = { automation: 'automation_basic', repairs: 'repairs', renovations: 'renovations', contracts: 'contracts', meters: 'meters', house3d: 'house_model', partnerHub: 'service_portal', portfolio: 'portfolio' };
+    const PAGE_TITLES = { automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', contracts: 'Verträge & Fristen', meters: 'Zählerstände', house3d: 'Hausmodell', partnerHub: 'Partner-Portal', portfolio: 'Portfolio' };
     function lockedPageHtml(page) {
       const feature = PAGE_GATES[page];
       const plan = entitlements.minPlanFor(feature);
@@ -7197,6 +7251,130 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         tag.textContent = entitlements.minPlanFor(feature).name;
       });
     }
+    // ----- ULTIMATE: Hauszustands-Score, Kostenprognose, Budgetwarnungen, Eskalationen, Portfolio, Aktivitätsprotokoll -----
+    // Score 0–100 aus überfälligen Aufgaben, offenen Mängeln, Kontrollalter, fälligen Bauteilen, Vertragsfristen und Zustand.
+    function conditionScore(property) {
+      const today = localDateKey(new Date());
+      const reasons = [];
+      let score = 100;
+      const take = (points, text) => { if (points > 0) { score -= points; reasons.push({ points, text }); } };
+      const isHouse = (task) => task.propertyId === property.id || task.property === property.name || task.property === property.id;
+      const overdue = tasks.filter((task) => !task.done && task.date && task.date < today && isHouse(task)).length;
+      take(Math.min(32, overdue * 8), `${overdue} überfällige ${overdue === 1 ? 'Aufgabe' : 'Aufgaben'}`);
+      const houseIssues = openIssues(property.id);
+      const issuePoints = houseIssues.reduce((sum, issue) => sum + (issue.priority === 'urgent' ? 12 : issue.priority === 'soon' ? 6 : 3), 0);
+      take(Math.min(36, issuePoints), `${houseIssues.length} offene ${houseIssues.length === 1 ? 'Mangel' : 'Mängel'}${houseIssues.some((issue) => issue.priority === 'urgent') ? ' (davon dringend)' : ''}`);
+      const last = lastAbsenceInspection(property.id).entry;
+      const age = last ? Math.round((toDate(today) - toDate(last.date)) / 86400000) : null;
+      if (age === null) take(15, 'Noch keine Hauskontrolle erfasst');
+      else if (age > 180) take(20, `Letzte Kontrolle vor ${age} Tagen`);
+      else if (age > 90) take(10, `Letzte Kontrolle vor ${age} Tagen`);
+      let dueParts = 0;
+      try { dueParts = activeHouseParts(property).filter((part) => housePartInfo(property.id, part).status === 'due').length; } catch (error) { dueParts = 0; }
+      take(Math.min(15, dueParts * 3), `${dueParts} ${dueParts === 1 ? 'Bauteil' : 'Bauteile'} mit fälliger Wartung`);
+      const contractsDue = contractsFor(property.id).filter((contract) => ['urgent', 'expired'].includes(contractState(contract).level)).length;
+      take(Math.min(9, contractsDue * 3), `${contractsDue} ${contractsDue === 1 ? 'Vertrag' : 'Verträge'} mit Frist/abgelaufen`);
+      if (/^Dringender/.test(property.condition || '')) take(10, 'Zustand: dringender Sanierungsbedarf');
+      else if (/^Sanierungsbedarf/.test(property.condition || '')) take(5, 'Zustand: Sanierungsbedarf');
+      score = Math.max(0, Math.min(100, score));
+      const level = score >= 85 ? 'ok' : score >= 70 ? 'good' : score >= 50 ? 'mid' : 'bad';
+      const label = { ok: 'Sehr gut', good: 'Gut', mid: 'Mittel', bad: 'Kritisch' }[level];
+      return { score, level, label, reasons, lastInspection: last?.date || '' };
+    }
+    // Prognose: je Kostenposition mindestens der Planwert, bei Überschreitung die Hochrechnung der bisherigen Ist-Kosten.
+    function costForecast(property, year = new Date().getFullYear()) {
+      const { rows, plan, actual } = costFigures(property, costsOf(property.id), year);
+      const months = year === new Date().getFullYear() ? new Date().getMonth() + 1 : 12;
+      const projected = (row) => (row.actual > row.plan ? Math.max(row.actual, Math.round((row.actual / months) * 12)) : row.plan);
+      const yearEnd = rows.reduce((sum, row) => sum + projected(row), 0);
+      const lastYear = costFigures(property, costsOf(property.id), year - 1).rows;
+      const nextYear = Math.round(rows.reduce((sum, row, index) => sum + Math.max(projected(row), lastYear[index]?.actual || 0), 0) * 1.03);
+      const alerts = rows
+        .filter((row) => row.plan > 0 && (row.actual > row.plan || projected(row) > row.plan * 1.1))
+        .map((row) => ({ label: row.category.label, plan: row.plan, actual: row.actual, projected: projected(row), over: row.actual > row.plan }));
+      rows.filter((row) => !row.plan && row.actual > 0).forEach((row) => alerts.push({ label: row.category.label, plan: 0, actual: row.actual, projected: row.actual, over: true, unplanned: true }));
+      return { plan, actual, yearEnd, nextYear, alerts, months };
+    }
+    // Eskalationsstufen für überfällige Aufgaben: 1 ab 1 Tag, 2 ab 7 Tagen, 3 ab 14 Tagen.
+    function escalatedTasks() {
+      const today = localDateKey(new Date());
+      return tasks.filter((task) => !task.done && task.date && task.date < today).map((task) => {
+        const days = Math.round((toDate(today) - toDate(task.date)) / 86400000);
+        return { task, days, stage: days >= 14 ? 3 : days >= 7 ? 2 : 1 };
+      }).sort((a, b) => b.days - a.days);
+    }
+    const activity = { rows: null, loading: false, error: '' };
+    const ACTIVITY_ENTITY = { properties: 'Haus', service_tasks: 'Aufgabe', service_orders: 'Auftrag', documents: 'Dokument', invoices: 'Rechnung', inspections: 'Kontrolle', repairs: 'Reparatur', organization_members: 'Mitglied', service_partners: 'Servicepartner', bookings: 'Buchung', quotes: 'Angebot', maintenance: 'Wartung', organizations: 'Organisation' };
+    async function activityLoad() {
+      if (!cloudReady() || activity.loading) return;
+      activity.loading = true; activity.error = '';
+      try {
+        activity.rows = await cloudFetch(`/rest/v1/audit_logs?organization_id=eq.${cloud.org.id}&entity_type=neq.organization_invites&select=action,created_at,user_id,entity_type,new_name:new_data->>name,old_name:old_data->>name,new_title:new_data->>title,old_title:old_data->>title,old_status:old_data->>status,new_status:new_data->>status&order=created_at.desc&limit=60`);
+        if (!team.members && cloud.org.role === 'admin') await teamLoad().catch(() => {});
+      } catch (error) { activity.rows = []; activity.error = 'Protokoll konnte nicht geladen werden.'; }
+      activity.loading = false;
+      if (currentPage === 'portfolio') { const slot = document.querySelector('[data-activity-slot]'); if (slot) slot.outerHTML = activityHtml(); }
+    }
+    function activityHtml() {
+      const head = `<div class="card-head"><div><h2 class="card-title">Aktivitätsprotokoll</h2><p class="card-caption">Wer hat wann was geändert – serverseitig protokolliert, nur für Admins sichtbar.</p></div></div>`;
+      let body;
+      if (!entitlements.can('activity_log')) body = `<p class="settings-hint">Ab ${escapeHtml(entitlements.minPlanFor('activity_log').name)} verfügbar.</p>`;
+      else if (!cloudReady()) body = '<p class="settings-hint">Melde dich unter Einstellungen → Cloud an, um das Protokoll zu sehen.</p>';
+      else if (cloud.org.role !== 'admin') body = '<p class="settings-hint">Nur Admins deiner Organisation sehen das Protokoll.</p>';
+      else if (!activity.rows) { setTimeout(activityLoad, 0); body = '<p class="settings-hint">Wird geladen …</p>'; }
+      else if (!activity.rows.length) body = `<p class="settings-hint">${escapeHtml(activity.error || 'Noch keine Einträge.')}</p>`;
+      else {
+        const who = (id) => { const member = (team.members || []).find((m) => m.user_id === id); return member ? (member.is_me ? 'Du' : member.name || member.email) : id ? 'Servicepartner' : 'System'; };
+        const verb = { insert: 'angelegt', update: 'geändert', delete: 'gelöscht' };
+        body = `<ol class="activity-list">${activity.rows.map((r) => {
+          const name = r.new_name || r.new_title || r.old_name || r.old_title || '';
+          const status = r.action === 'update' && r.old_status !== r.new_status && r.new_status ? ` → ${ORDER_STATUS_DE[r.new_status] || r.new_status}` : '';
+          return `<li><time>${escapeHtml(fmtDateTime(r.created_at))}</time><span><b>${escapeHtml(who(r.user_id))}</b> · ${escapeHtml(ACTIVITY_ENTITY[r.entity_type] || r.entity_type)} ${escapeHtml(verb[r.action] || r.action)}${name ? `: „${escapeHtml(name)}“` : ''}${escapeHtml(status)}</span></li>`;
+        }).join('')}</ol><div class="settings-actions"><button type="button" class="secondary-btn" data-activity-reload>Aktualisieren</button></div>`;
+      }
+      return `<section class="card pf-card activity-card" data-activity-slot>${head}${body}</section>`;
+    }
+    function portfolioPage() {
+      const year = new Date().getFullYear();
+      const rows = properties.map((property) => {
+        const score = entitlements.can('condition_score') ? conditionScore(property) : null;
+        const forecast = costForecast(property, year);
+        const isHouse = (task) => task.propertyId === property.id || task.property === property.name || task.property === property.id;
+        const open = tasks.filter((task) => !task.done && isHouse(task));
+        const today = localDateKey(new Date());
+        return { property, score, forecast, open: open.length, overdue: open.filter((task) => task.date && task.date < today).length, issues: openIssues(property.id).length };
+      });
+      const sum = (key) => rows.reduce((total, row) => total + row.forecast[key], 0);
+      const avg = rows.length && rows[0].score ? Math.round(rows.reduce((total, row) => total + row.score.score, 0) / rows.length) : null;
+      const escalations = entitlements.can('escalations') ? escalatedTasks() : [];
+      const kpi = (label, value, note = '', cls = '') => `<article class="pf-kpi ${cls}"><span>${escapeHtml(label)}</span><strong>${value}</strong>${note ? `<small>${note}</small>` : ''}</article>`;
+      const kpis = `<div class="pf-kpis">
+        ${kpi(properties.length === 1 ? 'Haus' : 'Häuser', String(properties.length))}
+        ${avg !== null ? kpi('Ø Zustands-Score', `${avg}<small>/100</small>`, '', `pf-${avg >= 85 ? 'ok' : avg >= 70 ? 'good' : avg >= 50 ? 'mid' : 'bad'}`) : ''}
+        ${kpi(`Ist-Kosten ${year}`, escapeHtml(formatCost(sum('actual'))), `Plan ${escapeHtml(formatCost(sum('plan')))}`)}
+        ${entitlements.can('cost_forecast') ? kpi('Prognose Jahresende', escapeHtml(formatCost(sum('yearEnd'))), `${year + 1}: ${escapeHtml(formatCost(sum('nextYear')))}`, sum('yearEnd') > sum('plan') ? 'pf-bad' : '') : ''}
+        ${entitlements.can('escalations') ? kpi('Eskalationen', String(escalations.length), escalations.filter((e) => e.stage === 3).length ? `${escalations.filter((e) => e.stage === 3).length} ab 14 Tagen` : 'überfällige Aufgaben', escalations.length ? 'pf-bad' : 'pf-ok') : ''}
+      </div>`;
+      const houses = `<section class="card pf-card"><div class="card-head"><div><h2 class="card-title">Häuser im Überblick</h2><p class="card-caption">Zustand, offene Arbeit und Kosten je Haus${entitlements.can('cost_forecast') ? ' mit Prognose' : ''}.</p></div></div>
+        <div class="pf-houses">${rows.map(({ property, score, forecast, open, overdue, issues }) => `<article class="pf-house">
+          <div class="pf-house-head">${score ? `<span class="pf-score pf-${score.level}" title="Hauszustands-Score">${score.score}</span>` : ''}<div><button type="button" class="text-btn pf-name" data-action="view-property" data-property="${escapeHtml(property.id)}">${escapeHtml(property.name)}</button><small>${escapeHtml(property.region || property.address || '')}${score ? ` · ${score.label}` : ''}</small></div></div>
+          <dl class="pf-facts"><div><dt>Offene Aufgaben</dt><dd>${open}${overdue ? ` <em>(${overdue} überfällig)</em>` : ''}</dd></div><div><dt>Offene Mängel</dt><dd>${issues}</dd></div><div><dt>Letzte Kontrolle</dt><dd>${score?.lastInspection ? escapeHtml(fmtDate(score.lastInspection)) : (lastAbsenceInspection(property.id).entry ? escapeHtml(fmtDate(lastAbsenceInspection(property.id).entry.date)) : '–')}</dd></div><div><dt>Ist / Plan ${year}</dt><dd>${escapeHtml(formatCost(forecast.actual))} / ${escapeHtml(formatCost(forecast.plan))}</dd></div>${entitlements.can('cost_forecast') ? `<div><dt>Prognose</dt><dd class="${forecast.yearEnd > forecast.plan ? 'pf-over' : ''}">${escapeHtml(formatCost(forecast.yearEnd))}</dd></div>` : ''}</dl>
+          ${score && score.reasons.length ? `<details class="pf-reasons"><summary>Was senkt den Score?</summary><ul>${score.reasons.map((r) => `<li><span>${escapeHtml(r.text)}</span><b>−${r.points}</b></li>`).join('')}</ul></details>` : score ? '<p class="pf-fine">Alles im grünen Bereich.</p>' : ''}
+        </article>`).join('') || '<p class="settings-hint">Noch keine Häuser angelegt.</p>'}</div></section>`;
+      const alerts = rows.flatMap(({ property, forecast }) => forecast.alerts.map((alert) => ({ property, ...alert })));
+      const budget = entitlements.can('budget_alerts') ? `<section class="card pf-card"><div class="card-head"><div><h2 class="card-title">Budgetwarnungen ${year}</h2><p class="card-caption">Positionen über Plan oder mit einer Hochrechnung über 110 % des Plans.</p></div><button type="button" class="secondary-btn" data-page="costs">Zu den Kosten</button></div>
+        ${alerts.length ? `<ul class="pf-alerts">${alerts.map((a) => `<li class="${a.over ? 'over' : 'trend'}"><div><strong>${escapeHtml(a.label)}</strong><small>${properties.length > 1 ? `${escapeHtml(a.property.name)} · ` : ''}${a.unplanned ? 'nicht geplant' : `Plan ${escapeHtml(formatCost(a.plan))}`}</small></div><span>Ist ${escapeHtml(formatCost(a.actual))}${!a.over ? ` · Prognose ${escapeHtml(formatCost(a.projected))}` : a.plan ? ` · +${escapeHtml(formatCost(a.actual - a.plan))}` : ''}</span></li>`).join('')}</ul>` : '<p class="pf-fine">Alle Kostenpositionen liegen im Plan.</p>'}</section>` : '';
+      const stageLabel = { 1: 'Stufe 1 · überfällig', 2: 'Stufe 2 · ab 7 Tagen', 3: 'Stufe 3 · ab 14 Tagen' };
+      const esc = entitlements.can('escalations') ? `<section class="card pf-card"><div class="card-head"><div><h2 class="card-title">Eskalationen</h2><p class="card-caption">Überfällige Aufgaben werden automatisch hochgestuft und erscheinen in der Glocke. Ab Stufe 2 den Servicepartner direkt erinnern.</p></div></div>
+        ${escalations.length ? `<ul class="pf-esc">${escalations.slice(0, 30).map(({ task, days, stage }) => { const partner = task.partnerId ? providerById(task.partnerId) : null; const mail = partner?.email && stage >= 2 ? `<a class="secondary-btn" href="mailto:${encodeURIComponent(partner.email)}?subject=${encodeURIComponent(`Erinnerung: ${task.title}`)}&body=${encodeURIComponent(`Hallo,\n\ndie Aufgabe „${task.title}“ war am ${fmtDate(task.date)} fällig und ist seit ${days} Tagen offen. Bitte gib uns kurz Bescheid, wann sie erledigt wird.\n\nVielen Dank`)}">Partner erinnern</a>` : ''; return `<li class="stage-${stage}"><div><span class="pf-stage">${stageLabel[stage]}</span><strong>${escapeHtml(task.title)}</strong><small>fällig ${escapeHtml(fmtDate(task.date))} · seit ${days} ${days === 1 ? 'Tag' : 'Tagen'}${partner ? ` · ${escapeHtml(partner.name)}` : ''}</small></div><div class="pf-esc-actions">${mail}<button type="button" class="secondary-btn" data-edit-task="${escapeHtml(String(task.id))}">Öffnen</button></div></li>`; }).join('')}</ul>` : '<p class="pf-fine">Keine überfälligen Aufgaben.</p>'}</section>` : '';
+      return `<div class="welcome"><div><p class="eyebrow">ULTIMATE · ${properties.length} ${properties.length === 1 ? 'Haus' : 'Häuser'}</p><h1>Portfolio</h1><p class="subtitle">Zustand, Kosten, Prognosen und Eskalationen über alle Häuser.</p></div></div>
+        ${kpis}${esc}${houses}${budget}${entitlements.can('activity_log') ? activityHtml() : ''}`;
+    }
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-activity-reload]')) return;
+      activity.rows = null; activityLoad();
+      const slot = document.querySelector('[data-activity-slot]'); if (slot) slot.outerHTML = activityHtml();
+    });
     function plansPage() {
       const currentId = currentPlanId();
       const loaded = Array.isArray(planCatalog) && planCatalog.length;
@@ -7239,7 +7417,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       ['Portfolio & Profis', [['cost_forecast', 'Kostenprognosen'], ['budget_alerts', 'Budgetwarnungen'], ['condition_score', 'Hauszustands-Score'], ['portfolio', 'Portfolioübersicht'], ['roles_advanced', 'Erweiterte Rollen & Rechte'], ['activity_log', 'Aktivitätsprotokoll'], ['priority_support', 'Prioritätssupport']]]
     ];
     // Funktionen, die im Tarif enthalten sind, in der App aber noch gebaut werden
-    const PLAN_PLANNED = new Set(['automation_advanced', 'automation_autonomous', 'maintenance_planning', 'escalations', 'ai_advanced', 'cost_forecast', 'budget_alerts', 'condition_score', 'portfolio', 'roles_advanced', 'activity_log']);
+    const PLAN_PLANNED = new Set(['automation_advanced', 'automation_autonomous', 'maintenance_planning', 'ai_advanced', 'roles_advanced']);
     function planMatrixHtml(currentId) {
       const plans = PLAN_ORDER.map((id) => planDef(id));
       const cell = (plan, key) => {
@@ -7264,6 +7442,32 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       showToast(planOverride ? `Testmodus: ${planDef(planOverride).name} ist jetzt aktiv.` : 'Testmodus beendet – es gilt wieder dein echter Tarif.');
     });
     // Stripe: Checkout bzw. Kundenportal über die Edge Function „stripe-checkout“
+    function openCheckoutConsent(planId) {
+      const plan = planDef(planId);
+      document.getElementById('checkout-consent')?.remove();
+      const box = document.createElement('div');
+      box.className = 'modal-backdrop open'; box.id = 'checkout-consent'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'checkout-consent-title');
+      box.innerHTML = `<section class="modal checkout-consent"><div class="modal-head"><div><h2 id="checkout-consent-title">${escapeHtml(plan.name)} bestellen</h2><p>Abonnement · jederzeit zum Ende des Abrechnungszeitraums kündbar</p></div><button class="close-btn" type="button" data-consent-close aria-label="Schließen">✕</button></div>
+        <form data-consent-form>
+          <label class="consent-row"><input type="checkbox" name="terms" required><span>Ich akzeptiere die <button type="button" class="text-btn" data-legal-open="terms">AGB</button> und habe die <button type="button" class="text-btn" data-legal-open="privacy">Datenschutzerklärung</button> gelesen.</span></label>
+          <label class="consent-row"><input type="checkbox" name="waiver" required><span>Ich verlange ausdrücklich, dass Husora vor Ablauf der Widerrufsfrist mit der Leistung beginnt. Mir ist bekannt, dass mein Widerrufsrecht damit bei vollständiger Vertragserfüllung erlischt; bei vorzeitigem Widerruf zahle ich den anteiligen Betrag.</span></label>
+          <p class="settings-hint">Im nächsten Schritt öffnet sich das sichere Bezahlfenster von Stripe. Dort siehst du Preis und Abrechnungszeitraum und schließt die Bestellung kostenpflichtig ab.</p>
+          <div class="settings-actions"><button type="button" class="secondary-btn" data-consent-close>Abbrechen</button><button type="submit" class="primary-btn">Weiter zur Bezahlung</button></div>
+        </form></section>`;
+      document.body.appendChild(box);
+      box.addEventListener('click', (event) => {
+        if (event.target === box || event.target.closest('[data-consent-close]')) { box.remove(); return; }
+        const legal = event.target.closest('[data-legal-open]');
+        if (legal) { box.remove(); legalTab = legal.dataset.legalOpen; currentPage = 'legal'; render(); window.scrollTo(0, 0); }
+      });
+      box.querySelector('[data-consent-form]').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const submit = event.target.querySelector('[type=submit]'); submit.disabled = true;
+        startCheckout({ plan_id: planId, consent: { terms: true, waiver: true, at: new Date().toISOString() } })
+          .catch((error) => { submit.disabled = false; showToast(`Online-Bezahlung gerade nicht möglich (${error.message}). Schreib uns gern eine E-Mail.`); });
+      });
+      box.querySelector('input[name=terms]').focus();
+    }
     async function startCheckout(body) {
       const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
       const response = await fetch(`${base}/functions/v1/stripe-checkout`, { method: 'POST', headers: { apikey: cloud.key || CLOUD_DEFAULT.key, Authorization: `Bearer ${cloud.session.access_token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, return_url: `${location.origin}${location.pathname}` }) });
@@ -7274,8 +7478,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     document.addEventListener('click', (event) => {
       const checkout = event.target.closest('[data-plan-checkout], [data-plan-portal]');
       if (!checkout) return;
+      // Vor dem Bezahlfenster: AGB, Datenschutz und Beginn der Leistung vor Ablauf der Widerrufsfrist ausdrücklich bestätigen.
+      if (checkout.dataset.planCheckout && !checkout.dataset.consent) { openCheckoutConsent(checkout.dataset.planCheckout); return; }
       checkout.disabled = true;
-      startCheckout(checkout.dataset.planPortal !== undefined ? { portal: true } : { plan_id: checkout.dataset.planCheckout })
+      startCheckout(checkout.dataset.planPortal !== undefined ? { portal: true } : { plan_id: checkout.dataset.planCheckout, consent: { terms: true, waiver: true, at: new Date().toISOString() } })
         .catch((error) => { checkout.disabled = false; showToast(`Online-Bezahlung gerade nicht möglich (${error.message}). Schreib uns gern eine E-Mail.`); });
     });
     (() => { try { const flag = new URLSearchParams(location.search).get('checkout'); if (!flag) return; history.replaceState(null, '', location.pathname); setTimeout(() => { showToast(flag === 'success' ? 'Danke! Dein Tarif wird freigeschaltet – das dauert nur einen Moment.' : 'Bezahlung abgebrochen – dein Tarif bleibt unverändert.'); currentPage = 'plans'; render(); setTimeout(loadOrgPlan, 2500); }, 800); } catch (error) { /* optional */ } })();
@@ -10694,8 +10900,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const prefix = toast.classList.contains('show') ? `${toast.textContent} ` : '';
         showToast(`${prefix}${plannedCount} ${plannedCount === 1 ? 'Aufgabe' : 'Aufgaben'} automatisch geplant.`);
       }, 0);
-      const pages = { dashboard, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
-      const labels = { dashboard: 'Übersicht', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' };
+      const pages = { dashboard, portfolio: portfolioPage, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
+      const labels = { dashboard: 'Übersicht', portfolio: 'Portfolio', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -13548,7 +13754,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <h3>Verbraucherstreitbeilegung</h3><p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>` },
       privacy: { title: 'Datenschutzerklärung', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Verantwortlicher</h3><p>${legalValue('company', 'Firma oder Name')}, ${legalValue('street', 'Anschrift')}, ${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')} · ${legalValue('email', 'E-Mail-Adresse')}</p>
-        <h3>2. Grundsatz: Speicherung auf deinem Gerät</h3><p>Husora benötigt kein Benutzerkonto. Alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – werden im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p><p><strong>Optionaler Cloud-Speicher (Husora Cloud):</strong> Meldest du dich unter „Einstellungen → Daten & App“ beim Cloud-Speicher an, werden deine Husora-Daten, Fotos und Dokumente verschlüsselt (HTTPS) übertragen und in der Husora Cloud gespeichert, damit sie auf mehreren Geräten verfügbar sind. Technischer Dienstleister (Auftragsverarbeiter) ist die Supabase Inc. (supabase.com); die Datenbank liegt im Rechenzentrum London (Vereinigtes Königreich, Angemessenheitsbeschluss der EU-Kommission). Für die Anmeldung werden deine E-Mail-Adresse und ein Passwort (nur verschlüsselt) bei Supabase Auth hinterlegt. Fotos und Dokumente liegen in privaten Speicherbereichen, die nur mit Anmeldung abrufbar sind. Alternativ kannst du ein eigenes Supabase-Projekt verbinden – dann bist du für dieses selbst verantwortlich. Die Verbindung lässt sich jederzeit trennen.</p>
+        <h3>2. Speicherung auf deinem Gerät und in der Husora Cloud</h3><p>Husora funktioniert auch ohne Benutzerkonto. Ohne Anmeldung werden alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – nur im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p><p><strong>Optionaler Cloud-Speicher (Husora Cloud):</strong> Meldest du dich unter „Einstellungen → Daten & App“ beim Cloud-Speicher an, werden deine Husora-Daten, Fotos und Dokumente verschlüsselt (HTTPS) übertragen und in der Husora Cloud gespeichert, damit sie auf mehreren Geräten verfügbar sind. Technischer Dienstleister (Auftragsverarbeiter) ist die Supabase Inc. (supabase.com); die Datenbank liegt im Rechenzentrum London (Vereinigtes Königreich, Angemessenheitsbeschluss der EU-Kommission). Für die Anmeldung werden deine E-Mail-Adresse und ein Passwort (nur verschlüsselt) bei Supabase Auth hinterlegt. Fotos und Dokumente liegen in privaten Speicherbereichen, die nur mit Anmeldung abrufbar sind. Alternativ kannst du ein eigenes Supabase-Projekt verbinden – dann bist du für dieses selbst verantwortlich. Die Verbindung lässt sich jederzeit trennen.</p>
 <p><strong>Feedback und Fehlerberichte:</strong> Nachrichten, die du unter „Hilfe & Support“ sendest, speichern wir mit App-Version, Gerätetyp (Browser-Kennung) und – falls angegeben – deiner E-Mail-Adresse, um zu antworten und Fehler zu beheben. Tritt ein technischer Fehler auf, wird automatisch nur die Fehlermeldung mit diesen technischen Angaben übermittelt, keine Haus-, Buchungs- oder Kostendaten; das kannst du dort jederzeit abschalten. Rechtsgrundlage ist unser berechtigtes Interesse an einer funktionierenden App (Art. 6 Abs. 1 lit. f DSGVO); gelöscht wird nach spätestens 12 Monaten.</p>
 <p><strong>Partner-Portal:</strong> Lädst du einen Servicepartner in das Partner-Portal ein, sieht dieser Betrieb nur, was zu seinen Aufträgen gehört: Name, Adresse, Eckdaten und Hausfotos des betroffenen Ferienhauses, die Aufgaben, die du ihm sendest, eure Nachrichten sowie Kontrollergebnisse, Fotos und Rechnungen zu diesen Aufträgen. Andere Häuser, Buchungen und Kosten sieht er nicht. Die Verbindung beendest du, indem du den Partner entfernst; gesendete Aufträge bleiben zur Nachweisführung erhalten.</p>
         <h3>3. Externe Dienste</h3><p>Für einzelne Funktionen ruft die App Inhalte von Drittanbietern ab. Dabei wird technisch bedingt deine IP-Adresse an den jeweiligen Anbieter übertragen; bei Suchanfragen zusätzlich der eingegebene Suchbegriff bzw. Link.</p>
@@ -13559,19 +13765,19 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <li><strong>Wechselkurse:</strong> frankfurter.dev und open.er-api.com (nur bei Anzeige in Euro).</li>
           <li><strong>Import von Inseraten:</strong> Abruf der angegebenen Inseratsseite, ggf. über die Weiterleitungsdienste allorigins.win und cors.lol sowie die Schnittstellen der jeweiligen Maklerportale; Übersetzung schwedischer Texte über Google Übersetzer bzw. MyMemory.</li>
           <li><strong>Kalender-Abgleich:</strong> Abruf deiner iCal-Links, auf Wunsch über eine Weiterleitung; bei verbundenem Buchungsportal Datenaustausch mit Repull.</li>
-          <li><strong>Zahlung Husora Pro:</strong> PayPal (Europe) S.à r.l. et Cie, S.C.A. – Name, E-Mail und Zahlungsdaten werden direkt von PayPal verarbeitet.</li>
+          <li><strong>Zahlung der Tarife PLUS, PRO und ULTIMATE:</strong> Stripe Payments Europe, Ltd. (Dublin, Irland) – Name, E-Mail-Adresse und Zahlungsdaten gibst du direkt bei Stripe ein; wir erhalten nur Tarif, Abo-Status und eine Kundennummer, keine Karten- oder Kontodaten. Rechtsgrundlage ist die Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO); Rechnungsdaten bewahren wir nach den steuerrechtlichen Fristen (bis zu 10 Jahre) auf.</li>
           <li><strong>E-Mails an Servicepartner:</strong> werden über dein eigenes Mailprogramm versendet; Husora selbst versendet keine E-Mails.</li>
         </ul>
         <h3>4. Rechtsgrundlagen</h3><p>Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der von dir genutzten Funktionen und Abwicklung des Kaufs) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer funktionsfähigen App).</p>
         <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls. Dein Konto und alle Daten im Cloud-Speicher löschst du selbst unter „Einstellungen → Daten & App → Konto und Cloud-Daten löschen“ oder auf Anfrage per E-Mail an ${escapeHtml(LEGAL_INFO.supportEmail)}; bei einem eigenen Supabase-Projekt in diesem Projekt. Aufträge und Rechnungen, die du mit anderen Betrieben ausgetauscht hast, bleiben bei diesen zur Erfüllung gesetzlicher Aufbewahrungspflichten erhalten.</p>
-        <h3>6. Deine Rechte</h3><p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde. Da wir keine Daten von dir speichern, betreffen diese Rechte vor allem die Kaufabwicklung.</p>` },
+        <h3>6. Deine Rechte</h3><p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde. Nutzt du Husora ohne Anmeldung, liegen deine Daten nur auf deinem Gerät; dann betreffen diese Rechte vor allem Feedback, Fehlerberichte und die Zahlungsabwicklung. Anfragen richtest du an ${escapeHtml(LEGAL_INFO.supportEmail)}.</p>` },
       terms: { title: 'Allgemeine Geschäftsbedingungen', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Geltungsbereich</h3><p>Diese Bedingungen gelten für die Nutzung der App Husora, angeboten von ${legalValue('company', 'Firma oder Name')}.</p>
-        <h3>2. Leistungen</h3><p>Husora unterstützt bei der Verwaltung von Ferienhäusern: Aufgaben, Buchungen, Hauskontrollen, Kosten, Dokumente und die Kontaktaufnahme mit Servicepartnern. Husora Free ist kostenlos und umfasst ein Ferienhaus. Husora Pro erweitert die Nutzung auf bis zu 50 Ferienhäuser und das 3D-Hausmodell.</p>
-        <h3>3. Vertragsschluss und Preis</h3><p>Husora Pro wird gegen eine einmalige Zahlung freigeschaltet (Preis laut Anzeige in der App, inkl. gesetzlicher MwSt.). Es entsteht kein Abonnement.</p>
+        <h3>2. Leistungen und Tarife</h3><p>Husora unterstützt bei der Verwaltung von Ferienhäusern: Aufgaben, Buchungen, Hauskontrollen, Mängel und Reparaturen, Kosten, Verträge, Dokumente sowie die Zusammenarbeit mit Servicepartnern über das Partner-Portal. Der Tarif FREE ist kostenlos. Die Tarife PLUS, PRO und ULTIMATE erweitern Umfang und Funktionen; welche Funktionen und Grenzen (z. B. Anzahl Häuser, Benutzer, Dokumente) ein Tarif enthält, zeigt die Tarifübersicht unter „Versionen“ zum Zeitpunkt der Buchung. Als „in Vorbereitung“ gekennzeichnete Funktionen sind noch nicht geschuldet.</p>
+        <h3>3. Vertragsschluss, Preis und Laufzeit</h3><p>Kostenpflichtige Tarife werden als Abonnement mit monatlicher oder jährlicher Abrechnung abgeschlossen (Preis laut Anzeige in der App, inkl. gesetzlicher MwSt.). Der Vertrag kommt zustande, wenn du die Bestellung im Bezahlfenster von Stripe kostenpflichtig abschließt; die Zahlung wickelt Stripe ab. Das Abonnement verlängert sich jeweils um den gewählten Zeitraum und ist jederzeit zum Ende des laufenden Abrechnungszeitraums kündbar – im Kundenportal unter „Versionen → Abo verwalten“ oder per E-Mail. Ein Wechsel in einen höheren Tarif gilt sofort und wird anteilig berechnet; ein Wechsel in einen niedrigeren Tarif gilt ab dem nächsten Abrechnungszeitraum. Nach einer Kündigung oder einem Wechsel bleiben deine Daten erhalten; Funktionen und Grenzen richten sich dann nach dem neuen Tarif.</p>
         <h3>4. Widerrufsrecht</h3><p>Verbrauchern steht ein gesetzliches Widerrufsrecht zu. Bei digitalen Inhalten erlischt es, wenn du ausdrücklich zustimmst, dass wir vor Ablauf der Widerrufsfrist mit der Bereitstellung beginnen, und deine Kenntnis vom Verlust des Widerrufsrechts bestätigst.</p>
         <h3>5. Servicepartner</h3><p>Aufträge an Servicepartner schließt du direkt mit dem jeweiligen Betrieb. Husora ist nicht Vertragspartei und übernimmt keine Gewähr für Verfügbarkeit, Preise oder Qualität der Leistungen.</p>
-        <h3>6. Daten und Datensicherung</h3><p>Deine Daten werden lokal auf deinem Gerät gespeichert. Für regelmäßige Sicherungen bist du selbst verantwortlich; die App bietet dafür unter „Einstellungen“ eine Export-Funktion.</p>
+        <h3>6. Daten und Datensicherung</h3><p>Ohne Anmeldung werden deine Daten nur auf deinem Gerät gespeichert; mit Husora-Konto zusätzlich in der Husora Cloud (Einzelheiten in der Datenschutzerklärung). Für eigene Sicherungen bietet die App unter „Einstellungen“ eine Export-Funktion. Du bist für die Inhalte verantwortlich, die du hochlädst oder mit Servicepartnern teilst, insbesondere für Zugangsdaten zu deinen Häusern.</p>
         <h3>7. Haftung</h3><p>Wir haften unbeschränkt bei Vorsatz und grober Fahrlässigkeit sowie bei Verletzung von Leben, Körper und Gesundheit. Bei leichter Fahrlässigkeit haften wir nur bei Verletzung wesentlicher Vertragspflichten und begrenzt auf den vorhersehbaren, vertragstypischen Schaden.</p>
         <h3>8. Schlussbestimmungen</h3><p>Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts; zwingende Verbraucherschutzvorschriften deines Wohnsitzstaates bleiben unberührt.</p>` },
       partners: { title: 'Hinweis zu Partnerdaten', html: () => `<p>Die Servicepartner-Datenbank wurde aus öffentlich zugänglichen Quellen (Websites der Betriebe, Branchenverzeichnisse) zusammengestellt. Angaben wie Leistungen, Kontaktdaten und Entfernungen können veraltet oder ungenau sein; Entfernungen sind Luftlinien-Schätzungen.</p>
@@ -13813,6 +14019,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const openTasks = tasks.filter((task) => !task.done && task.date);
       const overdue = openTasks.filter((task) => task.date < today);
       if (overdue.length) add('tasks', { id: `tasks-overdue-${overdue.length}`, level: 'urgent', icon: 'task', title: `${overdue.length} ${overdue.length === 1 ? 'Aufgabe ist' : 'Aufgaben sind'} überfällig`, detail: overdue.slice(0, 2).map((task) => task.title).join(' · '), page: 'tasks' });
+      if (entitlements.can('escalations')) { const high = escalatedTasks().filter((entry) => entry.stage >= 2); if (high.length) add('tasks', { id: `escalation-${today}-${high.length}`, level: 'urgent', icon: 'alert', title: `Eskalation: ${high.length} ${high.length === 1 ? 'Aufgabe ist' : 'Aufgaben sind'} seit über 7 Tagen überfällig`, detail: high.slice(0, 2).map((entry) => `${entry.task.title} (${entry.days} Tage)`).join(' · '), page: 'portfolio' }); }
       const dueSoon = openTasks.filter((task) => task.date === today || task.date === tomorrow);
       if (dueSoon.length) add('tasks', { id: `tasks-due-${today}-${dueSoon.length}`, level: 'soon', icon: 'task', title: `${dueSoon.length} ${dueSoon.length === 1 ? 'Aufgabe' : 'Aufgaben'} heute oder morgen fällig`, detail: dueSoon.slice(0, 2).map((task) => task.title).join(' · '), page: 'tasks' });
       properties.forEach((property) => {
@@ -16987,7 +17194,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       else if (o.status === 'in_progress') {
         const vat = o.currency === 'SEK' || ppOrg().country === 'SE' ? 25 : 19;
         const canBill = o.organization_id !== ppOrg().id && (ppIsLead() || ppRole() === 'accounting');
-        const number = `R-${new Date().getFullYear()}-${String(ppD('invoices').length + 1).padStart(4, '0')}`;
+        const number = ppNextNumber('R', ppD('invoices'), 'invoice_number');
         actions = `<form class="pp-card pp-form" data-pp-form="complete-invoice" data-order="${o.id}"><h3>Auftrag abschließen</h3>
           <div class="pp-grid"><label><span class="form-label">Ist-Kosten brutto (${escapeHtml(o.currency)})</span><input class="form-control" type="number" min="0" step="0.01" name="gross" data-pp-field="actual" value="${o.actual_cost ?? o.estimated_cost ?? ''}" ${canBill ? 'required' : ''}></label>
           ${canBill ? `<label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}"></label>
@@ -17024,7 +17231,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const upload = kind === 'invoice' && pp.formMode === 'upload';
       const vat = o.currency === 'SEK' || ppOrg().country === 'SE' ? 25 : 19;
       const net = o.actual_cost ?? o.estimated_cost ?? '';
-      const number = `${kind === 'invoice' ? 'R' : 'A'}-${new Date().getFullYear()}-${String((kind === 'invoice' ? ppD('invoices') : ppD('quotes')).length + 1).padStart(4, '0')}`;
+      const number = kind === 'invoice' ? ppNextNumber('R', ppD('invoices'), 'invoice_number') : ppNextNumber('A', ppD('quotes'), 'quote_number');
       return `<form class="pp-form pp-subform" data-pp-form="finance" data-order="${o.id}" data-kind="${kind}" data-mode="${upload ? 'upload' : 'create'}"><h3>${upload ? 'Eigene Rechnung (PDF)' : kind === 'invoice' ? 'Rechnung' : 'Angebot'} an ${escapeHtml(ppCustomerName(o.organization_id))}</h3>
         ${upload ? `<label class="pp-pdf-pick">${icon('document')}<span><strong>Rechnung als PDF auswählen *</strong><small>Deine fertige Rechnung aus dem eigenen Programm (max. 10 MB).</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf" required style="margin-top:8px"></span></label>` : ''}<div class="pp-grid">
         <label><span class="form-label">Nummer</span><input class="form-control" name="number" value="${escapeHtml(number)}" required maxlength="40"></label>
@@ -17293,11 +17500,24 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
 
     // Rechnung: eigenes PDF hochladen oder aus den Angaben erzeugen, beim Kunden ablegen und per Nachricht melden
+    // Nächste freie Nummer (R-2026-0004): höchste vorhandene Nummer des Jahres + 1, nicht die Anzahl – sonst Doppelvergabe.
+    function ppNextNumber(prefix, rows, field, extra = []) {
+      const year = new Date().getFullYear();
+      const re = new RegExp(`^${prefix}-${year}-(\\d+)$`);
+      const max = [...(rows || []).map((row) => row?.[field]), ...extra].reduce((top, value) => { const match = re.exec(String(value || '').trim()); return match ? Math.max(top, Number(match[1])) : top; }, 0);
+      return `${prefix}-${year}-${String(max + 1).padStart(4, '0')}`;
+    }
     async function ppSendInvoice(o, invoice, file, uploadMode) {
       const hasFile = file && typeof file === 'object' && file.size > 0;
       if (uploadMode && !hasFile) throw new Error('Bitte wähle die Rechnung als PDF aus.');
       if (hasFile && file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) throw new Error(`„${file.name}“ ist kein PDF.`);
       if (hasFile && file.size > 10 * 1024 * 1024) throw new Error(`„${file.name}“ ist größer als 10 MB.`);
+      // Rechnungsnummer muss je Kunde eindeutig sein: vorher prüfen, automatisch vergebene Nummern hochzählen.
+      const taken = (await cloudFetch(`/rest/v1/invoices?organization_id=eq.${o.organization_id}&service_partner_id=eq.${invoice.service_partner_id}&select=invoice_number&limit=1000`)).map((row) => row.invoice_number);
+      if (taken.includes(invoice.invoice_number)) {
+        if (!/^R-\d{4}-\d+$/.test(invoice.invoice_number)) throw new Error(`Die Rechnungsnummer „${invoice.invoice_number}“ hast du diesem Kunden schon gestellt. Bitte eine andere Nummer eintragen.`);
+        invoice.invoice_number = ppNextNumber('R', ppD('invoices'), 'invoice_number', taken);
+      }
       let dataUrl, name, size;
       if (hasFile) {
         dataUrl = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).replace(/^data:[^;,]*/, 'data:application/pdf')); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
@@ -17310,7 +17530,15 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const path = `organization/${o.organization_id}/property/${o.property_id}/documents/${window.crypto?.randomUUID ? crypto.randomUUID() : Date.now()}.pdf`;
       await cloudPutFile('husora-documents', path, dataUrl, 'application/pdf');
       const [doc] = await ppInsert('documents', { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, file_name: name, file_type: 'application/pdf', file_size: size, storage_bucket: 'husora-documents', storage_path: path, document_type: 'invoice' });
-      await ppInsert('invoices', { ...invoice, document_id: doc.id });
+      try {
+        await ppInsert('invoices', { ...invoice, document_id: doc.id });
+      } catch (error) {
+        // Fehlgeschlagene Rechnung: hochgeladene PDF wieder entfernen, damit beim Kunden keine Rechnung ohne Buchung liegt.
+        await cloudFetch(`/rest/v1/documents?id=eq.${doc.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }).catch(() => {});
+        await cloudFetch('/storage/v1/object/husora-documents', { method: 'DELETE', body: { prefixes: [path] } }).catch(() => {});
+        if (/duplicate|unique|409/i.test(error.message)) throw new Error(`Die Rechnungsnummer „${invoice.invoice_number}“ ist bei diesem Kunden schon vergeben. Bitte erneut senden – die nächste freie Nummer wird vorgeschlagen.`);
+        throw error;
+      }
       if (o.organization_id !== ppOrg().id) {
         await ppInsert('messages', { organization_id: o.organization_id, service_order_id: o.id, message: `Rechnung ${invoice.invoice_number} über ${ppMoney(invoice.amount_gross, invoice.currency)} als PDF gesendet${invoice.due_date ? ` – zahlbar bis ${fmtDate(invoice.due_date)}` : ''}.` });
       }
@@ -17624,9 +17852,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const net = Math.round((gross / (1 + vatRate / 100)) * 100) / 100;
         const note = (v.note || '').trim();
         ppRun('complete', async () => {
+          // Erst die Rechnung senden – scheitert sie, bleibt der Auftrag offen und kann erneut abgeschlossen werden.
+          await ppSendInvoice(o, { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, invoice_number: (v.number || '').trim() || `R-${Date.now()}`, invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: Math.round((gross - net) * 100) / 100, amount_gross: gross, currency: o.currency, status: 'received' }, fd.get('pdf'), false);
           await ppPatch('service_orders', o.id, { status: 'completed', actual_cost: gross, response_note: note || o.response_note || null });
           if (note) await ppInsert('messages', { organization_id: o.organization_id, service_order_id: o.id, message: `Erledigt: ${note}` });
-          await ppSendInvoice(o, { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, invoice_number: (v.number || '').trim() || `R-${Date.now()}`, invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: Math.round((gross - net) * 100) / 100, amount_gross: gross, currency: o.currency, status: 'received' }, fd.get('pdf'), false);
         }, { notice: `Auftrag erledigt – Rechnung als PDF an ${ppCustomerName(o.organization_id)} gesendet.` });
         return;
       }
