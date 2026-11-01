@@ -88,5 +88,22 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     if (n !== '2' || !order.includes('offered')) throw new Error(`PDFs ${n} · ${order}`);
     return `${r.note.slice(0, 70)}… · Auftrag „${order}“ · ${n} Kontrollplan-PDFs`;
   });
+  await step('Saison-Checkliste: „Prüfung beauftragen“ → Auftrag im Partner-Portal mit Checklisten-PDF', async () => {
+    const key = await H.evaluate((firm) => {
+      const p = properties[0]; const prov = providers.find((x) => x.name === firm);
+      servicePartnerAssignments[p.id] = [...new Set([...(servicePartnerAssignments[p.id] || []), prov.id])];
+      inspectionProperty = p.id; currentPage = 'seasons'; render();
+      const sel = document.getElementById('season-order-partner'); if (sel) sel.value = prov.id;
+      return currentSeasonKey(p.id);
+    }, FIRM);
+    await H.screenshot({ path: OUT + '/3-saison.png', fullPage: true });
+    await H.click('[data-season-order]'); await H.waitForTimeout(3500);
+    const title = key === 'winter' ? 'Wintercheckliste' : 'Frühjahrscheckliste';
+    const r = sql(`select o.title||' · '||o.status||' · '||d.file_name||' · '||d.description from documents d join service_orders o on o.id=d.service_order_id where o.service_partner_id='${spId()}' and d.file_name like '${title}%'`);
+    if (!r) throw new Error('keine Checklisten-PDF am Auftrag');
+    await P.evaluate(async () => { await ppLoad(); const o = ppD('orders').find((x) => /Prüfung/.test(x.title)); pp.view = 'orders'; pp.detail = { type: 'order', id: o.id }; ppRender(); }); await P.waitForTimeout(400);
+    await P.click('.pp-doc[data-pp-doc=view]'); await P.waitForSelector('#pdf-viewer-modal.open', { timeout: 15000 }); await P.screenshot({ path: OUT + '/4-partner-saison.png' }); await P.evaluate(() => closePdfViewer());
+    return r;
+  });
   console.log(res.join('\n')); console.log(errs.length ? 'JS-Fehler:\n' + [...new Set(errs)].join('\n') : 'keine JS-Fehler'); await b.close();
 })();

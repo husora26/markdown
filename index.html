@@ -10452,7 +10452,7 @@ Morgen|Tomorrow|Imorgon
       }
       return out.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
     }
-    function buildPlanPdf(property, items, cadence, control) {
+    function buildPlanPdf(property, items, cadence, control, opts = {}) {
       const W = 595, H = 842, M = 48;
       const pages = [];
       let page;
@@ -10464,9 +10464,9 @@ Morgen|Tomorrow|Imorgon
       const ensure = (height) => { if (y - height < M + 20) newPage(); };
       const field = (type, name, x, y0, w, h, extra = '') => page.annots.push({ type, name, rect: [x, y0, x + w, y0 + h], extra });
       newPage();
-      text('HUSORA · HAUSKONTROLLE', M, 9, true, '0.29 0.39 0.32'); y -= 26;
-      text('Kontrollplan / Prüfprotokoll', M, 22, true); y -= 20;
-      text(control ? `Kontrolle „${control.name}“ · Servicepartner: ${providers.find((entry) => entry.id === control.providerId)?.name || '–'} · erstellt am` : `Abwesenheitskontrolle · ${cadence === 'weekly' ? 'wöchentlich' : 'monatlich'} · erstellt am ${fmtDateFull(new Date())}`, M, 10, false, '0.35 0.39 0.35'); y -= 28;
+      text(opts.kicker || 'HUSORA · HAUSKONTROLLE', M, 9, true, '0.29 0.39 0.32'); y -= 26;
+      text(opts.title || 'Kontrollplan / Prüfprotokoll', M, 22, true); y -= 20;
+      text(opts.subtitle ? opts.subtitle : control ? `Kontrolle „${control.name}“ · Servicepartner: ${providers.find((entry) => entry.id === control.providerId)?.name || '–'} · erstellt am` : `Abwesenheitskontrolle · ${cadence === 'weekly' ? 'wöchentlich' : 'monatlich'} · erstellt am ${fmtDateFull(new Date())}`, M, 10, false, '0.35 0.39 0.35'); y -= 28;
       text('Angaben zum Gebäude', M, 13, true); y -= 8;
       line(M, y, W - M, y); y -= 16;
       const details = inspectionHouseDetails(property);
@@ -10490,7 +10490,9 @@ Morgen|Tomorrow|Imorgon
       text('Je Position „OK“ oder „Auffällig“ ankreuzen und Auffälligkeiten kurz beschreiben.', M, 8.5, false, '0.4 0.45 0.4'); y -= 18;
       const textWidth = W - 2 * M - 120;
       items.forEach((item, index) => {
-        const history = positionHistory(property.id, item.id);
+        const raw = positionHistory(property.id, item.id) || {};
+        // Saison-Prüfpunkte haben keine Positions-Historie
+        const history = { ...raw, open: raw.open || [], repairs: raw.repairs || [], projects: raw.projects || [], details: { ...(raw.details || {}), hints: raw.details?.hints || [] } };
         const titleLines = pdfWrap(item.title, 11, textWidth, true);
         const detailLines = pdfWrap(`${control?.items?.[item.id] ? `Taktung: ${planFrequencyLabel(control.items[item.id])} · ` : ''}${item.detail || ''}`, 9, textWidth, false);
         const hintLines = history.details.hints.length ? pdfWrap(`Achten auf: ${history.details.hints.join(' · ')}`, 8.5, textWidth, false) : [];
@@ -15863,9 +15865,9 @@ Morgen|Tomorrow|Imorgon
       if (!assigned.length) return `<div class="season-group-foot season-order">${noPartnerLinkHtml(property.id, 'Für die Beauftragung zuerst einen Servicepartner zuordnen')}</div>`;
       return `<div class="season-group-foot season-order">${order ? `<div class="season-order-state st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}">${icon(status === 'Erledigt' ? 'check' : 'clock')}<span><strong>${status === 'Erledigt' ? 'Prüfung erledigt' : 'Prüfung beauftragt'}${partner ? ` · ${escapeHtml(partner.name)}` : ''}</strong><small>Serviceaufgabe bis ${escapeHtml(fmtDate(order.date))} · ${escapeHtml(status)}</small></span><button type="button" class="small-action" data-season-open-task="${order.id}">Zur Aufgabe</button></div>` : ''}
         <div class="season-order-row"><label><span class="form-label">Servicepartner für die Prüfung</span><select class="form-control" id="season-order-partner">${assigned.map((provider) => `<option value="${escapeHtml(provider.id)}" ${provider.id === preferred ? 'selected' : ''}>${escapeHtml(provider.name)} · ${partnerCategoryLabel(provider)}</option>`).join('')}</select></label><button type="button" class="primary-btn" data-season-order="${key}">${icon('document')} ${order ? 'Erneut beauftragen' : 'Prüfung beauftragen'}</button></div>
-        <small class="season-order-hint">Der Partner erhält die ${list.length} Prüfpunkte per E-Mail; Husora legt dazu eine Serviceaufgabe an. Ist sie erledigt, werden die Prüfpunkte abgehakt.</small></div>`;
+        <small class="season-order-hint">Der Partner erhält die ${list.length} Prüfpunkte als PDF – über das Partner-Portal direkt im Auftrag, sonst per E-Mail. Husora legt dazu eine Serviceaufgabe an; ist sie erledigt, werden die Prüfpunkte abgehakt.</small></div>`;
     }
-    function orderSeasonControls(key) {
+    async function orderSeasonControls(key) {
       const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
       const season = SEASON_CHECKLISTS[key];
       const partner = providerById(document.getElementById('season-order-partner')?.value);
@@ -15880,9 +15882,24 @@ Morgen|Tomorrow|Imorgon
       persistTasks();
       const subject = `${season.title} – Prüfauftrag für ${property.name}`;
       const body = `Hej ${partner.name},\n\nfür mein Ferienhaus „${property.name}“${property.address ? ` (${property.address})` : ''} bitte ich Sie, bis ${fmtDateFull(date)} folgende Punkte zu prüfen:\n\n${controls.map((item) => `• ${item.title}${item.detail ? `\n  ${item.detail}` : ''}`).join('\n')}\n\nBitte melden Sie mir Auffälligkeiten direkt, damit ich die Reparatur beauftragen kann.\n\nVielen Dank und viele Grüße\n${profileData.name || ''}`;
-      if (partner.email) openMailUrl(webmailUrl(profileData.mailProvider || 'default', partner.email, subject, body), body);
+      const task = seasonOrderTask(key, property.id);
+      // Über das Partner-Portal verbunden: Auftrag dort, Checkliste als PDF am Auftrag
+      if (cloudReady() && entitlements.can('service_portal')) {
+        try {
+          const partners = await cloudFetch(`/rest/v1/service_partners?organization_id=eq.${cloud.org.id}&partner_organization_id=not.is.null&select=id,company_name,partner_organization_id`);
+          if (cloudPartnerOf(partner.id, partners)) {
+            await cloudUpload({ full: false, keys: new Set(['stugliv-tasks']) });
+            await ownerDispatchOrders({ providerId: partner.id, only: task.id });
+            render();
+            showToast(`Prüfauftrag an ${partner.name} über das Partner-Portal gesendet – die ${season.title} liegt als PDF im Auftrag.`);
+            return;
+          }
+        } catch (error) { console.warn('Partner-Portal nicht erreichbar, Versand per E-Mail:', error); }
+      }
+      const pdf = seasonPlanPdf(key, property, partner.name);
+      if (partner.email) { downloadFile(pdf.bytes, pdf.fileName, 'application/pdf'); openMailUrl(webmailUrl(profileData.mailProvider || 'default', partner.email, subject, `${body}\n\nAnhang: ${pdf.fileName}`), body); }
       render();
-      showToast(partner.email ? `Prüfauftrag an ${partner.name} vorbereitet – E-Mail ist geöffnet, die Serviceaufgabe ist angelegt.` : `Serviceaufgabe für ${partner.name} angelegt – für diesen Partner ist keine E-Mail-Adresse hinterlegt.`);
+      showToast(partner.email ? `Prüfauftrag an ${partner.name} vorbereitet – E-Mail ist geöffnet, die ${season.title} wurde als PDF geladen: bitte anhängen und absenden.` : `Serviceaufgabe für ${partner.name} angelegt – für diesen Partner ist keine E-Mail-Adresse hinterlegt.`);
     }
     function seasonsPage() {
       const property = properties.find((item) => item.id === inspectionProperty) || properties[0];
@@ -19461,6 +19478,18 @@ Morgen|Tomorrow|Imorgon
     }
     // ----- Hauskontrolle über das Partner-Portal: Kontrollplan (PDF) wird an den Auftrag angehängt -----
     const isInspectionTask = (task) => task?.auto === 'inspection' || /kontrolle/i.test(String(task?.title || ''));
+    // Saison-Checkliste: Prüfauftrag (seasonRef …|control-order) oder automatische Saisonaufgabe
+    const seasonKeyOfTask = (task) => { if (task?.auto === 'season' && SEASON_CHECKLISTS[task.season]) return task.season; const parts = String(task?.seasonRef || '').split('|'); return parts[parts.length - 1] === 'control-order' && SEASON_CHECKLISTS[parts[parts.length - 2]] ? parts[parts.length - 2] : ''; };
+    const isPlanTask = (task) => isInspectionTask(task) || Boolean(seasonKeyOfTask(task));
+    function seasonPlanPdf(key, property, partnerName = '') {
+      const season = SEASON_CHECKLISTS[key];
+      const controls = season.items.filter((item) => (SEASON_ITEM_TYPES[key]?.[item.id] || 'control') === 'control');
+      const items = controls.length ? controls : season.items;
+      const due = seasonState(key, property.id).due;
+      const bytes = buildPlanPdf(property, items, 'monthly', null, { kicker: `HUSORA · ${season.card.toUpperCase()}`, title: `${season.title} / Prüfprotokoll`, subtitle: `${season.card}${partnerName ? ` · Servicepartner: ${partnerName}` : ''}${due ? ` · bis ${fmtDateFull(new Date(`${due}T12:00:00`))}` : ''} · erstellt am ${fmtDateFull(new Date())}` });
+      const fileName = `${season.title}-${String(property.name).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '')}.pdf`;
+      return { bytes, fileName, description: `${season.title} · ${items.length} Prüfpunkte`, count: items.length };
+    }
     function inspectionPlanFor(property, partnerId = '') {
       const controls = controlsFor(property.id);
       const control = controls.find((c) => partnerId && c.providerId === partnerId) || controls[controls.length - 1] || null;
@@ -19473,13 +19502,20 @@ Morgen|Tomorrow|Imorgon
       if (!property) return false;
       const [order] = await cloudFetch(`/rest/v1/service_orders?id=eq.${orderId}&select=id,organization_id,property_id`);
       if (!order) return false;
-      const existing = await cloudFetch(`/rest/v1/documents?service_order_id=eq.${orderId}&file_name=like.Kontrollplan*&select=id`);
+      const seasonKey = seasonKeyOfTask(task);
+      let bytes, fileName, description;
+      if (seasonKey) ({ bytes, fileName, description } = seasonPlanPdf(seasonKey, property, providerById(task.partnerId)?.name || ''));
+      else {
+        const { control, items } = inspectionPlanFor(property, task.partnerId);
+        bytes = buildPlanPdf(property, items, 'monthly', control);
+        fileName = planFileName(property);
+        description = `Kontrollplan${control?.name ? ` „${control.name}“` : ''} · ${items.length} Prüfpositionen`;
+      }
+      const existing = await cloudFetch(`/rest/v1/documents?service_order_id=eq.${orderId}&file_name=eq.${encodeURIComponent(fileName)}&select=id`);
       if (existing.length) return true;
-      const { control, items } = inspectionPlanFor(property, task.partnerId);
-      const bytes = buildPlanPdf(property, items, 'monthly', control);
       const path = `organization/${order.organization_id}/property/${order.property_id}/documents/${window.crypto?.randomUUID ? crypto.randomUUID() : Date.now()}.pdf`;
       await cloudPutFile('husora-documents', path, ppBytesToDataUrl(bytes, 'application/pdf'), 'application/pdf');
-      await cloudFetch('/rest/v1/documents', { method: 'POST', body: { organization_id: order.organization_id, property_id: order.property_id, service_order_id: order.id, file_name: planFileName(property), file_type: 'application/pdf', file_size: bytes.length, storage_bucket: 'husora-documents', storage_path: path, document_type: 'other', description: `Kontrollplan${control?.name ? ` „${control.name}“` : ''} · ${items.length} Prüfpositionen` }, headers: { Prefer: 'return=minimal' } });
+      await cloudFetch('/rest/v1/documents', { method: 'POST', body: { organization_id: order.organization_id, property_id: order.property_id, service_order_id: order.id, file_name: fileName, file_type: 'application/pdf', file_size: bytes.length, storage_bucket: 'husora-documents', storage_path: path, document_type: 'other', description }, headers: { Prefer: 'return=minimal' } });
       return true;
     }
     async function ownerDispatchOrders({ providerId = '', only = null } = {}) {
@@ -19511,11 +19547,11 @@ Morgen|Tomorrow|Imorgon
           // schon früher gesendet und noch aktiv → Status nachziehen
           if (taskId && running.has(`${taskId}:${sp.id}`) && taskStatus(t) === 'Offen') { markTaskCommissioned(t); restated += 1; }
           // bereits laufende Hauskontrolle ohne Kontrollplan: PDF nachreichen
-          if (taskId && running.has(`${taskId}:${sp.id}`) && isInspectionTask(t)) { const running0 = existing.find((o) => o.service_task_id === taskId && o.service_partner_id === sp.id && ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)); if (running0) await ownerAttachInspectionPlan(t, running0.id).catch(() => {}); }
+          if (taskId && running.has(`${taskId}:${sp.id}`) && isPlanTask(t)) { const running0 = existing.find((o) => o.service_task_id === taskId && o.service_partner_id === sp.id && ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)); if (running0) await ownerAttachInspectionPlan(t, running0.id).catch(() => {}); }
           if (!taskId || done.has(`${taskId}:${sp.id}`)) continue; // noch nicht in der Cloud oder schon gesendet
           const orderId = await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: taskId, p_service_partner_id: sp.id } });
           // Hauskontrolle: Kontrollplan als PDF an den Auftrag hängen
-          if (isInspectionTask(t)) await ownerAttachInspectionPlan(t, orderId).catch((error) => console.warn('Kontrollplan nicht angehängt:', error));
+          if (isPlanTask(t)) await ownerAttachInspectionPlan(t, orderId).catch((error) => console.warn('Kontrollplan nicht angehängt:', error));
           done.add(`${taskId}:${sp.id}`);
           sent.set(sp.company_name, (sent.get(sp.company_name) || 0) + 1);
           markTaskCommissioned(t);
