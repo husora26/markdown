@@ -39,6 +39,8 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…2400_order_access.sql` | Zugangsdaten je Auftrag zeitlich begrenzt freigeben (`order_access_shares`, `order_access()` mit Abrufprotokoll) |
 | `…2500_usage_limits.sql` | Monatszähler (`usage_counters`, `consume_usage()`), Häuser-/Dokumentgrenze serverseitig |
 | `…2600_property_archive.sql` | Häuser archivieren (`status = archived`, `set_property_archived()`), archivierte zählen nicht ins Limit |
+| `…2700_agreements_batch_invoices.sql` | Jahresverträge (`service_agreements`, `propose/respond/end_service_agreement()`), automatische Zuordnung passender Aufträge, Sammelrechnungen (`invoice_orders`), keine Einzelrechnung für Vertragsaufträge |
+| `…2800_invoice_number_guard.sql` | Doppelte automatische Rechnungsnummer → nächste freie Nummer; doppelte eigene Nummer → verständliche Meldung |
 | `…1700_partner_portal.sql` | Zugang für Servicepartner: Partner-Organisationen, Einladungen, Mitarbeiterrollen, Kunden, Kontrollvorlagen, 14 Servicearten |
 | `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |
