@@ -26,13 +26,13 @@ const ANON = ENV_ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now
     await p.screenshot({ path: OUT + '/3-portal.png' }); return await p.evaluate(() => ppOrg().name);
   });
   await step('Symbol oben links (nach Eingabe) → Start des Partner-Portals', async () => { await p.evaluate(() => { pp.view = 'company'; ppRender(); }); await p.click('.pp-top [data-pp-action=home]'); await p.waitForTimeout(300); const r = await p.evaluate(() => `${!document.getElementById('partner-portal').hidden} · ${pp.view}`); if (r !== 'true · dashboard') throw new Error(r); return r; });
-  await step('Hausbesitzer-Knopf → Einstellungen → wieder ins Partner-Portal', async () => {
-    await p.click('.pp-top [data-pp-action=close]'); await p.waitForTimeout(300); await p.evaluate(() => { currentPage = 'settings'; settingsView = 'settings-data'; render(); });
+  await step('Mehr → „Zur Hausbesitzer-Ansicht“ → Einstellungen → wieder ins Partner-Portal', async () => {
+    await p.evaluate(() => { pp.view = 'more'; pp.detail = null; ppRender(); }); if (await p.$('.pp-top [data-pp-action=close]')) throw new Error('Hausbesitzer-Knopf noch oben'); await p.click('#partner-portal .pp-tip [data-pp-action=close]'); await p.waitForTimeout(300); await p.evaluate(() => { currentPage = 'settings'; settingsView = 'settings-data'; render(); });
     await p.click('#settings-partners [data-open-partner-portal]'); await p.waitForTimeout(800);
     return await p.evaluate(() => `${!document.getElementById('partner-portal').hidden} · ${ppOrg()?.name}`);
   });
   await step('Neu laden: App startet nicht mehr gefangen im Portal', async () => {
-    await p.click('.pp-top [data-pp-action=close]'); await p.waitForTimeout(300); await p.reload(); await p.waitForTimeout(600); return await p.evaluate(() => `Portal offen: ${!document.getElementById('partner-portal')?.hidden && !!document.getElementById('partner-portal')} · Modus ${localStorage.getItem('husora-mode')}`);
+    await p.evaluate(() => { pp.view = 'more'; pp.detail = null; ppRender(); }); if (await p.$('.pp-top [data-pp-action=close]')) throw new Error('Hausbesitzer-Knopf noch oben'); await p.click('#partner-portal .pp-tip [data-pp-action=close]'); await p.waitForTimeout(300); await p.reload(); await p.waitForTimeout(600); return await p.evaluate(() => `Portal offen: ${!document.getElementById('partner-portal')?.hidden && !!document.getElementById('partner-portal')} · Modus ${localStorage.getItem('husora-mode')}`);
   });
   console.log(res.join('\n')); console.log(errs.length ? 'JS-Fehler:\n' + [...new Set(errs)].join('\n') : 'keine JS-Fehler'); await b.close();
 })();

@@ -93,15 +93,15 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const t = await P.evaluate(() => [document.querySelectorAll('.pp-main .pp-photo').length, [...document.querySelectorAll('.pp-main h2, .pp-main .pp-section-title')].map((e) => e.textContent).join('|')].join(' · '));
     if (!t.startsWith('0')) throw new Error(t); return t;
   });
-  await step('Leistungen: nur 3 Gruppen, Preis je Arbeitspaket/Stunde, Speichern', async () => {
-    await view('services'); await P.screenshot({ path: OUT + '/4-leistungen.png' });
-    const names = await P.$$eval('.pp-service strong', (e) => e.map((x) => x.textContent).join(', '));
-    const ids = await P.$$eval('.pp-service input[type=checkbox]', (e) => e.map((x) => x.name.split(':')[1]));
-    await P.check(`[name="type:${ids[0]}"]`); await P.fill(`[name="price:${ids[0]}"]`, '450'); await P.selectOption(`[name="unit:${ids[0]}"]`, 'job');
-    await P.check(`[name="type:${ids[1]}"]`); await P.fill(`[name="price:${ids[1]}"]`, '520'); await P.selectOption(`[name="unit:${ids[1]}"]`, 'hour');
-    await P.$eval('[data-pp-form=services] button[type=submit]', (e) => e.click()); await P.waitForFunction(() => !pp.busy, null, { timeout: 15000 }); await P.waitForTimeout(300);
-    const db = sql(`select string_agg(t.name||' '||s.price_from||'/'||s.price_unit||(case when s.active then '' else ' (aus)' end), ', ' order by t.name) from service_partner_services s join service_types t on t.id=s.service_type_id join service_partners sp on sp.id=s.service_partner_id where sp.company_name='${FIRM}' and sp.partner_organization_id=sp.organization_id`);
-    if (names !== 'Hauskontrolle, Servicearbeiten, Sanierungen') throw new Error(names); return `${names} · DB: ${db}`;
+  await step('Leistungen: Pakete in den 3 Bereichen, Preis je Arbeitspaket/Stunde', async () => {
+    await view('services');
+    const add = async (group, name, price, unit) => { await P.click('[data-pp-svc=new]'); await P.selectOption('[data-pp-form=svc-new] [name=group]', group); await P.fill('[data-pp-form=svc-new] [name=name]', name); await P.fill('[data-pp-form=svc-new] [name=price]', price); await P.selectOption('[data-pp-form=svc-new] [name=unit]', unit); await P.$eval('[data-pp-form=svc-new] button[type=submit]', (e) => e.click()); await P.waitForFunction(() => !pp.busy, null, { timeout: 15000 }); await P.waitForTimeout(300); };
+    const groups = await P.$$eval('[data-pp-form] [name=group] option', (e) => e.map((x) => x.textContent).join(', ')).catch(() => '');
+    await add('inspection', 'Hauskontrolle', '450', 'job'); await add('service_work', 'Servicearbeiten', '520', 'hour');
+    await P.screenshot({ path: OUT + '/4-leistungen.png' });
+    const db = sql(`select string_agg(t.name||' '||s.price_from||'/'||s.price_unit||(case when s.active then '' else ' (aus)' end), ', ' order by t.name) from service_partner_services s join service_types t on t.id=s.service_type_id join service_partners sp on sp.id=s.service_partner_id where sp.company_name='${FIRM}' and sp.partner_organization_id=sp.organization_id and s.active`);
+    const bereiche = await P.evaluate(() => PP_SERVICE_GROUPS.map(([, n]) => n).join(', '));
+    if (bereiche !== 'Hauskontrolle, Servicearbeiten, Sanierungen' || !db.includes('450.00/job') || !db.includes('520.00/hour')) throw new Error(`${bereiche} · ${db}`); return `${bereiche} · DB: ${db}`;
   });
   await step('Leistungen: Zurück führt zu „Mehr“', async () => {
     await P.click('.pp-main .pp-back'); await P.waitForTimeout(200); const v = await P.evaluate(() => pp.view); if (v !== 'more') throw new Error(v); return v;

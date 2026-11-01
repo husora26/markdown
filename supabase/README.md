@@ -42,6 +42,7 @@ Die Migrationen setzen das Husora-Datenbankschema v1.0 vollständig um:
 | `…2700_agreements_batch_invoices.sql` | Jahresverträge (`service_agreements`, `propose/respond/end_service_agreement()`), automatische Zuordnung passender Aufträge, Sammelrechnungen (`invoice_orders`), keine Einzelrechnung für Vertragsaufträge |
 | `…2800_invoice_number_guard.sql` | Doppelte automatische Rechnungsnummer → nächste freie Nummer; doppelte eigene Nummer → verständliche Meldung |
 | `…2900_agreement_tasks.sql` | Jahresverträge mit mehreren Aufgaben (`task_titles`), Beginn/Ende frei wählbar (max. 3 Jahre), Hausname am Vertrag für den Partner |
+| `…3000_partner_portal_extras.sql` | Jahresverträge bearbeiten (`update_service_agreement`, Gegenseite bestätigt) und löschen (`delete_service_agreement`), Leistungspakete mit Name/Beschreibung/Ergänzung, Mitarbeiter mit Name/Telefon/Info (auch in Einladungen), Dokumentenarchiv je Betrieb (`document_archive`) |
 | `…1700_partner_portal.sql` | Zugang für Servicepartner: Partner-Organisationen, Einladungen, Mitarbeiterrollen, Kunden, Kontrollvorlagen, 14 Servicearten |
 | `husora_komplett.sql` | alle Migrationen in einer Datei für den SQL Editor |
 | `seed.sql` | Testdaten |

@@ -569,6 +569,41 @@
     .ag-add-task svg { width: 16px; height: 16px; }
     .ag-hint { color: var(--muted); font-size: 12px; }
     .pp-ag-facts .wide { grid-column: 1 / -1; }
+    .pp-section-head { gap: 10px; flex-wrap: wrap; }
+    .pp-sort { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+    .pp-sort select { min-height: 34px; padding: 4px 28px 4px 10px; font-size: 13px; width: auto; }
+    .pp-sort-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 0 4px; }
+    .pp-insp-filters { margin-bottom: 0; }
+    .pp-member { display: grid; gap: 8px; }
+    .pp-member-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .pp-member-head small { display: block; color: var(--muted); font-size: 12.5px; }
+    .pp-member-meta { display: grid; gap: 4px; font-size: 13.5px; }
+    .pp-member-meta a { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 600; text-decoration: none; }
+    .pp-member-meta a svg { width: 15px; height: 15px; }
+    .pp-member-meta p { margin: 0; color: var(--muted); }
+    .pp-member .pp-actions { margin: 0; }
+    .pp-package { display: grid; gap: 8px; }
+    .pp-package-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .pp-package-head strong { display: block; font-size: 15.5px; }
+    .pp-package-price { text-align: right; font-weight: 750; white-space: nowrap; }
+    .pp-package-price small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 500; }
+    .pp-package-price.muted { color: var(--muted); font-weight: 600; font-size: 13px; }
+    .pp-package-note { display: flex; gap: 6px; margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--green-soft); font-size: 13px; }
+    .pp-package-note svg { flex: none; width: 15px; height: 15px; margin-top: 2px; }
+    .pp-package .pp-actions { margin: 0; }
+    .pp-package .pp-svc-desc { margin: 0; padding: 0; }
+    @media (max-width: 420px) { .pp-doc-row { flex-wrap: wrap; } .pp-doc-row > .pp-doc { flex-basis: 100%; } .pp-doc-actions { margin-left: auto; } }
+    .hub-agreement-edit { display: grid; gap: 10px; padding-top: 8px; border-top: 1px dashed var(--line); }
+    .hub-agreement-edit h3 { margin: 0; font-size: 15px; }
+    @media (max-width: 560px) { .hub-agreement-edit .pp-grid { grid-template-columns: 1fr; } }
+    .pp-doc-row { display: flex; align-items: center; gap: 6px; }
+    .pp-doc-row > .pp-doc { flex: 1; min-width: 0; }
+    .pp-doc-actions { display: flex; gap: 4px; flex: none; }
+    .pp-doc-actions .pp-icon-btn { min-height: 36px; width: 36px; padding: 0; justify-content: center; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+    .pp-archive { margin-top: 14px; }
+    .pp-archive summary { display: flex; align-items: center; gap: 8px; padding: 10px 2px; cursor: pointer; color: var(--muted); font-weight: 700; }
+    .pp-archive summary svg { width: 16px; height: 16px; }
+    .pp-muted svg { width: 14px; height: 14px; vertical-align: -2px; }
     .pf-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
     .pf-kpi { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); border-left: 4px solid var(--green); }
     .pf-kpi > span { color: var(--muted); font-size: 12.5px; }
@@ -829,7 +864,7 @@
     .manual-check-bar p { margin: 0; color: var(--muted); font-size: 12.5px; }
     .item-frequency { display: inline-block; margin-top: 4px; padding: 2px 8px; border-radius: 12px; color: var(--green); background: #e6f1ea; font-size: 10.5px; font-weight: 700; }
     @media (max-width: 720px) { .plan-row { grid-template-columns: 1fr; } .house-service-row { align-items: flex-start; flex-direction: column; } }
-    #pdf-viewer-modal { z-index: 80; }
+    #pdf-viewer-modal { z-index: 950; }
     .pdf-viewer-modal { width: min(760px, 100%); }
     .pdf-preview { max-height: 60vh; overflow-y: auto; padding: 22px 24px; border: 1px solid var(--line); border-radius: 8px; background: white; color: #1a241d; box-shadow: inset 0 0 0 4px #f4f4f2; }
     .pdf-preview[hidden] { display: none; }
@@ -3719,6 +3754,8 @@
   
   
   
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4844,6 +4881,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
         clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
         note: '<path d="M5 4h14a1 1 0 0 1 1 1v10l-5 5H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M15 20v-4a1 1 0 0 1 1-1h4M8 9h8M8 13h4"/>',
+        eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+        download: '<path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/>',
+        archive: '<rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/><path d="M10 13h4"/>',
+        undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
         edit: '<path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
         trash: '<path d="M4 7h16M10 11v6m4-6v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
         ticket: '<path d="M4 8a2 2 0 0 0 0 4v0a2 2 0 0 1 0 4v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1a2 2 0 0 1 0-4v0a2 2 0 0 0 0-4V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1z"/><path d="M14 6v12" stroke-dasharray="2 2.4"/>'
@@ -16964,7 +17005,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     const ppOwnCustomer = (property) => (property?.owner_customer_id ? ppD('customers').find((c) => c.id === property.owner_customer_id) : null);
     const ppCustomerLabel = (c) => c ? (c.company_name || [c.first_name, c.last_name].filter(Boolean).join(' ')) : '';
     const ppAddress = (p) => (p ? [[p.street, p.house_number].filter(Boolean).join(' '), [p.postal_code, p.city].filter(Boolean).join(' ')].filter(Boolean).join(', ') : '');
-    const ppMemberName = (userId) => { const m = ppD('members').find((x) => x.user_id === userId); return m?.user ? ([m.user.first_name, m.user.last_name].filter(Boolean).join(' ') || m.user.email) : ''; };
+    const ppMemberName = (userId) => { const m = ppD('members').find((x) => x.user_id === userId); return m?.display_name || (m?.user ? ([m.user.first_name, m.user.last_name].filter(Boolean).join(' ') || m.user.email) : ''); };
     const ppOpenOrders = () => ppD('orders').filter((o) => ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status));
     const ppToday = () => localDateKey(new Date());
     const ppDayKey = (value) => (value ? localDateKey(new Date(value)) : '');
@@ -17014,7 +17055,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -17022,17 +17063,18 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             ppQ('messages?select=*&order=created_at.desc&limit=400'),
             ppQ('customers?select=*&order=company_name.asc.nullslast,last_name.asc.nullslast'),
             ppQ(`properties?select=${propSel}&order=name.asc&limit=1000`),
-            ppQ(`organization_members?organization_id=eq.${org.id}&select=id,role,status,user_id,user:users!organization_members_user_id_fkey(first_name,last_name,email)`),
+            ppQ(`organization_members?organization_id=eq.${org.id}&select=id,role,status,user_id,display_name,phone,info,user:users!organization_members_user_id_fkey(first_name,last_name,email)`),
             self ? ppQ(`service_partner_services?service_partner_id=eq.${self}&select=*`) : [],
-            ppQ('service_types?select=id,code,name,organization_id&active=eq.true&order=name.asc'),
+            ppQ('service_types?select=id,code,name,description,category,organization_id&active=eq.true&order=name.asc'),
             ppQ(`inspection_templates?organization_id=eq.${org.id}&active=eq.true&select=id,name,description,items:inspection_template_items(count)&order=name.asc`),
             ppQ('photos?select=id,organization_id,property_id,service_order_id,inspection_id,storage_bucket,storage_path,caption,created_at&order=created_at.desc&limit=300'),
             ppQ('documents?select=id,organization_id,property_id,service_order_id,file_name,file_type,file_size,storage_bucket,storage_path,document_type,created_at&order=created_at.desc&limit=300'),
             ppIsAdmin() ? ppQ(`organization_invites?organization_id=eq.${org.id}&accepted_at=is.null&select=*&order=created_at.desc`) : [],
             ppQ('service_agreements?select=*,property:properties(name)&order=starts_on.desc&limit=300').catch(() => []),
-            ppQ('invoice_orders?select=invoice_id,service_order_id,amount_gross&limit=2000').catch(() => [])
+            ppQ('invoice_orders?select=invoice_id,service_order_id,amount_gross&limit=2000').catch(() => []),
+            ppQ(`document_archive?organization_id=eq.${org.id}&select=document_id,archived_at`).catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines };
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive };
           pp.access = {};
         } else {
           pp.data = null;
@@ -17129,7 +17171,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const org = ppOrg();
       const signedIn = cloudSignedIn();
       const head = `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="home" aria-label="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}" title="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}">${org ? '' : `<span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span>`}<span class="pp-logo">${icon(org ? 'home' : 'gear')}</span><div><strong>${escapeHtml(org?.name || 'Husora für Servicepartner')}</strong><small>${org ? `${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())} · ${escapeHtml(cloud.session?.email || '')}` : 'Partner-Portal'}</small></div></button>
-        <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button>` : ''}<button type="button" class="pp-switch" data-pp-action="close">${icon('home')}<span>Hausbesitzer</span></button></div></header>`;
+        <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button>` : ''}</div></header>`;
       let body;
       if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal arbeitet mit dem Husora-Cloud-Speicher.', `<div class="pp-actions" style="justify-content:center"><button type="button" class="primary-btn" data-pp-action="connect-default">Mit Husora verbinden</button></div>`);
       else if (!signedIn) body = ppLoginHtml();
@@ -17194,7 +17236,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     }
     // Im Portal wählbare Leistungsgruppen (service_types.code)
     const PP_SERVICE_GROUPS = [['inspection', 'Hauskontrolle', 'Abwesenheits-, Saison- und Ferienhauskontrollen'], ['service_work', 'Servicearbeiten', 'Hausservice, Reinigung, Garten, Winterdienst, kleine Reparaturen'], ['renovation', 'Sanierungen', 'Dach, Fassade, Fenster, Bad, Heizung und Technik']];
-    const PP_PRICE_UNITS = [['job', 'je Arbeitspaket'], ['hour', 'je Stunde']];
+    const PP_PRICE_UNITS = [['job', 'je Arbeitspaket'], ['hour', 'je Stunde'], ['visit', 'je Einsatz'], ['month', 'je Monat'], ['year', 'je Jahr'], ['m2', 'je m²']];
     const PP_DEFAULT_TYPES = [['inspection', 'Hauskontrolle'], ['holiday_home_inspection', 'Ferienhauskontrolle'], ['cleaning', 'Reinigung'], ['gardening', 'Gartenpflege'], ['snow_removal', 'Winterdienst'], ['repair', 'Reparatur'], ['plumbing', 'Sanitär'], ['heating', 'Heizung'], ['electrician', 'Elektro'], ['roofing', 'Dach'], ['facade', 'Fassade'], ['windows', 'Fenster'], ['key_service', 'Schlüsselservice'], ['general_maintenance', 'Technische Wartung']].map(([code, name]) => ({ code, name }));
 
     function ppViewHtml() {
@@ -17271,8 +17313,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const number = ppNextNumber('R', ppD('invoices'), 'invoice_number');
         actions = `<form class="pp-card pp-form" data-pp-form="complete-invoice" data-order="${o.id}"><h3>Auftrag abschließen</h3>
           ${inAgreement ? `<p class="pp-hint">${icon('calendar')} Im Jahresvertrag „${escapeHtml(ppAgreementOf(o).title)}“ enthalten – wird nicht einzeln, sondern mit der Jahresrechnung abgerechnet.</p>` : ''}
-          <div class="pp-grid">${inAgreement ? '' : `<label><span class="form-label">Ist-Kosten brutto (${escapeHtml(o.currency)})</span><input class="form-control" type="number" min="0" step="0.01" name="gross" data-pp-field="actual" value="${o.actual_cost ?? o.estimated_cost ?? ''}" ${canBill ? 'required' : ''}></label>`}
-          ${canBill ? `<label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}"></label>
+          <div class="pp-grid">${inAgreement ? '' : `<label><span class="form-label">Ist-Kosten brutto${canBill ? '' : ` (${escapeHtml(o.currency)})`}</span><input class="form-control" type="number" min="0" step="0.01" name="gross" data-pp-field="actual" value="${o.actual_cost ?? o.estimated_cost ?? ''}" ${canBill ? 'required' : ''}></label>`}
+          ${canBill ? `${ppCurrencySelect(o.currency)}<label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}"></label>
           <label><span class="form-label">Rechnungsnummer</span><input class="form-control" name="number" value="${escapeHtml(number)}" maxlength="40"></label>
           <label><span class="form-label">Zahlbar bis</span><input class="form-control" name="due" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label>` : ''}
           <label class="full"><span class="form-label">Abschlussnotiz</span><input class="form-control" name="note" data-pp-field="done-note" placeholder="Was wurde erledigt?"></label></div>
@@ -17301,6 +17343,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ${['accepted', 'scheduled', 'in_progress', 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
           ${pp.form === `finance:${o.id}` ? ppFinanceForm(o) : o.agreement_id ? `<p class="pp-hint">${icon('calendar')} Im Jahresvertrag – Abrechnung einmal jährlich unter „Mehr → Jahresverträge“.</p>` : `${ppOrderBilled(o) ? '<p class="pp-hint">Dieser Auftrag ist bereits abgerechnet – eine weitere Rechnung nur für Korrekturen oder Zusatzleistungen.</p>' : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="quote">Angebot</button><button type="button" class="primary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice">Rechnung erstellen</button><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice" data-mode="upload">${icon('document')} PDF-Rechnung hochladen</button></div>`}`) : ''}`;
     }
+    // Angebote und Rechnungen wahlweise in Euro oder Kronen
+    const ppCurrencySelect = (current) => `<label><span class="form-label">Währung</span><select class="form-control" name="currency">${[['EUR', 'Euro (€)'], ['SEK', 'Schwedische Kronen (kr)']].map(([code, label]) => `<option value="${code}" ${(current || 'EUR') === code ? 'selected' : ''}>${label}</option>`).join('')}</select></label>`;
     function ppFinanceForm(o) {
       const kind = pp.formKind || 'invoice';
       const upload = kind === 'invoice' && pp.formMode === 'upload';
@@ -17310,7 +17354,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       return `<form class="pp-form pp-subform" data-pp-form="finance" data-order="${o.id}" data-kind="${kind}" data-mode="${upload ? 'upload' : 'create'}"><h3>${upload ? 'Eigene Rechnung (PDF)' : kind === 'invoice' ? 'Rechnung' : 'Angebot'} an ${escapeHtml(ppCustomerName(o.organization_id))}</h3>
         ${upload ? `<label class="pp-pdf-pick">${icon('document')}<span><strong>Rechnung als PDF auswählen *</strong><small>Deine fertige Rechnung aus dem eigenen Programm (max. 10 MB).</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf" required style="margin-top:8px"></span></label>` : ''}<div class="pp-grid">
         <label><span class="form-label">Nummer</span><input class="form-control" name="number" value="${escapeHtml(number)}" required maxlength="40"></label>
-        <label><span class="form-label">Netto (${escapeHtml(o.currency)})</span><input class="form-control" name="net" type="number" min="0" step="0.01" value="${net !== '' ? (Number(net) / (1 + vat / 100)).toFixed(2) : ''}" required></label>
+        ${ppCurrencySelect(o.currency)}
+        <label><span class="form-label">Netto</span><input class="form-control" name="net" type="number" min="0" step="0.01" value="${net !== '' ? (Number(net) / (1 + vat / 100)).toFixed(2) : ''}" required></label>
         <label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}" required></label>
         ${kind === 'invoice' ? `<label><span class="form-label">Rechnungsdatum</span><input class="form-control" name="date" type="date" value="${ppToday()}"></label><label><span class="form-label">Fällig am</span><input class="form-control" name="due" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label>` : `<label><span class="form-label">Gültig bis</span><input class="form-control" name="valid" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label><label class="full"><span class="form-label">Leistung</span><input class="form-control" name="description" value="${escapeHtml(o.title)}"></label>`}
         </div><p class="pp-hint">${kind !== 'invoice' ? 'Brutto wird automatisch berechnet. Das Angebot erscheint beim Kunden zur Freigabe.' : upload ? 'Nummer und Beträge übernimmst du aus deinem PDF – damit sieht der Hausbesitzer die Summe direkt. Das PDF wird ihm zugeschickt und bei seinem Ferienhaus unter Dokumente abgelegt.' : 'Brutto wird automatisch berechnet. Husora erstellt die Rechnung als PDF (mit deinen Firmen- und Bankdaten) und schickt sie dem Hausbesitzer.'}</p>
@@ -17361,8 +17406,22 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <label><span class="form-label">Objekt</span><select class="form-control" name="property_id">${props.map((p) => `<option value="${p.id}">${escapeHtml(p.name)} – ${escapeHtml(ppCustomerName(p.organization_id) === 'Eigener Kunde' ? ppCustomerLabel(ppOwnCustomer(p)) || 'eigenes Objekt' : ppCustomerName(p.organization_id))}</option>`).join('')}</select></label>
           <label><span class="form-label">Vorlage</span><select class="form-control" name="template_id">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)} (${t.items?.[0]?.count ?? 0})</option>`).join('')}</select></label>
         </div><div class="pp-actions"><button class="primary-btn" type="submit" ${props.length && ppD('templates').length ? '' : 'disabled'} ${ppDisabled()}>Kontrolle anlegen</button></div>${props.length ? '' : '<p class="pp-hint">Objekte erscheinen, sobald ein Kunde dich beauftragt oder du einen eigenen Kunden anlegst.</p>'}</form>
-        ${ppSection('Offen', `<div class="pp-list">${active.map(ppInspectionCard).join('') || '<p class="pp-muted">Keine offenen Kontrollen.</p>'}</div>`)}
-        ${ppSection('Abgeschlossen', `<div class="pp-list">${done.slice(0, 20).map(ppInspectionCard).join('') || '<p class="pp-muted">Noch keine abgeschlossenen Kontrollen.</p>'}</div>`)}`;
+        ${(() => {
+          const status = pp.inspFilter || 'all';
+          const groups = [['scheduled', 'Offen'], ['in_progress', 'In Bearbeitung'], ['completed', 'Abgeschlossen']];
+          const all = ppD('inspections').filter((i) => i.status !== 'cancelled');
+          const mode = pp.sort.inspections;
+          const owner = (i) => ppOwnerName(i.organization_id, i.property_id);
+          const prop = (i) => i.property?.name || ppPropertyName(i.property_id);
+          const sorted = (list) => list.slice().sort((a, b) => (mode === 'owner' ? ppNaturalCompare(owner(a), owner(b)) || ppNaturalCompare(prop(a), prop(b))
+            : mode === 'property' ? ppNaturalCompare(prop(a), prop(b)) : String(a.scheduled_at || '9').localeCompare(String(b.scheduled_at || '9')) * (a.status === 'completed' ? -1 : 1)));
+          const chips = `<div class="pp-filters pp-insp-filters">${[['all', 'Alle'], ...groups].map(([id, label]) => `<button type="button" class="${status === id ? 'active' : ''}" data-pp-insp-filter="${id}" aria-pressed="${status === id}">${label} <b>${id === 'all' ? all.length : all.filter((i) => i.status === id).length}</b></button>`).join('')}</div>`;
+          const sections = groups.filter(([id]) => status === 'all' || status === id).map(([id, label]) => {
+            const list = sorted(all.filter((i) => i.status === id));
+            return ppSection(`${label} (${list.length})`, `<div class="pp-list">${(id === 'completed' && status === 'all' ? list.slice(0, 20) : list).map(ppInspectionCard).join('') || `<p class="pp-muted">Keine Kontrollen „${label.toLowerCase()}“.</p>`}</div>`);
+          }).join('');
+          return `<div class="pp-sort-row">${chips}${ppSortSelect('inspections', all.length)}</div>${sections}`;
+        })()}`;
     }
     function ppInspectionDetailHtml(id) {
       const i = ppD('inspections').find((x) => x.id === id);
@@ -17525,11 +17584,75 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     function ppDocumentsHtml() {
       // nur Dokumente (PDF, Rechnungen, Berichte) – Fotos der Häuser stehen beim jeweiligen Objekt bzw. Auftrag
       const docs = ppD('documents').filter((d) => !/^image\//.test(d.file_type || ''));
-      const where = (x) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); const p = ppD('properties').find((y) => y.id === x.property_id); return [o?.title, p?.name].filter(Boolean).join(' · '); };
+      const archived = new Set(ppD('docArchive').map((x) => x.document_id));
+      const where = (x) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); const p = ppD('properties').find((y) => y.id === x.property_id); return [o?.title, p?.name, ppOwnerName(x.organization_id, x.property_id)].filter(Boolean).join(' · '); };
+      const row = (d, isArchived) => `<div class="pp-doc-row"><button type="button" class="pp-doc" data-pp-doc="view" data-id="${d.id}" title="In der App öffnen">${icon('document')}<span>${escapeHtml(d.file_name)}<small>${escapeHtml(where(d))}</small></span><small>${escapeHtml(ppDate(d.created_at))}</small></button>
+        <div class="pp-doc-actions"><button type="button" class="pp-icon-btn" data-pp-doc="view" data-id="${d.id}" aria-label="Öffnen" title="In der App öffnen">${icon('eye')}</button><button type="button" class="pp-icon-btn" data-pp-doc="pdf" data-id="${d.id}" aria-label="Als PDF exportieren" title="Als PDF exportieren">${icon('download')}</button>${ppIsLead() || ppRole() === 'accounting' ? `<button type="button" class="pp-icon-btn" data-pp-doc="${isArchived ? 'restore' : 'archive'}" data-id="${d.id}" aria-label="${isArchived ? 'Wiederherstellen' : 'Archivieren'}" title="${isArchived ? 'Aus dem Archiv holen' : 'Archivieren'}">${icon(isArchived ? 'undo' : 'archive')}</button>` : ''}</div></div>`;
+      const active = docs.filter((d) => !archived.has(d.id));
+      const old = docs.filter((d) => archived.has(d.id));
       return `${ppBack()}<div class="pp-page-head"><h1>Dokumente</h1></div>
-        ${ppSection(`Dokumente (${docs.length})`, docs.map((d) => `<button type="button" class="pp-doc" data-pp-file="${d.storage_bucket}|${d.storage_path}|${escapeHtml(d.file_name)}">${icon('document')}<span>${escapeHtml(d.file_name)}<small>${escapeHtml(where(d))}</small></span><small>${escapeHtml(ppDate(d.created_at))}</small></button>`).join('') || '<p class="pp-muted">Noch keine Dokumente. Lade PDFs direkt im Auftrag hoch.</p>')}
-`;
+        <p class="pp-muted">Tippe ein Dokument an, um es in der App zu öffnen. ${icon('download')} exportiert es als PDF, ${icon('archive')} legt es ins Archiv.</p>
+        ${ppSection(`Dokumente (${active.length})`, active.map((d) => row(d, false)).join('') || '<p class="pp-muted">Keine offenen Dokumente. Lade PDFs direkt im Auftrag hoch.</p>')}
+        ${old.length ? `<details class="pp-archive"${pp.archiveOpen ? ' open' : ''}><summary>${icon('archive')} Archiv (${old.length})</summary>${old.map((d) => row(d, true)).join('')}</details>` : ''}`;
     }
+    // Dokument laden (Daten-URL) – für Anzeige und Export
+    async function ppLoadDocument(d) {
+      const dataUrl = await cloudGetFile(`${CLOUD_FILE_PREFIX}${d.storage_bucket}/${d.storage_path}`);
+      return String(dataUrl);
+    }
+    const ppDataUrlBytes = (dataUrl) => { const bin = atob(String(dataUrl).split(',')[1] || ''); const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i += 1) bytes[i] = bin.charCodeAt(i); return bytes; };
+    // Bild (JPEG/PNG/WebP) als einseitige PDF (A4, eingepasst)
+    async function imageToPdfBytes(dataUrl) {
+      const img = await new Promise((resolve, reject) => { const i = new Image(); i.onload = () => resolve(i); i.onerror = () => reject(new Error('Bild konnte nicht gelesen werden.')); i.src = dataUrl; });
+      const canvas = document.createElement('canvas'); canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.drawImage(img, 0, 0);
+      const jpeg = atob(canvas.toDataURL('image/jpeg', 0.9).split(',')[1]);
+      const W = 595, H = 842, M = 28;
+      const scale = Math.min((W - 2 * M) / canvas.width, (H - 2 * M) / canvas.height, 1);
+      const w = canvas.width * scale, h = canvas.height * scale, x = (W - w) / 2, y = (H - h) / 2;
+      const content = `q ${w.toFixed(2)} 0 0 ${h.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)} cm /Im1 Do Q`;
+      const objs = ['<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Count 1 /Kids [3 0 R] >>',
+        `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /XObject << /Im1 4 0 R >> >> /Contents 5 0 R >>`,
+        `<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n${jpeg}\nendstream`,
+        `<< /Length ${content.length} >>\nstream\n${content}\nendstream`];
+      let pdf = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';
+      const offsets = [];
+      objs.forEach((body, i) => { offsets.push(pdf.length); pdf += `${i + 1} 0 obj\n${body}\nendobj\n`; });
+      const xref = pdf.length;
+      pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((o) => `${String(o).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+      const bytes = new Uint8Array(pdf.length);
+      for (let i = 0; i < pdf.length; i += 1) bytes[i] = pdf.charCodeAt(i) & 255;
+      return bytes;
+    }
+    async function ppDocumentPdf(d) {
+      const dataUrl = await ppLoadDocument(d);
+      const type = (dataUrl.match(/^data:([^;,]+)/) || [])[1] || d.file_type || '';
+      const pdfName = String(d.file_name || 'Dokument').replace(/\.[a-z0-9]+$/i, '') + '.pdf';
+      if (/pdf/i.test(type) || /\.pdf$/i.test(d.file_name || '')) return { bytes: ppDataUrlBytes(dataUrl), name: /\.pdf$/i.test(d.file_name || '') ? d.file_name : pdfName };
+      if (/^image\//.test(type)) return { bytes: await imageToPdfBytes(dataUrl), name: pdfName };
+      throw new Error('Dieses Dateiformat lässt sich nicht als PDF anzeigen.');
+    }
+    document.addEventListener('toggle', (event) => { if (event.target.matches?.('#partner-portal .pp-archive')) pp.archiveOpen = event.target.open; }, true);
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('#partner-portal [data-pp-doc]');
+      if (!btn) return;
+      const d = ppD('documents').find((x) => x.id === btn.dataset.id);
+      if (!d) return;
+      const kind = btn.dataset.ppDoc;
+      if (kind === 'view' || kind === 'pdf') {
+        btn.disabled = true;
+        ppDocumentPdf(d).then(({ bytes, name }) => {
+          if (kind === 'view') { showPdf(bytes, name, 'Dokument'); return; }
+          const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+          const link = document.createElement('a'); link.href = url; link.download = name; document.body.appendChild(link); link.click();
+          setTimeout(() => { URL.revokeObjectURL(url); link.remove(); }, 4000);
+          showToast(`„${name}“ als PDF exportiert.`);
+        }).catch((error) => showToast(error instanceof TypeError ? 'Keine Verbindung – Dokument nicht geladen.' : error.message)).finally(() => { btn.disabled = false; });
+        return;
+      }
+      if (kind === 'archive') { pp.archiveOpen = true; ppRun('archive', () => ppInsert('document_archive', { organization_id: ppOrg().id, document_id: d.id }), { notice: `„${d.file_name}“ archiviert – zu finden unter „Archiv“.` }); }
+      if (kind === 'restore') { pp.archiveOpen = true; ppRun('archive', () => cloudFetch(`/rest/v1/document_archive?organization_id=eq.${ppOrg().id}&document_id=eq.${d.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }), { notice: `„${d.file_name}“ wiederhergestellt.` }); }
+    });
     // ----- Mehrere Aufträge zusammen beenden / zusammen abrechnen, Jahresverträge -----
     pp.sel = pp.sel || new Set();
     const PP_AGREEMENT_STATUS = { proposed: ['Vorgeschlagen', 'amber'], active: ['Aktiv', 'green'], declined: ['Abgelehnt', 'red'], ended: ['Beendet', 'muted'], cancelled: ['Zurückgezogen', 'muted'] };
@@ -17567,9 +17690,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const vat = first.currency === 'SEK' || ppOrg().country === 'SE' ? 25 : 19;
       const open = orders.filter((o) => o.status !== 'completed').length;
       return `<form class="pp-card pp-form" data-pp-form="batch-invoice"><h3>${orders.length === 1 ? 'Rechnung' : 'Sammelrechnung'} an ${escapeHtml(ppCustomerName(first.organization_id))}</h3>
-        <p class="pp-hint">Eine Rechnung mit einer Position je Auftrag. Beträge brutto in ${escapeHtml(first.currency)}.</p>
+        <p class="pp-hint">Eine Rechnung mit einer Position je Auftrag. Beträge brutto in der gewählten Währung.</p>
         <div class="pp-batch-lines">${orders.map((o) => `<label class="pp-batch-line"><span><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.property?.name || '')}${o.scheduled_at ? ` · ${escapeHtml(ppDate(o.scheduled_at))}` : ''}</small></span><input class="form-control" type="number" min="0" step="0.01" required name="amount:${o.id}" value="${o.actual_cost ?? o.estimated_cost ?? ''}" aria-label="Betrag für ${escapeHtml(o.title)}"></label>`).join('')}</div>
-        <div class="pp-grid"><label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}"></label>
+        <div class="pp-grid">${ppCurrencySelect(first.currency)}<label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}"></label>
         <label><span class="form-label">Rechnungsnummer</span><input class="form-control" name="number" value="${escapeHtml(ppNextNumber('R', ppD('invoices'), 'invoice_number'))}" maxlength="40"></label>
         <label><span class="form-label">Zahlbar bis</span><input class="form-control" name="due" type="date" value="${localDateKey(new Date(Date.now() + 14 * 86400000))}"></label>
         <label class="pp-pdf-pick full">${icon('document')}<span><strong>Eigene Rechnung als PDF (optional)</strong><small>Ohne Datei erstellt Husora die Rechnung mit allen Positionen.</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf"></span></label></div>
@@ -17579,15 +17702,31 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     // ----- Jahresverträge -----
     // ----- Jahresvertrag: mehrere Aufgaben und frei wählbare Laufzeit (Partner- und Hausbesitzer-Formular) -----
     const agEndDefault = (start) => { const d = new Date(`${start || localDateKey(new Date())}T12:00:00`); d.setFullYear(d.getFullYear() + 1); d.setDate(d.getDate() - 1); return localDateKey(d); };
-    function agTaskFieldsHtml(listId, options) {
+    function agTaskFieldsHtml(listId, options, values = []) {
+      const rows = (values.length ? values : ['']).map((value, index) => `<div class="ag-task-row"><input class="form-control" name="task" ${index ? '' : 'required'} maxlength="160" list="${listId}" placeholder="${index ? 'weitere Aufgabe' : 'z. B. Rasen mähen'}" aria-label="Aufgabe ${index + 1}" value="${escapeHtml(value)}">${index ? '<button type="button" class="ag-task-x" data-ag-remove-task aria-label="Aufgabe entfernen" title="Entfernen">✕</button>' : ''}</div>`).join('');
       return `<div class="ag-tasks full"><span class="form-label">Aufgaben im Vertrag *</span>
-        <div class="ag-task-list"><div class="ag-task-row"><input class="form-control" name="task" required maxlength="160" list="${listId}" placeholder="z. B. Rasen mähen" aria-label="Aufgabe 1"></div></div>
+        <div class="ag-task-list">${rows}</div>
         <datalist id="${listId}">${options.map((t) => `<option value="${escapeHtml(t)}">`).join('')}</datalist>
         <button type="button" class="text-btn ag-add-task" data-ag-add-task>${icon('plus')} Weitere Aufgabe</button>
         <small class="ag-hint">Aufträge, deren Titel mit einer dieser Aufgaben beginnt, gehören automatisch zum Vertrag.</small></div>`;
     }
-    const agDateFieldsHtml = () => `<label><span class="form-label">Beginn *</span><input class="form-control" name="start" type="date" required value="${localDateKey(new Date())}" data-ag-start></label>
-        <label><span class="form-label">Ende *</span><input class="form-control" name="end" type="date" required value="${agEndDefault(localDateKey(new Date()))}" data-ag-end></label>`;
+    const agDateFieldsHtml = (start = '', end = '') => `<label><span class="form-label">Beginn *</span><input class="form-control" name="start" type="date" required value="${start || localDateKey(new Date())}" data-ag-start></label>
+        <label><span class="form-label">Ende *</span><input class="form-control" name="end" type="date" required value="${end || agEndDefault(start || localDateKey(new Date()))}" data-ag-end ${end ? 'data-touched="1"' : ''}></label>`;
+    const AG_INTERVALS = ['wöchentlich', 'alle 2 Wochen', 'monatlich', 'vierteljährlich', 'saisonal', 'nach Bedarf'];
+    // Bearbeiten-Formular (Partner- und Hausbesitzer-Seite): Änderungen an einem laufenden Vertrag bestätigt die andere Seite
+    function agEditFormHtml(a, attr, options) {
+      const interval = a.interval_label || 'monatlich';
+      return `<form class="${attr.startsWith('data-pp') ? 'pp-form pp-subform' : 'hub-agreement-edit'}" ${attr} data-id="${a.id}"><h3>Vertrag bearbeiten</h3>
+        ${a.status === 'active' && !a.own ? '<p class="ag-hint">Änderungen an einem laufenden Vertrag muss die andere Seite bestätigen – bis dahin gilt er als Vorschlag.</p>' : ''}
+        <div class="pp-grid">${agTaskFieldsHtml(`ag-edit-${a.id.slice(0, 8)}`, options, a.task_titles?.length ? a.task_titles : [a.task_title])}
+        <label><span class="form-label">Rhythmus</span><select class="form-control" name="interval">${[...new Set([...AG_INTERVALS, interval])].map((x) => `<option ${x === interval ? 'selected' : ''}>${escapeHtml(x)}</option>`).join('')}</select></label>
+        <label><span class="form-label">Einsätze pro Jahr</span><input class="form-control" name="visits" type="number" min="1" max="366" value="${a.visits_per_year ?? ''}"></label>
+        <label><span class="form-label">Jahrespreis brutto (${escapeHtml(a.currency)}) *</span><input class="form-control" name="price" type="number" min="0" step="0.01" required value="${a.annual_price}"></label>
+        ${agDateFieldsHtml(a.starts_on, a.ends_on)}
+        <label class="full"><span class="form-label">Hinweise</span><textarea class="form-control" name="notes" rows="2" maxlength="2000">${escapeHtml(a.notes || '')}</textarea></label></div>
+        <div class="${attr.startsWith('data-pp') ? 'pp-actions' : 'settings-actions'}"><button type="button" class="secondary-btn" data-ag-cancel>Abbrechen</button><button type="submit" class="primary-btn">Änderung speichern</button></div></form>`;
+    }
+    const agUpdateBody = (form, id) => { const ag = agReadForm(form); const v = Object.fromEntries(new FormData(form)); return { p_agreement_id: id, p_task_titles: ag.tasks, p_annual_price: Number(v.price), p_starts_on: ag.start, p_ends_on: ag.end, p_interval_label: v.interval || null, p_visits_per_year: v.visits ? Number(v.visits) : null, p_notes: v.notes || null }; };
     function agReadForm(form) {
       const fd = new FormData(form);
       const tasks = [...new Set(fd.getAll('task').map((t) => String(t).trim()).filter(Boolean))];
@@ -17609,6 +17748,10 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       row.innerHTML = `<input class="form-control" name="task" maxlength="160" list="${first.getAttribute('list')}" placeholder="weitere Aufgabe" aria-label="Aufgabe ${list.children.length + 1}"><button type="button" class="ag-task-x" data-ag-remove-task aria-label="Aufgabe entfernen" title="Entfernen">✕</button>`;
       list.appendChild(row);
       row.querySelector('input').focus();
+    });
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-ag-cancel]')) return;
+      if (event.target.closest('#partner-portal')) { pp.form = null; ppRender(); } else { hub.agEdit = null; hubRerender(); }
     });
     document.addEventListener('input', (event) => {
       if (event.target.matches?.('[data-ag-end]')) { event.target.dataset.touched = '1'; return; }
@@ -17637,7 +17780,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     function ppAgreementBillForm(a) {
       const vat = a.currency === 'SEK' || ppOrg().country === 'SE' ? 25 : 19;
       return `<form class="pp-form pp-subform" data-pp-form="agreement-bill" data-agreement="${a.id}"><h3>Jahresrechnung</h3><div class="pp-grid">
-        <label><span class="form-label">Betrag brutto (${escapeHtml(a.currency)})</span><input class="form-control" name="gross" type="number" min="0" step="0.01" required value="${a.annual_price}"></label>
+        ${ppCurrencySelect(a.currency)}<label><span class="form-label">Betrag brutto</span><input class="form-control" name="gross" type="number" min="0" step="0.01" required value="${a.annual_price}"></label>
         <label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}"></label>
         <label><span class="form-label">Rechnungsnummer</span><input class="form-control" name="number" value="${escapeHtml(ppNextNumber('R', ppD('invoices'), 'invoice_number'))}" maxlength="40"></label>
         <label><span class="form-label">Zahlbar bis</span><input class="form-control" name="due" type="date" value="${localDateKey(new Date(Date.now() + 14 * 86400000))}"></label>
@@ -17654,13 +17797,15 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const actions = [
           incoming && ppIsLead() ? `<button type="button" class="primary-btn" data-pp-ag="accept" data-id="${a.id}" ${ppDisabled()}>Annehmen</button><button type="button" class="secondary-btn" data-pp-ag="decline" data-id="${a.id}" ${ppDisabled()}>Ablehnen</button>` : '',
           a.status === 'proposed' && a.proposed_by === 'partner' ? '<small class="pp-hint">Wartet auf Zustimmung des Kunden</small>' : '',
+          ['proposed', 'active'].includes(a.status) && ppIsLead() ? `<button type="button" class="secondary-btn" data-pp-ag="edit" data-id="${a.id}">${icon('edit')} Bearbeiten</button>` : '',
+          !invoices.length && ppIsLead() ? `<button type="button" class="secondary-btn danger" data-pp-ag="delete" data-id="${a.id}" ${ppDisabled()}>Löschen</button>` : '',
           ['active', 'ended'].includes(a.status) && ppCanBill() && a.organization_id !== ppOrg().id ? (orders.length ? `<button type="button" class="${invoices.length ? 'secondary-btn' : 'primary-btn'}" data-pp-ag="bill" data-id="${a.id}">${icon('cost')} ${invoices.length ? 'Weitere Jahresrechnung' : 'Jahresrechnung stellen'}</button>` : '<small class="pp-hint">Jahresrechnung möglich, sobald der erste Auftrag im Vertrag ist</small>') : '',
  (a.status === 'active' || (a.status === 'proposed' && a.proposed_by === 'partner')) && ppIsLead() ? `<button type="button" class="secondary-btn danger" data-pp-ag="end" data-id="${a.id}" ${ppDisabled()}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''
         ].join('');
         return `<article class="pp-card pp-agreement"><div class="pp-ag-head"><div><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.property?.name || a.property_label || 'Haus')} · ${escapeHtml(ppCustomerName(a.organization_id))}</small></div>${ppBadge(PP_AGREEMENT_STATUS, a.status)}</div>
           <dl class="pp-ag-facts"><div class="wide"><dt>${(a.task_titles || []).length > 1 ? 'Aufgaben' : 'Aufgabe'}</dt><dd>${escapeHtml(agTasksText(a))}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(ppMoney(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}${orders.length > done ? ` · ${orders.length - done} offen` : ''}</dd></div>${invoices.length ? `<div><dt>Abgerechnet</dt><dd>${invoices.map((i) => `${escapeHtml(i.invoice_number || '')} (${escapeHtml(ppMoney(i.amount_gross, i.currency))})`).join(', ')}</dd></div>` : ''}</dl>
           ${a.notes ? `<p class="pp-hint">${escapeHtml(a.notes)}</p>` : ''}
-          ${pp.form === `agreement-bill:${a.id}` ? ppAgreementBillForm(a) : actions ? `<div class="pp-actions">${actions}</div>` : ''}</article>`;
+          ${pp.form === `agreement-bill:${a.id}` ? ppAgreementBillForm(a) : pp.form === `agreement-edit:${a.id}` ? agEditFormHtml({ ...a, own: a.organization_id === ppOrg().id }, 'data-pp-form="agreement-edit"', [...new Set(ppD('orders').filter((o) => o.organization_id === a.organization_id).map((o) => o.title.split(' · ')[0]))].slice(0, 30)) : actions ? `<div class="pp-actions">${actions}</div>` : ''}</article>`;
       };
       const groups = [['Offene Vorschläge', list.filter((a) => a.status === 'proposed')], ['Aktive Verträge', list.filter((a) => a.status === 'active')], ['Beendet', list.filter((a) => ['ended', 'declined', 'cancelled'].includes(a.status))]];
       return `<div class="pp-page-head"><h1>Jahresverträge</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-ag="new">${icon('plus')} Vertrag</button>` : ''}</div>
@@ -17697,11 +17842,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const a = ppD('agreements').find((x) => x.id === ag.dataset.id);
       if (kind === 'new') { pp.form = 'agreement'; ppRender(); return; }
       if (kind === 'bill' && a) { pp.form = `agreement-bill:${a.id}`; ppRender(); return; }
+      if (kind === 'edit' && a) { pp.form = `agreement-edit:${a.id}`; ppRender(); return; }
+      if (kind === 'delete' && a && confirm(`Jahresvertrag „${a.title}“ löschen? Zugeordnete Aufträge bleiben erhalten und werden wieder einzeln abgerechnet.`)) { ppRun('agreement', () => ppRpc('delete_service_agreement', { p_agreement_id: a.id }), { notice: 'Jahresvertrag gelöscht.' }); return; }
       if (kind === 'accept' || kind === 'decline') ppRun('agreement', () => ppRpc('respond_service_agreement', { p_agreement_id: a.id, p_accept: kind === 'accept' }), { notice: kind === 'accept' ? 'Jahresvertrag angenommen – passende Aufträge werden jetzt jährlich abgerechnet.' : 'Vorschlag abgelehnt.' });
       if (kind === 'end' && a && confirm(a.status === 'proposed' ? 'Vorschlag zurückziehen?' : `Jahresvertrag „${a.title}“ zum heutigen Tag beenden? Bereits erledigte Einsätze kannst du weiterhin mit der Jahresrechnung abrechnen.`)) ppRun('agreement', () => ppRpc('end_service_agreement', { p_agreement_id: a.id }), { notice: 'Jahresvertrag beendet.' });
     });
     document.addEventListener('submit', (event) => {
-      const form = event.target.closest('#partner-portal [data-pp-form="batch-invoice"], #partner-portal [data-pp-form="agreement"], #partner-portal [data-pp-form="agreement-bill"]');
+      const form = event.target.closest('#partner-portal [data-pp-form="batch-invoice"], #partner-portal [data-pp-form="agreement"], #partner-portal [data-pp-form="agreement-bill"], #partner-portal [data-pp-form="agreement-edit"]');
       if (!form) return;
       event.preventDefault();
       const fd = new FormData(form);
@@ -17714,6 +17861,11 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         ppRun('agreement', async () => { await ppRpc('propose_service_agreement', { p_service_partner_id: spId, p_property_id: propertyId, p_task_title: ag.tasks[0], p_task_titles: ag.tasks, p_annual_price: Number(v.price), p_starts_on: ag.start, p_ends_on: ag.end, p_interval_label: v.interval || null, p_visits_per_year: v.visits ? Number(v.visits) : null, p_notes: v.notes || null }); pp.form = null; }, { notice: 'Vorschlag gesendet – der Kunde muss den Jahresvertrag noch annehmen.' });
         return;
       }
+      if (kind === 'agreement-edit') {
+        let body; try { body = agUpdateBody(form, form.dataset.id); } catch (error) { pp.error = error.message; ppRender(); return; }
+        ppRun('agreement', async () => { const status = await ppRpc('update_service_agreement', body); pp.form = null; pp.notice = status === 'proposed' ? 'Änderung gesendet – der Kunde muss sie bestätigen.' : 'Jahresvertrag gespeichert.'; showToast(pp.notice); });
+        return;
+      }
       if (kind === 'agreement-bill') {
         const a = ppD('agreements').find((x) => x.id === form.dataset.agreement);
         const orders = ppD('orders').filter((o) => o.agreement_id === a.id).sort((x, y) => String(y.scheduled_at || y.created_at).localeCompare(String(x.scheduled_at || x.created_at)));
@@ -17721,7 +17873,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const { net, tax } = split(gross, Number(v.vat || 0));
         const anchor = { ...orders[0], title: a.title, scheduled_at: null };
         ppRun('agreement-bill', async () => {
-          await ppSendInvoice(anchor, { organization_id: a.organization_id, property_id: a.property_id, service_partner_id: a.service_partner_id, agreement_id: a.id, invoice_number: (v.number || '').trim() || ppNextNumber('R', ppD('invoices'), 'invoice_number'), invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: tax, amount_gross: gross, currency: a.currency, status: 'received', _agreement: a.title, _period: `Laufzeit ${fmtDate(a.starts_on)} – ${fmtDate(a.ends_on)} · ${orders.filter((o) => o.status === 'completed').length} Einsätze` }, fd.get('pdf'), false);
+          await ppSendInvoice(anchor, { organization_id: a.organization_id, property_id: a.property_id, service_partner_id: a.service_partner_id, agreement_id: a.id, invoice_number: (v.number || '').trim() || ppNextNumber('R', ppD('invoices'), 'invoice_number'), invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: tax, amount_gross: gross, currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : a.currency, status: 'received', _agreement: a.title, _period: `Laufzeit ${fmtDate(a.starts_on)} – ${fmtDate(a.ends_on)} · ${orders.filter((o) => o.status === 'completed').length} Einsätze` }, fd.get('pdf'), false);
           pp.form = null;
         }, { notice: `Jahresrechnung an ${ppCustomerName(a.organization_id)} gesendet.` });
         return;
@@ -17738,7 +17890,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const complete = fd.get('complete') === 'on';
       ppRun('batch-invoice', async () => {
         const single = orders.length === 1;
-        const invoice = await ppSendInvoice(first, { organization_id: first.organization_id, property_id: first.property_id, service_order_id: single ? first.id : null, service_partner_id: first.service_partner_id, invoice_number: (v.number || '').trim() || ppNextNumber('R', ppD('invoices'), 'invoice_number'), invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: tax, amount_gross: gross, currency: first.currency, status: 'received', ...(single ? {} : { _lines: lines.map((l) => ({ title: l.o.title, house: l.o.property?.name || '', date: l.o.scheduled_at ? ppDayKey(l.o.scheduled_at) : '', net: l.net })) }) }, fd.get('pdf'), false);
+        const invoice = await ppSendInvoice(first, { organization_id: first.organization_id, property_id: first.property_id, service_order_id: single ? first.id : null, service_partner_id: first.service_partner_id, invoice_number: (v.number || '').trim() || ppNextNumber('R', ppD('invoices'), 'invoice_number'), invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: tax, amount_gross: gross, currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : first.currency, status: 'received', ...(single ? {} : { _lines: lines.map((l) => ({ title: l.o.title, house: l.o.property?.name || '', date: l.o.scheduled_at ? ppDayKey(l.o.scheduled_at) : '', net: l.net })) }) }, fd.get('pdf'), false);
         if (!single) await cloudFetch('/rest/v1/invoice_orders', { method: 'POST', body: lines.map((l) => ({ invoice_id: invoice.id, organization_id: first.organization_id, service_order_id: l.o.id, amount_gross: l.gross })), headers: { Prefer: 'return=minimal' } });
         for (const l of lines) {
           const body = { actual_cost: l.gross };
@@ -17766,32 +17918,148 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         <div class="pp-card pp-tip">${icon('home')}<div><strong>Auch Hausbesitzer?</strong><p>Mit demselben Konto verwaltest du in der Hausbesitzer-Ansicht deine eigenen Ferienhäuser.</p><button type="button" class="secondary-btn" data-pp-action="close">Zur Hausbesitzer-Ansicht</button></div></div>
         <div class="pp-actions"><button type="button" class="secondary-btn danger" data-pp-action="signout">Abmelden</button></div>`;
     }
+    // ----- Sortieren: Rechnungen/Angebote und Kontrollen -----
+    pp.sort = pp.sort || { invoices: 'number', quotes: 'number', inspections: 'date' };
+    const ppPropertyName = (propertyId, fallback = '') => ppD('properties').find((p) => p.id === propertyId)?.name || fallback;
+    const ppOwnerName = (orgId, propertyId) => { const name = ppCustomerName(orgId); if (name !== 'Eigener Kunde') return name; const p = ppD('properties').find((x) => x.id === propertyId); return ppCustomerLabel(ppOwnCustomer(p)) || 'Eigener Kunde'; };
+    const PP_SORTS = { invoices: [['number', 'Rechnungsnummer'], ['owner', 'Hausbesitzer'], ['property', 'Objekt'], ['date', 'Neueste zuerst']], quotes: [['number', 'Angebotsnummer'], ['owner', 'Hausbesitzer'], ['property', 'Objekt'], ['date', 'Neueste zuerst']], inspections: [['date', 'Termin'], ['owner', 'Hausbesitzer'], ['property', 'Objekt']] };
+    const ppSortSelect = (key, count) => (count > 1 ? `<label class="pp-sort"><span>Sortieren</span><select class="form-control" data-pp-sort="${key}">${PP_SORTS[key].map(([v, l]) => `<option value="${v}" ${pp.sort[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>` : '');
+    const ppNaturalCompare = (a, b) => String(a || '').localeCompare(String(b || ''), 'de', { numeric: true, sensitivity: 'base' });
+    function ppSortFinance(list, key) {
+      const mode = pp.sort[key];
+      const num = (x) => (key === 'invoices' ? x.invoice_number : x.quote_number);
+      const owner = (x) => ppOwnerName(x.organization_id, x.property_id);
+      const prop = (x) => ppPropertyName(x.property_id, ppD('orders').find((o) => o.id === x.service_order_id)?.property?.name || '');
+      return list.slice().sort((a, b) => (mode === 'owner' ? ppNaturalCompare(owner(a), owner(b)) || ppNaturalCompare(num(a), num(b))
+        : mode === 'property' ? ppNaturalCompare(prop(a), prop(b)) || ppNaturalCompare(num(a), num(b))
+        : mode === 'date' ? String(b.created_at || '').localeCompare(String(a.created_at || ''))
+        : ppNaturalCompare(num(b), num(a))));
+    }
+    document.addEventListener('change', (event) => {
+      const select = event.target.closest?.('#partner-portal [data-pp-sort]');
+      if (select) { pp.sort[select.dataset.ppSort] = select.value; pp.keepScroll = true; ppRender(); return; }
+    });
+    document.addEventListener('click', (event) => {
+      const filter = event.target.closest('#partner-portal [data-pp-insp-filter]');
+      if (filter) { pp.inspFilter = filter.dataset.ppInspFilter; pp.keepScroll = true; ppRender(); }
+    });
     function ppFinanceHtml() {
-      const row = (x, isInvoice) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); return `<button type="button" class="pp-item" ${o ? `data-pp-open="order:${o.id}"` : ''}><span class="pp-item-main"><strong>${isInvoice ? 'Rechnung' : 'Angebot'} ${escapeHtml((isInvoice ? x.invoice_number : x.quote_number) || '')}</strong><small>${escapeHtml(o?.title || '')} · ${escapeHtml(ppCustomerName(x.organization_id))}</small><small>${isInvoice ? `${escapeHtml(x.invoice_date ? fmtDate(x.invoice_date) : '')}${x.due_date ? ` · fällig ${escapeHtml(fmtDate(x.due_date))}` : ''}` : x.valid_until ? `gültig bis ${escapeHtml(fmtDate(x.valid_until))}` : ''}</small></span><span class="pp-amount"><b>${escapeHtml(ppMoney(x.amount_gross, x.currency))}</b>${ppBadge(isInvoice ? PP_INVOICE_STATUS : PP_QUOTE_STATUS, x.status)}</span></button>`; };
+      const row = (x, isInvoice) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); return `<button type="button" class="pp-item" ${o ? `data-pp-open="order:${o.id}"` : ''}><span class="pp-item-main"><strong>${isInvoice ? 'Rechnung' : 'Angebot'} ${escapeHtml((isInvoice ? x.invoice_number : x.quote_number) || '')}</strong><small>${escapeHtml([o?.title, ppPropertyName(x.property_id, o?.property?.name || ''), ppOwnerName(x.organization_id, x.property_id)].filter(Boolean).join(' · '))}</small><small>${isInvoice ? `${escapeHtml(x.invoice_date ? fmtDate(x.invoice_date) : '')}${x.due_date ? ` · fällig ${escapeHtml(fmtDate(x.due_date))}` : ''}` : x.valid_until ? `gültig bis ${escapeHtml(fmtDate(x.valid_until))}` : ''}</small></span><span class="pp-amount"><b>${escapeHtml(ppMoney(x.amount_gross, x.currency))}</b>${ppBadge(isInvoice ? PP_INVOICE_STATUS : PP_QUOTE_STATUS, x.status)}</span></button>`; };
       const unpaid = ppD('invoices').filter((i) => ['received', 'approved', 'overdue'].includes(i.status));
       const sum = (list) => list.reduce((s, x) => s + Number(x.amount_gross || 0), 0);
       return `${ppBack()}<div class="pp-page-head"><h1>Angebote & Rechnungen</h1></div>
         <div class="pp-tiles"><div class="pp-tile"><b>${escapeHtml(ppMoney(sum(unpaid)))}</b><span>offen (${unpaid.length})</span></div><div class="pp-tile"><b>${escapeHtml(ppMoney(sum(ppD('invoices').filter((i) => i.status === 'paid'))))}</b><span>bezahlt</span></div></div>
-        ${ppSection('Rechnungen', `<div class="pp-list">${ppD('invoices').map((x) => row(x, true)).join('') || '<p class="pp-muted">Rechnungen erstellst du im jeweiligen Auftrag.</p>'}</div>`)}
-        ${ppSection('Angebote', `<div class="pp-list">${ppD('quotes').map((x) => row(x, false)).join('') || '<p class="pp-muted">Noch keine Angebote.</p>'}</div>`)}`;
+        ${ppSection('Rechnungen', `<div class="pp-list">${ppSortFinance(ppD('invoices'), 'invoices').map((x) => row(x, true)).join('') || '<p class="pp-muted">Rechnungen erstellst du im jeweiligen Auftrag.</p>'}</div>`, ppSortSelect('invoices', ppD('invoices').length))}
+        ${ppSection('Angebote', `<div class="pp-list">${ppSortFinance(ppD('quotes'), 'quotes').map((x) => row(x, false)).join('') || '<p class="pp-muted">Noch keine Angebote.</p>'}</div>`, ppSortSelect('quotes', ppD('quotes').length))}`;
+    }
+    // Leistungspakete: Standard-Bereiche (Hauskontrolle, Servicearbeiten, Sanierungen) und eigene Pakete
+    function ppPackages() {
+      const org = ppOrg();
+      return ppD('services').filter((s) => s.active).map((s) => {
+        const t = ppD('types').find((x) => x.id === s.service_type_id);
+        if (!t) return null;
+        const custom = t.organization_id === org?.id;
+        const groupCode = custom ? t.category : t.code;
+        const group = PP_SERVICE_GROUPS.find(([code]) => code === groupCode);
+        if (!custom && !group) return null; // frühere Einzel-Leistungen
+        return { s, t, custom, groupCode, groupName: group?.[1] || 'Sonstiges', name: s.label || t.name, description: s.description || (custom ? t.description : group?.[2]) || '' };
+      }).filter(Boolean).sort((x, y) => PP_SERVICE_GROUPS.findIndex(([c]) => c === x.groupCode) - PP_SERVICE_GROUPS.findIndex(([c]) => c === y.groupCode) || x.name.localeCompare(y.name, 'de'));
+    }
+    function ppPackageForm(pkg = null) {
+      const s = pkg?.s || {};
+      const unit = s.price_unit || 'job';
+      return `<form class="pp-card pp-form" data-pp-form="${pkg ? 'svc-edit' : 'svc-new'}" ${pkg ? `data-id="${s.id}"` : ''}><h3>${pkg ? 'Leistungspaket bearbeiten' : 'Leistungspaket hinzufügen'}</h3><div class="pp-grid">
+        ${pkg ? '' : `<label class="full"><span class="form-label">Bereich *</span><select class="form-control" name="group" required>${PP_SERVICE_GROUPS.map(([code, name]) => `<option value="${code}">${escapeHtml(name)}</option>`).join('')}</select></label>`}
+        <label class="full"><span class="form-label">Name des Pakets *</span><input class="form-control" name="name" required maxlength="120" value="${escapeHtml(pkg?.name || '')}" placeholder="z. B. Winterdienst Einfahrt, Gästewechsel komplett"></label>
+        <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="1000" placeholder="Was ist enthalten?">${escapeHtml(pkg?.description || '')}</textarea></label>
+        <label><span class="form-label">Preis</span><input class="form-control" type="number" min="0" step="0.01" inputmode="decimal" name="price" value="${s.price_from ?? ''}" placeholder="z. B. 450"></label>
+        <label><span class="form-label">Abrechnung</span><select class="form-control" name="unit">${PP_PRICE_UNITS.map(([v, l]) => `<option value="${v}" ${unit === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+        ${ppCurrencySelect(s.currency || ppOrg()?.currency)}
+        <label class="full"><span class="form-label">Ergänzung</span><textarea class="form-control" name="notes" rows="2" maxlength="2000" placeholder="z. B. zzgl. Anfahrt 0,50 €/km · Material nach Aufwand · Mindestauftrag 1 Stunde">${escapeHtml(s.notes || '')}</textarea></label></div>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>${pkg ? 'Speichern' : 'Paket hinzufügen'}</button></div></form>`;
     }
     function ppServicesHtml() {
-      const services = ppD('services');
       const lead = ppIsLead();
-      const dis = lead ? '' : 'disabled';
-      const groups = PP_SERVICE_GROUPS.map(([code, name, desc]) => ({ code, name, desc, type: ppD('types').find((t) => t.code === code && !t.organization_id) })).filter((g) => g.type);
-      return `${ppBack()}<div class="pp-page-head"><h1>Leistungen</h1></div><p class="pp-muted">Wähle, was dein Betrieb anbietet, und gib den Preis je Arbeitspaket oder je Stunde an. Husora nutzt das, um dich Hausbesitzern in deiner Region passend vorzuschlagen.</p>
-        <form class="pp-form" data-pp-form="services">${groups.map(({ name, desc, type: t }) => { const s = services.find((x) => x.service_type_id === t.id); const unit = ['job', 'hour'].includes(s?.price_unit) ? s.price_unit : 'job'; return `<div class="pp-card pp-service ${s?.active ? 'on' : ''}"><label class="pp-service-head"><input type="checkbox" name="type:${t.id}" ${s?.active ? 'checked' : ''} ${dis}><strong>${escapeHtml(name)}</strong></label><p class="pp-svc-desc">${escapeHtml(desc)}</p>
-          <div class="pp-svc-price"><label><span class="form-label">Preis (${escapeHtml(ppOrg().currency || 'SEK')})</span><input class="form-control" type="number" min="0" step="1" inputmode="decimal" name="price:${t.id}" value="${s?.price_from ?? ''}" placeholder="z. B. 450" ${dis}></label><label><span class="form-label">Abrechnung</span><select class="form-control" name="unit:${t.id}" ${dis}>${PP_PRICE_UNITS.map(([v, l]) => `<option value="${v}" ${unit === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label></div></div>`; }).join('') || '<p class="pp-muted">Die Leistungsgruppen werden gerade eingerichtet – bitte später erneut öffnen.</p>'}
-        ${lead && groups.length ? `<div class="pp-actions sticky flat"><button class="primary-btn" type="submit" ${ppDisabled()}>${ppBusy('services') ? 'Speichere …' : 'Leistungen speichern'}</button></div>` : ''}</form>`;
+      const self = pp.ctx?.self_partner_id;
+      const packages = ppPackages();
+      const unitLabel = (u) => (PP_PRICE_UNITS.find(([v]) => v === u) || ['', ''])[1];
+      const card = (pkg) => pp.form === `svc-edit:${pkg.s.id}` ? ppPackageForm(pkg) : `<article class="pp-card pp-package"><div class="pp-package-head"><div><span class="pp-eyebrow">${escapeHtml(pkg.groupName)}${pkg.custom ? ' · eigenes Paket' : ''}</span><strong>${escapeHtml(pkg.name)}</strong></div>${pkg.s.price_from !== null && pkg.s.price_from !== undefined ? `<span class="pp-package-price">${escapeHtml(ppMoney(pkg.s.price_from, pkg.s.currency))}<small>${escapeHtml(unitLabel(pkg.s.price_unit))}</small></span>` : '<span class="pp-package-price muted">Preis auf Anfrage</span>'}</div>
+          ${pkg.description ? `<p class="pp-svc-desc">${escapeHtml(pkg.description)}</p>` : ''}
+          ${pkg.s.notes ? `<p class="pp-package-note">${icon('note')} ${escapeHtml(pkg.s.notes)}</p>` : ''}
+          ${lead ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-svc="edit" data-id="${pkg.s.id}">${icon('edit')} Bearbeiten</button><button type="button" class="secondary-btn danger" data-pp-svc="delete" data-id="${pkg.s.id}">Löschen</button></div>` : ''}</article>`;
+      return `${ppBack()}<div class="pp-page-head"><h1>Leistungen</h1>${lead && self ? `<button type="button" class="primary-btn" data-pp-svc="new">${icon('plus')} Paket</button>` : ''}</div>
+        <p class="pp-muted">Deine Leistungspakete mit Preis je Arbeitspaket, Stunde oder Einsatz. Husora nutzt die Bereiche, um dich Hausbesitzern in deiner Region passend vorzuschlagen.</p>
+        ${pp.form === 'svc-new' ? ppPackageForm() : ''}
+        ${PP_SERVICE_GROUPS.map(([code, name]) => { const list = packages.filter((p) => p.groupCode === code); return list.length ? ppSection(`${escapeHtml(name)} (${list.length})`, list.map(card).join('')) : ''; }).join('')}
+        ${packages.length ? '' : ppEmpty('Noch keine Leistungen', lead ? 'Lege mit „Paket“ deine erste Leistung an – z. B. Hauskontrolle monatlich.' : 'Die Leitung des Betriebs legt die Leistungen fest.')}`;
     }
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('#partner-portal [data-pp-svc]');
+      if (!btn) return;
+      const kind = btn.dataset.ppSvc;
+      if (kind === 'new') { pp.form = 'svc-new'; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+      const pkg = ppPackages().find((p) => p.s.id === btn.dataset.id);
+      if (!pkg) return;
+      if (kind === 'edit') { pp.form = `svc-edit:${pkg.s.id}`; ppRender(); return; }
+      if (kind === 'delete' && confirm(`Leistungspaket „${pkg.name}“ löschen?`)) ppRun('services', async () => {
+        if (pkg.custom) {
+          await cloudFetch(`/rest/v1/service_partner_services?id=eq.${pkg.s.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+          await cloudFetch(`/rest/v1/service_types?id=eq.${pkg.t.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }).catch(() => {});
+        } else await ppPatch('service_partner_services', pkg.s.id, { active: false, label: null, description: null, notes: null });
+      }, { notice: 'Leistungspaket gelöscht.' });
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('#partner-portal [data-pp-form="svc-new"], #partner-portal [data-pp-form="svc-edit"]');
+      if (!form) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      const name = String(v.name || '').trim();
+      const fields = { price_from: v.price === '' || v.price === undefined ? null : Number(v.price), price_unit: v.unit || 'job', currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : (ppOrg()?.currency || 'EUR'), description: String(v.description || '').trim() || null, notes: String(v.notes || '').trim() || null };
+      if (!name) { pp.error = 'Bitte einen Namen für das Paket angeben.'; ppRender(); return; }
+      if (form.dataset.ppForm === 'svc-edit') {
+        const pkg = ppPackages().find((p) => p.s.id === form.dataset.id);
+        if (!pkg) return;
+        ppRun('services', async () => {
+          if (pkg.custom) await ppPatch('service_types', pkg.t.id, { name, description: fields.description });
+          await ppPatch('service_partner_services', pkg.s.id, { ...fields, label: name === pkg.t.name ? null : name });
+          pp.form = null;
+        }, { notice: 'Leistungspaket gespeichert.' });
+        return;
+      }
+      const self = pp.ctx?.self_partner_id;
+      const group = PP_SERVICE_GROUPS.find(([code]) => code === v.group);
+      const groupType = ppD('types').find((t) => t.code === v.group && !t.organization_id);
+      if (!self || !group || !groupType) { pp.error = 'Leistungsbereich nicht gefunden – bitte neu laden.'; ppRender(); return; }
+      const standardFree = !ppD('services').some((x) => x.service_type_id === groupType.id && x.active);
+      ppRun('services', async () => {
+        if (standardFree) {
+          // erstes Paket eines Bereichs: Standard-Bereich aktivieren (zählt für die Partnersuche)
+          await cloudFetch('/rest/v1/service_partner_services?on_conflict=service_partner_id,service_type_id', { method: 'POST', body: [{ service_partner_id: self, service_type_id: groupType.id, active: true, ...fields, label: name === groupType.name ? null : name }], headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+        } else {
+          const [type] = await ppInsert('service_types', { organization_id: ppOrg().id, code: `pkg_${Date.now().toString(36)}`, name, description: fields.description, category: group[0] });
+          await ppInsert('service_partner_services', { service_partner_id: self, service_type_id: type.id, active: true, ...fields });
+        }
+        pp.form = null;
+      }, { notice: 'Leistungspaket hinzugefügt.' });
+    });
     function ppTeamHtml() {
       const members = ppD('members');
       const roles = [['dispatcher', 'Disposition – alle Aufträge, Mitarbeiter einteilen'], ['technician', 'Techniker – nur zugewiesene Aufträge'], ['inspector', 'Kontrolleur – zugewiesene Aufträge und Kontrollen'], ['accounting', 'Buchhaltung – Angebote und Rechnungen'], ['viewer', 'Nur lesen'], ['admin', 'Admin – volle Rechte']];
       return `${ppBack()}<div class="pp-page-head"><h1>Mitarbeiter</h1></div>
-        <div class="pp-list">${members.map((m) => `<div class="pp-item static"><span class="pp-item-main"><strong>${escapeHtml(ppMemberName(m.user_id) || m.user?.email || '–')}${m.user_id === ppMe() ? ' (du)' : ''}</strong><small>${escapeHtml(m.user?.email || '')}</small></span>${ppIsAdmin() && m.user_id !== ppMe() ? `<select class="form-control pp-role" data-pp-role="${m.id}">${roles.map(([r, l]) => `<option value="${r}" ${m.role === r ? 'selected' : ''}>${escapeHtml(l.split(' – ')[0])}</option>`).join('')}</select>` : `<span class="pp-badge muted">${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)}</span>`}</div>`).join('')}</div>
-        ${ppIsAdmin() ? `<form class="pp-card pp-form" data-pp-form="member-invite"><h3>Mitarbeiter einladen</h3><div class="pp-grid"><label class="full"><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" required></label><label class="full"><span class="form-label">Rolle</span><select class="form-control" name="role">${roles.map(([r, l]) => `<option value="${r}" ${r === 'technician' ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label></div><div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>Einladung erstellen</button></div><p class="pp-hint">Der Mitarbeiter erstellt mit genau dieser E-Mail ein Husora-Konto, öffnet das Partner-Portal und gibt den Code ein.</p></form>
-          ${ppD('invites').length ? ppSection('Offene Einladungen', ppD('invites').map((inv) => `<div class="pp-card pp-invite"><div><strong>${escapeHtml(inv.email)}</strong><small>${escapeHtml(PP_ROLE_LABELS[inv.role] || inv.role)} · gültig bis ${escapeHtml(fmtDate(inv.expires_at.slice(0, 10)))}</small></div><code>${escapeHtml(inv.code)}</code><a class="secondary-btn" href="mailto:${encodeURIComponent(inv.email)}?subject=${encodeURIComponent(`Einladung zu ${ppOrg().name} in Husora`)}&body=${encodeURIComponent(`Hallo,\n\ndu bist eingeladen, im Husora Partner-Portal für ${ppOrg().name} mitzuarbeiten.\n\n1. ${location.origin}${location.pathname} öffnen\n2. Mit dieser E-Mail-Adresse ein Konto erstellen\n3. Partner-Portal → Einladungscode: ${inv.code}\n\nViele Grüße`)}">E-Mail</a></div>`).join('')) : ''}` : ''}`;
+        <div class="pp-list">${members.map((m) => {
+          const name = ppMemberName(m.user_id) || m.user?.email || '–';
+          if (pp.form === `member-edit:${m.id}`) return `<form class="pp-card pp-form" data-pp-form="member-edit" data-id="${m.id}"><h3>${escapeHtml(name)} bearbeiten</h3><div class="pp-grid">
+            <label class="full"><span class="form-label">Name</span><input class="form-control" name="display_name" maxlength="120" value="${escapeHtml(m.display_name || [m.user?.first_name, m.user?.last_name].filter(Boolean).join(' '))}"></label>
+            <label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" inputmode="tel" maxlength="40" value="${escapeHtml(m.phone || '')}"></label>
+            <label><span class="form-label">Rolle</span><select class="form-control" name="role" ${m.user_id === ppMe() ? 'disabled' : ''}>${roles.map(([r, l]) => `<option value="${r}" ${m.role === r ? 'selected' : ''}>${escapeHtml(l.split(' – ')[0])}</option>`).join('')}</select></label>
+            <label class="full"><span class="form-label">Info</span><textarea class="form-control" name="info" rows="2" maxlength="1000" placeholder="z. B. Führerschein Klasse BE, nur vormittags, Schlüssel für Objekt X">${escapeHtml(m.info || '')}</textarea></label></div>
+            <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>Speichern</button></div></form>`;
+          return `<div class="pp-card pp-member"><div class="pp-member-head"><div><strong>${escapeHtml(name)}${m.user_id === ppMe() ? ' (du)' : ''}</strong><small>${escapeHtml(m.user?.email || '')}</small></div><span class="pp-badge muted">${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)}</span></div>
+            ${m.phone || m.info ? `<div class="pp-member-meta">${m.phone ? `<a href="tel:${escapeHtml(m.phone.replace(/[^\d+]/g, ''))}">${icon('phone')} ${escapeHtml(m.phone)}</a>` : ''}${m.info ? `<p>${escapeHtml(m.info)}</p>` : ''}</div>` : ''}
+            ${ppIsAdmin() ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="member-edit" data-id="${m.id}">${icon('edit')} Bearbeiten</button>${m.user_id !== ppMe() ? `<button type="button" class="secondary-btn danger" data-pp-action="member-remove" data-id="${m.id}">Entfernen</button>` : ''}</div>` : ''}</div>`;
+        }).join('')}</div>
+        ${ppIsAdmin() ? `<form class="pp-card pp-form" data-pp-form="member-invite"><h3>Mitarbeiter einladen</h3><div class="pp-grid"><label class="full"><span class="form-label">Name</span><input class="form-control" name="display_name" maxlength="120" placeholder="Vor- und Nachname"></label><label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" required></label><label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" inputmode="tel" maxlength="40"></label><label class="full"><span class="form-label">Info</span><input class="form-control" name="info" maxlength="1000" placeholder="z. B. Spezialgebiet, Arbeitszeiten"></label><label class="full"><span class="form-label">Rolle</span><select class="form-control" name="role">${roles.map(([r, l]) => `<option value="${r}" ${r === 'technician' ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label></div><div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>Einladung erstellen</button></div><p class="pp-hint">Der Mitarbeiter erstellt mit genau dieser E-Mail ein Husora-Konto, öffnet das Partner-Portal und gibt den Code ein.</p></form>
+          ${ppD('invites').length ? ppSection('Offene Einladungen', ppD('invites').map((inv) => `<div class="pp-card pp-invite"><div><strong>${escapeHtml(inv.display_name || inv.email)}</strong><small>${inv.display_name ? `${escapeHtml(inv.email)} · ` : ''}${escapeHtml(PP_ROLE_LABELS[inv.role] || inv.role)} · gültig bis ${escapeHtml(fmtDate(inv.expires_at.slice(0, 10)))}</small></div><code>${escapeHtml(inv.code)}</code><a class="secondary-btn" href="mailto:${encodeURIComponent(inv.email)}?subject=${encodeURIComponent(`Einladung zu ${ppOrg().name} in Husora`)}&body=${encodeURIComponent(`Hallo,\n\ndu bist eingeladen, im Husora Partner-Portal für ${ppOrg().name} mitzuarbeiten.\n\n1. ${location.origin}${location.pathname} öffnen\n2. Mit dieser E-Mail-Adresse ein Konto erstellen\n3. Partner-Portal → Einladungscode: ${inv.code}\n\nViele Grüße`)}">E-Mail</a><button type="button" class="secondary-btn danger" data-pp-action="invite-delete" data-id="${inv.id}">Zurückziehen</button></div>`).join('')) : ''}` : ''}`;
     }
     function ppCompanyHtml() {
       const o = ppOrg();
@@ -18026,6 +18294,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (a === 'new-order') { pp.form = 'new-order'; pp.formProperty = ''; ppRender(); return; }
       if (a === 'order-for') { pp.form = 'new-order'; pp.formProperty = action.dataset.property; pp.keepScroll = true; ppRender(); return; }
       if (a === 'new-customer') { pp.form = 'new-customer'; ppRender(); return; }
+      if (a === 'member-edit') { pp.form = `member-edit:${id}`; ppRender(); return; }
+      if (a === 'member-remove') {
+        const m = ppD('members').find((x) => x.id === id);
+        if (m && confirm(`${ppMemberName(m.user_id) || m.user?.email || 'Mitarbeiter'} aus dem Team entfernen? Zugewiesene Aufträge bleiben erhalten und können neu verteilt werden.`)) ppRun('member', () => cloudFetch(`/rest/v1/organization_members?id=eq.${id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }), { notice: 'Mitarbeiter entfernt.' });
+        return;
+      }
+      if (a === 'invite-delete') { if (confirm('Einladung zurückziehen? Der Code wird ungültig.')) ppRun('member', () => cloudFetch(`/rest/v1/organization_invites?id=eq.${id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }), { notice: 'Einladung zurückgezogen.' }); return; }
       if (a === 'edit-customer') { pp.form = `edit-customer:${id}`; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo({ top: 0, behavior: 'smooth' }); return; }
       if (a === 'finance-form') { pp.form = `finance:${id}`; pp.formKind = action.dataset.kind; pp.formMode = action.dataset.mode || 'create'; pp.keepScroll = true; ppRender(); return; }
       if (a === 'invoice-pdf') { const inv = ppD('invoices').find((x) => x.id === id); const doc = ppD('documents').find((d) => d.id === inv?.document_id); if (doc) ppOpenFile(doc.storage_bucket, doc.storage_path, doc.file_name).catch((error) => showToast(error.message)); return; }
@@ -18162,7 +18437,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const o = ppD('orders').find((x) => x.id === form.dataset.order);
         const net = Math.round(Number(v.net) * 100) / 100;
         const tax = Math.round(net * Number(v.vat)) / 100;
-        const base = { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, amount_net: net, tax_amount: tax, amount_gross: Math.round((net + tax) * 100) / 100, currency: o.currency };
+        const base = { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, amount_net: net, tax_amount: tax, amount_gross: Math.round((net + tax) * 100) / 100, currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : o.currency };
         ppRun('finance', async () => {
           if (form.dataset.kind === 'invoice') await ppSendInvoice(o, { ...base, invoice_number: v.number.trim(), invoice_date: v.date || null, due_date: v.due || null, status: o.organization_id === ppOrg().id ? 'approved' : 'received' }, fd.get('pdf'), form.dataset.mode === 'upload');
           else await ppInsert('quotes', { ...base, quote_number: v.number, valid_until: v.valid || null, description: v.description || null, status: o.organization_id === ppOrg().id ? 'approved' : 'received' });
@@ -18177,14 +18452,26 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         const note = (v.note || '').trim();
         ppRun('complete', async () => {
           // Erst die Rechnung senden – scheitert sie, bleibt der Auftrag offen und kann erneut abgeschlossen werden.
-          await ppSendInvoice(o, { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, invoice_number: (v.number || '').trim() || `R-${Date.now()}`, invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: Math.round((gross - net) * 100) / 100, amount_gross: gross, currency: o.currency, status: 'received' }, fd.get('pdf'), false);
+          await ppSendInvoice(o, { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, invoice_number: (v.number || '').trim() || `R-${Date.now()}`, invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: Math.round((gross - net) * 100) / 100, amount_gross: gross, currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : o.currency, status: 'received' }, fd.get('pdf'), false);
           await ppPatch('service_orders', o.id, { status: 'completed', actual_cost: gross, response_note: note || o.response_note || null });
           if (note) await ppInsert('messages', { organization_id: o.organization_id, service_order_id: o.id, message: `Erledigt: ${note}` });
         }, { notice: `Auftrag erledigt – Rechnung als PDF an ${ppCustomerName(o.organization_id)} gesendet.` });
         return;
       }
       if (kind === 'inspection-start') ppRun('inspection', async () => { const newId = await ppRpc('partner_start_inspection', { p_property_id: v.property_id, p_template_id: v.template_id }); pp.prev = { view: pp.view, detail: null }; pp.detail = { type: 'inspection', id: newId }; }, { notice: 'Kontrolle angelegt.' });
-      if (kind === 'member-invite') ppRun('member', async () => { const code = await ppRpc('create_member_invite', { p_organization_id: ppOrg().id, p_email: v.email, p_role: v.role }); showToast(`Einladungscode: ${code}`); });
+      if (kind === 'member-invite') ppRun('member', async () => {
+        const code = await ppRpc('create_member_invite', { p_organization_id: ppOrg().id, p_email: v.email, p_role: v.role });
+        const details = clean({ display_name: v.display_name || '', phone: v.phone || '', info: v.info || '' });
+        if (details.display_name || details.phone || details.info) await cloudFetch(`/rest/v1/organization_invites?organization_id=eq.${ppOrg().id}&code=eq.${encodeURIComponent(code)}`, { method: 'PATCH', body: details, headers: { Prefer: 'return=minimal' } });
+        showToast(`Einladungscode: ${code}`);
+      });
+      if (kind === 'member-edit') {
+        const body = clean({ display_name: v.display_name || '', phone: v.phone || '', info: v.info || '' });
+        if (body.phone && !/^\+?[\d\s()\/.-]{5,}$/.test(body.phone)) { pp.error = 'Bitte eine gültige Telefonnummer eintragen.'; ppRender(); return; }
+        const m = ppD('members').find((x) => x.id === form.dataset.id);
+        if (v.role && m && m.user_id !== ppMe()) body.role = v.role;
+        ppRun('member', async () => { await ppPatch('organization_members', form.dataset.id, body); pp.form = null; }, { notice: 'Mitarbeiter gespeichert.' });
+      }
       if (kind === 'company-edit') {
         const body = clean(v);
         body.business_hours = { text: body.business_hours || '' };
@@ -18789,7 +19076,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
         return `<article class="card hub-agreement"><div class="hub-partner-head"><div><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.partner?.company_name || 'Servicepartner')} · ${escapeHtml(a.property?.name || a.property_label || '')}</small></div><span class="hub-status ${a.status}">${AG_STATUS[a.status] || a.status}</span></div>
           <dl class="pp-ag-facts"><div class="wide"><dt>${(a.task_titles || []).length > 1 ? 'Aufgaben' : 'Aufgabe'}</dt><dd>${escapeHtml(agTasksText(a))}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(money(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}</dd></div>${billed.length ? `<div><dt>Abgerechnet</dt><dd>${billed.map((i) => escapeHtml(money(i.amount_gross, i.currency))).join(', ')}</dd></div>` : ''}</dl>
           ${a.notes ? `<p class="settings-hint">${escapeHtml(a.notes)}</p>` : ''}
-          <div class="settings-actions">${incoming ? `<button type="button" class="primary-btn" data-owner-ag="accept" data-id="${a.id}" ${busy}>Annehmen</button><button type="button" class="secondary-btn" data-owner-ag="decline" data-id="${a.id}" ${busy}>Ablehnen</button>` : ''}${a.status === 'proposed' && a.proposed_by === 'owner' ? '<small class="settings-hint">Wartet auf Zustimmung des Partners</small>' : ''} ${a.status === 'active' || (a.status === 'proposed' && a.proposed_by === 'owner') ? `<button type="button" class="secondary-btn" data-owner-ag="end" data-id="${a.id}" ${busy}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''}</div></article>`;
+          ${hub.agEdit === a.id ? agEditFormHtml(a, 'data-owner-form="agreement-edit"', recurring) : `<div class="settings-actions">${incoming ? `<button type="button" class="primary-btn" data-owner-ag="accept" data-id="${a.id}" ${busy}>Annehmen</button><button type="button" class="secondary-btn" data-owner-ag="decline" data-id="${a.id}" ${busy}>Ablehnen</button>` : ''}${a.status === 'proposed' && a.proposed_by === 'owner' ? '<small class="settings-hint">Wartet auf Zustimmung des Partners</small>' : ''}  ${['proposed', 'active'].includes(a.status) ? `<button type="button" class="secondary-btn" data-owner-ag="edit" data-id="${a.id}" ${busy}>${icon('edit')} Bearbeiten</button>` : ''}${!billed.length ? `<button type="button" class="secondary-btn danger" data-owner-ag="delete" data-id="${a.id}" ${busy}>Löschen</button>` : ''}${a.status === 'active' || (a.status === 'proposed' && a.proposed_by === 'owner') ? `<button type="button" class="secondary-btn" data-owner-ag="end" data-id="${a.id}" ${busy}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''}</div>`}</article>`;
       };
       const form = partners.length && props.length ? `<form class="card hub-agreement-form" data-owner-form="agreement"><h3 class="card-title">Jahresvertrag vorschlagen</h3>
         <p class="settings-hint">Wiederkehrende Aufgabe zum festen Jahrespreis: Aufträge mit diesem Titel für das Haus gehen automatisch in den Vertrag und werden nicht einzeln, sondern einmal im Jahr abgerechnet. Der Partner muss zustimmen.</p>
@@ -18813,8 +19100,16 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const kind = button.dataset.ownerAg;
       const a = (ownerSide.agreements || []).find((x) => x.id === button.dataset.id);
       if (!a) return;
+      if (kind === 'edit') { hub.agEdit = a.id; hubRerender(); return; }
+      if (kind === 'delete' && confirm(`Jahresvertrag „${a.title}“ löschen? Zugeordnete Aufträge bleiben erhalten und werden wieder einzeln abgerechnet.`)) { ownerRun('agreement', async () => { await cloudFetch('/rest/v1/rpc/delete_service_agreement', { method: 'POST', body: { p_agreement_id: a.id } }); showToast('Jahresvertrag gelöscht.'); }); return; }
       if (kind === 'accept' || kind === 'decline') ownerRun('agreement', async () => { await cloudFetch('/rest/v1/rpc/respond_service_agreement', { method: 'POST', body: { p_agreement_id: a.id, p_accept: kind === 'accept' } }); showToast(kind === 'accept' ? `Jahresvertrag mit ${a.partner?.company_name || 'dem Partner'} angenommen.` : 'Vorschlag abgelehnt.'); });
       if (kind === 'end' && confirm(a.status === 'proposed' ? 'Vorschlag zurückziehen?' : `Jahresvertrag „${a.title}“ zum heutigen Tag beenden?`)) ownerRun('agreement', async () => { await cloudFetch('/rest/v1/rpc/end_service_agreement', { method: 'POST', body: { p_agreement_id: a.id } }); showToast('Jahresvertrag beendet.'); });
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-owner-form="agreement-edit"]');
+      if (!form) return;
+      let body; try { body = agUpdateBody(form, form.dataset.id); } catch (error) { showToast(error.message); return; }
+      ownerRun('agreement', async () => { const status = await cloudFetch('/rest/v1/rpc/update_service_agreement', { method: 'POST', body }); hub.agEdit = null; showToast(status === 'proposed' ? 'Änderung gesendet – der Partner muss sie bestätigen.' : 'Jahresvertrag gespeichert.'); });
     });
     document.addEventListener('submit', (event) => {
       const form = event.target.closest('[data-owner-form="agreement"]');
