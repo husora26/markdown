@@ -20282,7 +20282,10 @@ Morgen|Tomorrow|Imorgon
     setInterval(() => { if (document.visibilityState === 'visible') msgPoll(); }, 30000);
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') msgPoll(); });
     setTimeout(msgPoll, 1500);
-    if (ppMode() === 'partner') setTimeout(() => ppOpen('dashboard'), 0);
+    // Link für Servicepartner (…/?partner): startet direkt im Partner-Portal
+    const startAsPartner = (() => { try { return new URLSearchParams(location.search).has('partner'); } catch (error) { return false; } })();
+    if (startAsPartner && !onboardingState) { onboardingState = { status: 'done', at: new Date().toISOString(), partnerLink: true }; saveStore('stugliv-onboarding', onboardingState); }
+    if (startAsPartner || ppMode() === 'partner') setTimeout(() => { document.querySelectorAll('.modal-backdrop.open').forEach((m) => { if (startAsPartner && m.id === 'onboarding-modal') m.classList.remove('open'); }); ppOpen('dashboard'); }, 0);
     // Offline-Hinweis: Daten bleiben lokal gespeichert, Abgleich folgt automatisch
     function updateOnlineState() {
       let banner = document.getElementById('offline-banner');
