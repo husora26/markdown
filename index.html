@@ -17388,6 +17388,23 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <div class="pp-actions"><button type="button" class="primary-btn big" data-pp-action="inspection-complete" data-id="${i.id}" ${checked < items.length ? 'data-incomplete="1"' : ''} ${ppDisabled()}>${icon('check')} Kontrolle abschließen</button></div>
           <p class="pp-hint">Mängel werden beim Abschluss automatisch als Reparatur an den Kunden gemeldet. Den Bericht siehst du unter „Dokumente“.</p></div>` : `${defects.length && i.organization_id === ppOrg().id && ppIsLead() ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="defects-to-orders" data-id="${i.id}" ${ppDisabled()}>Mängel als Aufträge anlegen</button></div>` : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="inspection-report" data-id="${i.id}">${icon('document')} Prüfbericht (PDF)</button></div>`}`;
     }
+    // Kontaktdaten eines Kunden anlegen oder bearbeiten (Husora-Kunden: eigene Kontaktkarte des Betriebs)
+    const PP_COUNTRIES = [['DE', 'Deutschland'], ['SE', 'Schweden'], ['AT', 'Österreich'], ['CH', 'Schweiz'], ['DK', 'Dänemark'], ['NO', 'Norwegen'], ['NL', 'Niederlande'], ['FI', 'Finnland']];
+    function ppCustomerFormHtml(c = null) {
+      const val = (key) => escapeHtml(c?.[key] || '');
+      const country = c?.country || (c ? '' : ppOrg()?.country || '');
+      return `<form class="pp-card pp-form" data-pp-form="${c ? 'customer-edit' : 'customer'}"${c ? ` data-id="${c.id}"` : ''}><h3>${c ? 'Kontakt bearbeiten' : 'Eigener Kunde'}</h3>
+        ${c?.linked_organization_id ? '<p class="pp-hint">Das ist deine Kontaktkarte zu diesem Husora-Kunden – Änderungen siehst nur du und dein Team, beim Hausbesitzer ändert sich nichts.</p>' : ''}
+        <div class="pp-grid">
+          <label class="full"><span class="form-label">Firma (optional)</span><input class="form-control" name="company_name" maxlength="120" value="${val('company_name')}"></label>
+          <label><span class="form-label">Vorname</span><input class="form-control" name="first_name" maxlength="60" autocomplete="off" value="${val('first_name')}"></label><label><span class="form-label">Nachname</span><input class="form-control" name="last_name" maxlength="60" autocomplete="off" value="${val('last_name')}"></label>
+          <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120" value="${val('email')}"></label><label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" inputmode="tel" maxlength="40" value="${val('phone')}"></label>
+          <label class="full"><span class="form-label">Straße und Hausnummer</span><input class="form-control" name="street" maxlength="120" value="${val('street')}"></label><label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12" value="${val('postal_code')}"></label><label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" value="${val('city')}"></label>
+          <label class="full"><span class="form-label">Land</span><select class="form-control" name="country"><option value="">–</option>${PP_COUNTRIES.map(([code, label]) => `<option value="${code}" ${country === code ? 'selected' : ''}>${label}</option>`).join('')}${country && !PP_COUNTRIES.some(([code]) => code === country) ? `<option value="${escapeHtml(country)}" selected>${escapeHtml(country)}</option>` : ''}</select></label>
+          ${c ? `<label><span class="form-label">Kundennummer</span><input class="form-control" name="customer_number" maxlength="40" value="${val('customer_number')}"></label>` : ''}
+          <label class="full"><span class="form-label">Notizen</span><textarea class="form-control" name="notes" rows="3" maxlength="2000" placeholder="z. B. erreichbar ab 17 Uhr, Schlüssel beim Nachbarn">${val('notes')}</textarea></label></div>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>${c ? 'Speichern' : 'Kunde anlegen'}</button></div></form>`;
+    }
     function ppCustomersHtml() {
       const customers = ppD('customers');
       const linked = customers.filter((c) => c.linked_organization_id);
@@ -17396,13 +17413,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const card = (c) => `<button type="button" class="pp-item" data-pp-open="customer:${c.id}"><span class="pp-item-main"><strong>${escapeHtml(ppCustomerLabel(c))}</strong><small>${c.linked_organization_id ? 'Husora-Kunde · verbunden' : escapeHtml([c.city, c.email].filter(Boolean).join(' · ') || 'Eigener Kunde')}</small><small>${propsOf(c).length} Objekt${propsOf(c).length === 1 ? '' : 'e'} · ${ppD('orders').filter((o) => propsOf(c).some((p) => p.id === o.property_id)).length} Aufträge</small></span>${icon('arrow')}</button>`;
       return `${ppBack()}<div class="pp-page-head"><h1>Kunden & Objekte</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-customer">${icon('plus')} Kunde</button>` : ''}</div>
         ${ppIsLead() ? `<form class="pp-card pp-form pp-compact" data-pp-form="invite-code"><h3>Einladung eines Hausbesitzers</h3><div class="pp-inline"><input class="form-control pp-code" name="code" placeholder="HUS-XXXX-XXXX" autocapitalize="characters" required><button class="primary-btn" type="submit" ${ppDisabled()}>Verbinden</button></div><p class="pp-hint">Den Code erzeugt dein Kunde in seiner Husora-App. Danach siehst du seine Aufträge und die betroffenen Häuser.</p></form>` : ''}
-        ${pp.form === 'new-customer' ? `<form class="pp-card pp-form" data-pp-form="customer"><h3>Eigener Kunde</h3><div class="pp-grid">
-          <label class="full"><span class="form-label">Firma (optional)</span><input class="form-control" name="company_name" maxlength="120"></label>
-          <label><span class="form-label">Vorname</span><input class="form-control" name="first_name" maxlength="60"></label><label><span class="form-label">Nachname</span><input class="form-control" name="last_name" maxlength="60"></label>
-          <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120"></label><label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" maxlength="40"></label>
-          <label class="full"><span class="form-label">Straße</span><input class="form-control" name="street" maxlength="120"></label><label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12"></label><label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80"></label>
-          <label class="full"><span class="form-label">Notizen</span><textarea class="form-control" name="notes" rows="2"></textarea></label></div>
-          <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>Kunde anlegen</button></div></form>` : ''}
+        ${pp.form === 'new-customer' ? ppCustomerFormHtml() : ''}
         ${ppSection(`Husora-Kunden (${linked.length})`, `<div class="pp-list">${linked.map(card).join('') || '<p class="pp-muted">Noch kein Hausbesitzer verbunden.</p>'}</div>`)}
         ${ppSection(`Eigene Kunden (${own.length})`, `<div class="pp-list">${own.map(card).join('') || '<p class="pp-muted">Noch keine eigenen Kunden.</p>'}</div>`)}`;
     }
@@ -17410,7 +17421,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       const c = ppD('customers').find((x) => x.id === id);
       if (!c) return `${ppBack()}${ppEmpty('Kunde nicht gefunden', '')}`;
       const props = ppD('properties').filter((p) => (c.linked_organization_id ? p.organization_id === c.linked_organization_id : p.owner_customer_id === c.id));
-      return `${ppBack()}<div class="pp-detail-head"><div><span class="pp-eyebrow">${c.linked_organization_id ? 'Husora-Kunde' : 'Eigener Kunde'}</span><h1>${escapeHtml(ppCustomerLabel(c))}</h1></div></div>
+      const editing = pp.form === `edit-customer:${c.id}`;
+      return `${ppBack()}<div class="pp-detail-head"><div><span class="pp-eyebrow">${c.linked_organization_id ? 'Husora-Kunde' : 'Eigener Kunde'}${c.customer_number ? ` · Nr. ${escapeHtml(c.customer_number)}` : ''}</span><h1>${escapeHtml(ppCustomerLabel(c))}</h1></div>${ppIsLead() && !editing ? `<button type="button" class="secondary-btn" data-pp-action="edit-customer" data-id="${c.id}">${icon('edit')} Kontakt bearbeiten</button>` : ''}</div>
+        ${editing ? ppCustomerFormHtml(c) : ''}
         <div class="pp-card pp-facts"><div><span>Kontakt</span><strong>${escapeHtml([c.first_name, c.last_name].filter(Boolean).join(' ') || '–')}</strong><small>${[c.email ? `<a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>` : '', c.phone ? `<a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a>` : ''].filter(Boolean).join(' · ')}</small></div><div><span>Adresse</span><strong>${escapeHtml(ppAddress(c) || '–')}</strong></div></div>
         ${c.notes ? `<div class="pp-card"><p class="pp-text">${escapeHtml(c.notes)}</p></div>` : ''}
         ${ppSection(`Objekte (${props.length})`, `${props.map((p) => `${ppPropertyCard(p)}<div class="pp-card pp-prop"><div class="pp-prop-stats"><span>${ppD('orders').filter((o) => o.property_id === p.id).length} Aufträge</span><span>${ppD('inspections').filter((i) => i.property_id === p.id).length} Kontrollen</span></div>${!c.linked_organization_id && ppIsLead() ? `<button type="button" class="text-btn" data-pp-action="order-for" data-property="${p.id}">Auftrag anlegen</button>` : ''}</div>`).join('') || `<p class="pp-muted">${c.linked_organization_id ? 'Häuser dieses Kunden erscheinen, sobald er dir einen Auftrag gibt.' : 'Noch kein Objekt.'}</p>`}
@@ -18013,6 +18026,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (a === 'new-order') { pp.form = 'new-order'; pp.formProperty = ''; ppRender(); return; }
       if (a === 'order-for') { pp.form = 'new-order'; pp.formProperty = action.dataset.property; pp.keepScroll = true; ppRender(); return; }
       if (a === 'new-customer') { pp.form = 'new-customer'; ppRender(); return; }
+      if (a === 'edit-customer') { pp.form = `edit-customer:${id}`; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo({ top: 0, behavior: 'smooth' }); return; }
       if (a === 'finance-form') { pp.form = `finance:${id}`; pp.formKind = action.dataset.kind; pp.formMode = action.dataset.mode || 'create'; pp.keepScroll = true; ppRender(); return; }
       if (a === 'invoice-pdf') { const inv = ppD('invoices').find((x) => x.id === id); const doc = ppD('documents').find((d) => d.id === inv?.document_id); if (doc) ppOpenFile(doc.storage_bucket, doc.storage_path, doc.file_name).catch((error) => showToast(error.message)); return; }
       if (a === 'signout') { cloudSignOut(); pp.ctx = null; pp.data = null; try { localStorage.removeItem(PP_CACHE_KEY); } catch (error) { /* egal */ } ppRender(); return; }
@@ -18122,6 +18136,12 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       if (kind === 'company') ppRun('company', () => ppRpc('create_partner_organization', { p_profile: { ...clean(v), services: fd.getAll('services') } }), { notice: 'Dein Betrieb ist angelegt. Willkommen bei Husora!' });
       if (kind === 'join') ppRun('join', async () => { const r = await ppRpc('accept_member_invite', { p_code: v.code }); pp.notice = `Du bist jetzt im Team von ${r.organization_name}.`; });
       if (kind === 'invite-code') ppRun('invite', async () => { const r = await ppRpc('accept_service_partner_invite', { p_code: v.code }); showToast(`Verbunden mit ${r.organization_name}.`); });
+      if (kind === 'customer-edit') {
+        const body = clean(v);
+        if (!body.company_name && !body.first_name && !body.last_name) { pp.error = 'Bitte Firma oder Namen angeben.'; ppRender(); return; }
+        if (body.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) { pp.error = 'Bitte eine gültige E-Mail-Adresse eintragen.'; ppRender(); return; }
+        ppRun('customer', async () => { await ppPatch('customers', form.dataset.id, body); pp.form = null; }, { notice: 'Kontakt gespeichert.' });
+      }
       if (kind === 'customer') ppRun('customer', async () => { await ppInsert('customers', { ...clean(v), organization_id: ppOrg().id }); pp.form = null; }, { notice: 'Kunde angelegt.' });
       if (kind === 'property') ppRun('property', () => ppInsert('properties', { ...clean(v), organization_id: ppOrg().id, owner_customer_id: form.dataset.customer, country: ppOrg().country || 'SE' }), { notice: 'Objekt gespeichert.' });
       if (kind === 'new-order') ppRun('order', async () => { const [row] = await ppInsert('service_orders', { organization_id: ppOrg().id, property_id: v.property_id, service_partner_id: pp.ctx.self_partner_id, title: v.title.trim(), description: v.description?.trim() || null, status: v.scheduled_at ? 'scheduled' : 'accepted', scheduled_at: ppIso(v.scheduled_at), estimated_cost: v.estimated_cost === '' ? null : Number(v.estimated_cost), currency: ppOrg().currency }); pp.form = null; pp.detail = { type: 'order', id: row.id }; }, { notice: 'Auftrag angelegt.' });
