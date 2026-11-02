@@ -2943,6 +2943,19 @@
     .hub-approvals-card .hub-approval + .hub-approval { margin-top: 8px; }
     .hub-limit-form { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
     .hub-limit-form label { flex: 1 1 200px; }
+    /* Phase 9: Benachrichtigungen, Chat-Anhänge */
+    .notify-table { display: grid; margin: 6px 0 10px; }
+    .notify-row { display: grid; grid-template-columns: 1fr 52px 52px 52px; align-items: center; gap: 6px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+    .notify-row.head { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .notify-row.head span:not(:first-child), .notify-row .notify-switch { justify-self: center; }
+    .notify-device { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--green-soft); }
+    .notify-device > span { display: grid; gap: 2px; flex: 1 1 200px; }
+    .notify-device small { color: var(--muted); }
+    .chat-attach { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
+    .chat-attach svg { width: 15px; height: 15px; }
+    .chat-attach-photo { display: block; margin-top: 6px; max-width: 220px; }
+    .chat-attach-photo img { width: 100%; border-radius: 10px; }
+    .chat-attach-pick { flex: none; padding-left: 12px; padding-right: 12px; font-size: 16px; }
     /* Husora Beta Mode */
     .settings-switch { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; }
     .settings-switch > span:first-child { display: grid; gap: 2px; min-width: 0; }
@@ -16458,6 +16471,123 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     setInterval(() => { betaFlush(); betaLoadAdmin(); }, 45000);
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') betaSessionStart(); else betaFlush(); });
 
+    // ===== Phase 9: Benachrichtigungen je Kategorie (App, Push, E-Mail) und Push auf diesem Gerät =====
+    const CLOUD_NOTIFY_CATEGORIES = [['order', 'Aufträge & Anfragen'], ['message', 'Nachrichten'], ['approval', 'Freigaben & Mehrkosten'], ['invoice', 'Rechnungen'], ['repair', 'Mängel & Reparaturen'], ['inspection', 'Kontrollen'], ['agreement', 'Jahresverträge'], ['maintenance', 'Wartung & Automatik']];
+    function notifyS() { return window.__husoraNotify || (window.__husoraNotify = { prefs: null, loading: false, vapid: undefined, device: null, busy: false }); }
+    function notifyRerender() { try { if (pp.open && pp.view === 'settings') { pp.keepScroll = true; ppRender(); } else if (currentPage === 'settings') render(); } catch (error) { /* optional */ } }
+    function notifyPushSupported() { return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+    async function notifyLoad() {
+      const s = notifyS();
+      if (s.loading || !cloudSignedIn()) return;
+      s.loading = true;
+      try {
+        const [rows, cfg] = await Promise.all([
+          cloudFetch('/rest/v1/notification_preferences?select=category,in_app,push,email'),
+          cloudFetch('/rest/v1/app_config?key=eq.push&select=value').catch(() => [])
+        ]);
+        s.prefs = Object.fromEntries((rows || []).map((r) => [r.category, r]));
+        s.vapid = cfg?.[0]?.value?.vapid_public_key || null;
+        if (notifyPushSupported()) {
+          const reg = await navigator.serviceWorker.getRegistration('./sw.js').catch(() => null);
+          const sub = reg ? await reg.pushManager.getSubscription().catch(() => null) : null;
+          s.device = sub ? 'on' : 'off';
+        } else s.device = 'unsupported';
+      } catch (error) {
+        s.prefs = s.prefs || {}; s.error = /notification_preferences|404|does not exist/.test(error.message) ? 'Die Cloud kennt die Benachrichtigungs-Einstellungen noch nicht (Migration 3800 fehlt).' : error.message;
+      } finally { s.loading = false; notifyRerender(); }
+    }
+    function notifyPrefsBodyHtml() {
+      const s = notifyS();
+      if (!cloudSignedIn()) return '<p class="settings-hint">Melde dich mit deinem Husora-Konto an, um Benachrichtigungen zu Aufträgen, Nachrichten und Rechnungen einzustellen.</p>';
+      if (!s.prefs) { notifyLoad(); return '<p class="settings-hint">Einstellungen werden geladen …</p>'; }
+      const pref = (c) => ({ in_app: true, push: true, email: false, ...(s.prefs[c] || {}) });
+      const sw = (c, field) => `<label class="switch notify-switch" title="${field === 'in_app' ? 'In der App' : field === 'push' ? 'Push' : 'E-Mail'}"><input type="checkbox" data-notify-pref="${c}|${field}" ${pref(c)[field] ? 'checked' : ''}><span></span></label>`;
+      const device = s.device === 'unsupported' ? '<p class="settings-hint">Dieser Browser unterstützt keine Push-Benachrichtigungen. Auf dem iPhone: Husora über „Teilen → Zum Home-Bildschirm“ als App hinzufügen.</p>'
+        : !s.vapid ? '<p class="settings-hint">Push-Benachrichtigungen werden gerade eingerichtet – bis dahin erscheinen alle Meldungen in der App.</p>'
+        : `<div class="notify-device"><span><strong>Push auf diesem Gerät</strong><small>${s.device === 'on' ? 'Aktiv – du erhältst Meldungen auch, wenn Husora geschlossen ist.' : 'Aus – Meldungen erscheinen nur in der App.'}</small></span><button type="button" class="${s.device === 'on' ? 'secondary-btn' : 'primary-btn'}" data-notify-device="${s.device === 'on' ? 'off' : 'on'}" ${s.busy ? 'disabled' : ''}>${s.device === 'on' ? 'Ausschalten' : 'Aktivieren'}</button></div>`;
+      return `${s.error ? `<p class="settings-hint">${escapeHtml(s.error)}</p>` : ''}<div class="notify-table" role="table"><div class="notify-row head" role="row"><span>Kategorie</span><span>App</span><span>Push</span><span>E-Mail</span></div>
+        ${CLOUD_NOTIFY_CATEGORIES.map(([c, l]) => `<div class="notify-row" role="row"><span>${l}</span>${sw(c, 'in_app')}${sw(c, 'push')}${sw(c, 'email')}</div>`).join('')}</div>${device}
+        <p class="settings-hint">Push und E-Mail enthalten nur Titel und Kurztext – keine Zugangsdaten oder Dokumente.</p>`;
+    }
+    function cloudNotifyCardHtml() {
+      return `<section class="card settings-card" id="settings-cloud-notify"><div class="settings-card-head"><span class="settings-icon">${icon('bell')}</span><div><h2 class="card-title">Benachrichtigungen</h2><p class="card-caption">Was dir Husora zu Aufträgen, Nachrichten und Rechnungen meldet – in der App, per Push oder E-Mail.</p></div></div>${notifyPrefsBodyHtml()}</section>`;
+    }
+    try { settingsCardBuilders.splice(Math.max(0, settingsCardBuilders.indexOf(notifyCardHtml) + 1), 0, cloudNotifyCardHtml); } catch (error) { /* Einstellungen noch nicht geladen */ }
+    function notifyB64(base64) { const pad = '='.repeat((4 - (base64.length % 4)) % 4); const raw = atob((base64 + pad).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(raw, (c) => c.charCodeAt(0)); }
+    async function notifySetDevice(on) {
+      const s = notifyS();
+      s.busy = true; notifyRerender();
+      try {
+        const reg = await navigator.serviceWorker.register('./sw.js');
+        if (on) {
+          const perm = await Notification.requestPermission();
+          if (perm !== 'granted') throw new Error('Benachrichtigungen wurden im Browser nicht erlaubt.');
+          const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: notifyB64(s.vapid) });
+          const j = sub.toJSON();
+          await cloudFetch('/rest/v1/push_subscriptions?on_conflict=endpoint', { method: 'POST', body: { endpoint: j.endpoint, p256dh: j.keys.p256dh, auth_key: j.keys.auth, user_agent: navigator.userAgent.slice(0, 300) }, headers: { Prefer: 'resolution=ignore-duplicates,return=minimal' } });
+          s.device = 'on'; showToast('Push ist auf diesem Gerät aktiv.');
+        } else {
+          const sub = await reg.pushManager.getSubscription();
+          if (sub) { await cloudFetch(`/rest/v1/push_subscriptions?endpoint=eq.${encodeURIComponent(sub.endpoint)}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }).catch(() => {}); await sub.unsubscribe(); }
+          s.device = 'off'; showToast('Push auf diesem Gerät ausgeschaltet.');
+        }
+      } catch (error) { showToast(error.message || 'Push konnte nicht eingerichtet werden.'); }
+      finally { s.busy = false; notifyRerender(); }
+    }
+    document.addEventListener('change', (event) => {
+      const input = event.target.closest?.('[data-notify-pref]');
+      if (!input) return;
+      const [category, field] = input.dataset.notifyPref.split('|');
+      const s = notifyS();
+      const current = { in_app: true, push: true, email: false, ...(s.prefs?.[category] || {}) };
+      const next = { category, in_app: current.in_app, push: current.push, email: current.email, [field]: input.checked };
+      s.prefs = { ...(s.prefs || {}), [category]: next };
+      cloudFetch('/rest/v1/notification_preferences?on_conflict=user_id,category', { method: 'POST', body: next, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } })
+        .then(() => showToast(!next.in_app && !next.push && !next.email ? `${CLOUD_NOTIFY_CATEGORIES.find(([c]) => c === category)?.[1]}: keine Benachrichtigungen mehr.` : 'Benachrichtigungen gespeichert.'))
+        .catch((error) => { input.checked = !input.checked; showToast(error.message); });
+    });
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-notify-device]');
+      if (btn) notifySetDevice(btn.dataset.notifyDevice === 'on');
+    });
+    // ----- Chat-Anhänge: Datei im Auftragsgespräch senden (Partner) und öffnen (beide Seiten) -----
+    function chatAttachmentHtml(m, side) {
+      if (!m.document_id && !m.photo_id) return '';
+      const label = escapeHtml(String(m.message || '').replace(/^📎\s*/, '') || 'Anhang');
+      if (side === 'partner') {
+        if (m.photo_id) { const ph = ppD('photos').find((p) => p.id === m.photo_id); return ph ? `<button type="button" class="pp-photo chat-attach-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(ph.caption || 'Foto')}"><img data-pp-thumb="${ph.id}" alt="${label}"></button>` : ''; }
+        return `<button type="button" class="chat-attach" data-pp-doc="view" data-id="${m.document_id}">${icon('document')} ${label}</button>`;
+      }
+      return `<button type="button" class="chat-attach" data-hub-attach="${m.photo_id ? 'photo' : 'document'}:${m.photo_id || m.document_id}">${icon(m.photo_id ? 'camera' : 'document')} ${label}</button>`;
+    }
+    document.addEventListener('change', (event) => {
+      const input = event.target.closest?.('#partner-portal [data-pp-chat-attach]');
+      if (!input || !input.files?.length) return;
+      const o = ppD('orders').find((x) => x.id === input.dataset.ppChatAttach);
+      const file = input.files[0];
+      input.value = '';
+      if (!o) return;
+      if (file.size > 10 * 1024 * 1024) { showToast('Die Datei ist größer als 10 MB.'); return; }
+      pp.keepScroll = true;
+      ppRun('chat-attach', async () => {
+        const ref = await ppUploadFile(file, o, 'order');
+        await ppInsert('messages', { organization_id: o.organization_id, service_order_id: o.id, message: `📎 ${file.name}`.slice(0, 300), document_id: ref?.document_id || null, photo_id: ref?.photo_id || null });
+      }, { notice: `„${file.name}“ an ${ppCustomerName(o.organization_id)} gesendet.` });
+    });
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-hub-attach]');
+      if (!btn) return;
+      const [kind, id] = btn.dataset.hubAttach.split(':');
+      const table = kind === 'photo' ? 'photos' : 'documents';
+      cloudFetch(`/rest/v1/${table}?id=eq.${id}&select=${kind === 'photo' ? 'caption,storage_bucket,storage_path' : 'file_name,file_type,storage_bucket,storage_path'}`)
+        .then(async ([row]) => {
+          if (!row) throw new Error('Der Anhang ist nicht mehr verfügbar.');
+          const dataUrl = await cloudGetFile(`${CLOUD_FILE_PREFIX}${row.storage_bucket}/${row.storage_path}`);
+          openDocument({ name: row.file_name || row.caption || 'Foto', type: row.file_type || (kind === 'photo' ? 'image/jpeg' : ''), dataUrl, category: 'other' });
+        })
+        .catch((error) => showToast(error.message));
+    });
+
     // --- Ersteinrichtung ---
     let onboardingState = loadStore('stugliv-onboarding', null);
     let onboardingStep = 0;
@@ -19191,12 +19321,14 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (isImage) {
         const path = `${base}/photos/${id}.${ext}`;
         await cloudPutFile('husora-property-photos', path, dataUrl, mime);
-        await ppInsert('photos', { organization_id: order.organization_id, property_id: order.property_id, service_order_id: kind === 'inspection' ? null : order.id, inspection_id: kind === 'inspection' ? order.inspection_id : null, storage_bucket: 'husora-property-photos', storage_path: path, caption: file.name, taken_at: new Date().toISOString() });
+        const [row] = await ppInsert('photos', { organization_id: order.organization_id, property_id: order.property_id, service_order_id: kind === 'inspection' ? null : order.id, inspection_id: kind === 'inspection' ? order.inspection_id : null, storage_bucket: 'husora-property-photos', storage_path: path, caption: file.name, taken_at: new Date().toISOString() });
+        return { photo_id: row?.id || null };
       } else {
         if (!CLOUD_DOC_TYPES.includes(mime)) throw new Error(`„${file.name}“: Dateityp wird nicht unterstützt (PDF, Bild, Word, Excel).`);
         const path = `${base}/documents/${id}.${ext}`;
         await cloudPutFile('husora-documents', path, dataUrl, mime);
-        await ppInsert('documents', { organization_id: order.organization_id, property_id: order.property_id, service_order_id: kind === 'inspection' ? null : order.id, inspection_id: kind === 'inspection' ? order.inspection_id : null, file_name: file.name, file_type: mime, file_size: file.size, storage_bucket: 'husora-documents', storage_path: path, document_type: /rechnung|invoice|faktura/i.test(file.name) ? 'invoice' : /angebot|offert|quote/i.test(file.name) ? 'quote' : /protokoll|bericht|report/i.test(file.name) ? 'inspection_report' : 'other' });
+        const [row] = await ppInsert('documents', { organization_id: order.organization_id, property_id: order.property_id, service_order_id: kind === 'inspection' ? null : order.id, inspection_id: kind === 'inspection' ? order.inspection_id : null, file_name: file.name, file_type: mime, file_size: file.size, storage_bucket: 'husora-documents', storage_path: path, document_type: /rechnung|invoice|faktura/i.test(file.name) ? 'invoice' : /angebot|offert|quote/i.test(file.name) ? 'quote' : /protokoll|bericht|report/i.test(file.name) ? 'inspection_report' : 'other' });
+        return { document_id: row?.id || null };
       }
     }
     async function ppThumb(photo) {
@@ -19527,8 +19659,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <div class="pp-actions"><label class="primary-btn pp-file">${icon('plus')} Foto aufnehmen<input type="file" accept="image/*" capture="environment" multiple hidden data-pp-upload="order:${o.id}"></label><label class="secondary-btn pp-file">Dokument<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" multiple hidden data-pp-upload="order:${o.id}"></label></div>`)}
         ${ppSection('Kontrolle', `${ppD('inspections').filter((i) => i.property_id === o.property_id && i.status !== 'cancelled').slice(0, 3).map(ppInspectionCard).join('')}
           ${ppD('templates').length ? `<div class="pp-inline"><select class="form-control" data-pp-field="tpl">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-action="start-inspection" data-property="${o.property_id}" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}`)}
-        ${ppSection('Nachrichten', `<div class="pp-thread">${thread.map((m) => `<div class="pp-bubble ${m.sender_user_id === ppMe() ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(m.sender_user_id === ppMe() ? 'Du' : ppMemberName(m.sender_user_id) || 'Kunde')} · ${escapeHtml(fmtDateTime(m.created_at))}</small></div>`).join('') || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
-          <form class="pp-send" data-pp-form="message" data-order="${o.id}" data-org="${o.organization_id}"><input class="form-control" name="message" placeholder="Nachricht an den Kunden …" maxlength="2000" required><button class="primary-btn" type="submit" aria-label="Senden" ${ppDisabled()}>Senden</button></form>`)}
+        ${ppSection('Nachrichten', `<div class="pp-thread">${thread.map((m) => `<div class="pp-bubble ${m.sender_user_id === ppMe() ? 'me' : ''}">${(m.document_id || m.photo_id) && /^📎/.test(m.message || '') ? '' : `<p>${escapeHtml(m.message)}</p>`}${chatAttachmentHtml(m, 'partner')}<small>${escapeHtml(m.sender_user_id === ppMe() ? 'Du' : ppMemberName(m.sender_user_id) || 'Kunde')} · ${escapeHtml(fmtDateTime(m.created_at))}</small></div>`).join('') || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
+          <form class="pp-send" data-pp-form="message" data-order="${o.id}" data-org="${o.organization_id}"><label class="secondary-btn pp-file chat-attach-pick" title="Foto oder Datei anhängen" aria-label="Foto oder Datei anhängen">📎<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" hidden data-pp-chat-attach="${o.id}"></label><input class="form-control" name="message" placeholder="Nachricht an den Kunden …" maxlength="2000" required><button class="primary-btn" type="submit" aria-label="Senden" ${ppDisabled()}>Senden</button></form>`)}
         ${ppSection('Verlauf', `<div class="order-events" data-order-events="${o.id}" data-side="partner">${orderEventsHtml(o, 'partner')}</div>`)}
         ${[...ORDER_RUNNING, 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
           ${pp.form === `finance:${o.id}` ? ppFinanceForm(o) : o.agreement_id ? `<p class="pp-hint">${icon('calendar')} Im Jahresvertrag – Abrechnung einmal jährlich unter „Mehr → Jahresverträge“.</p>` : `${ppOrderBilled(o) ? '<p class="pp-hint">Dieser Auftrag ist bereits abgerechnet – eine weitere Rechnung nur für Korrekturen oder Zusatzleistungen.</p>' : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="quote">Angebot</button><button type="button" class="primary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice">Rechnung erstellen</button><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice" data-mode="upload">${icon('document')} PDF-Rechnung hochladen</button></div>`}`) : ''}`;
@@ -20396,6 +20528,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return `${ppBack()}<div class="pp-page-head"><h1>Einstellungen</h1></div>
         ${card('Startseite', 'Welche Kacheln die Startseite zeigt.', 'home', `<div class="pp-tile-picks">${PP_TILES.map(([id, label, ic]) => `<label class="pp-tile-pick ${tiles.includes(id) ? 'on' : ''}"><input type="checkbox" data-pp-tile-toggle="${id}" ${tiles.includes(id) ? 'checked' : ''}><span>${icon(ic)} ${escapeHtml(label)}</span></label>`).join('')}</div><div class="pp-actions flat"><button type="button" class="secondary-btn" data-pp-tile-reset>Standard wiederherstellen</button></div>`)}
         ${card('Aussehen der Kacheln', 'Bilder oder farbige Kacheln auf der Startseite – die Farbe wählst du frei.', 'home', tileLookControlsHtml('pp-tile', ppHomePrefs().tileStyle || 'photo', ppHomePrefs().tileColor))}
+        ${card('Benachrichtigungen', 'Was dir Husora meldet – in der App, per Push oder E-Mail.', 'bell', notifyPrefsBodyHtml())}
         ${card('Darstellung & Sprache', 'Hell oder dunkel, Schriftgröße und Sprache der App.', 'text', `<span class="form-label">Erscheinungsbild</span>
           <div class="segmented" role="radiogroup" aria-label="Erscheinungsbild">${themes.map(([id, label, ic]) => `<button type="button" role="radio" aria-checked="${displaySettings.theme === id}" class="${displaySettings.theme === id ? 'active' : ''}" data-display-theme="${id}">${icon(ic)} ${label}</button>`).join('')}</div>
           <label class="pp-check pp-home-toggle"><input type="checkbox" data-pp-home-pref="showOffered" ${ppHomePrefs().showOffered ? 'checked' : ''}><span><strong>Neue Anfragen auf der Startseite</strong><small>Ausgeschaltet findest du neue Anfragen weiter unter „Aufträge → Neu“ und an der Zahl im Menü.</small></span></label>
@@ -21233,7 +21366,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status,share_phone,share_address,contact_decided_at&order=company_name.asc`).catch(() => cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status&order=company_name.asc`)),
         cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=not.is.null&status=in.(pending,assigned)&select=id,app_ref,title,scheduled_start,assigned_partner_id,property:properties(name)&order=scheduled_start.asc.nullslast&limit=100`),
         cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,priority,order_type,agreement_id,scheduled_at,response_note,actual_cost,currency,service_task_id,service_partner_id,created_at,partner:service_partners(company_name),property:properties(name,app_ref),task:service_tasks(app_ref)&order=created_at.desc&limit=200`),
-        cloudFetch(`/rest/v1/messages?organization_id=eq.${org}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`),
+        cloudFetch(`/rest/v1/messages?organization_id=eq.${org}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,document_id,photo_id,created_at,read_at&order=created_at.desc&limit=500`),
         cloudFetch(`/rest/v1/service_partner_invites?organization_id=eq.${org}&select=service_partner_id,code,expires_at,accepted_at&order=created_at.desc&limit=200`),
         cloudFetch(`/rest/v1/invoices?organization_id=eq.${org}&service_partner_id=not.is.null&select=id,invoice_number,amount_gross,currency,status,invoice_date,due_date,service_order_id,agreement_id,lines:invoice_orders(service_order_id,amount_gross),partner:service_partners!invoices_organization_id_service_partner_id_fkey(company_name),property:properties!invoices_organization_id_property_id_fkey(app_ref,name),document:documents!invoices_organization_id_document_id_fkey(id,file_name,file_size,storage_bucket,storage_path)&order=created_at.desc&limit=100`).catch(() => [])
       ]);
@@ -21838,7 +21971,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const order = t.kind === 'order' ? (ownerSide.orders || []).find((o) => o.id === t.id) : null;
       const list = hubThreadMessages(t);
       let day = '';
-      const bubbles = list.map((m) => { const d = ppDayKey(m.created_at); const sep = d !== day ? `<div class="hub-day">${escapeHtml(d === ppToday() ? 'Heute' : new Date(m.created_at).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }))}</div>` : ''; day = d; const mine = m.sender_user_id === hubMyId(); return `${sep}<div class="pp-bubble ${mine ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(ppTime(m.created_at))}${mine ? (m.read_at ? ' · gelesen' : ' · gesendet') : ''}</small></div>`; }).join('');
+      const bubbles = list.map((m) => { const d = ppDayKey(m.created_at); const sep = d !== day ? `<div class="hub-day">${escapeHtml(d === ppToday() ? 'Heute' : new Date(m.created_at).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }))}</div>` : ''; day = d; const mine = m.sender_user_id === hubMyId(); return `${sep}<div class="pp-bubble ${mine ? 'me' : ''}">${(m.document_id || m.photo_id) && /^📎/.test(m.message || '') ? '' : `<p>${escapeHtml(m.message)}</p>`}${chatAttachmentHtml(m, 'owner')}<small>${escapeHtml(ppTime(m.created_at))}${mine ? (m.read_at ? ' · gelesen' : ' · gesendet') : ''}</small></div>`; }).join('');
       return `<div class="hub-thread">
         <div class="hub-thread-head"><button type="button" class="pp-back" data-hub-back>${icon('arrow')}<span>Gespräche</span></button><div><strong>${escapeHtml(partner?.company_name || order?.title || 'Gespräch')}</strong><small>${escapeHtml(order ? `${order.partner?.company_name || ''} · ${order.order_number} · ${(PP_ORDER_STATUS[order.status] || [order.status])[0]}` : 'Servicepartner · über das Husora Partner-Portal')}</small></div></div>
         <div class="hub-messages" id="hub-messages">${bubbles || `<div class="pp-empty">${icon('note')}<strong>Noch keine Nachrichten</strong><p>Schreib ${escapeHtml(partner?.company_name || 'deinem Partner')} – zum Beispiel einen Terminwunsch oder Zugangshinweise.</p></div>`}</div>
@@ -22316,7 +22449,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         // alle 2 Minuten vollständig abgleichen: Partner-Fortschritt (angenommen, erledigt) in die Aufgaben übernehmen
         if (ownerSide.partners === null || Date.now() - (msgTop.fullAt || 0) > 120000) { await ownerLoadPartners(); msgTop.fullAt = Date.now(); loadOrgPlan(); }
         else {
-          ownerSide.messages = await cloudFetch(`/rest/v1/messages?organization_id=eq.${cloud.org.id}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`);
+          ownerSide.messages = await cloudFetch(`/rest/v1/messages?organization_id=eq.${cloud.org.id}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,document_id,photo_id,created_at,read_at&order=created_at.desc&limit=500`);
           const known = new Set([...(ownerSide.partners || []).filter((p) => p.partner_organization_id).map((p) => p.id), ...(ownerSide.orders || []).map((o) => o.id)]);
           if (ownerSide.messages.some((m) => msgIncoming(m) && !m.read_at && !known.has(m.service_partner_id || m.service_order_id))) await ownerLoadPartners();
         }

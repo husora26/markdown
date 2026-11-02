@@ -486,3 +486,19 @@ Sobald eine `stripe_price_id` gesetzt ist, zeigt die App statt der E-Mail-Anfrag
 ```sql
 select created_at, kind, message, page, app_version, contact_email from public.app_feedback order by created_at desc limit 100;
 ```
+
+## Push- und E-Mail-Benachrichtigungen (Phase 9)
+
+Code: `supabase/functions/notify-dispatch` (Versand) und `sw.js` (Service Worker nur für Push). Ohne Einrichtung erscheinen alle Meldungen wie bisher in der App – nichts bricht.
+
+1. VAPID-Schlüssel erzeugen (lokal): `npx web-push generate-vapid-keys`
+2. Secrets der Edge Function setzen (Supabase → Edge Functions → Secrets), **nie im Code**:
+   `NOTIFY_DISPATCH_SECRET` (langer Zufallswert), `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (z. B. `mailto:info@husora.de`), optional `RESEND_API_KEY` und `NOTIFY_FROM_EMAIL` für E-Mails, optional `HUSORA_APP_URL`.
+3. Deploy: `supabase functions deploy notify-dispatch --no-verify-jwt`
+4. Im SQL Editor die Adresse und dasselbe Geheimnis im Vault hinterlegen:
+   ```sql
+   select vault.create_secret('https://<projekt>.supabase.co/functions/v1/notify-dispatch', 'notify_dispatch_url');
+   select vault.create_secret('<gleicher Wert wie NOTIFY_DISPATCH_SECRET>', 'notify_dispatch_secret');
+   update public.app_config set value = jsonb_build_object('vapid_public_key', '<VAPID_PUBLIC_KEY>') where key = 'push';
+   ```
+Danach können Nutzer unter Einstellungen → Benachrichtigungen „Push auf diesem Gerät“ aktivieren und je Kategorie App/Push/E-Mail wählen.

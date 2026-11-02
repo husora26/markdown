@@ -380,7 +380,16 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 
 > **Zwischenschritt Beta Mode (Migration 3700, 02.11.2026):** siehe `BETA_MODE.md`.
 
-### Phase 9 – Benachrichtigungen + Chat
+### Phase 9 – Benachrichtigungen + Chat (Migration 3800)  ✅ umgesetzt (02.11.2026)
+> Umgesetzt (Migration 3800, SQL `notifications_test.sql`, E2E `notify`):
+> - `notifications.category` (order, message, approval, invoice, repair, inspection, agreement, maintenance, system), aus vorhandenen Feldern abgeleitet und nachgetragen.
+> - `notification_preferences` je Benutzer und Kategorie (App/Push/E-Mail; nur eigene Zeilen). Ganz aus = keine Benachrichtigung; nur Push/E-Mail = in der App als gelesen.
+> - `push_subscriptions` (nur eigenes Gerät, nur https, max. 10), Service Worker `sw.js` nur für Push (kein Offline-Cache), öffentlicher VAPID-Schlüssel in `app_config` („push“).
+> - Edge Function `notify-dispatch`: Web-Push (`web-push`) und E-Mail (Resend). Schlüssel nur als Secrets; Aufruf per `pg_net` aus dem Trigger, nur wenn `notify_dispatch_url`/`notify_dispatch_secret` im Vault stehen. Geheimnis wird in konstanter Zeit geprüft.
+> - Nachrichten benachrichtigen jetzt beide Seiten (Partner-Nachricht im Auftragsgespräch → Hausbesitzer; Hausbesitzer-Nachricht → Partnerleitung + zugewiesener Mitarbeiter).
+> - Chat-Anhänge: `messages.document_id`/`photo_id`, nur aus demselben Auftrag (Trigger). Partner hängt im Auftragsgespräch Foto/Datei an (📎), der Hausbesitzer öffnet sie im Messenger.
+> - Einstellungen: Hausbesitzer unter Einstellungen → Darstellung & Erinnerungen → „Benachrichtigungen“, Partner unter Einstellungen.
+> - Offen: Anhänge vom Hausbesitzer aus senden; Einrichtung von VAPID/Resend/Vault durch das Husora-Team **[ext]**.
 - **Push:** Web-Push über den Service Worker. Für VAPID-Schlüssel und E-Mail-Versand braucht es eine Edge Function mit Secrets **im Supabase-Secret-Store**, nicht im Code.
 - **Einstellungen:** pro Benutzer und Ereignistyp.
 - **Chat:** auf `messages` erweitern (Anhänge über `documents`); keine neuen Tabellen.
