@@ -337,7 +337,8 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 - **Kalender:** Tages- und Wochenansicht, Filter Mitarbeiter/Leistung, Abwesenheiten anzeigen.
 - **Tests:** Erweiterung der Suiten `home` und `partner`.
 
-### Phase 6 – Aufträge vollständig (UI-Phase auf Basis von Phase 2/3)
+### Phase 6 – Aufträge vollständig (UI-Phase auf Basis von Phase 2/3)  ✅ umgesetzt (02.11.2026)
+> Umgesetzt ohne Migration: Suche, Filter Priorität/Art, Sortierung, Dringend-/Notfall-Kennzeichnung, Art/Priorität bei eigenen Aufträgen, Dringlichkeit aus der Aufgabe des Hausbesitzers; Haus-Detail mit Beträgen und Grafik; E2E `orders6`.
 - **Filter und Status:** Filter nach Status inkl. Wartestatus, Priorität und Auftragsart; Notfall-Kennzeichnung.
 - **Zuweisung:** Contractor bekommt einzelne Aufträge.
 - **Lade-, Leer- und Fehlerzustände** prüfen.

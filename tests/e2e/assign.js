@@ -85,7 +85,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await P.evaluate(async (id) => { await ppLoad(); pp.view = 'customers'; pp.detail = { type: 'customer', id }; ppRender(); }, cid); await P.waitForTimeout(300);
     const closed = await P.$eval(`[data-pp-prop-orders="${HOUSE}"]`, (e) => e.open);
     await P.click(`[data-pp-prop-orders="${HOUSE}"] summary`); await P.waitForTimeout(200);
-    const items = await P.$$eval(`[data-pp-prop-orders="${HOUSE}"] .pp-item`, (e) => e.length);
+    const items = await P.$$eval(`[data-pp-prop-orders="${HOUSE}"] .pp-prop-row`, (e) => e.length);
     await P.screenshot({ path: OUT + '/3-objekt.png', fullPage: true });
     if (closed || items < 1) throw new Error(`${closed} / ${items}`);
     return `${items} Auftrag/Aufträge aufgeklappt · Infos: ${(await P.textContent('.pp-prop-notes')).replace(/\s+/g, ' ').slice(0, 80)}`;
