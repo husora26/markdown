@@ -2920,6 +2920,9 @@
     .pp-prop-orders[open] > summary { margin-bottom: 10px; }
     .pp-compact .pp-item { padding: 9px 11px; }
     .pp-compact .pp-item small { font-size: 12px; }
+    .tchip.progress { background: #e4eefb; color: #2b5f99; font-weight: 700; }
+    .tchip.progress svg { width: 12px; height: 12px; }
+    .tcard.is-progress { border-left: 4px solid #3b7bbf; }
     .pp-grant { display: inline-flex; align-items: center; gap: 4px; color: var(--green); font-weight: 700; }
     .pp-grant svg { width: 13px; height: 13px; }
     .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
@@ -3883,6 +3886,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4501,6 +4505,7 @@ html.dark .hub-send-bar { background: var(--surface, #2b2410); box-shadow: 0 8px
 html.dark .hub-access { border: 1px solid #424e45; }
 html.dark .hub-check input { accent-color: var(--green-solid); }
 html.dark .pp-home-toggle input { accent-color: var(--green-solid); }
+html.dark .tchip.progress { background: #182331; color: #9dbbdc; }
 html.dark .issue-card.in_progress .issue-status { color: #9ebfe0; }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
@@ -5677,6 +5682,7 @@ Infos bearbeiten|Edit information|Redigera information
 Objekt mit Infos ergänzen|Add information to the property|Komplettera objektet med information
 Noch keine Aufträge für dieses Haus.|No orders for this house yet.|Inga uppdrag för detta hus ännu.
 Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property information saved – your team also sees it in the order.|Objektinformation sparad – ditt team ser den även i uppdraget.
+ohne Datum|no date|inget datum
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -8667,6 +8673,7 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         const relative = dayDiff === null || done ? '' : dayDiff === 0 ? 'heute' : dayDiff === 1 ? 'morgen' : dayDiff > 1 ? `in ${dayDiff} Tagen` : `seit ${-dayDiff} ${dayDiff === -1 ? 'Tag' : 'Tagen'}`;
         const areaIcon = /kontroll|inspekt/i.test(task.area || '') ? 'inspection' : /saison|winter|frühjahr/i.test(task.area || '') ? 'calendar' : /reinig|gäste|wechsel/i.test(task.area || '') ? 'users' : /repar|instand|sanier/i.test(task.area || '') ? 'alert' : 'home';
         const chips = [
+          status === 'In Bearbeitung' ? `<span class="tchip progress">${icon('clock')} In Bearbeitung</span>` : '',
           priority !== 'normal' ? `<span class="tchip prio ${priority}">${priorityText[priority]}</span>` : '',
 
           task.repeat && task.repeat !== 'Einmalig' ? `<span class="tchip">${icon('clock')} ${escapeHtml(task.repeat)}</span>` : '',
@@ -8675,9 +8682,9 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         ].filter(Boolean).join('');
         const taskIssues = issues.filter((issue) => issue.taskId === task.id);
         const issueNote = taskIssues.length ? `<div class="tcard-issues">${taskIssues.map((issue) => `<span class="tcard-issue ${issue.status}">${icon('alert')}<span><strong>Auffälligkeit:</strong> ${escapeHtml(issue.text)}<em>${ISSUE_STATUS[issue.status] || ''}${partLabel(issue.part) ? ` · ${escapeHtml(partLabel(issue.part))}` : ''}</em></span></span>`).join('')}</div>` : '';
-        return `<article class="tcard prio-${priority} ${done ? 'is-done' : ''} ${overdue ? 'is-overdue' : ''} ${taskIssues.length ? 'has-issue' : ''}">
+        return `<article class="tcard prio-${priority} ${done ? 'is-done' : ''} ${status === 'In Bearbeitung' ? 'is-progress' : ''} ${overdue ? 'is-overdue' : ''} ${taskIssues.length ? 'has-issue' : ''}">
           <button type="button" class="tcard-check" data-complete-task="${task.id}" aria-pressed="${done}" aria-label="${done ? 'Wieder öffnen' : 'Als erledigt markieren'}: ${escapeHtml(task.title)}">${icon('check')}</button>
-          <div class="tcard-date">${dueDate ? `<strong>${dueDate.getDate()}</strong><span>${dueDate.toLocaleDateString('de-DE', { month: 'short' })}</span>` : '<strong>–</strong><span>offen</span>'}</div>
+          <div class="tcard-date">${dueDate ? `<strong>${dueDate.getDate()}</strong><span>${dueDate.toLocaleDateString('de-DE', { month: 'short' })}</span>` : '<strong>–</strong><span>ohne Datum</span>'}</div>
           <div class="tcard-body">
             <button type="button" class="tcard-title" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten: ${escapeHtml(task.title)}">${escapeHtml(task.title)}</button>
             <div class="tcard-chips">${relative ? `<span class="tchip when ${overdue ? 'late' : dayDiff <= 2 ? 'soon' : ''}">${overdue ? 'Überfällig · ' : ''}${relative}</span>` : ''}${chips}</div>
@@ -8693,10 +8700,11 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         </article>`;
       }).join('');
       const openCount = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length;
+      const workCount = tasks.filter((task) => taskStatus(task) === 'In Bearbeitung').length;
       const archivedCount = tasks.filter(isArchivedTask).length;
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
         <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-template-picker>${icon('task')} Aufgabenpaket aus Vorlage wählen</button></div></section>
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount} offen · ${tasks.length - openCount - archivedCount} erledigt${archivedCount ? ` · ${archivedCount} im Archiv` : ''}</p></div></div>
+        <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount - workCount} offen${workCount ? ` · <span class="ptask-work-count">${workCount} in Bearbeitung</span>` : ''} · ${tasks.length - openCount - archivedCount} erledigt${archivedCount ? ` · ${archivedCount} im Archiv` : ''}</p></div></div>
         <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
         ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="tcard-list">${rows || '<div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div>'}</div>`}</section>
         ${taskArchiveHtml()}`;
