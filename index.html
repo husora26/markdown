@@ -2889,6 +2889,20 @@
     .hub-history-list, .issue-history ol { display: grid; gap: 6px; margin: 8px 0 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); list-style: none; }
     .hub-history-list li, .issue-history li { display: grid; gap: 1px; }
     .hub-history-list time, .issue-history time { color: var(--muted); font-size: 11.5px; }
+    .hub-consent { display: grid; gap: 8px; margin: 10px 0 4px; padding: 12px; border: 1px solid var(--green); border-radius: 12px; background: var(--green-soft); }
+    .hub-consent p { margin: 0; font-size: 13px; color: var(--muted); }
+    .hub-check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .hub-check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--green); flex: none; }
+    .hub-check span { display: grid; gap: 1px; }
+    .hub-check small { color: var(--muted); font-weight: 500; font-size: 12px; overflow-wrap: anywhere; }
+    .hub-check input:disabled + span { opacity: .55; }
+    .hub-contact-line { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; color: var(--muted); font-size: 12.5px; }
+    .hub-contact-line svg { width: 14px; height: 14px; flex: none; }
+    .hub-contact-line .text-btn { margin-left: auto; }
+    .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+    .pp-reopen summary { color: var(--green); font-weight: 700; cursor: pointer; }
+    .pp-reopen[open] summary { margin-bottom: 8px; }
+    .pp-reopen .pp-actions { margin-bottom: 0; }
     .issue-history { margin-top: 8px; font-size: 13px; }
     .issue-history summary { color: var(--muted); font-weight: 700; cursor: pointer; }
     .issue-history li span { color: var(--muted); }
@@ -3840,6 +3854,8 @@
   
   
   
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4456,6 +4472,7 @@ html.dark .hub-pick { background: var(--surface, #1c1c1c); }
 html.dark .hub-pick input { accent-color: var(--green-solid); }
 html.dark .hub-send-bar { background: var(--surface, #2b2410); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.27); }
 html.dark .hub-access { border: 1px solid #424e45; }
+html.dark .hub-check input { accent-color: var(--green-solid); }
 html.dark .issue-card.in_progress .issue-status { color: #9ebfe0; }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
@@ -4941,6 +4958,9 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
   <nav class="tabbar" id="tabbar" aria-label="Schnellnavigation"></nav>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
+    // Laufende Auftragsstatus inkl. Wartezuständen – eine Quelle für alle Listen und Filter
+    const ORDER_RUNNING = ['accepted', 'scheduled', 'in_progress', 'waiting_customer', 'waiting_parts'];
+    const ORDER_WAITING = ['waiting_customer', 'waiting_parts'];
     const I18N_SOURCE = `
 Abbrechen|Cancel|Avbryt
 Abgelaufen|Expired|Utgången
@@ -5557,6 +5577,51 @@ Dringend|Urgent|Brådskande
 Wichtig|Important|Viktigt
 Fällig heute|Due today|Förfaller idag
 Morgen|Tomorrow|Imorgon
+Wartet auf Kunde|Waiting for customer|Väntar på kund
+Wartet auf Material|Waiting for parts|Väntar på material
+Wartet|Waiting|Väntar
+Auftrag unterbrechen|Pause order|Pausa uppdraget
+Grund (sieht der Kunde)|Reason (visible to the customer)|Anledning (syns för kunden)
+z. B. Ersatzteil ist bestellt|e.g. spare part has been ordered|t.ex. reservdelen är beställd
+Wartet auf Rückmeldung des Kunden|Waiting for the customer's reply|Väntar på kundens svar
+Der Auftrag ist unterbrochen. Geht es weiter, setze ihn fort oder plane einen neuen Termin.|The order is paused. When work can continue, resume it or plan a new appointment.|Uppdraget är pausat. När arbetet kan fortsätta, återuppta det eller planera en ny tid.
+Neuer Termin (optional)|New appointment (optional)|Ny tid (valfritt)
+Neuen Termin speichern|Save new appointment|Spara ny tid
+Weiter arbeiten|Resume work|Fortsätt arbetet
+Auftrag wieder öffnen|Reopen order|Återöppna uppdraget
+Nur für Nacharbeiten. Der Grund wird im Verlauf festgehalten und der Kunde informiert.|Only for rework. The reason is recorded in the history and the customer is informed.|Endast för efterarbete. Anledningen sparas i historiken och kunden informeras.
+Grund *|Reason *|Anledning *
+z. B. Nacharbeit am Fenster nötig|e.g. window needs rework|t.ex. fönstret behöver efterarbete
+Wieder öffnen|Reopen|Återöppna
+Verlauf|History|Historik
+Verlauf wird geladen …|Loading history …|Laddar historik …
+Der Verlauf ist gerade nicht verfügbar.|The history is currently unavailable.|Historiken är inte tillgänglig just nu.
+Noch keine Einträge.|No entries yet.|Inga poster ännu.
+Anfrage gesendet|Request sent|Förfrågan skickad
+Wieder geöffnet|Reopened|Återöppnad
+Termin entfernt|Appointment removed|Tid borttagen
+Mitarbeiter eingeteilt|Staff assigned|Personal tilldelad
+Zuteilung entfernt|Assignment removed|Tilldelning borttagen
+Notiz|Note|Anteckning
+Arbeit fortgesetzt|Work resumed|Arbetet återupptogs
+Termin geplant|Appointment planned|Tid planerad
+Begonnen|Started|Påbörjad
+Zurück in Entwurf|Back to draft|Tillbaka till utkast
+Der Kunde wird informiert – der Auftrag wartet auf seine Rückmeldung.|The customer is informed – the order is waiting for their reply.|Kunden informeras – uppdraget väntar på svar.
+Der Auftrag wartet auf Material.|The order is waiting for parts.|Uppdraget väntar på material.
+Auftrag fortgesetzt.|Order resumed.|Uppdraget återupptogs.
+Neuer Termin gespeichert.|New appointment saved.|Ny tid sparad.
+Auftrag wieder geöffnet.|Order reopened.|Uppdraget återöppnat.
+Bitte einen Grund angeben.|Please enter a reason.|Ange en anledning.
+Verbindung trennen|Disconnect|Koppla från
+Nur Name und E-Mail|Only name and email|Endast namn och e-post
+Auswahl übermitteln|Share selection|Dela urval
+Telefonnummer freigeben|Share phone number|Dela telefonnummer
+Adresse freigeben|Share address|Dela adress
+Im Profil nicht hinterlegt|Not in your profile|Saknas i profilen
+Kontaktfreigabe ändern|Change contact sharing|Ändra kontaktdelning
+Ändern|Change|Ändra
+Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail kommen aus seinem Husora-Konto.|The customer has not shared phone number and address. Name and email come from their Husora account.|Kunden har inte delat telefonnummer och adress. Namn och e-post kommer från kundens Husora-konto.
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -5576,6 +5641,8 @@ Morgen|Tomorrow|Imorgon
       [/^(\d+) offene Angebote$/, { en: '$1 open quotes', sv: '$1 öppna offerter' }],
       [/^(\d+) ausgewählt$/, { en: '$1 selected', sv: '$1 valda' }],
       [/^(\d+) gemeinsam beenden$/, { en: 'Complete $1 together', sv: 'Avsluta $1 samtidigt' }],
+      [/^Termin: (.+)$/, { en: 'Appointment: $1', sv: 'Tid: $1' }],
+      [/^Eingeteilt: (.+)$/, { en: 'Assigned: $1', sv: 'Tilldelad: $1' }],
       [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
       [/^(\d+) überfällig$/, { en: '$1 overdue', sv: '$1 försenade' }],
       [/^(\d+) % erledigt$/, { en: '$1 % done', sv: '$1 % klart' }],
@@ -13210,6 +13277,7 @@ Morgen|Tomorrow|Imorgon
       try {
         localStorage.setItem('stugliv-profile', JSON.stringify(updatedProfile));
         profileData = updatedProfile;
+        try { ownerSyncSharedContact(); } catch (error) { /* Cloud optional */ }
         if (!removePropertiesBeyondProfileCount()) {
           render();
           return;
@@ -15496,7 +15564,7 @@ Morgen|Tomorrow|Imorgon
         meters: tile('meters', 'Zählerstände', 'meter', meterCount, 'Zähler', meterCount ? 'Ablesung eintragen' : 'Zähler anlegen', 'kosten.jpg'),
         settings: tile('settings', 'Einstellungen', 'gear', `${storageUsage().percent} %`, 'Speicher', 'Datensicherung & Darstellung', 'meine-haeuser.jpg'),
         help: tile('help', 'Hilfe & Support', 'help', FAQ.length, 'Antworten', 'FAQ, Kontakt, Fehler melden', 'schweden-landschaft.jpg'),
-        partnerHub: (() => { if (!entitlements.can('service_portal')) return tile('partnerHub', 'Partner-Portal', 'note', 'PRO', '', 'Messenger und Aufträge an Servicepartner', 'gaestewechsel.jpg'); let unread = 0; try { unread = hubTotalUnread(); } catch (error) { unread = 0; } const running = (ownerSide.orders || []).filter((o) => ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)).length; return tile('partnerHub', 'Partner-Portal', 'note', unread || running, unread ? 'ungelesen' : 'laufend', unread ? `<span class="stat-alert">${unread} neue Nachricht${unread === 1 ? '' : 'en'}</span>` : cloudReady() ? 'Aufträge und Messenger' : 'Mit der Cloud anmelden', 'gaestewechsel.jpg'); })(),
+        partnerHub: (() => { if (!entitlements.can('service_portal')) return tile('partnerHub', 'Partner-Portal', 'note', 'PRO', '', 'Messenger und Aufträge an Servicepartner', 'gaestewechsel.jpg'); let unread = 0; try { unread = hubTotalUnread(); } catch (error) { unread = 0; } const running = (ownerSide.orders || []).filter((o) => ['offered', ...ORDER_RUNNING].includes(o.status)).length; return tile('partnerHub', 'Partner-Portal', 'note', unread || running, unread ? 'ungelesen' : 'laufend', unread ? `<span class="stat-alert">${unread} neue Nachricht${unread === 1 ? '' : 'en'}</span>` : cloudReady() ? 'Aufträge und Messenger' : 'Mit der Cloud anmelden', 'gaestewechsel.jpg'); })(),
         portfolio: (() => { if (!entitlements.can('portfolio')) return tile('portfolio', 'Portfolio', 'cost', 'ULTIMATE', '', 'Zustands-Score, Prognose, Eskalationen', 'meine-haeuser.jpg'); const scores = properties.map((p) => conditionScore(p).score); const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0; const esc = escalatedTasks().filter((e) => e.stage >= 2).length; return tile('portfolio', 'Portfolio', 'cost', avg, '/100', esc ? `<span class="stat-alert">${esc} Eskalation${esc === 1 ? '' : 'en'}</span>` : 'Ø Zustands-Score', 'meine-haeuser.jpg'); })()
       };
     }
@@ -17959,7 +18027,7 @@ Morgen|Tomorrow|Imorgon
     const PP_CACHE_KEY = 'husora-partner-cache';
     const PP_LEAD_ROLES = ['admin', 'dispatcher', 'service_manager', 'property_manager'];
     const PP_ROLE_LABELS = { admin: 'Inhaber / Admin', dispatcher: 'Disposition', service_manager: 'Disposition', property_manager: 'Verwaltung', accounting: 'Buchhaltung', technician: 'Techniker', inspector: 'Kontrolleur', viewer: 'Nur lesen', owner: 'Eigentümer', cleaner: 'Reinigung', service_partner: 'Partner' };
-    const PP_ORDER_STATUS = { draft: ['Entwurf', 'muted'], offered: ['Neue Anfrage', 'amber'], accepted: ['Angenommen', 'green'], scheduled: ['Terminiert', 'green'], in_progress: ['In Arbeit', 'blue'], completed: ['Erledigt', 'done'], rejected: ['Abgelehnt', 'red'], cancelled: ['Storniert', 'muted'] };
+    const PP_ORDER_STATUS = { draft: ['Entwurf', 'muted'], offered: ['Neue Anfrage', 'amber'], accepted: ['Angenommen', 'green'], scheduled: ['Terminiert', 'green'], in_progress: ['In Arbeit', 'blue'], waiting_customer: ['Wartet auf Kunde', 'amber'], waiting_parts: ['Wartet auf Material', 'amber'], completed: ['Erledigt', 'done'], rejected: ['Abgelehnt', 'red'], cancelled: ['Storniert', 'muted'] };
     const PP_INSPECTION_STATUS = { scheduled: ['Geplant', 'amber'], in_progress: ['Läuft', 'blue'], completed: ['Abgeschlossen', 'done'], cancelled: ['Abgesagt', 'muted'] };
     const PP_INVOICE_STATUS = { draft: ['Entwurf', 'muted'], received: ['Eingereicht', 'amber'], approved: ['Freigegeben', 'green'], paid: ['Bezahlt', 'done'], overdue: ['Überfällig', 'red'], cancelled: ['Storniert', 'muted'] };
     const PP_QUOTE_STATUS = { requested: ['Angefragt', 'amber'], received: ['Eingereicht', 'amber'], approved: ['Angenommen', 'done'], rejected: ['Abgelehnt', 'red'], expired: ['Abgelaufen', 'muted'] };
@@ -17987,7 +18055,7 @@ Morgen|Tomorrow|Imorgon
     const ppCustomerLabel = (c) => c ? (c.company_name || [c.first_name, c.last_name].filter(Boolean).join(' ')) : '';
     const ppAddress = (p) => (p ? [[p.street, p.house_number].filter(Boolean).join(' '), [p.postal_code, p.city].filter(Boolean).join(' ')].filter(Boolean).join(', ') : '');
     const ppMemberName = (userId) => { const m = ppD('members').find((x) => x.user_id === userId); return m?.display_name || (m?.user ? ([m.user.first_name, m.user.last_name].filter(Boolean).join(' ') || m.user.email) : ''); };
-    const ppOpenOrders = () => ppD('orders').filter((o) => ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status));
+    const ppOpenOrders = () => ppD('orders').filter((o) => ['offered', ...ORDER_RUNNING].includes(o.status));
     const ppToday = () => localDateKey(new Date());
     const ppDayKey = (value) => (value ? localDateKey(new Date(value)) : '');
 
@@ -18254,7 +18322,7 @@ Morgen|Tomorrow|Imorgon
         ${!(pp.ctx?.links || []).length ? `<div class="pp-card pp-tip">${icon('users')}<div><strong>Kunden verbinden</strong><p>Hausbesitzer laden dich in ihrer Husora-App unter Einstellungen → Servicepartner ein. Den Code gibst du unter „Kunden & Objekte“ ein.</p><button type="button" class="secondary-btn" data-pp-view="customers">Code eingeben</button></div></div>` : ''}`;
     }
     function ppOrdersHtml() {
-      const filters = [['new', 'Neu', (o) => o.status === 'offered'], ['active', 'Aktiv', (o) => ['accepted', 'scheduled', 'in_progress'].includes(o.status)], ['done', 'Erledigt', (o) => o.status === 'completed'], ['all', 'Alle', () => true]];
+      const filters = [['new', 'Neu', (o) => o.status === 'offered'], ['active', 'Aktiv', (o) => ORDER_RUNNING.includes(o.status)], ['waiting', 'Wartet', (o) => ORDER_WAITING.includes(o.status)], ['done', 'Erledigt', (o) => o.status === 'completed'], ['all', 'Alle', () => true]];
       const [, , fn] = filters.find(([id]) => id === pp.filter) || filters[1];
       const list = ppD('orders').filter(fn);
       return `<div class="pp-page-head"><h1>Aufträge</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-order">${icon('plus')} Auftrag</button>` : ''}</div>
@@ -18274,6 +18342,62 @@ Morgen|Tomorrow|Imorgon
         <label><span class="form-label">Termin</span><input class="form-control" name="scheduled_at" type="datetime-local"></label>
         <label><span class="form-label">Preis (${escapeHtml(ppOrg().currency)})</span><input class="form-control" name="estimated_cost" type="number" min="0" step="0.01"></label>
         </div><div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>Auftrag anlegen</button></div></form>`;
+    }
+    // ----- Auftrag unterbrechen / fortsetzen / wieder öffnen (Status-Engine, Migration 3100) -----
+    function ppWaitFormHtml(o) {
+      return `<div class="pp-card pp-form pp-wait"><h3>Auftrag unterbrechen</h3><label><span class="form-label">Grund (sieht der Kunde)</span><input class="form-control" data-pp-field="wait-note" maxlength="300" placeholder="z. B. Ersatzteil ist bestellt"></label>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="wait" data-status="waiting_customer" data-id="${o.id}" ${ppDisabled()}>Wartet auf Kunde</button><button type="button" class="secondary-btn" data-pp-action="wait" data-status="waiting_parts" data-id="${o.id}" ${ppDisabled()}>Wartet auf Material</button></div></div>`;
+    }
+    function ppWaitingHtml(o) {
+      const other = o.status === 'waiting_customer' ? ['waiting_parts', 'Wartet auf Material'] : ['waiting_customer', 'Wartet auf Kunde'];
+      return `<div class="pp-card pp-form pp-wait"><h3>${o.status === 'waiting_customer' ? 'Wartet auf Rückmeldung des Kunden' : 'Wartet auf Material'}</h3>
+        <p class="pp-hint">Der Auftrag ist unterbrochen. Geht es weiter, setze ihn fort oder plane einen neuen Termin.</p>
+        <label><span class="form-label">Neuer Termin (optional)</span><input class="form-control" type="datetime-local" data-pp-field="sched" value="${ppLocalInput(o.scheduled_at)}"></label>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="wait" data-status="${other[0]}" data-id="${o.id}" ${ppDisabled()}>${other[1]}</button><button type="button" class="secondary-btn" data-pp-action="resume-schedule" data-id="${o.id}" ${ppDisabled()}>Neuen Termin speichern</button><button type="button" class="primary-btn" data-pp-action="resume" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Weiter arbeiten</button></div></div>`;
+    }
+    function ppReopenHtml(o) {
+      return `<details class="pp-card pp-reopen"><summary>Auftrag wieder öffnen</summary><p class="pp-hint">Nur für Nacharbeiten. Der Grund wird im Verlauf festgehalten und der Kunde informiert.</p>
+        <label><span class="form-label">Grund *</span><input class="form-control" data-pp-field="reopen-note" maxlength="300" placeholder="z. B. Nacharbeit am Fenster nötig"></label>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="reopen" data-id="${o.id}" ${ppDisabled()}>Wieder öffnen</button></div></details>`;
+    }
+    // ----- Auftragsverlauf aus service_order_events (für Partner und Hausbesitzer) -----
+    const orderEvents = {};
+    const ORDER_EVENT_LABEL = { offered: 'Angefragt', accepted: 'Angenommen', rejected: 'Abgelehnt', scheduled: 'Termin geplant', in_progress: 'Begonnen', waiting_customer: 'Wartet auf Kunde', waiting_parts: 'Wartet auf Material', completed: 'Erledigt', cancelled: 'Storniert', draft: 'Zurück in Entwurf' };
+    function orderEventText(r, side) {
+      const meta = r.metadata || {};
+      if (r.event_type === 'created') return r.new_status === 'offered' ? 'Anfrage gesendet' : `Auftrag angelegt (${(ORDER_EVENT_LABEL[r.new_status] || r.new_status || '').toLowerCase()})`;
+      if (r.event_type === 'reopened') return 'Wieder geöffnet';
+      if (r.event_type === 'scheduled') return meta.scheduled_at ? `Termin: ${fmtDateTime(meta.scheduled_at)}` : 'Termin entfernt';
+      if (r.event_type === 'assigned') return meta.assigned_user_id ? (side === 'partner' && meta.assigned_name ? `Eingeteilt: ${meta.assigned_name}` : 'Mitarbeiter eingeteilt') : 'Zuteilung entfernt';
+      if (r.event_type === 'note') return 'Notiz';
+      const label = r.new_status === 'in_progress' && ORDER_WAITING.includes(r.old_status) ? 'Arbeit fortgesetzt' : (ORDER_EVENT_LABEL[r.new_status] || r.new_status || 'Geändert');
+      return meta.scheduled_at && ['accepted', 'scheduled'].includes(r.new_status) ? `${label} · Termin ${fmtDateTime(meta.scheduled_at)}` : label;
+    }
+    function orderEventWho(r, order, side) {
+      if (r.actor_side === 'system' || !r.user_id) return 'Husora';
+      if (side === 'partner') {
+        if (r.user_id === ppMe()) return 'Du';
+        const own = order.organization_id === ppOrg()?.id;
+        return r.actor_side === 'partner' || own ? (ppMemberName(r.user_id) || 'Team') : (ppCustomerName(order.organization_id) || 'Kunde');
+      }
+      if (r.user_id === ownerSide.me) return 'Du';
+      return r.actor_side === 'owner' ? 'Verwaltung' : (order.partner?.company_name || 'Servicepartner');
+    }
+    function orderEventsHtml(order, side) {
+      const key = `${order.id}|${order.updated_at || ''}`;
+      const entry = orderEvents[order.id];
+      if (!entry || entry.key !== key) { orderEventsLoad(order, side, key); return '<p class="settings-hint">Verlauf wird geladen …</p>'; }
+      if (entry.loading) return '<p class="settings-hint">Verlauf wird geladen …</p>';
+      if (entry.error) return '<p class="settings-hint">Der Verlauf ist gerade nicht verfügbar.</p>';
+      if (!entry.rows.length) return '<p class="settings-hint">Noch keine Einträge.</p>';
+      return `<ol class="hub-history-list">${entry.rows.map((r) => `<li><time>${escapeHtml(fmtDateTime(r.created_at))}</time><span><b>${escapeHtml(orderEventText(r, side))}</b> · ${escapeHtml(orderEventWho(r, order, side))}</span>${r.message ? `<small class="order-event-msg">„${escapeHtml(r.message)}“</small>` : ''}</li>`).join('')}</ol>`;
+    }
+    function orderEventsLoad(order, side, key) {
+      orderEvents[order.id] = { key, loading: true, rows: [] };
+      cloudFetch(`/rest/v1/service_order_events?service_order_id=eq.${order.id}&select=event_type,old_status,new_status,message,metadata,actor_side,user_id,created_at&order=created_at.asc&limit=200`)
+        .then((rows) => { orderEvents[order.id] = { key, rows: Array.isArray(rows) ? rows : [] }; })
+        .catch(() => { orderEvents[order.id] = { key, rows: [], error: true }; })
+        .finally(() => document.querySelectorAll(`[data-order-events="${order.id}"]`).forEach((el) => { el.innerHTML = orderEventsHtml(order, el.dataset.side || side); }));
     }
     function ppOrderDetailHtml(id) {
       const o = ppD('orders').find((x) => x.id === id);
@@ -18305,6 +18429,9 @@ Morgen|Tomorrow|Imorgon
           ${canBill ? `<label class="pp-pdf-pick">${icon('document')}<span><strong>Eigene Rechnung als PDF (optional)</strong><small>Ohne Datei erstellt Husora die Rechnung als PDF mit deinen Firmen- und Bankdaten.</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf" style="margin-top:8px"></span></label>` : ''}
           <div class="pp-actions">${canBill ? `<button type="button" class="secondary-btn" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>Nur als erledigt melden</button><button type="submit" class="primary-btn big" ${ppDisabled()}>${icon('check')} Auftrag erledigt und Rechnung an Kunden schicken</button>` : `<button type="button" class="primary-btn big" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Erledigt</button>`}</div></form>`;
       }
+      if (o.status === 'in_progress') actions = `${ppWaitFormHtml(o)}${actions}`;
+      else if (ORDER_WAITING.includes(o.status)) actions = ppWaitingHtml(o);
+      else if (o.status === 'completed' && lead) actions += ppReopenHtml(o);
       return `${ppBack()}
         <div class="pp-detail-head"><div><span class="pp-eyebrow">${escapeHtml(o.order_number)} · ${escapeHtml(ppCustomerName(o.organization_id))}</span><h1>${escapeHtml(o.title)}</h1></div>${ppBadge(PP_ORDER_STATUS, o.status)}</div>
         ${ppPropertyCard(ppD('properties').find((x) => x.id === p?.id) || p, { maps })}
@@ -18313,7 +18440,7 @@ Morgen|Tomorrow|Imorgon
           <div><span>Preis</span><strong>${escapeHtml(ppMoney(o.actual_cost ?? o.estimated_cost, o.currency))}</strong>${o.actual_cost != null ? '<small>Ist-Kosten</small>' : '<small>geschätzt</small>'}</div>
           <div><span>Mitarbeiter</span>${lead && !['completed', 'cancelled', 'rejected'].includes(o.status) ? `<select class="form-control" data-pp-assign="${o.id}"><option value="">– nicht zugewiesen –</option>${members.map((m) => `<option value="${m.user_id}" ${m.user_id === o.assigned_user_id ? 'selected' : ''}>${escapeHtml(ppMemberName(m.user_id) || m.user_id)} (${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)})</option>`).join('')}</select>` : `<strong>${escapeHtml(ppMemberName(o.assigned_user_id) || '–')}</strong>`}</div>
         </div>
-        ${['accepted', 'scheduled', 'in_progress'].includes(o.status) ? ppAccessHtml(o) : ''}
+        ${ORDER_RUNNING.includes(o.status) ? ppAccessHtml(o) : ''}
         ${o.description ? `<div class="pp-card"><span class="pp-eyebrow">Beschreibung</span><p class="pp-text">${escapeHtml(o.description)}</p></div>` : ''}
         ${o.response_note ? `<div class="pp-card"><span class="pp-eyebrow">Deine Antwort</span><p class="pp-text">${escapeHtml(o.response_note)}</p></div>` : ''}
         ${actions}
@@ -18324,7 +18451,8 @@ Morgen|Tomorrow|Imorgon
           ${ppD('templates').length ? `<div class="pp-inline"><select class="form-control" data-pp-field="tpl">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-action="start-inspection" data-property="${o.property_id}" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}`)}
         ${ppSection('Nachrichten', `<div class="pp-thread">${thread.map((m) => `<div class="pp-bubble ${m.sender_user_id === ppMe() ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(m.sender_user_id === ppMe() ? 'Du' : ppMemberName(m.sender_user_id) || 'Kunde')} · ${escapeHtml(fmtDateTime(m.created_at))}</small></div>`).join('') || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
           <form class="pp-send" data-pp-form="message" data-order="${o.id}" data-org="${o.organization_id}"><input class="form-control" name="message" placeholder="Nachricht an den Kunden …" maxlength="2000" required><button class="primary-btn" type="submit" aria-label="Senden" ${ppDisabled()}>Senden</button></form>`)}
-        ${['accepted', 'scheduled', 'in_progress', 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
+        ${ppSection('Verlauf', `<div class="order-events" data-order-events="${o.id}" data-side="partner">${orderEventsHtml(o, 'partner')}</div>`)}
+        ${[...ORDER_RUNNING, 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
           ${pp.form === `finance:${o.id}` ? ppFinanceForm(o) : o.agreement_id ? `<p class="pp-hint">${icon('calendar')} Im Jahresvertrag – Abrechnung einmal jährlich unter „Mehr → Jahresverträge“.</p>` : `${ppOrderBilled(o) ? '<p class="pp-hint">Dieser Auftrag ist bereits abgerechnet – eine weitere Rechnung nur für Korrekturen oder Zusatzleistungen.</p>' : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="quote">Angebot</button><button type="button" class="primary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice">Rechnung erstellen</button><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice" data-mode="upload">${icon('document')} PDF-Rechnung hochladen</button></div>`}`) : ''}`;
     }
     // Angebote und Rechnungen wahlweise in Euro oder Kronen
@@ -18468,6 +18596,7 @@ Morgen|Tomorrow|Imorgon
       return `${ppBack()}<div class="pp-detail-head"><div><span class="pp-eyebrow">${c.linked_organization_id ? 'Husora-Kunde' : 'Eigener Kunde'}${c.customer_number ? ` · Nr. ${escapeHtml(c.customer_number)}` : ''}</span><h1>${escapeHtml(ppCustomerLabel(c))}</h1></div>${ppIsLead() && !editing ? `<button type="button" class="secondary-btn" data-pp-action="edit-customer" data-id="${c.id}">${icon('edit')} Kontakt bearbeiten</button>` : ''}</div>
         ${editing ? ppCustomerFormHtml(c) : ''}
         <div class="pp-card pp-facts"><div><span>Kontakt</span><strong>${escapeHtml([c.first_name, c.last_name].filter(Boolean).join(' ') || '–')}</strong><small>${[c.email ? `<a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>` : '', c.phone ? `<a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a>` : ''].filter(Boolean).join(' · ')}</small></div><div><span>Adresse</span><strong>${escapeHtml(ppAddress(c) || '–')}</strong></div></div>
+        ${c.linked_organization_id && !c.phone && !ppAddress(c) ? '<p class="pp-hint">Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail kommen aus seinem Husora-Konto.</p>' : ''}
         ${c.notes ? `<div class="pp-card"><p class="pp-text">${escapeHtml(c.notes)}</p></div>` : ''}
         ${ppSection(`Objekte (${props.length})`, `${props.map((p) => `${ppPropertyCard(p)}<div class="pp-card pp-prop"><div class="pp-prop-stats"><span>${ppD('orders').filter((o) => o.property_id === p.id).length} Aufträge</span><span>${ppD('inspections').filter((i) => i.property_id === p.id).length} Kontrollen</span></div>${!c.linked_organization_id && ppIsLead() ? `<button type="button" class="text-btn" data-pp-action="order-for" data-property="${p.id}">Auftrag anlegen</button>` : ''}</div>`).join('') || `<p class="pp-muted">${c.linked_organization_id ? 'Häuser dieses Kunden erscheinen, sobald er dir einen Auftrag gibt.' : 'Noch kein Objekt.'}</p>`}
           ${!c.linked_organization_id && ppIsLead() ? `<form class="pp-form pp-subform" data-pp-form="property" data-customer="${c.id}"><h3>Objekt hinzufügen</h3><div class="pp-grid"><label class="full"><span class="form-label">Name *</span><input class="form-control" name="name" required maxlength="80" placeholder="z. B. Ferienhaus am See"></label><label class="full"><span class="form-label">Straße</span><input class="form-control" name="street" maxlength="120" value="${escapeHtml(c.street || '')}"></label><label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12" value="${escapeHtml(c.postal_code || '')}"></label><label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" value="${escapeHtml(c.city || '')}"></label></div><div class="pp-actions"><button class="secondary-btn" type="submit" ${ppDisabled()}>Objekt speichern</button></div></form>` : ''}`)}
@@ -18644,8 +18773,8 @@ Morgen|Tomorrow|Imorgon
     const ppOrderBilled = (o) => ppD('invoices').some((i) => i.service_order_id === o.id && i.status !== 'cancelled') || ppD('invoiceLines').some((l) => l.service_order_id === o.id);
     const ppCanBill = () => ppIsLead() || ppRole() === 'accounting';
     // auswählbar: laufende Aufträge (gemeinsam beenden) und erledigte, noch nicht abgerechnete (gemeinsam abrechnen)
-    const ppSelectable = (o) => ppCanBill() && (['accepted', 'scheduled', 'in_progress'].includes(o.status) || (o.status === 'completed' && !o.agreement_id && !ppOrderBilled(o) && o.organization_id !== ppOrg()?.id));
-    const ppBillable = (o) => !o.agreement_id && !ppOrderBilled(o) && o.organization_id !== ppOrg()?.id && ['accepted', 'scheduled', 'in_progress', 'completed'].includes(o.status);
+    const ppSelectable = (o) => ppCanBill() && (ORDER_RUNNING.includes(o.status) || (o.status === 'completed' && !o.agreement_id && !ppOrderBilled(o) && o.organization_id !== ppOrg()?.id));
+    const ppBillable = (o) => !o.agreement_id && !ppOrderBilled(o) && o.organization_id !== ppOrg()?.id && [...ORDER_RUNNING, 'completed'].includes(o.status);
     function ppSelectedOrders() { return ppD('orders').filter((o) => pp.sel.has(o.id) && ppSelectable(o)); }
     function ppOrderRow(o) {
       const ag = ppAgreementOf(o);
@@ -19394,6 +19523,10 @@ Morgen|Tomorrow|Imorgon
       if (a === 'reject') { const reason = window.prompt('Grund für die Ablehnung (sieht der Kunde):', ppField('accept-note') || 'Leider keine Kapazität zu diesem Termin.'); if (reason !== null) ppRun('reject', () => ppRpc('respond_service_order', { p_service_order_id: id, p_accept: false, p_note: reason || null }), { notice: 'Auftrag abgelehnt.' }); }
       if (a === 'schedule') { const at = ppIso(ppField('sched')); if (!at) { showToast('Bitte einen Termin wählen.'); return; } ppRun('schedule', () => ppPatch('service_orders', id, { scheduled_at: at, status: 'scheduled' }), { notice: 'Termin gespeichert.' }); }
       if (a === 'start') ppRun('start', () => ppPatch('service_orders', id, { status: 'in_progress' }), { notice: 'Auftrag gestartet.' });
+      if (a === 'wait') { const note = ppField('wait-note') || null; const status = action.dataset.status; ppRun('wait', () => ppRpc('transition_service_order', { p_service_order_id: id, p_status: status, p_message: note }), { notice: status === 'waiting_customer' ? 'Der Kunde wird informiert – der Auftrag wartet auf seine Rückmeldung.' : 'Der Auftrag wartet auf Material.' }); }
+      if (a === 'resume') ppRun('resume', () => ppRpc('transition_service_order', { p_service_order_id: id, p_status: 'in_progress' }), { notice: 'Auftrag fortgesetzt.' });
+      if (a === 'resume-schedule') { const at = ppIso(ppField('sched')); if (!at) { showToast('Bitte einen Termin wählen.'); return; } ppRun('schedule', () => ppPatch('service_orders', id, { scheduled_at: at, status: 'scheduled' }), { notice: 'Neuer Termin gespeichert.' }); }
+      if (a === 'reopen') { const reason = ppField('reopen-note').trim(); if (!reason) { showToast('Bitte einen Grund angeben.'); return; } ppRun('reopen', () => ppRpc('reopen_service_order', { p_service_order_id: id, p_reason: reason }), { notice: 'Auftrag wieder geöffnet.' }); }
       if (a === 'complete') {
         const actual = ppField('actual');
         const note = ppField('done-note');
@@ -19572,7 +19705,7 @@ Morgen|Tomorrow|Imorgon
         } catch (error) { ownerSide.me = ''; }
       }
       const [partners, tasksRows, orders, messages, invites, invoices] = await Promise.all([
-        cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status&order=company_name.asc`),
+        cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status,share_phone,share_address,contact_decided_at&order=company_name.asc`).catch(() => cloudFetch(`/rest/v1/service_partners?organization_id=eq.${org}&select=id,company_name,email,partner_organization_id,status&order=company_name.asc`)),
         cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=not.is.null&status=in.(pending,assigned)&select=id,app_ref,title,scheduled_start,assigned_partner_id,property:properties(name)&order=scheduled_start.asc.nullslast&limit=100`),
         cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,order_number,title,status,agreement_id,scheduled_at,response_note,actual_cost,currency,service_task_id,service_partner_id,created_at,partner:service_partners(company_name),property:properties(name,app_ref),task:service_tasks(app_ref)&order=created_at.desc&limit=200`),
         cloudFetch(`/rest/v1/messages?organization_id=eq.${org}&select=id,organization_id,sender_user_id,service_partner_id,service_order_id,message,created_at,read_at&order=created_at.desc&limit=500`),
@@ -19580,6 +19713,12 @@ Morgen|Tomorrow|Imorgon
         cloudFetch(`/rest/v1/invoices?organization_id=eq.${org}&service_partner_id=not.is.null&select=id,invoice_number,amount_gross,currency,status,invoice_date,due_date,service_order_id,agreement_id,lines:invoice_orders(service_order_id,amount_gross),partner:service_partners!invoices_organization_id_service_partner_id_fkey(company_name),property:properties!invoices_organization_id_property_id_fkey(app_ref,name),document:documents!invoices_organization_id_document_id_fkey(id,file_name,file_size,storage_bucket,storage_path)&order=created_at.desc&limit=100`).catch(() => [])
       ]);
       Object.assign(ownerSide, { partners, tasks: tasksRows, orders, messages, invites, invoices });
+      // Rückfrage zur Kontaktfreigabe für neu verbundene Partner (einmal je Sitzung)
+      const undecided = (partners || []).filter((p) => p.partner_organization_id && 'contact_decided_at' in p && !p.contact_decided_at && !ownerSide.consentAsked?.has(p.id));
+      if (undecided.length) {
+        ownerSide.consentAsked = new Set([...(ownerSide.consentAsked || []), ...undecided.map((p) => p.id)]);
+        showToast(`${undecided.map((p) => p.company_name).join(', ')} ist verbunden – bitte unter Partner-Portal → Partner die Kontaktfreigabe bestätigen.`);
+      }
       [ownerSide.agreements, ownerSide.cloudProperties] = await Promise.all([
         cloudFetch(`/rest/v1/service_agreements?organization_id=eq.${org}&select=*,partner:service_partners(company_name),property:properties(name,app_ref)&order=starts_on.desc&limit=300`).catch(() => []),
         cloudFetch(`/rest/v1/properties?organization_id=eq.${org}&select=id,name,app_ref&order=name.asc&limit=500`).catch(() => [])
@@ -19594,9 +19733,9 @@ Morgen|Tomorrow|Imorgon
         if (!ref) return;
         const task = tasks.find((t) => String(t.id) === ref);
         if (!task) return;
-        let target = order.status === 'completed' ? 'Erledigt' : ['accepted', 'scheduled', 'in_progress'].includes(order.status) ? 'In Bearbeitung' : null;
+        let target = order.status === 'completed' ? 'Erledigt' : ORDER_RUNNING.includes(order.status) ? 'In Bearbeitung' : null;
         // abgelehnt und kein anderer Partner dran → wieder offen
-        if (['rejected', 'cancelled'].includes(order.status) && taskStatus(task) === 'In Bearbeitung' && !orders.some((other) => other.task?.app_ref === ref && ['offered', 'accepted', 'scheduled', 'in_progress', 'completed'].includes(other.status))) target = 'Offen';
+        if (['rejected', 'cancelled'].includes(order.status) && taskStatus(task) === 'In Bearbeitung' && !orders.some((other) => other.task?.app_ref === ref && ['offered', ...ORDER_RUNNING, 'completed'].includes(other.status))) target = 'Offen';
         if (target && taskStatus(task) !== target && !(target === 'In Bearbeitung' && task.done)) { if (target === 'Erledigt') completedNow.add(ref); setTaskStatus(task, target); changed += 1; }
       });
       if (changed) {
@@ -19695,17 +19834,33 @@ Morgen|Tomorrow|Imorgon
           const refs = wanted.slice(i, i + 50).map(({ t }) => `"${String(t.id).replace(/"/g, '')}"`).join(',');
           (await cloudFetch(`/rest/v1/service_tasks?organization_id=eq.${org}&app_ref=in.(${encodeURIComponent(refs)})&select=id,app_ref`)).forEach((row) => byRef.set(row.app_ref, row.id));
         }
+        // Aufgaben fehlen in der Cloud, weil die Häuser dieser Organisation nie hochgeladen wurden
+        // (z. B. nach einem Kontowechsel nur Teil-Uploads): Häuser einmalig nachreichen, danach die Aufgaben.
+        // Nur wenn die Organisation in der Cloud noch gar keine Häuser hat – vorhandene Cloud-Daten werden nie überschrieben.
+        const missing = wanted.filter(({ t }) => !byRef.has(String(t.id)));
+        if (missing.length && ownerSide.healedOrg !== org && properties.length && cloudCanWrite()) {
+          ownerSide.healedOrg = org;
+          const cloudProps = await cloudFetch(`/rest/v1/properties?organization_id=eq.${org}&select=id&limit=1`);
+          if (!cloudProps.length) {
+            await cloudUpload({ full: false, keys: new Set(['stugliv-properties']) });
+            await cloudUpload({ full: false, keys: new Set(['stugliv-tasks']) }); // löst danach erneut ownerDispatchOrders aus
+            return 0;
+          }
+        }
+        if (missing.length && !byRef.size) {
+          showToast(`${missing.length} Aufgabe${missing.length === 1 ? '' : 'n'} noch nicht in der Cloud – bitte unter Einstellungen → Cloud-Speicher „Jetzt hochladen“ tippen, dann erneut senden.`);
+        }
         const ids = [...byRef.values()];
         const existing = [];
         for (let i = 0; i < ids.length; i += 50) existing.push(...await cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&service_task_id=in.(${ids.slice(i, i + 50).join(',')})&select=id,service_task_id,service_partner_id,status`));
         const done = new Set(existing.map((o) => `${o.service_task_id}:${o.service_partner_id}`));
-        const running = new Set(existing.filter((o) => ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)).map((o) => `${o.service_task_id}:${o.service_partner_id}`));
+        const running = new Set(existing.filter((o) => ['offered', ...ORDER_RUNNING].includes(o.status)).map((o) => `${o.service_task_id}:${o.service_partner_id}`));
         for (const { t, sp } of wanted) {
           const taskId = byRef.get(String(t.id));
           // schon früher gesendet und noch aktiv → Status nachziehen
           if (taskId && running.has(`${taskId}:${sp.id}`) && taskStatus(t) === 'Offen') { markTaskCommissioned(t); restated += 1; }
           // bereits laufende Hauskontrolle ohne Kontrollplan: PDF nachreichen
-          if (taskId && running.has(`${taskId}:${sp.id}`) && isPlanTask(t)) { const running0 = existing.find((o) => o.service_task_id === taskId && o.service_partner_id === sp.id && ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)); if (running0) await ownerAttachInspectionPlan(t, running0.id).catch(() => {}); }
+          if (taskId && running.has(`${taskId}:${sp.id}`) && isPlanTask(t)) { const running0 = existing.find((o) => o.service_task_id === taskId && o.service_partner_id === sp.id && ['offered', ...ORDER_RUNNING].includes(o.status)); if (running0) await ownerAttachInspectionPlan(t, running0.id).catch(() => {}); }
           if (!taskId || done.has(`${taskId}:${sp.id}`)) continue; // noch nicht in der Cloud oder schon gesendet
           const orderId = await cloudFetch('/rest/v1/rpc/offer_service_order', { method: 'POST', body: { p_service_task_id: taskId, p_service_partner_id: sp.id } });
           // Hauskontrolle: Kontrollplan als PDF an den Auftrag hängen
@@ -19949,6 +20104,29 @@ Morgen|Tomorrow|Imorgon
       const button = event.target.closest('[data-owner-action]');
       if (!button) return;
       if (button.dataset.ownerAction === 'refresh') ownerRun('load', async () => {});
+      if (button.dataset.ownerAction === 'disconnect') {
+        const partner = (ownerSide.partners || []).find((x) => x.id === button.dataset.id);
+        const running = (ownerSide.orders || []).filter((o) => o.service_partner_id === button.dataset.id && ['draft', 'offered', ...ORDER_RUNNING].includes(o.status)).length;
+        const reason = window.prompt(`Verbindung zu „${partner?.company_name || 'Servicepartner'}“ trennen?\n\nDer Partner sieht danach keine deiner Häuser, Aufträge und Nachrichten mehr.${running ? ` ${running} offene/laufende Auftr${running === 1 ? 'ag wird' : 'äge werden'} zurückgezogen.` : ''} Freigegebene Telefonnummer und Adresse werden beim Partner gelöscht. Verbinden kannst du dich später mit einem neuen Einladungscode.\n\nGrund (optional, sieht der Partner):`, '');
+        if (reason === null) return;
+        ownerRun('disconnect', async () => {
+          const result = await cloudFetch('/rest/v1/rpc/disconnect_service_partner', { method: 'POST', body: { p_service_partner_id: button.dataset.id, p_reason: reason.trim() || null } });
+          showToast(`Verbindung zu ${partner?.company_name || 'dem Partner'} getrennt${result?.cancelled_orders ? ` – ${result.cancelled_orders} Auftr${result.cancelled_orders === 1 ? 'ag' : 'äge'} zurückgezogen` : ''}.`);
+        });
+        return;
+      }
+      if (button.dataset.ownerAction === 'contact-edit') { ownerSide.contactEdit = button.dataset.id; render(); return; }
+      if (button.dataset.ownerAction === 'contact-share') {
+        const box = button.closest('[data-hub-consent]');
+        const all = button.dataset.mode === 'selected';
+        const phone = all && box?.querySelector('[name=share_phone]')?.checked;
+        const address = all && box?.querySelector('[name=share_address]')?.checked;
+        ownerRun('contact', async () => {
+          await ownerShareContact(button.dataset.id, phone, address);
+          ownerSide.contactEdit = '';
+          showToast(`Übermittelt: Name und E-Mail${phone ? ', Telefon' : ''}${address ? ', Adresse' : ''}.`);
+        });
+      }
       if (button.dataset.ownerAction === 'invite') ownerRun('invite', async () => { const code = await cloudFetch('/rest/v1/rpc/create_service_partner_invite', { method: 'POST', body: { p_service_partner_id: button.dataset.id, p_email: (ownerSide.partners || []).find((p) => p.id === button.dataset.id)?.email || null } }); ownerSide.code = { id: button.dataset.id, code }; });
     });
     document.addEventListener('submit', (event) => {
@@ -20002,6 +20180,44 @@ Morgen|Tomorrow|Imorgon
         <div class="hub-code-actions"><button type="button" class="secondary-btn" data-hub-copy="${escapeHtml(code)}">Kopieren</button>${navigator.share ? `<button type="button" class="secondary-btn" data-hub-share="${p.id}">Teilen</button>` : ''}<a class="secondary-btn" href="mailto:${encodeURIComponent(p.email || '')}?subject=${encodeURIComponent('Einladung ins Husora Partner-Portal')}&body=${encodeURIComponent(text)}">E-Mail</a><a class="secondary-btn" href="sms:?&body=${encodeURIComponent(`Husora Partner-Portal: ${location.origin}${location.pathname} – Einladungscode ${code}`)}">SMS</a></div>
         <small>Gültig 30 Tage, nur einmal verwendbar. Der Partner gibt den Code in seinem Partner-Portal unter „Kunden & Objekte“ ein.</small></div>`;
     }
+    // ----- Kontaktdaten an den Servicepartner: Name und E-Mail aus dem Konto, Telefon/Adresse nur nach Freigabe -----
+    function ownerContactProfile() {
+      const name = String(profileData?.name || '').trim();
+      const realName = name && name !== 'Max Mustermann' ? name : '';
+      const parts = realName.split(/\s+/);
+      const address = [profileData?.street, [profileData?.zip, profileData?.city].filter(Boolean).join(' '), profileData?.country].map((x) => String(x || '').trim()).filter(Boolean).join(', ');
+      return {
+        name: realName, email: cloud.session?.email || profileData?.email || '', phone: String(profileData?.phone || '').trim(), address,
+        payload: { ...(realName ? { first_name: parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0], last_name: parts.length > 1 ? parts[parts.length - 1] : '' } : {}),
+          phone: profileData?.phone || '', street: profileData?.street || '', postal_code: profileData?.zip || '', city: profileData?.city || '', country: profileData?.country || '' }
+      };
+    }
+    function hubContactHtml(p) {
+      if (!('contact_decided_at' in p)) return '';
+      const me = ownerContactProfile();
+      const editing = !p.contact_decided_at || ownerSide.contactEdit === p.id;
+      if (!editing) {
+        const shared = ['Name', 'E-Mail', p.share_phone ? 'Telefon' : '', p.share_address ? 'Adresse' : ''].filter(Boolean).join(', ');
+        return `<p class="hub-contact-line">${icon('users')}<span>Kontakt freigegeben: ${escapeHtml(shared)}</span><button type="button" class="text-btn" data-owner-action="contact-edit" data-id="${p.id}">Ändern</button></p>`;
+      }
+      return `<div class="hub-consent" data-hub-consent="${p.id}">
+        <strong>${p.contact_decided_at ? 'Kontaktfreigabe ändern' : `Kontaktdaten an ${escapeHtml(p.company_name)} übermitteln?`}</strong>
+        <p>Aus deinem Benutzerkonto werden <b>Name und E-Mail</b> übermittelt${me.name || me.email ? `: ${escapeHtml([me.name, me.email].filter(Boolean).join(' · '))}` : ''}. Telefonnummer und Adresse nur, wenn du sie freigibst.</p>
+        <label class="hub-check"><input type="checkbox" name="share_phone" ${p.share_phone ? 'checked' : ''} ${me.phone ? '' : 'disabled'}><span>Telefonnummer freigeben<small>${escapeHtml(me.phone || 'Im Profil nicht hinterlegt')}</small></span></label>
+        <label class="hub-check"><input type="checkbox" name="share_address" ${p.share_address ? 'checked' : ''} ${me.address ? '' : 'disabled'}><span>Adresse freigeben<small>${escapeHtml(me.address || 'Im Profil nicht hinterlegt')}</small></span></label>
+        <div class="pp-actions flat"><button type="button" class="secondary-btn" data-owner-action="contact-share" data-mode="basic" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>Nur Name und E-Mail</button><button type="button" class="primary-btn" data-owner-action="contact-share" data-mode="selected" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>${icon('check')} Auswahl übermitteln</button></div>
+      </div>`;
+    }
+    function ownerShareContact(partnerId, sharePhone, shareAddress) {
+      const me = ownerContactProfile();
+      return cloudFetch('/rest/v1/rpc/share_contact_with_partner', { method: 'POST', body: { p_service_partner_id: partnerId, p_share_phone: Boolean(sharePhone && me.phone), p_share_address: Boolean(shareAddress && me.address), p_contact: me.payload } });
+    }
+    // Profil geändert: freigegebene Kontaktdaten bei den Partnern aktualisieren
+    function ownerSyncSharedContact() {
+      if (!cloudReady() || !cloudCanWrite()) return;
+      (ownerSide.partners || []).filter((p) => p.partner_organization_id && p.contact_decided_at)
+        .forEach((p) => ownerShareContact(p.id, p.share_phone, p.share_address).catch((error) => console.warn('Kontakt nicht aktualisiert:', error)));
+    }
     function hubPartnersHtml() {
       const partners = ownerSide.partners || [];
       const suggestions = hubAssignedProviders();
@@ -20013,8 +20229,8 @@ Morgen|Tomorrow|Imorgon
           </form></section>
         <section class="hub-section"><h3 class="hub-section-title">Deine Servicepartner (${partners.length})</h3>
           ${partners.length ? partners.map((p) => { const [label, tone] = hubStatus(p); const unread = hubUnread(hubThreadMessages({ kind: 'partner', id: p.id })); return `<div class="card hub-partner"><div class="hub-partner-head"><div><strong>${escapeHtml(p.company_name)}</strong><small>${escapeHtml(p.email || 'keine E-Mail hinterlegt')}</small></div><span class="pp-badge ${tone}">${label}</span></div>
-            ${hubCodeBox(p)}
-            <div class="pp-actions">${p.partner_organization_id ? `<button type="button" class="primary-btn" data-hub-chat="partner:${p.id}">${icon('note')} Nachricht${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button><button type="button" class="secondary-btn" data-hub-tab="orders" data-hub-partner="${p.id}">Auftrag senden</button>` : `<button type="button" class="secondary-btn" data-owner-action="invite" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>${hubStatus(p)[0] === 'Einladung offen' ? 'Neuen Code erzeugen' : 'Einladungscode erzeugen'}</button>`}</div></div>`; }).join('') : `<div class="pp-empty">${icon('users')}<strong>Noch keine Servicepartner</strong><p>Lade oben deinen ersten Partner ein.</p></div>`}
+            ${hubCodeBox(p)}${p.partner_organization_id ? hubContactHtml(p) : ''}
+            <div class="pp-actions">${p.partner_organization_id ? `<button type="button" class="primary-btn" data-hub-chat="partner:${p.id}">${icon('note')} Nachricht${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button><button type="button" class="secondary-btn" data-hub-tab="orders" data-hub-partner="${p.id}">Auftrag senden</button>${cloudCanWrite() && p.partner_organization_id !== cloud.org?.id ? `<button type="button" class="secondary-btn danger" data-owner-action="disconnect" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>Verbindung trennen</button>` : ''}` : `<button type="button" class="secondary-btn" data-owner-action="invite" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>${hubStatus(p)[0] === 'Einladung offen' ? 'Neuen Code erzeugen' : 'Einladungscode erzeugen'}</button>`}</div></div>`; }).join('') : `<div class="pp-empty">${icon('users')}<strong>Noch keine Servicepartner</strong><p>Lade oben deinen ersten Partner ein.</p></div>`}
         </section>`;
     }
     function hubChatListHtml() {
@@ -20052,7 +20268,7 @@ Morgen|Tomorrow|Imorgon
       const orders = ownerSide.orders || [];
       if (!connected.length && !orders.length) return `<div class="pp-empty">${icon('task')}<strong>Noch kein verbundener Partner</strong><p>Lade zuerst einen Servicepartner ein.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`;
       const partner = connected.find((p) => p.id === hub.partner) || connected[0];
-      const active = (o) => ['offered', 'accepted', 'scheduled', 'in_progress', 'completed'].includes(o.status);
+      const active = (o) => ['offered', ...ORDER_RUNNING, 'completed'].includes(o.status);
       const sentTo = (taskId) => orders.filter((o) => o.service_task_id === taskId && active(o));
       const picked = hub.picked || (hub.picked = new Set());
       const tasksOpen = ownerSide.tasks || [];
@@ -20076,7 +20292,7 @@ Morgen|Tomorrow|Imorgon
       // Aufträge je Servicepartner, darin nach Ferienhaus
       const groups = new Map();
       orders.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
-      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubAccessHtml(o)}${cloud.org?.role === 'admin' ? `<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body">${hubHistoryHtml(o.id)}</div></details>` : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${['accepted', 'scheduled', 'in_progress'].includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
+      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
       const rank = (o) => ({ in_progress: 0, scheduled: 1, accepted: 2, offered: 3, completed: 4 }[o.status] ?? 5);
       const list = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0], 'de')).map(([name, list]) => {
         const houses = new Map();
@@ -20088,7 +20304,7 @@ Morgen|Tomorrow|Imorgon
     }
     // ----- Auftragsverlauf aus dem Audit-Protokoll (nur Admins der Organisation) -----
     const hubHistory = {};
-    const ORDER_STATUS_DE = { offered: 'angefragt', accepted: 'angenommen', rejected: 'abgelehnt', scheduled: 'terminiert', in_progress: 'begonnen', completed: 'erledigt', cancelled: 'zurückgezogen', draft: 'Entwurf' };
+    const ORDER_STATUS_DE = { offered: 'angefragt', accepted: 'angenommen', rejected: 'abgelehnt', scheduled: 'terminiert', in_progress: 'begonnen', waiting_customer: 'wartet auf Kunde', waiting_parts: 'wartet auf Material', completed: 'erledigt', cancelled: 'zurückgezogen', draft: 'Entwurf' };
     function hubHistoryHtml(orderId) {
       const rows = hubHistory[orderId];
       if (!rows) return '<p class="settings-hint">Wird geladen …</p>';
@@ -20099,6 +20315,9 @@ Morgen|Tomorrow|Imorgon
       const box = event.target.closest?.('[data-hub-history]');
       if (!box || !box.open) return;
       const id = box.dataset.hubHistory;
+      const order = (ownerSide.orders || []).find((x) => x.id === id);
+      const body = box.querySelector('[data-order-events]');
+      if (order && body) { delete orderEvents[id]; body.innerHTML = orderEventsHtml(order, 'owner'); return; }
       cloudFetch(`/rest/v1/audit_logs?entity_type=eq.service_orders&entity_id=eq.${id}&select=action,created_at,user_id,old_status:old_data->>status,new_status:new_data->>status,old_sched:old_data->>scheduled_at,new_sched:new_data->>scheduled_at,note:new_data->>response_note&order=created_at.asc&limit=100`)
         .then((rows) => { hubHistory[id] = rows; }).catch(() => { hubHistory[id] = []; })
         .finally(() => { const body = document.querySelector(`[data-hub-history="${id}"] .hub-history-body`); if (body) body.innerHTML = hubHistoryHtml(id); });

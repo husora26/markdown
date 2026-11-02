@@ -289,7 +289,9 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 
 ### Phase 1 – Bestandsaufnahme ✅ (dieses Dokument)
 
-### Phase 2 – Auftragskern: Status-Engine + Ereignisse (Migration 3100)
+### Phase 2 – Auftragskern: Status-Engine + Ereignisse (Migration 3100)  ✅ umgesetzt (02.11.2026)
+> Umgesetzt: Migration 3100, SQL-Test `supabase/tests/order_flow_test.sql`, E2E `orderflow`. Zusätzlich: Kontaktfreigabe an Partner (3110, E2E `contactshare`) und Verbindung trennen (3120).
+
 - **DB:**
   - `service_orders` erweitern: `order_type`, `priority`, `scheduled_end`, `started_at`, `cancelled_at`, `estimated_minutes`, `actual_minutes`, `requires_approval`, `approval_status`, `customer_visible`. Standardwerte so wählen, dass alte Zeilen gültig bleiben.
   - Status-CHECK um `waiting_customer` und `waiting_parts` erweitern.
