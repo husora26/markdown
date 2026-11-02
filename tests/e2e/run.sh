@@ -7,7 +7,7 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 OUT="${HUSORA_E2E_OUT:-$DIR/output}"
 mkdir -p "$OUT/open" "$OUT/audit"
 export HUSORA_E2E_OUT="$OUT"
-TESTS="${*:-auth cloud plans partner hub hub2 msg custom dispatch withdraw compl pp2 bulk back team access launch issues followup archive usage portfolio batch contacts pp3 home plan switch taskarchive orderflow contactshare assign crawl}"
+TESTS="${*:-auth cloud plans partner hub hub2 msg custom dispatch withdraw compl pp2 bulk back team access launch issues followup archive usage portfolio batch contacts pp3 home plan switch taskarchive orderflow contactshare assign multi crawl}"
 failed=0
 for t in $TESTS; do
   log="$OUT/$t.log"

@@ -2903,6 +2903,11 @@
     .hub-assign-row span { overflow-wrap: anywhere; }
     .hub-assign-row input[type=date] { font-size: 13px; }
     .hub-assign-until { color: var(--muted); font-size: 12px; font-weight: 500; }
+    .pp-batch-member { min-width: 0; max-width: 220px; min-height: 40px; font-size: 14px; }
+    .pp-home-toggle { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; cursor: pointer; }
+    .pp-home-toggle input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--green); flex: none; }
+    .pp-home-toggle span { display: grid; gap: 2px; }
+    .pp-home-toggle small { color: var(--muted); font-size: 12px; }
     .pp-grant { display: inline-flex; align-items: center; gap: 4px; color: var(--green); font-weight: 700; }
     .pp-grant svg { width: 13px; height: 13px; }
     .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
@@ -3864,6 +3869,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4481,6 +4487,7 @@ html.dark .hub-pick input { accent-color: var(--green-solid); }
 html.dark .hub-send-bar { background: var(--surface, #2b2410); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.27); }
 html.dark .hub-access { border: 1px solid #424e45; }
 html.dark .hub-check input { accent-color: var(--green-solid); }
+html.dark .pp-home-toggle input { accent-color: var(--green-solid); }
 html.dark .issue-card.in_progress .issue-status { color: #9ebfe0; }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
@@ -5639,6 +5646,13 @@ Freigaben speichern|Save access|Spara åtkomst
 Freigaben gespeichert.|Access saved.|Åtkomst sparad.
 Noch keine Häuser freigegeben – der Partner sieht Häuser nur über Aufträge.|No houses shared yet – the partner only sees houses through orders.|Inga hus delade ännu – partnern ser hus endast via uppdrag.
 Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
+Neue Anfragen auf der Startseite|New requests on the home screen|Nya förfrågningar på startsidan
+Ausgeschaltet findest du neue Anfragen weiter unter „Aufträge → Neu“ und an der Zahl im Menü.|When switched off, new requests are still under “Orders → New” and shown by the count in the menu.|När det är avstängt finns nya förfrågningar kvar under ”Uppdrag → Nya” och syns i menyns siffra.
+Mitarbeiter wählen …|Choose staff …|Välj personal …
+Zuordnen|Assign|Tilldela
+Bitte zuerst einen Mitarbeiter wählen.|Please choose a staff member first.|Välj först en medarbetare.
+Neue Anfragen erscheinen auf der Startseite.|New requests are shown on the home screen.|Nya förfrågningar visas på startsidan.
+Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on the home screen.|Nya förfrågningar döljs på startsidan.
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -5661,6 +5675,8 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
       [/^Freigegeben: (.+)$/, { en: 'Shared: $1', sv: 'Delat: $1' }],
       [/^Termin: (.+)$/, { en: 'Appointment: $1', sv: 'Tid: $1' }],
       [/^Eingeteilt: (.+)$/, { en: 'Assigned: $1', sv: 'Tilldelad: $1' }],
+      [/^(\d+) annehmen$/, { en: 'Accept $1', sv: 'Acceptera $1' }],
+      [/^(\d+) zuordnen$/, { en: 'Assign $1', sv: 'Tilldela $1' }],
       [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
       [/^(\d+) überfällig$/, { en: '$1 overdue', sv: '$1 försenade' }],
       [/^(\d+) % erledigt$/, { en: '$1 % done', sv: '$1 % klart' }],
@@ -18334,7 +18350,7 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
       const initials = String(org?.name || '?').split(/\s+/).filter((w) => /[\p{L}\d]/u.test(w)).slice(0, 2).map((w) => [...w][0]).join('').toUpperCase();
       return `<div class="pp-company"><span class="pp-company-mark" aria-hidden="true">${escapeHtml(initials)}</span><div><h1 data-no-i18n>${escapeHtml(org?.name || '')}</h1><p><b>${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())}</b>${pp.loadedAt ? ` · <span>Stand</span> ${escapeHtml(fmtDateTime(pp.loadedAt))}` : ''}</p></div></div>
         ${ppTilesHtml()}
-        ${offered.length ? ppSection('Neue Anfragen', `<div class="pp-list">${offered.map(ppOrderCard).join('')}</div>`) : ''}
+        ${offered.length && ppHomePrefs().showOffered ? ppSection('Neue Anfragen', `<div class="pp-list">${offered.map(ppOrderCard).join('')}</div>`) : ''}
         ${ppSection('Heute', todayItems.length ? `<div class="pp-list">${todayItems.map((x) => (x.order_number ? ppOrderCard(x) : ppInspectionCard(x))).join('')}</div>` : '<p class="pp-muted">Heute stehen keine Termine an.</p>')}
         ${urgent.length ? ppSection('Dringende Mängel', `<div class="pp-list">${urgent.slice(0, 6).map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.inspection.property?.name || '')}${item.notes ? ` · ${escapeHtml(item.notes)}` : ''}</small></span><span class="pp-badge red">Mangel</span></button>`).join('')}</div>`) : ''}
         ${ppSection('Letzte Aktivität', `<div class="pp-list">${ppD('orders').slice().sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)).slice(0, 5).map(ppOrderCard).join('') || '<p class="pp-muted">Noch keine Aufträge. Sobald ein Kunde dich beauftragt, erscheint der Auftrag hier.</p>'}</div>`)}
@@ -18348,7 +18364,7 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
         <div class="pp-filters">${filters.map(([id, label, f]) => `<button type="button" class="${pp.filter === id ? 'active' : ''}" data-pp-filter="${id}">${label} <b>${ppD('orders').filter(f).length}</b></button>`).join('')}</div>
         ${pp.form === 'new-order' ? ppNewOrderForm() : ''}
         ${pp.form === 'batch-invoice' ? ppBatchInvoiceForm() : ''}
-        ${list.some(ppSelectable) && !pp.sel.size ? '<p class="pp-hint pp-sel-hint">Tipp: Aufträge links anhaken, um mehrere zusammen zu beenden oder in einer Rechnung abzurechnen.</p>' : ''}
+        ${list.some(ppSelectable) && !pp.sel.size ? `<p class="pp-hint pp-sel-hint">Tipp: Aufträge links anhaken, um mehrere ${ppIsLead() ? 'zusammen anzunehmen, einem Mitarbeiter zuzuordnen, ' : ''}zusammen zu beenden oder in einer Rechnung abzurechnen.</p>` : ''}
         <div class="pp-list">${list.map(ppOrderRow).join('') || ppEmpty('Keine Aufträge', pp.filter === 'new' ? 'Keine neuen Anfragen.' : 'In dieser Ansicht gibt es keine Aufträge.')}</div>${ppBatchBarHtml()}`;
     }
     function ppNewOrderForm(propertyId = '') {
@@ -18792,7 +18808,8 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
     const ppOrderBilled = (o) => ppD('invoices').some((i) => i.service_order_id === o.id && i.status !== 'cancelled') || ppD('invoiceLines').some((l) => l.service_order_id === o.id);
     const ppCanBill = () => ppIsLead() || ppRole() === 'accounting';
     // auswählbar: laufende Aufträge (gemeinsam beenden) und erledigte, noch nicht abgerechnete (gemeinsam abrechnen)
-    const ppSelectable = (o) => ppCanBill() && (ORDER_RUNNING.includes(o.status) || (o.status === 'completed' && !o.agreement_id && !ppOrderBilled(o) && o.organization_id !== ppOrg()?.id));
+    const ppSelectable = (o) => (ppIsLead() && (o.status === 'offered' || ORDER_RUNNING.includes(o.status)))
+      || (ppCanBill() && (ORDER_RUNNING.includes(o.status) || (o.status === 'completed' && !o.agreement_id && !ppOrderBilled(o) && o.organization_id !== ppOrg()?.id)));
     const ppBillable = (o) => !o.agreement_id && !ppOrderBilled(o) && o.organization_id !== ppOrg()?.id && [...ORDER_RUNNING, 'completed'].includes(o.status);
     function ppSelectedOrders() { return ppD('orders').filter((o) => pp.sel.has(o.id) && ppSelectable(o)); }
     function ppOrderRow(o) {
@@ -18804,13 +18821,18 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
     function ppBatchBarHtml() {
       const sel = ppSelectedOrders();
       if (!sel.length || pp.form === 'batch-invoice') return '';
-      const running = sel.filter((o) => o.status !== 'completed');
+      const running = sel.filter((o) => ORDER_RUNNING.includes(o.status));
+      const offered = sel.filter((o) => o.status === 'offered');
+      const assignable = ppIsLead() ? sel.filter((o) => o.status === 'offered' || ORDER_RUNNING.includes(o.status)) : [];
+      const members = ppD('members').filter((m) => m.status === 'active');
       const billable = sel.filter(ppBillable);
       const customers = new Set(billable.map((o) => o.organization_id));
       const inAgreement = sel.filter((o) => o.agreement_id).length;
       const hint = customers.size > 1 ? 'Sammelrechnung nur für Aufträge desselben Kunden' : inAgreement ? `${inAgreement} im Jahresvertrag – nicht einzeln abrechenbar` : '';
       return `<div class="pp-batch-bar" role="region" aria-label="Auswahl"><div class="pp-batch-info"><button type="button" class="pp-batch-x" data-pp-batch="clear" aria-label="Auswahl aufheben" title="Auswahl aufheben">✕</button><div><strong>${sel.length} ausgewählt</strong>${hint ? `<small>${escapeHtml(hint)}</small>` : ''}</div></div><div class="pp-actions">
         
+        ${assignable.length && members.length ? `<select class="form-control pp-batch-member" data-pp-batch-member aria-label="Mitarbeiter für die Auswahl"><option value="">Mitarbeiter wählen …</option>${members.map((m) => `<option value="${m.user_id}" ${pp.batchMember === m.user_id ? 'selected' : ''}>${escapeHtml(ppMemberName(m.user_id) || m.user_id)} (${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)})</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-batch="assign" ${ppDisabled()}>${icon('users')} ${assignable.length === 1 ? 'Zuordnen' : `${assignable.length} zuordnen`}</button>` : ''}
+        ${offered.length ? `<button type="button" class="primary-btn" data-pp-batch="accept" ${ppDisabled()}>${icon('check')} ${offered.length === 1 ? 'Annehmen' : `${offered.length} annehmen`}</button>` : ''}
         ${running.length ? `<button type="button" class="secondary-btn" data-pp-batch="complete" ${ppDisabled()}>${icon('check')} ${running.length === 1 ? 'Als erledigt melden' : `${running.length} gemeinsam beenden`}</button>` : ''}
         ${billable.length && customers.size === 1 ? `<button type="button" class="primary-btn" data-pp-batch="invoice" ${ppDisabled()}>${icon('cost')} ${billable.length === 1 ? 'Abrechnen' : `Sammelrechnung (${billable.length})`}</button>` : ''}
       </div></div>`;
@@ -18959,8 +18981,29 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
         const kind = batch.dataset.ppBatch;
         if (kind === 'clear') { pp.sel.clear(); pp.form = null; ppRender(); return; }
         if (kind === 'invoice') { pp.form = 'batch-invoice'; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+        if (kind === 'accept' || kind === 'assign') {
+          const member = document.querySelector('#partner-portal [data-pp-batch-member]')?.value || '';
+          const sel = ppSelectedOrders();
+          const offered = sel.filter((o) => o.status === 'offered');
+          const targets = kind === 'accept' ? offered : sel.filter((o) => o.status === 'offered' || ORDER_RUNNING.includes(o.status));
+          if (kind === 'assign' && !member) { showToast('Bitte zuerst einen Mitarbeiter wählen.'); return; }
+          if (!targets.length) return;
+          const name = member ? ppMemberName(member) || 'den Mitarbeiter' : '';
+          ppRun(`batch-${kind}`, async () => {
+            const failed = [];
+            for (const o of targets) {
+              try {
+                if (kind === 'accept') await ppRpc('respond_service_order', { p_service_order_id: o.id, p_accept: true, p_note: null, p_scheduled_at: null });
+                if (member && o.assigned_user_id !== member) await ppPatch('service_orders', o.id, { assigned_user_id: member });
+              } catch (error) { failed.push(`${o.title}: ${error.message}`); }
+            }
+            if (failed.length) throw new Error(`${failed.length} nicht möglich – ${failed[0]}`);
+            if (kind === 'accept') targets.forEach((o) => pp.sel.delete(o.id));
+          }, { notice: kind === 'accept' ? `${targets.length} ${targets.length === 1 ? 'Anfrage' : 'Anfragen'} angenommen${member ? ` und ${name} zugeordnet` : ''}.` : `${targets.length} ${targets.length === 1 ? 'Auftrag' : 'Aufträge'} ${name} zugeordnet.` });
+          return;
+        }
         if (kind === 'complete') {
-          const running = ppSelectedOrders().filter((o) => o.status !== 'completed');
+          const running = ppSelectedOrders().filter((o) => ORDER_RUNNING.includes(o.status));
           if (!running.length) return;
           ppRun('batch-complete', async () => {
             for (const o of running) await ppPatch('service_orders', o.id, { status: 'completed' });
@@ -19046,6 +19089,8 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
     ];
     const PP_TILES_DEFAULT = ['orders', 'inspections', 'defects', 'finance', 'calendar', 'customers'];
     const PP_TILES_KEY = 'husora-pp-tiles';
+    const PP_HOME_KEY = 'husora-pp-home';
+    const ppHomePrefs = () => { try { return { showOffered: true, ...JSON.parse(localStorage.getItem(PP_HOME_KEY) || '{}') }; } catch (error) { return { showOffered: true }; } };
     const ppTiles = () => { try { const saved = JSON.parse(localStorage.getItem(PP_TILES_KEY) || 'null'); if (Array.isArray(saved)) return saved.filter((id) => PP_TILES.some(([t]) => t === id)); } catch (error) { /* Standard */ } return [...PP_TILES_DEFAULT]; };
     // offene Mängel aus Kontrollen (je Prüfpunkt), neueste zuerst
     const ppOpenDefects = () => ppD('inspections').filter((i) => i.status !== 'cancelled').flatMap((i) => (i.items || []).filter((item) => item.status === 'defect').map((item) => ({ ...item, inspection: i })))
@@ -19082,6 +19127,7 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
         ${card('Startseite', 'Welche Kacheln die Startseite zeigt.', 'home', `<div class="pp-tile-picks">${PP_TILES.map(([id, label, ic]) => `<label class="pp-tile-pick ${tiles.includes(id) ? 'on' : ''}"><input type="checkbox" data-pp-tile-toggle="${id}" ${tiles.includes(id) ? 'checked' : ''}><span>${icon(ic)} ${escapeHtml(label)}</span></label>`).join('')}</div><div class="pp-actions flat"><button type="button" class="secondary-btn" data-pp-tile-reset>Standard wiederherstellen</button></div>`)}
         ${card('Darstellung & Sprache', 'Hell oder dunkel, Schriftgröße und Sprache der App.', 'text', `<span class="form-label">Erscheinungsbild</span>
           <div class="segmented" role="radiogroup" aria-label="Erscheinungsbild">${themes.map(([id, label, ic]) => `<button type="button" role="radio" aria-checked="${displaySettings.theme === id}" class="${displaySettings.theme === id ? 'active' : ''}" data-display-theme="${id}">${icon(ic)} ${label}</button>`).join('')}</div>
+          <label class="pp-check pp-home-toggle"><input type="checkbox" data-pp-home-pref="showOffered" ${ppHomePrefs().showOffered ? 'checked' : ''}><span><strong>Neue Anfragen auf der Startseite</strong><small>Ausgeschaltet findest du neue Anfragen weiter unter „Aufträge → Neu“ und an der Zahl im Menü.</small></span></label>
           <span class="form-label" style="margin-top:14px;display:block">Schriftgröße</span>
           <div class="segmented" role="radiogroup" aria-label="Schriftgröße">${sizes.map(([id, label]) => `<button type="button" role="radio" aria-checked="${displaySettings.textSize === id}" class="${displaySettings.textSize === id ? 'active' : ''}" data-display-size="${id}">${label}</button>`).join('')}</div>
           <span class="form-label" style="margin-top:14px;display:block">Sprache</span>
@@ -19091,6 +19137,14 @@ Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
         ${card('Über Husora', `Version ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}`, 'help', `<div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}" data-legal-modal><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>`)}`;
     }
     document.addEventListener('change', (event) => {
+      const batchMember = event.target.closest?.('#partner-portal [data-pp-batch-member]');
+      if (batchMember) { pp.batchMember = batchMember.value; return; }
+      const pref = event.target.closest?.('#partner-portal [data-pp-home-pref]');
+      if (pref) {
+        try { localStorage.setItem(PP_HOME_KEY, JSON.stringify({ ...ppHomePrefs(), [pref.dataset.ppHomePref]: pref.checked })); } catch (error) { /* optional */ }
+        showToast(pref.checked ? 'Neue Anfragen erscheinen auf der Startseite.' : 'Neue Anfragen werden auf der Startseite ausgeblendet.');
+        pp.keepScroll = true; ppRender(); return;
+      }
       const box = event.target.closest?.('#partner-portal [data-pp-tile-toggle]');
       if (!box) return;
       const id = box.dataset.ppTileToggle;
