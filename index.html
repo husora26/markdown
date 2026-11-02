@@ -2977,6 +2977,21 @@
     .tile-look-preview.photo span:nth-child(2) { background-image: url("assets/hauskontrolle.jpg"); }
     .tile-look-preview.photo span:nth-child(3) { background-image: url("assets/gaestewechsel.jpg"); }
     .hub-order-filters { margin: 4px 0 10px; }
+    .pp-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 14px; }
+    .pp-kpi { display: grid; gap: 1px; padding: 10px 11px; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); text-align: left; cursor: pointer; }
+    .pp-kpi b { font-size: 20px; line-height: 1.15; overflow-wrap: anywhere; }
+    .pp-kpi span { color: var(--muted); font-size: 12px; font-weight: 600; }
+    .pp-kpi.wide { grid-column: span 2; }
+    .pp-kpi.wide b { font-size: 17px; }
+    .pp-kpi.red b { color: #c0503f; }
+    .pp-kpi.amber b { color: #b5791a; }
+    .pp-cal-controls { display: grid; gap: 8px; margin-bottom: 10px; }
+    .pp-cal-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pp-cal-filters select { flex: 1 1 140px; min-height: 40px; font-size: 14px; }
+    .pp-cal-dayblock { margin-top: 10px; }
+    .pp-cal-dayblock .pp-section-title .text-btn { padding: 0; font-size: inherit; text-transform: none; letter-spacing: 0; }
+    .pp-cal-dayblock .pp-section-title small { margin-left: 6px; color: var(--muted); font-weight: 500; text-transform: none; letter-spacing: 0; }
+    .pp-cal-dayblock.today .pp-section-title .text-btn { color: var(--green); }
     .pp-grant { display: inline-flex; align-items: center; gap: 4px; color: var(--green); font-weight: 700; }
     .pp-grant svg { width: 13px; height: 13px; }
     .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
@@ -3945,6 +3960,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4566,6 +4582,8 @@ html.dark .pp-home-toggle input { accent-color: var(--green-solid); }
 html.dark .tchip.progress { background: #182331; color: #9dbbdc; }
 html.dark #partner-portal.pp-tiles-color .pp-home-tile-icon { background: rgba(255, 255, 255, 0.03); }
 html.dark .tile-swatch.on { box-shadow: 0 0 0 2px var(--ink, #000000); }
+html.dark .pp-kpi.red b { color: #d09288; }
+html.dark .pp-kpi.amber b { color: #e6c38d; }
 html.dark .issue-card.in_progress .issue-status { color: #9ebfe0; }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
@@ -5785,6 +5803,18 @@ Das Archiv ist leer. Erledigte Aufträge verschiebst du mit „Ins Archiv“ hie
 Anfrage zurückgezogen – der Partner wird informiert.|Request withdrawn – the partner is informed.|Förfrågan återkallad – partnern informeras.
 Auftrag ins Archiv verschoben – zu finden unter „Archiv“.|Order archived – see “Archive”.|Uppdraget arkiverat – finns under ”Arkiv”.
 Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är tillbaka i översikten.
+Angebote offen|Open quotes|Öppna offerter
+Umsatz im Monat|Revenue this month|Omsättning denna månad
+Tag|Day|Dag
+Alle Mitarbeiter|All staff|All personal
+Nicht zugewiesen|Not assigned|Ej tilldelad
+Alle Arten|All types|Alla typer
+frei|free|ledigt
+Eintrag|entry|post
+Einträge|entries|poster
+Wartung|Maintenance|Underhåll
+Garten|Garden|Trädgård
+Sanierung|Renovation|Renovering
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -5816,6 +5846,7 @@ Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är till
       [/^Mindestauftragswert \((\w+)\)$/, { en: 'Minimum order value ($1)', sv: 'Minsta ordervärde ($1)' }],
       [/^Anfahrtspauschale \((\w+)\)$/, { en: 'Travel fee ($1)', sv: 'Resekostnad ($1)' }],
       [/^Stundensatz \((\w+)\)$/, { en: 'Hourly rate ($1)', sv: 'Timpris ($1)' }],
+      [/^(\d+) Einträge?$/, { en: '$1 entries', sv: '$1 poster' }],
       [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
       [/^(\d+) überfällig$/, { en: '$1 overdue', sv: '$1 försenade' }],
       [/^(\d+) % erledigt$/, { en: '$1 % done', sv: '$1 % klart' }],
@@ -18538,6 +18569,7 @@ Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är till
     }
     // Im Portal wählbare Leistungsgruppen (service_types.code)
     const PP_SERVICE_GROUPS = [['inspection', 'Hauskontrolle', 'Abwesenheits-, Saison- und Ferienhauskontrollen'], ['service_work', 'Servicearbeiten', 'Hausservice, Reinigung, Garten, Winterdienst, kleine Reparaturen'], ['renovation', 'Sanierungen', 'Dach, Fassade, Fenster, Bad, Heizung und Technik']];
+    const PP_ORDER_TYPES = { inspection: 'Hauskontrolle', maintenance: 'Wartung', repair: 'Reparatur', cleaning: 'Reinigung', garden: 'Garten', snow: 'Winterdienst', heating: 'Heizung', pool: 'Pool', sauna: 'Sauna', renovation: 'Sanierung', emergency: 'Notfall', other: 'Sonstiges' };
     const PP_PRICE_TYPES = [['fixed', 'Festpreis'], ['hourly', 'Stundensatz'], ['quote', 'Preis auf Anfrage'], ['free', 'Kostenlos']];
     const PP_PRICE_UNITS = [['job', 'je Arbeitspaket'], ['hour', 'je Stunde'], ['visit', 'je Einsatz'], ['month', 'je Monat'], ['year', 'je Jahr'], ['m2', 'je m²']];
     const PP_DEFAULT_TYPES = [['inspection', 'Hauskontrolle'], ['holiday_home_inspection', 'Ferienhauskontrolle'], ['cleaning', 'Reinigung'], ['gardening', 'Gartenpflege'], ['snow_removal', 'Winterdienst'], ['repair', 'Reparatur'], ['plumbing', 'Sanitär'], ['heating', 'Heizung'], ['electrician', 'Elektro'], ['roofing', 'Dach'], ['facade', 'Fassade'], ['windows', 'Fenster'], ['key_service', 'Schlüsselservice'], ['general_maintenance', 'Technische Wartung']].map(([code, name]) => ({ code, name }));
@@ -18552,6 +18584,37 @@ Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är till
     function ppOrderCard(o) {
       return `<button type="button" class="pp-item" data-pp-open="order:${o.id}"><span class="pp-item-main"><strong>${escapeHtml(o.title)}</strong><small>${escapeHtml(o.property?.name || 'Objekt')} · ${escapeHtml(ppCustomerName(o.organization_id))}</small><small>${icon('calendar')} ${escapeHtml(ppDateTime(o.scheduled_at))}${o.assigned_user_id ? ` · ${escapeHtml(ppMemberName(o.assigned_user_id) || 'zugewiesen')}` : ''}</small></span>${ppBadge(PP_ORDER_STATUS, o.status)}</button>`;
     }
+    // ----- Kennzahlen auf der Startseite (Phase 5): heute, überfällig, wartet, Angebote, Umsatz im Monat -----
+    function ppKpisHtml(todayItems) {
+      const today = ppToday();
+      const month = today.slice(0, 7);
+      const overdue = ppD('orders').filter((o) => o.scheduled_at && ppDayKey(o.scheduled_at) < today && ['accepted', 'scheduled', 'in_progress'].includes(o.status)).length
+        + ppD('inspections').filter((i) => i.scheduled_at && ppDayKey(i.scheduled_at) < today && ['scheduled', 'in_progress'].includes(i.status)).length;
+      const waiting = ppD('orders').filter((o) => ORDER_WAITING.includes(o.status)).length;
+      const quotes = ppD('quotes').filter((q) => q.status === 'received').length;
+      const revenue = {};
+      ppD('invoices').filter((i) => !['cancelled', 'draft'].includes(i.status) && String(i.invoice_date || i.created_at || '').slice(0, 7) === month)
+        .forEach((i) => { revenue[i.currency || 'EUR'] = (revenue[i.currency || 'EUR'] || 0) + Number(i.amount_gross || 0); });
+      const money = Object.entries(revenue).map(([c, v]) => ppMoney(v, c)).join(' · ') || ppMoney(0, ppOrg()?.currency || 'EUR');
+      const kpi = (value, label, attrs, tone = '') => `<button type="button" class="pp-kpi ${tone}" ${attrs}><b>${escapeHtml(String(value))}</b><span>${label}</span></button>`;
+      const canMoney = ppIsLead() || ppRole() === 'accounting';
+      return `<div class="pp-kpis" role="group" aria-label="Kennzahlen">
+        ${kpi(todayItems.length, 'Heute', 'data-pp-kpi="today"')}
+        ${kpi(overdue, 'Überfällig', 'data-pp-kpi="overdue"', overdue ? 'red' : '')}
+        ${kpi(waiting, 'Wartet', 'data-pp-kpi="waiting"', waiting ? 'amber' : '')}
+        ${canMoney ? kpi(quotes, 'Angebote offen', 'data-pp-view="finance"') : ''}
+        ${canMoney ? kpi(money, 'Umsatz im Monat', 'data-pp-view="finance"', 'wide') : ''}
+      </div>`;
+    }
+    document.addEventListener('click', (event) => {
+      const k = event.target.closest('#partner-portal [data-pp-kpi]');
+      if (!k) return;
+      const kind = k.dataset.ppKpi;
+      if (kind === 'today') { pp.view = 'calendar'; pp.calMode = 'day'; pp.calDay = ppToday(); pp.calMonth = pp.calDay.slice(0, 7); }
+      if (kind === 'overdue') { pp.view = 'calendar'; pp.calMode = 'month'; pp.calDay = ppToday(); pp.calMonth = pp.calDay.slice(0, 7); }
+      if (kind === 'waiting') { pp.view = 'orders'; pp.filter = 'waiting'; }
+      pp.detail = null; pp.form = null; ppRender();
+    });
     function ppDashboardHtml() {
       const today = ppToday();
       const open = ppOpenOrders();
@@ -18566,6 +18629,7 @@ Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är till
       const org = ppOrg();
       const initials = String(org?.name || '?').split(/\s+/).filter((w) => /[\p{L}\d]/u.test(w)).slice(0, 2).map((w) => [...w][0]).join('').toUpperCase();
       return `<div class="pp-company"><span class="pp-company-mark" aria-hidden="true">${escapeHtml(initials)}</span><div><h1 data-no-i18n>${escapeHtml(org?.name || '')}</h1><p><b>${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())}</b>${pp.loadedAt ? ` · <span>Stand</span> ${escapeHtml(fmtDateTime(pp.loadedAt))}` : ''}</p></div></div>
+        ${ppKpisHtml(todayItems)}
         ${ppTilesHtml()}
         ${offered.length && ppHomePrefs().showOffered ? ppSection('Neue Anfragen', `<div class="pp-list">${offered.map(ppOrderCard).join('')}</div>`) : ''}
         ${ppSection('Heute', todayItems.length ? `<div class="pp-list">${todayItems.map((x) => (x.order_number ? ppOrderCard(x) : ppInspectionCard(x))).join('')}</div>` : '<p class="pp-muted">Heute stehen keine Termine an.</p>')}
@@ -18902,16 +18966,20 @@ Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är till
       const month = pp.calMonth || today.slice(0, 7);
       const selected = pp.calDay || today;
       const entries = [
-        ...ppD('orders').filter((o) => o.scheduled_at && !['cancelled', 'rejected'].includes(o.status)).map((o) => ({ at: o.scheduled_at, kind: o.status === 'completed' ? 'done' : o.status === 'offered' ? 'new' : 'order', open: !['completed'].includes(o.status), html: ppOrderCard(o) })),
-        ...ppD('inspections').filter((i) => i.scheduled_at && i.status !== 'cancelled').map((i) => ({ at: i.scheduled_at, kind: i.status === 'completed' ? 'done' : 'insp', open: i.status !== 'completed', html: ppInspectionCard(i) }))
+        ...ppD('orders').filter((o) => o.scheduled_at && !['cancelled', 'rejected'].includes(o.status)).map((o) => ({ at: o.scheduled_at, kind: o.status === 'completed' ? 'done' : o.status === 'offered' ? 'new' : 'order', open: !['completed'].includes(o.status), html: ppOrderCard(o), member: o.assigned_user_id || '', type: o.order_type || 'other' })),
+        ...ppD('inspections').filter((i) => i.scheduled_at && i.status !== 'cancelled').map((i) => ({ at: i.scheduled_at, kind: i.status === 'completed' ? 'done' : 'insp', open: i.status !== 'completed', html: ppInspectionCard(i), member: i.inspector_user_id || '', type: 'inspection' }))
       ].sort((x, y) => new Date(x.at) - new Date(y.at));
       // Abwesenheiten: an jedem betroffenen Tag (höchstens 62 Tage je Eintrag)
       ppD('absences').forEach((a) => {
         const d = new Date(a.start_at); const end = new Date(a.end_at);
         for (let n = 0; d < end && n < 62; n += 1, d.setDate(d.getDate() + 1)) {
-          entries.push({ at: d.toISOString(), kind: 'away', open: false, html: `<div class="pp-item pp-away"><span class="pp-item-main"><strong>${escapeHtml(a.user_id ? ppMemberName(a.user_id) || 'Mitarbeiter' : 'Ganzer Betrieb')} abwesend</strong><small>${escapeHtml(ppAbsenceLabel(a))}${a.reason ? ` · ${escapeHtml(a.reason)}` : ''}</small></span></div>` });
+          entries.push({ at: d.toISOString(), kind: 'away', open: false, member: a.user_id || '*', type: '*', html: `<div class="pp-item pp-away"><span class="pp-item-main"><strong>${escapeHtml(a.user_id ? ppMemberName(a.user_id) || 'Mitarbeiter' : 'Ganzer Betrieb')} abwesend</strong><small>${escapeHtml(ppAbsenceLabel(a))}${a.reason ? ` · ${escapeHtml(a.reason)}` : ''}</small></span></div>` });
         }
       });
+      // Filter: Mitarbeiter und Auftragsart (Abwesenheiten des ganzen Betriebs bleiben immer sichtbar)
+      const fMember = pp.calMember || ''; const fType = pp.calType || '';
+      const visible = entries.filter((e) => (!fMember || e.member === '*' || (fMember === 'none' ? !e.member : e.member === fMember)) && (!fType || e.type === '*' || e.type === fType));
+      entries.length = 0; entries.push(...visible);
       const byDay = {};
       entries.forEach((e) => { (byDay[ppDayKey(e.at)] = byDay[ppDayKey(e.at)] || []).push(e); });
       const overdue = entries.filter((e) => e.open && ppDayKey(e.at) < today);
@@ -18930,7 +18998,24 @@ Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är till
       }
       const dayList = byDay[selected] || [];
       const label = new Date(`${selected}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
-      return `<div class="pp-page-head"><h1>Kalender</h1></div>
+      const mode = pp.calMode || 'month';
+      const members = ppD('members').filter((m) => m.status === 'active');
+      const types = [...new Set(ppD('orders').map((o) => o.order_type || 'other'))].sort();
+      const controls = `<div class="pp-cal-controls"><div class="segmented" role="radiogroup" aria-label="Ansicht">${[['day', 'Tag'], ['week', 'Woche'], ['month', 'Monat']].map(([id, l]) => `<button type="button" role="radio" aria-checked="${mode === id}" class="${mode === id ? 'active' : ''}" data-pp-cal-mode="${id}">${l}</button>`).join('')}</div>
+        <div class="pp-cal-filters">${ppIsLead() && members.length > 1 ? `<select class="form-control" data-pp-cal-filter="member" aria-label="Mitarbeiter"><option value="">Alle Mitarbeiter</option><option value="none" ${fMember === 'none' ? 'selected' : ''}>Nicht zugewiesen</option>${members.map((m) => `<option value="${m.user_id}" ${fMember === m.user_id ? 'selected' : ''}>${escapeHtml(ppMemberName(m.user_id) || m.user_id)}</option>`).join('')}</select>` : ''}
+        ${types.length > 1 ? `<select class="form-control" data-pp-cal-filter="type" aria-label="Auftragsart"><option value="">Alle Arten</option>${types.map((t) => `<option value="${t}" ${fType === t ? 'selected' : ''}>${escapeHtml(PP_ORDER_TYPES[t] || t)}</option>`).join('')}</select>` : ''}</div></div>`;
+      const dayLabel = (key) => new Date(`${key}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+      const dayItems = (key) => (byDay[key] || []);
+      if (mode !== 'month') {
+        const base = new Date(`${selected}T12:00:00`);
+        const days = mode === 'day' ? [selected] : Array.from({ length: 7 }, (_, n) => { const d = new Date(base); d.setDate(base.getDate() - ((base.getDay() + 6) % 7) + n); return localDateKey(d); });
+        const title = mode === 'day' ? dayLabel(selected) : `${new Date(`${days[0]}T12:00:00`).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' })} – ${new Date(`${days[6]}T12:00:00`).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+        return `<div class="pp-page-head"><h1>Kalender</h1></div>${controls}
+        <div class="pp-card pp-cal"><div class="pp-cal-head"><strong>${escapeHtml(title)}</strong><div class="pp-cal-nav"><button type="button" data-pp-cal-nav="-1" aria-label="Zurück">‹</button><button type="button" data-pp-cal-nav="0">Heute</button><button type="button" data-pp-cal-nav="1" aria-label="Weiter">›</button></div></div></div>
+        ${days.map((key) => { const list = dayItems(key); return `<section class="pp-cal-dayblock ${key === today ? 'today' : ''}"><h3 class="pp-section-title"><button type="button" class="text-btn" data-pp-cal-day="${key}" data-pp-cal-goto="day">${escapeHtml(dayLabel(key))}${key === today ? ' · Heute' : ''}</button> <small>${list.length ? `${list.length} ${list.length === 1 ? 'Eintrag' : 'Einträge'}` : 'frei'}</small></h3>${list.length ? `<div class="pp-list">${list.map((e) => e.html).join('')}</div>` : mode === 'day' ? '<p class="pp-muted">An diesem Tag sind keine Aufträge oder Kontrollen geplant.</p>' : ''}</section>`; }).join('')}
+        ${overdue.length ? ppSection(`Überfällig (${overdue.length})`, `<div class="pp-list">${overdue.map((e) => e.html).join('')}</div>`) : ''}`;
+      }
+      return `<div class="pp-page-head"><h1>Kalender</h1></div>${controls}
         <div class="pp-card pp-cal">
           <div class="pp-cal-head"><strong>${escapeHtml(first.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' }))}</strong><div class="pp-cal-nav"><button type="button" data-pp-cal-nav="-1" aria-label="Vorheriger Monat">‹</button><button type="button" data-pp-cal-nav="0">Heute</button><button type="button" data-pp-cal-nav="1" aria-label="Nächster Monat">›</button></div></div>
           <div class="pp-cal-grid">${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((w) => `<span class="pp-cal-wd">${w}</span>`).join('')}${cells.join('')}</div>
@@ -18943,11 +19028,14 @@ Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är till
     document.addEventListener('click', (event) => {
       if (!event.target.closest('#partner-portal')) return;
       const day = event.target.closest('[data-pp-cal-day]');
-      if (day) { pp.calDay = day.dataset.ppCalDay; pp.calMonth = pp.calDay.slice(0, 7); pp.keepScroll = true; ppRender(); return; }
+      const calMode = event.target.closest('[data-pp-cal-mode]');
+      if (calMode) { pp.calMode = calMode.dataset.ppCalMode; pp.calDay = pp.calDay || ppToday(); pp.keepScroll = true; ppRender(); return; }
+      if (day) { pp.calDay = day.dataset.ppCalDay; pp.calMonth = pp.calDay.slice(0, 7); if (day.dataset.ppCalGoto) pp.calMode = day.dataset.ppCalGoto; pp.keepScroll = true; ppRender(); return; }
       const nav = event.target.closest('[data-pp-cal-nav]');
       if (nav) {
         const step = Number(nav.dataset.ppCalNav);
         if (!step) { pp.calMonth = ppToday().slice(0, 7); pp.calDay = ppToday(); }
+        else if ((pp.calMode || 'month') !== 'month') { const d = new Date(`${pp.calDay || ppToday()}T12:00:00`); d.setDate(d.getDate() + step * (pp.calMode === 'week' ? 7 : 1)); pp.calDay = localDateKey(d); pp.calMonth = pp.calDay.slice(0, 7); }
         else { const [y, m] = (pp.calMonth || ppToday().slice(0, 7)).split('-').map(Number); const d = new Date(y, m - 1 + step, 1); pp.calMonth = localDateKey(d).slice(0, 7); pp.calDay = localDateKey(d); }
         pp.keepScroll = true; ppRender();
       }
@@ -19405,6 +19493,8 @@ Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är till
         ${card('Über Husora', `Version ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}`, 'help', `<div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}" data-legal-modal><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>`)}`;
     }
     document.addEventListener('change', (event) => {
+      const calFilter = event.target.closest?.('#partner-portal [data-pp-cal-filter]');
+      if (calFilter) { if (calFilter.dataset.ppCalFilter === 'member') pp.calMember = calFilter.value; else pp.calType = calFilter.value; pp.keepScroll = true; ppRender(); return; }
       const batchMember = event.target.closest?.('#partner-portal [data-pp-batch-member]');
       if (batchMember) { pp.batchMember = batchMember.value; return; }
       const pref = event.target.closest?.('#partner-portal [data-pp-home-pref]');

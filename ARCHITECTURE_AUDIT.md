@@ -331,7 +331,8 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 - **UI:** Firmendaten (Notdienst, Auto-Annahme, Mindestauftragswert, Anfahrt, Stundensatz), mehrere Servicegebiete, Abwesenheiten.
 - **Tests:** E2E `profile`.
 
-### Phase 5 – Dashboard & Kalender (keine bzw. kleine Migration)
+### Phase 5 – Dashboard & Kalender (keine bzw. kleine Migration)  ✅ umgesetzt (02.11.2026)
+> Umgesetzt ohne Migration: Kennzahlen Heute/Überfällig/Wartet/Angebote offen/Umsatz im Monat; Kalender Tag/Woche/Monat, Filter Mitarbeiter und Auftragsart, Abwesenheiten; E2E `cal`.
 - **Dashboard:** Kennzahlen heute, überfällig, wartet auf Freigabe, Umsatz Monat; alles aus vorhandenen Daten.
 - **Kalender:** Tages- und Wochenansicht, Filter Mitarbeiter/Leistung, Abwesenheiten anzeigen.
 - **Tests:** Erweiterung der Suiten `home` und `partner`.
