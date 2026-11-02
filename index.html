@@ -665,6 +665,23 @@
     .tab-option svg { flex: none; width: 17px; height: 17px; }
     .tab-option small { margin-left: auto; color: var(--muted); font-size: 10.5px; font-weight: 600; }
     .tab-option.on { border-color: var(--green); background: var(--green-soft); color: var(--green); }
+    .task-archive { margin-top: 16px; }
+    .task-archive summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px; cursor: pointer; font-weight: 700; }
+    .task-archive summary span { display: inline-flex; align-items: center; gap: 8px; }
+    .task-archive summary svg { width: 17px; height: 17px; }
+    .task-archive summary small { color: var(--muted); font-weight: 500; font-size: 12px; }
+    .task-archive-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 0 18px 10px; }
+    .task-archive-all { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+    .task-archive-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .task-archive-actions .secondary-btn { min-height: 38px; padding: 0 12px; font-size: 13px; }
+    .task-archive-actions svg { width: 15px; height: 15px; }
+    .task-archive-list { margin: 0; padding: 0 18px 16px; list-style: none; display: grid; gap: 6px; }
+    .task-archive-list label { display: flex; align-items: flex-start; gap: 10px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; }
+    .task-archive-list input, .task-archive-all input { width: 18px; height: 18px; accent-color: var(--green); flex: none; margin-top: 1px; }
+    .task-archive-list strong { display: block; font-size: 14px; }
+    .task-archive-list small { color: var(--muted); font-size: 12px; }
+    .task-archive-hint { display: flex; align-items: center; gap: 6px; margin: 12px 4px; }
+    .task-archive-hint svg { width: 15px; height: 15px; }
     .pf-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
     .pf-kpi { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); border-left: 4px solid var(--green); }
     .pf-kpi > span { color: var(--muted); font-size: 12.5px; }
@@ -3822,6 +3839,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3935,6 +3953,7 @@ html.dark .pp-home-tile-icon { background: rgba(255, 255, 255, 0.02); }
 html.dark .pp-tile-pick input { accent-color: var(--green-solid); }
 html.dark .tab-picker button, html.dark .tab-picker .tab-more { color: #c0c8c3; }
 html.dark .tab-option { background: #1c1c1c; }
+html.dark .task-archive-list input, html.dark .task-archive-all input { accent-color: var(--green-solid); }
 html.dark .pf-facts em, html.dark .pf-over { color: #d09288; }
 html.dark .pf-reasons b { color: #d09288; }
 html.dark .pf-fine { color: #a5dabe; }
@@ -7656,7 +7675,23 @@ Morgen|Tomorrow|Imorgon
       ].filter(Boolean);
       return details.length ? details.join(' · ') : 'Gebäudedaten ergänzen';
     }
+    // Erledigte Aufgaben: Zeitpunkt merken, nach 3 Tagen ins Archiv (bleiben in der Liste – Cloud-Abgleich und Verknüpfungen bleiben erhalten)
+    const TASK_ARCHIVE_DAYS = 3;
+    function stampTaskArchive() {
+      if (!Array.isArray(tasks)) return;
+      const today = localDateKey(new Date());
+      const limit = shiftDateKey(today, -TASK_ARCHIVE_DAYS);
+      tasks.forEach((task) => {
+        const done = task.done || taskStatus(task) === 'Erledigt';
+        if (!done) { if (task.doneAt || task.archivedAt) { delete task.doneAt; delete task.archivedAt; } return; }
+        if (!task.doneAt) task.doneAt = task.date && task.date < today ? task.date : today;
+        if (!task.archivedAt && task.doneAt <= limit) task.archivedAt = today;
+      });
+    }
+    const isArchivedTask = (task) => Boolean(task?.archivedAt);
+    stampTaskArchive(); // beim Start: alte erledigte Aufgaben ins Archiv
     function persistTasks() {
+      stampTaskArchive();
       try {
         localStorage.setItem('stugliv-tasks', JSON.stringify(tasks));
         return true;
@@ -8489,6 +8524,7 @@ Morgen|Tomorrow|Imorgon
       const priorityText = { urgent: 'Dringend', soon: 'Wichtig', normal: 'Normal' };
       const today = localDateKey(new Date());
       const visible = tasks.filter((task) => {
+        if (isArchivedTask(task)) return false;
         const matchesStatus = taskFilter === 'all' || taskStatus(task) === taskFilter;
         const matchesProperty = taskPropertyFilter === 'all' || task.property === taskPropertyFilter;
         const matchesPriority = taskPriorityFilter === 'all' || (task.priority || 'normal') === taskPriorityFilter;
@@ -8530,12 +8566,64 @@ Morgen|Tomorrow|Imorgon
         </article>`;
       }).join('');
       const openCount = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length;
+      const archivedCount = tasks.filter(isArchivedTask).length;
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
         <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-template-picker>${icon('task')} Aufgabenpaket aus Vorlage wählen</button></div></section>
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount} offen · ${tasks.length - openCount} erledigt</p></div></div>
+        <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount} offen · ${tasks.length - openCount - archivedCount} erledigt${archivedCount ? ` · ${archivedCount} im Archiv` : ''}</p></div></div>
         <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
-        ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="tcard-list">${rows || '<div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div>'}</div>`}</section>`;
+        ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="tcard-list">${rows || '<div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div>'}</div>`}</section>
+        ${taskArchiveHtml()}`;
     }
+    // ----- Archiv erledigter Aufgaben -----
+    const taskArchiveSel = new Set();
+    let taskArchiveOpen = false;
+    function taskArchiveHtml() {
+      const list = tasks.filter(isArchivedTask).sort((a, b) => String(b.doneAt || '').localeCompare(String(a.doneAt || '')));
+      if (!list.length) return `<p class="settings-hint task-archive-hint">${icon('archive')} Erledigte Aufgaben wandern nach ${TASK_ARCHIVE_DAYS} Tagen automatisch ins Archiv.</p>`;
+      const all = list.length && list.every((t) => taskArchiveSel.has(String(t.id)));
+      const n = list.filter((t) => taskArchiveSel.has(String(t.id))).length;
+      return `<section class="card task-archive"><details ${taskArchiveOpen ? 'open' : ''} data-task-archive><summary><span>${icon('archive')} Archiv · ${list.length} erledigte ${list.length === 1 ? 'Aufgabe' : 'Aufgaben'}</span><small>älter als ${TASK_ARCHIVE_DAYS} Tage</small></summary>
+        <div class="task-archive-bar"><label class="task-archive-all"><input type="checkbox" data-archive-all ${all ? 'checked' : ''}> Alle auswählen</label>
+          <div class="task-archive-actions"><button type="button" class="secondary-btn" data-archive-export>${icon('download')} ${n ? `${n} exportieren` : 'Alle exportieren'} (CSV)</button><button type="button" class="secondary-btn" data-archive-restore ${n ? '' : 'disabled'}>${icon('undo')} Wiederherstellen</button><button type="button" class="secondary-btn danger" data-archive-delete ${n ? '' : 'disabled'}>Löschen${n ? ` (${n})` : ''}</button></div></div>
+        <ul class="task-archive-list">${list.map((t) => `<li><label><input type="checkbox" data-archive-task="${t.id}" ${taskArchiveSel.has(String(t.id)) ? 'checked' : ''}><span><strong>${escapeHtml(t.title)}</strong><small>${escapeHtml([singleHouse() ? '' : t.property, t.area, providerById(t.partnerId)?.name || (t.selfService ? 'Eigenleistung' : ''), `erledigt ${fmtDate(t.doneAt)}`].filter(Boolean).join(' · '))}</small></span></label></li>`).join('')}</ul>
+      </details></section>`;
+    }
+    function rerenderTaskArchive() { const box = document.querySelector('.task-archive, .task-archive-hint'); if (box) box.outerHTML = taskArchiveHtml(); else render(); }
+    function exportTaskArchive(list) {
+      const cell = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const head = ['Aufgabe', 'Ferienhaus', 'Bereich', 'Fällig', 'Erledigt am', 'Servicepartner', 'Priorität', 'Wiederholung', 'Beschreibung'];
+      const rows = list.map((t) => [t.title, t.property, t.area, t.date, t.doneAt, providerById(t.partnerId)?.name || (t.selfService ? 'Eigenleistung' : ''), { urgent: 'Dringend', soon: 'Wichtig' }[t.priority] || 'Normal', t.repeat, t.description].map(cell).join(';'));
+      const text = '\ufeff' + [head.map(cell).join(';'), ...rows].join('\r\n');
+      downloadFile(new TextEncoder().encode(text), `Husora-Aufgaben-Archiv-${localDateKey(new Date())}.csv`, 'text/csv;charset=utf-8');
+      showToast(`${list.length} ${list.length === 1 ? 'Aufgabe' : 'Aufgaben'} als CSV exportiert – öffnet sich z. B. in Excel oder Numbers.`);
+    }
+    document.addEventListener('toggle', (event) => { if (event.target.matches?.('[data-task-archive]')) taskArchiveOpen = event.target.open; }, true);
+    document.addEventListener('change', (event) => {
+      const one = event.target.closest?.('[data-archive-task]');
+      const all = event.target.closest?.('[data-archive-all]');
+      if (!one && !all) return;
+      if (one) { if (one.checked) taskArchiveSel.add(one.dataset.archiveTask); else taskArchiveSel.delete(one.dataset.archiveTask); }
+      if (all) tasks.filter(isArchivedTask).forEach((t) => { if (all.checked) taskArchiveSel.add(String(t.id)); else taskArchiveSel.delete(String(t.id)); });
+      rerenderTaskArchive();
+    });
+    document.addEventListener('click', (event) => {
+      const archived = tasks.filter(isArchivedTask);
+      const picked = archived.filter((t) => taskArchiveSel.has(String(t.id)));
+      if (event.target.closest('[data-archive-export]')) { exportTaskArchive(picked.length ? picked : archived); return; }
+      if (event.target.closest('[data-archive-restore]') && picked.length) {
+        picked.forEach((t) => { delete t.archivedAt; t.doneAt = localDateKey(new Date()); });
+        taskArchiveSel.clear(); persistTasks(); render();
+        showToast(`${picked.length} ${picked.length === 1 ? 'Aufgabe' : 'Aufgaben'} wieder in der Liste – sie wandern in ${TASK_ARCHIVE_DAYS} Tagen erneut ins Archiv.`);
+        return;
+      }
+      if (event.target.closest('[data-archive-delete]') && picked.length) {
+        if (!confirm(`${picked.length} archivierte ${picked.length === 1 ? 'Aufgabe' : 'Aufgaben'} endgültig löschen? Aufträge und Rechnungen von Servicepartnern bleiben erhalten.`)) return;
+        const ids = new Set(picked.map((t) => String(t.id)));
+        tasks = tasks.filter((t) => !ids.has(String(t.id)));
+        taskArchiveSel.clear(); persistTasks(); render();
+        showToast(`${ids.size} ${ids.size === 1 ? 'Aufgabe' : 'Aufgaben'} gelöscht.`);
+      }
+    });
     function automationPage() {
       const today = localDateKey(new Date());
       const sw = (id, checked, label) => `<label class="switch"><input type="checkbox" id="${id}" ${checked ? 'checked' : ''}><span class="switch-track"></span><span>${label}</span></label>`;
