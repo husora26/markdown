@@ -2931,6 +2931,7 @@
     .pp-area-list small { color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
     .pp-area-actions { display: flex; gap: 10px; flex: none; }
     .pp-batch-spacer { height: 260px; }
+    .pp-batch-none { flex: 1 1 100%; margin: 0; color: rgba(255,255,255,.88); font-size: 13px; }
     .tchip.progress { background: #e4eefb; color: #2b5f99; font-weight: 700; }
     .tchip.progress svg { width: 12px; height: 12px; }
     .tcard.is-progress { border-left: 4px solid #3b7bbf; }
@@ -3890,6 +3891,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
   
   
@@ -5823,6 +5825,9 @@ Sanierung|Renovation|Renovering
 Alle Servicepartner|All service partners|Alla servicepartner
 Servicepartner auswählen|Choose service partner|Välj servicepartner
 Mit diesem Servicepartner gibt es noch keine Gespräche.|No conversations with this service partner yet.|Inga konversationer med denna servicepartner ännu.
+Verschiedene Kunden – je Kunde eine Rechnung|Different customers – one invoice per customer|Olika kunder – en faktura per kund
+Diese Aufträge werden über den Jahresvertrag abgerechnet (Mehr → Jahresverträge).|These orders are billed through the annual agreement (More → Annual agreements).|Dessa uppdrag faktureras via årsavtalet (Mer → Årsavtal).
+Diese Aufträge sind bereits abgerechnet oder gehören eigenen Kunden – hier gibt es nichts mehr abzurechnen.|These orders are already billed or belong to your own customers – nothing left to bill here.|Dessa uppdrag är redan fakturerade eller tillhör egna kunder – inget kvar att fakturera här.
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -5855,6 +5860,7 @@ Mit diesem Servicepartner gibt es noch keine Gespräche.|No conversations with t
       [/^Anfahrtspauschale \((\w+)\)$/, { en: 'Travel fee ($1)', sv: 'Resekostnad ($1)' }],
       [/^Stundensatz \((\w+)\)$/, { en: 'Hourly rate ($1)', sv: 'Timpris ($1)' }],
       [/^(\d+) Einträge?$/, { en: '$1 entries', sv: '$1 poster' }],
+      [/^Abrechnen: (.+) \((\d+)\)$/, { en: 'Bill: $1 ($2)', sv: 'Fakturera: $1 ($2)' }],
       [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
       [/^(\d+) überfällig$/, { en: '$1 overdue', sv: '$1 försenade' }],
       [/^(\d+) % erledigt$/, { en: '$1 % done', sv: '$1 % klart' }],
@@ -19191,13 +19197,16 @@ Mit diesem Servicepartner gibt es noch keine Gespräche.|No conversations with t
       const billable = sel.filter(ppBillable);
       const customers = new Set(billable.map((o) => o.organization_id));
       const inAgreement = sel.filter((o) => o.agreement_id).length;
-      const hint = customers.size > 1 ? 'Sammelrechnung nur für Aufträge desselben Kunden' : inAgreement ? `${inAgreement} im Jahresvertrag – nicht einzeln abrechenbar` : '';
+      const hint = customers.size > 1 ? 'Verschiedene Kunden – je Kunde eine Rechnung' : inAgreement ? `${inAgreement} im Jahresvertrag – nicht einzeln abrechenbar` : '';
+      const perCustomer = customers.size > 1 ? [...customers].map((org) => { const list = billable.filter((o) => o.organization_id === org); return `<button type="button" class="primary-btn" data-pp-batch="invoice" data-org="${org}" ${ppDisabled()}>${icon('cost')} Abrechnen: ${escapeHtml(ppCustomerName(org) || 'Kunde')} (${list.length})</button>`; }).join('') : '';
+      const nothing = !offered.length && !running.length && !billable.length && !(assignable.length && members.length);
       return `<div class="pp-batch-spacer" aria-hidden="true"></div><div class="pp-batch-bar" role="region" aria-label="Auswahl"><div class="pp-batch-info"><button type="button" class="pp-batch-x" data-pp-batch="clear" aria-label="Auswahl aufheben" title="Auswahl aufheben">✕</button><div><strong>${sel.length} ausgewählt</strong>${hint ? `<small>${escapeHtml(hint)}</small>` : ''}</div></div><div class="pp-actions">
         
         ${assignable.length && members.length ? `<select class="form-control pp-batch-member" data-pp-batch-member aria-label="Mitarbeiter für die Auswahl"><option value="">Mitarbeiter wählen …</option>${members.map((m) => `<option value="${m.user_id}" ${pp.batchMember === m.user_id ? 'selected' : ''}>${escapeHtml(ppMemberName(m.user_id) || m.user_id)} (${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)})</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-batch="assign" ${ppDisabled()}>${icon('users')} ${assignable.length === 1 ? 'Zuordnen' : `${assignable.length} zuordnen`}</button>` : ''}
         ${offered.length ? `<button type="button" class="primary-btn" data-pp-batch="accept" ${ppDisabled()}>${icon('check')} ${offered.length === 1 ? 'Annehmen' : `${offered.length} annehmen`}</button>` : ''}
         ${running.length ? `<button type="button" class="secondary-btn" data-pp-batch="complete" ${ppDisabled()}>${icon('check')} ${running.length === 1 ? 'Als erledigt melden' : `${running.length} gemeinsam beenden`}</button>` : ''}
-        ${billable.length && customers.size === 1 ? `<button type="button" class="primary-btn" data-pp-batch="invoice" ${ppDisabled()}>${icon('cost')} ${billable.length === 1 ? 'Abrechnen' : `Sammelrechnung (${billable.length})`}</button>` : ''}
+        ${billable.length && customers.size === 1 ? `<button type="button" class="primary-btn" data-pp-batch="invoice" ${ppDisabled()}>${icon('cost')} ${billable.length === 1 ? 'Abrechnen' : `Sammelrechnung (${billable.length})`}</button>` : perCustomer}
+        ${nothing ? `<p class="pp-batch-none">${inAgreement ? 'Diese Aufträge werden über den Jahresvertrag abgerechnet (Mehr → Jahresverträge).' : 'Diese Aufträge sind bereits abgerechnet oder gehören eigenen Kunden – hier gibt es nichts mehr abzurechnen.'}</p>` : ''}
       </div></div>`;
     }
     function ppBatchInvoiceForm() {
@@ -19343,6 +19352,7 @@ Mit diesem Servicepartner gibt es noch keine Gespräche.|No conversations with t
       if (batch) {
         const kind = batch.dataset.ppBatch;
         if (kind === 'clear') { pp.sel.clear(); pp.form = null; ppRender(); return; }
+        if (kind === 'invoice' && batch.dataset.org) { ppSelectedOrders().forEach((o) => { if (o.organization_id !== batch.dataset.org || !ppBillable(o)) pp.sel.delete(o.id); }); }
         if (kind === 'invoice') { pp.form = 'batch-invoice'; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo({ top: 0, behavior: 'smooth' }); return; }
         if (kind === 'accept' || kind === 'assign') {
           const member = document.querySelector('#partner-portal [data-pp-batch-member]')?.value || '';
