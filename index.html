@@ -2977,6 +2977,10 @@
     .tile-look-preview.photo span:nth-child(2) { background-image: url("assets/hauskontrolle.jpg"); }
     .tile-look-preview.photo span:nth-child(3) { background-image: url("assets/gaestewechsel.jpg"); }
     .hub-order-filters { margin: 4px 0 10px; }
+    .hub-partner-filter { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 13px; font-weight: 700; color: var(--muted); }
+    .hub-partner-filter span { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+    .hub-partner-filter svg { width: 15px; height: 15px; }
+    .hub-partner-filter select { flex: 1; min-width: 0; min-height: 42px; font-size: 15px; }
     .pp-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 14px; }
     .pp-kpi { display: grid; gap: 1px; padding: 10px 11px; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); text-align: left; cursor: pointer; }
     .pp-kpi b { font-size: 20px; line-height: 1.15; overflow-wrap: anywhere; }
@@ -3886,6 +3890,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
   
   
@@ -5815,6 +5820,9 @@ Einträge|entries|poster
 Wartung|Maintenance|Underhåll
 Garten|Garden|Trädgård
 Sanierung|Renovation|Renovering
+Alle Servicepartner|All service partners|Alla servicepartner
+Servicepartner auswählen|Choose service partner|Välj servicepartner
+Mit diesem Servicepartner gibt es noch keine Gespräche.|No conversations with this service partner yet.|Inga konversationer med denna servicepartner ännu.
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -20786,7 +20794,9 @@ Sanierung|Renovation|Renovering
         </section>`;
     }
     function hubChatListHtml() {
-      const convs = hubConversations();
+      const f = hub.partnerFilter || '';
+      const convs = hubConversations().filter((t) => !f || (t.kind === 'partner' ? t.id === f : t.order?.service_partner_id === f));
+      if (!convs.length && f) return '<p class="settings-hint">Mit diesem Servicepartner gibt es noch keine Gespräche.</p>';
       if (!convs.length) return `<div class="pp-empty">${icon('note')}<strong>Noch keine Gespräche</strong><p>Sobald ein eingeladener Servicepartner verbunden ist, kannst du ihm hier schreiben.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`;
       const row = (t) => { const last = t.messages[t.messages.length - 1]; const unread = hubUnread(t.messages); return `<button type="button" class="hub-conv ${unread ? 'unread' : ''}" data-hub-chat="${t.kind}:${t.id}"><span class="hub-avatar">${escapeHtml((t.partner?.company_name || t.order?.partner?.company_name || '?').slice(0, 1).toUpperCase())}</span><span class="hub-conv-main"><strong>${escapeHtml(t.title)}</strong><small>${escapeHtml(t.kind === 'order' ? t.subtitle : last ? `${last.sender_user_id === hubMyId() ? 'Du: ' : ''}${last.message}` : 'Noch keine Nachrichten – schreib die erste.')}</small></span><span class="hub-conv-meta">${last ? `<small>${escapeHtml(ppDate(last.created_at))}</small>` : ''}${unread ? `<b class="hub-count">${unread}</b>` : ''}</span></button>`; };
       // je Servicepartner: allgemeines Gespräch, darunter die Gespräche zu Aufträgen (mit Ferienhaus)
@@ -20819,7 +20829,7 @@ Sanierung|Renovation|Renovering
       const connected = (ownerSide.partners || []).filter((p) => p.partner_organization_id);
       const orders = ownerSide.orders || [];
       if (!connected.length && !orders.length) return `<div class="pp-empty">${icon('task')}<strong>Noch kein verbundener Partner</strong><p>Lade zuerst einen Servicepartner ein.</p><button type="button" class="secondary-btn" data-hub-tab="partners">Partner einladen</button></div>`;
-      const partner = connected.find((p) => p.id === hub.partner) || connected[0];
+      const partner = connected.find((p) => p.id === (hub.partnerFilter || hub.partner)) || connected[0];
       const active = (o) => ['offered', ...ORDER_RUNNING, 'completed'].includes(o.status);
       const sentTo = (taskId) => orders.filter((o) => o.service_task_id === taskId && active(o));
       const picked = hub.picked || (hub.picked = new Set());
@@ -20845,8 +20855,9 @@ Sanierung|Renovation|Renovering
       const archived = hubArchived();
       const filters = [['all', 'Alle', (o) => !archived.has(o.id)], ['offered', 'Neue Anfrage', (o) => o.status === 'offered' && !archived.has(o.id)], ['accepted', 'Angenommen', (o) => ['accepted', 'scheduled'].includes(o.status) && !archived.has(o.id)], ['running', 'In Arbeit', (o) => ['in_progress', ...ORDER_WAITING].includes(o.status) && !archived.has(o.id)], ['completed', 'Erledigt', (o) => o.status === 'completed' && !archived.has(o.id)], ['archive', 'Archiv', (o) => archived.has(o.id)]];
       const [, , keep] = filters.find(([id]) => id === hub.orderFilter) || filters[0];
-      const shown = orders.filter(keep);
-      const chips = `<div class="pp-filters hub-order-filters">${filters.map(([id, label, f]) => `<button type="button" class="${(hub.orderFilter || 'all') === id ? 'active' : ''}" data-hub-order-filter="${id}">${label} <b>${orders.filter(f).length}</b></button>`).join('')}</div>`;
+      const mine = hub.partnerFilter ? orders.filter((o) => o.service_partner_id === hub.partnerFilter) : orders;
+      const shown = mine.filter(keep);
+      const chips = `<div class="pp-filters hub-order-filters">${filters.map(([id, label, f]) => `<button type="button" class="${(hub.orderFilter || 'all') === id ? 'active' : ''}" data-hub-order-filter="${id}">${label} <b>${mine.filter(f).length}</b></button>`).join('')}</div>`;
       const groups = new Map();
       shown.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
       const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${o.status === 'offered' && cloudCanWrite() ? `<button type="button" class="secondary-btn danger" data-hub-withdraw="${o.id}">Anfrage zurückziehen</button>` : ''}${['completed', 'cancelled', 'rejected'].includes(o.status) ? `<button type="button" class="secondary-btn" data-hub-archive="${o.id}">${hubArchived().has(o.id) ? 'Aus dem Archiv holen' : 'Ins Archiv'}</button>` : ''}${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
@@ -20984,7 +20995,7 @@ Sanierung|Renovation|Renovering
     // ----- Jahresverträge (Hausbesitzer-Seite) -----
     const AG_STATUS = { proposed: 'Vorgeschlagen', active: 'Aktiv', declined: 'Abgelehnt', ended: 'Beendet', cancelled: 'Zurückgezogen' };
     function hubAgreementsHtml() {
-      const list = ownerSide.agreements || [];
+      const list = (ownerSide.agreements || []).filter((a) => !hub.partnerFilter || a.service_partner_id === hub.partnerFilter);
       const partners = (ownerSide.partners || []).filter((p) => p.partner_organization_id);
       const props = ownerSide.cloudProperties || [];
       const recurring = [...new Set(tasks.filter((t) => t.repeat && t.repeat !== 'Einmalig').map((t) => t.title))].slice(0, 40);
@@ -21050,11 +21061,21 @@ Sanierung|Renovation|Renovering
       if (ownerSide.partners === null && !ownerSide.busy) hubRefresh();
       const unread = hubTotalUnread();
       const body = hub.tab === 'chat' ? (hub.thread ? hubThreadHtml() : hubChatListHtml()) : hub.tab === 'orders' ? hubOrdersHtml() : hub.tab === 'agreements' ? hubAgreementsHtml() : hubPartnersHtml();
+      const filterable = (ownerSide.partners || []).filter((p) => p.partner_organization_id || (ownerSide.orders || []).some((o) => o.service_partner_id === p.id) || (ownerSide.agreements || []).some((a) => a.service_partner_id === p.id));
+      if (hub.partnerFilter && !filterable.some((p) => p.id === hub.partnerFilter)) hub.partnerFilter = '';
+      const partnerFilter = ['chat', 'orders', 'agreements'].includes(hub.tab) && !hub.thread && filterable.length > 1 ? `<label class="hub-partner-filter"><span>${icon('users')} Servicepartner</span><select class="form-control" data-hub-partner-filter aria-label="Servicepartner auswählen"><option value="">Alle Servicepartner</option>${filterable.map((p) => `<option value="${p.id}" ${hub.partnerFilter === p.id ? 'selected' : ''}>${escapeHtml(p.company_name)}</option>`).join('')}</select></label>` : '';
       return `${head}
         <div class="pp-filters hub-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" aria-selected="${hub.tab === id}" class="${hub.tab === id ? 'active' : ''}" data-hub-tab="${id}">${label}${id === 'chat' && unread ? ` <b class="hub-count">${unread}</b>` : ''}${id === 'agreements' && (ownerSide.agreements || []).some((a) => a.status === 'proposed' && a.proposed_by === 'partner') ? ' <b class="hub-count">!</b>' : ''}</button>`).join('')}</div>
         ${ownerSide.error ? `<p class="cloud-message error">${icon('alert')}<span>${escapeHtml(ownerSide.error)}</span></p>` : ''}
-        ${ownerSide.partners === null ? '<div class="pp-skel"><i></i><i></i></div>' : body}`;
+        ${ownerSide.partners === null ? '<div class="pp-skel"><i></i><i></i></div>' : `${partnerFilter}${body}`}`;
     }
+    document.addEventListener('change', (event) => {
+      const sel = event.target.closest?.('[data-hub-partner-filter]');
+      if (!sel) return;
+      hub.partnerFilter = sel.value;
+      if (sel.value) hub.partner = sel.value;
+      render();
+    });
     function hubRerender() {
       if (currentPage !== 'partnerHub') { hubUpdateBadge(); return; }
       const box = document.getElementById('hub-messages');

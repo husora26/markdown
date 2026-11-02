@@ -70,6 +70,20 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await H.click(`[data-hub-archive="${C}"]`); await H.waitForTimeout(150);
     return `archiviert und wiederhergestellt`;
   });
+  await step('Auswahl Servicepartner filtert Aufträge, Messenger und Jahresverträge', async () => {
+    await load();
+    await H.selectOption('[data-hub-partner-filter]', spId); await H.waitForTimeout(250);
+    const orderPartners = await H.evaluate(() => [...new Set((ownerSide.orders || []).filter((o) => document.querySelector(`[data-hub-history="${o.id}"]`)).map((o) => o.service_partner_id))]);
+    await H.evaluate(() => { hub.tab = 'chat'; hub.thread = null; render(); }); await H.waitForTimeout(200);
+    const sel = await H.$eval('[data-hub-partner-filter]', (e) => e.value);
+    const convs = await H.$$eval('.hub-conv', (e) => e.length);
+    await H.evaluate(() => { hub.tab = 'agreements'; render(); }); await H.waitForTimeout(200);
+    const sel2 = await H.$eval('[data-hub-partner-filter]', (e) => e.value);
+    await H.screenshot({ path: OUT + '/2-auswahl.png' });
+    await H.selectOption('[data-hub-partner-filter]', ''); await H.waitForTimeout(150);
+    if (orderPartners.join() !== spId || sel !== spId || sel2 !== spId) throw new Error(`${orderPartners} · ${sel} · ${sel2}`);
+    return `nur ${FIRM} · Auswahl bleibt über die Reiter erhalten · ${convs} Gespräch(e)`;
+  });
   await step('Kachel-Aussehen: Farbe auf beiden Seiten', async () => {
     await H.evaluate(() => { currentPage = 'settings'; settingsView = 'settings-home'; render(); }); await H.click('[data-owner-tile-look=color]'); await H.click('[data-owner-tile-swatch="#7048e8"]');
     const owner = await H.evaluate(() => [document.documentElement.classList.contains('owner-tiles-color'), displaySettings.tileColor].join('/'));
