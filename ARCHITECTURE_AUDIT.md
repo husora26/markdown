@@ -395,7 +395,13 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 - **Chat:** auf `messages` erweitern (Anhänge über `documents`); keine neuen Tabellen.
 - **Tests:** E2E `notify`.
 
-### Phase 10 – Automatisierung & Wiederkehr (Migration 3800)
+### Phase 10 – Automatisierung & Wiederkehr (Migration 3900)  ✅ umgesetzt (02.11.2026)
+> Umgesetzt (Migration 3900, SQL `recurring_test.sql`, E2E `recurring`):
+> - Jahresverträge: „Besuche automatisch planen“ (opt-in, Partnerleitung oder Hausbesitzer, RPC `set_agreement_auto_schedule`). `run_recurring_agreements()` legt Besuche `lead_days` (Standard 21) vorher als Aufträge (`scheduled`) beim Partner an – genau einmal je Termin (`service_orders.recurrence_key`, eindeutig), nicht wenn rund um den Termin schon ein Vertragsauftrag existiert.
+> - Keine Doppelten mit der App des Hausbesitzers: `offer_service_order` verknüpft eine gleichnamige Aufgabe (±7 Tage) mit dem geplanten Besuch, statt einen zweiten Auftrag anzulegen.
+> - Neue Automatik-Aktion `create_repair_order`: Mangel aus einer Partner-Kontrolle → Mangel freigegeben + Reparaturauftrag beim Partner (einmal je Prüfpunkt). Schalter „Mängel sofort beheben lassen“ unter Automatisierung (Hausbesitzer).
+> - pg_cron: stündlich `run_scheduled_automations()` (Wartung fällig, Rechnungen überfällig – lief bisher nicht automatisch), täglich `run_recurring_agreements()`.
+> - Offen: lokale Wartungsintervalle in `maintenance` projizieren (die App plant Wartung weiterhin lokal; Server-Wartung nur für Cloud-Einträge).
 - **Serverseitige Regeln** über `automation_rules`: Kontrolle fällig → Auftrag, Mangel → Reparaturauftrag.
 - **Wiederkehrende Aufträge:** aus `service_agreements` und `maintenance` per pg_cron oder Edge Function erzeugen. Die lokalen Wiederholaufgaben bleiben für Hausbesitzer ohne Partner.
 - **Wartung:** lokale Intervalle → `maintenance` projizieren.

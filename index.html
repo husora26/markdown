@@ -9330,6 +9330,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <section class="automation-summary"><div><strong>${automationActiveCount()}</strong><span>von ${bookingsEnabled() ? 7 : 6} Automatiken aktiv</span></div><div><strong>${tasks.filter((task) => task.auto && !task.done).length}</strong><span>automatisch geplante Aufgaben offen</span></div><div><strong>${tasks.filter((task) => task.auto && task.done).length}</strong><span>davon bereits erledigt</span></div></section>
         <div class="automation-grid">
           ${turnoverCard}
+          ${cloudRulesCardHtml()}
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('inspection')}</span><div><h2 class="card-title">Hauskontrolle bei Leerstand</h2><p class="card-caption">Ist die monatliche Abwesenheitskontrolle fällig und kein Gast im Haus, legt Husora eine Aufgabe an. Mit dem Prüfprotokoll erledigt sie sich von selbst.</p></div></div>
             <div class="automation-body">${sw('auto-vacancy', automation.vacancyInspection, 'Kontrollaufgabe automatisch anlegen')}<ul class="automation-status">${inspectionRows}</ul><button type="button" class="text-btn" data-page="inspections">Zur Hauskontrolle →</button></div></section>
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('moon')}</span><div><h2 class="card-title">Saisonale Aufgaben</h2><p class="card-caption">Einmal pro Jahr und Haus zur passenden Jahreszeit.</p></div></div>
@@ -16588,6 +16589,55 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         .catch((error) => showToast(error.message));
     });
 
+    // ===== Phase 10: Vertragsbesuche automatisch planen, Cloud-Regel Mangel → Reparaturauftrag =====
+    function agAutoHtml(a, canEdit) {
+      if (a.status !== 'active' || !('auto_schedule' in a)) return '';
+      return `<label class="settings-switch ag-auto"><span><strong>Besuche automatisch planen</strong><small>${a.auto_schedule ? `Aktiv: Husora legt jeden Besuch ${a.lead_days || 21} Tage vorher als Auftrag beim Partner an.` : 'Husora legt die Besuche des Vertrags selbst als Aufträge beim Partner an.'} Gleiche Aufgaben aus der App des Hausbesitzers werden damit verknüpft statt doppelt gesendet.</small></span><span class="switch"><input type="checkbox" data-ag-auto="${a.id}" ${a.auto_schedule ? 'checked' : ''} ${canEdit ? '' : 'disabled'}><span></span></span></label>`;
+    }
+    document.addEventListener('change', (event) => {
+      const input = event.target.closest?.('[data-ag-auto]');
+      if (!input) return;
+      const on = input.checked;
+      const inPortal = Boolean(input.closest('#partner-portal'));
+      const run = async () => {
+        await cloudFetch('/rest/v1/rpc/set_agreement_auto_schedule', { method: 'POST', body: { p_agreement_id: input.dataset.agAuto, p_enabled: on } });
+        showToast(on ? 'Besuche werden jetzt automatisch geplant.' : 'Automatische Planung ausgeschaltet – bereits geplante Besuche bleiben bestehen.');
+      };
+      if (inPortal) { pp.keepScroll = true; ppRun('agreement', run); }
+      else ownerRun('agreement', run);
+    });
+    // Cloud-Regel des Hausbesitzers (läuft auf dem Server, auch wenn die App geschlossen ist)
+    function cloudRulesS() { return window.__husoraRules || (window.__husoraRules = { rules: null, loading: false }); }
+    async function cloudRulesLoad() {
+      const s = cloudRulesS();
+      if (s.loading || !cloudReady()) return;
+      s.loading = true;
+      try { s.rules = await cloudFetch(`/rest/v1/automation_rules?organization_id=eq.${cloud.org.id}&trigger_type=eq.inspection_item_defect&select=id,name,active,action_config`); }
+      catch (error) { s.rules = []; }
+      finally { s.loading = false; if (currentPage === 'automation') render(); }
+    }
+    function cloudRulesCardHtml() {
+      if (!cloudReady()) return '';
+      const s = cloudRulesS();
+      if (!s.rules) { cloudRulesLoad(); return ''; }
+      const rule = s.rules.find((r) => r.action_config?.type === 'create_repair_order');
+      const on = Boolean(rule?.active);
+      return `<section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('alert')}</span><div><h2 class="card-title">Mängel sofort beheben lassen</h2><p class="card-caption">Meldet dein Servicepartner bei einer Kontrolle einen Mangel, beauftragt Husora die Beseitigung direkt bei ihm – ohne Rückfrage. Ausgeschaltet fragt der Partner wie bisher unter „Mängel & Reparaturen“ an.</p></div></div>
+        <label class="settings-switch"><span><strong>Mangel aus Partner-Kontrolle → Reparaturauftrag</strong><small>Läuft auf dem Server, auch wenn die App geschlossen ist.</small></span><span class="switch"><input type="checkbox" data-cloud-rule="repair_order" ${on ? 'checked' : ''} ${cloudCanWrite() ? '' : 'disabled'}><span></span></span></label></section>`;
+    }
+    document.addEventListener('change', (event) => {
+      const input = event.target.closest?.('[data-cloud-rule]');
+      if (!input) return;
+      const s = cloudRulesS();
+      const rule = (s.rules || []).find((r) => r.action_config?.type === 'create_repair_order');
+      const on = input.checked;
+      const req = rule
+        ? cloudFetch(`/rest/v1/automation_rules?id=eq.${rule.id}`, { method: 'PATCH', body: { active: on }, headers: { Prefer: 'return=minimal' } })
+        : on ? cloudFetch('/rest/v1/automation_rules', { method: 'POST', body: { organization_id: cloud.org.id, name: 'Mangel aus Partner-Kontrolle sofort beauftragen', trigger_type: 'inspection_item_defect', action_config: { type: 'create_repair_order' }, active: true }, headers: { Prefer: 'return=minimal' } }) : Promise.resolve();
+      req.then(() => { s.rules = null; showToast(on ? 'Mängel aus Partner-Kontrollen werden jetzt direkt beauftragt.' : 'Mängel werden wieder zuerst angefragt.'); cloudRulesLoad(); })
+        .catch((error) => { input.checked = !on; showToast(error.message); });
+    });
+
     // --- Ersteinrichtung ---
     let onboardingState = loadStore('stugliv-onboarding', null);
     let onboardingStep = 0;
@@ -20316,6 +20366,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         return `<article class="pp-card pp-agreement"><div class="pp-ag-head"><div><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.property?.name || a.property_label || 'Haus')} · ${escapeHtml(ppCustomerName(a.organization_id))}</small></div>${ppBadge(PP_AGREEMENT_STATUS, a.status)}</div>
           <dl class="pp-ag-facts"><div class="wide"><dt>${(a.task_titles || []).length > 1 ? 'Aufgaben' : 'Aufgabe'}</dt><dd>${escapeHtml(agTasksText(a))}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(ppMoney(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}${orders.length > done ? ` · ${orders.length - done} offen` : ''}</dd></div>${invoices.length ? `<div><dt>Abgerechnet</dt><dd>${invoices.map((i) => `${escapeHtml(i.invoice_number || '')} (${escapeHtml(ppMoney(i.amount_gross, i.currency))})`).join(', ')}</dd></div>` : ''}</dl>
           ${a.notes ? `<p class="pp-hint">${escapeHtml(a.notes)}</p>` : ''}
+          ${agAutoHtml(a, ppIsLead())}
           ${pp.form === `agreement-bill:${a.id}` ? ppAgreementBillForm(a) : pp.form === `agreement-edit:${a.id}` ? agEditFormHtml({ ...a, own: a.organization_id === ppOrg().id }, 'data-pp-form="agreement-edit"', [...new Set(ppD('orders').filter((o) => o.organization_id === a.organization_id).map((o) => o.title.split(' · ')[0]))].slice(0, 30)) : actions ? `<div class="pp-actions">${actions}</div>` : ''}</article>`;
       };
       const groups = [['Offene Vorschläge', list.filter((a) => a.status === 'proposed')], ['Aktive Verträge', list.filter((a) => a.status === 'active')], ['Beendet', list.filter((a) => ['ended', 'declined', 'cancelled'].includes(a.status))]];
@@ -22211,6 +22262,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         return `<article class="card hub-agreement"><div class="hub-partner-head"><div><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.partner?.company_name || 'Servicepartner')} · ${escapeHtml(a.property?.name || a.property_label || '')}</small></div><span class="hub-status ${a.status}">${AG_STATUS[a.status] || a.status}</span></div>
           <dl class="pp-ag-facts"><div class="wide"><dt>${(a.task_titles || []).length > 1 ? 'Aufgaben' : 'Aufgabe'}</dt><dd>${escapeHtml(agTasksText(a))}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(money(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}</dd></div>${billed.length ? `<div><dt>Abgerechnet</dt><dd>${billed.map((i) => escapeHtml(money(i.amount_gross, i.currency))).join(', ')}</dd></div>` : ''}</dl>
           ${a.notes ? `<p class="settings-hint">${escapeHtml(a.notes)}</p>` : ''}
+          ${agAutoHtml(a, cloudCanWrite())}
           ${hub.agEdit === a.id ? agEditFormHtml(a, 'data-owner-form="agreement-edit"', recurring) : `<div class="settings-actions">${incoming ? `<button type="button" class="primary-btn" data-owner-ag="accept" data-id="${a.id}" ${busy}>Annehmen</button><button type="button" class="secondary-btn" data-owner-ag="decline" data-id="${a.id}" ${busy}>Ablehnen</button>` : ''}${a.status === 'proposed' && a.proposed_by === 'owner' ? '<small class="settings-hint">Wartet auf Zustimmung des Partners</small>' : ''}  ${['proposed', 'active'].includes(a.status) ? `<button type="button" class="secondary-btn" data-owner-ag="edit" data-id="${a.id}" ${busy}>${icon('edit')} Bearbeiten</button>` : ''}${!billed.length ? `<button type="button" class="secondary-btn danger" data-owner-ag="delete" data-id="${a.id}" ${busy}>Löschen</button>` : ''}${a.status === 'active' || (a.status === 'proposed' && a.proposed_by === 'owner') ? `<button type="button" class="secondary-btn" data-owner-ag="end" data-id="${a.id}" ${busy}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''}</div>`}</article>`;
       };
       const form = partners.length && props.length ? `<form class="card hub-agreement-form" data-owner-form="agreement"><h3 class="card-title">Jahresvertrag vorschlagen</h3>
