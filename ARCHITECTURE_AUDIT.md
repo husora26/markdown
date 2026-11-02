@@ -344,7 +344,8 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 - **Lade-, Leer- und Fehlerzustände** prüfen.
 - **Tests:** E2E `orders2`.
 
-### Phase 7 – Kontrolle + Mängel (Migration 3400)
+### Phase 7 – Kontrolle + Mängel (Migration 3500)  ◐ Kernablauf umgesetzt (02.11.2026)
+> Umgesetzt: Partner meldet Mangel → Anfrage beim Hausbesitzer → Annahme erzeugt Reparaturauftrag → Status-Sync → Abrechnung wie Serviceaufgaben (Migration 3500, SQL `repair_offer_test.sql`, E2E `repair`). Offen: Vorher/Nachher-Fotos (`photo_kind`), Projektion der eigenen Hausbesitzer-Mängel.
 - **DB:**
   - `repairs` erweitern: `severity`, `category`, `location`, `source` (`owner/partner/inspection`), `customer_visible`.
   - `photos.photo_kind`.

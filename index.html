@@ -3030,6 +3030,16 @@
     .pp-prop-row small { color: var(--muted); font-size: 12px; }
     .pp-prop-row-side { display: grid; justify-items: end; gap: 3px; flex: none; }
     .pp-prop-row-side small { font-weight: 700; color: var(--ink, #1d2b24); }
+    .issue-offer { display: grid; gap: 8px; margin: 8px 0 4px; padding: 10px 12px; border: 1px solid #e2b35a; border-radius: 12px; background: #fdf4e1; }
+    .issue-offer p { display: grid; gap: 2px; margin: 0; font-size: 13.5px; }
+    .issue-offer p span { color: var(--muted); font-size: 12.5px; }
+    .issue-offer-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .issue-offer-state { display: flex; align-items: center; gap: 6px; margin: 6px 0 2px; color: var(--green); font-size: 12.5px; font-weight: 700; }
+    .issue-offer-state svg { width: 14px; height: 14px; }
+    .pp-defect-row { display: grid; gap: 4px; }
+    .pp-defect-ask { justify-self: start; margin: 0 0 6px 4px; }
+    .pp-repair { cursor: default; }
+    .pp-repair-btn { margin: 0 0 12px; }
     .pp-grant { display: inline-flex; align-items: center; gap: 4px; color: var(--green); font-weight: 700; }
     .pp-grant svg { width: 13px; height: 13px; }
     .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
@@ -4003,6 +4013,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4634,6 +4645,7 @@ html.dark .pp-prio-text.urgent, html.dark .pp-prio-text.emergency { color: #e3a2
 html.dark .pp-statlegend b { color: var(--ink, #d9e4de); }
 html.dark .pp-chart-bar { fill: #b6dac9; }
 html.dark .pp-prop-row-side small { color: var(--ink, #d9e4de); }
+html.dark .issue-offer { border: 1px solid #736241; background: #332a16; }
 html.dark .issue-card.in_progress .issue-status { color: #9ebfe0; }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
@@ -5885,6 +5897,24 @@ nicht abgerechnet|not billed|ej fakturerat
 Neu|New|Ny
 Laufend|Running|Pågående
 Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
+Beseitigung beim Kunden anfragen|Ask customer to approve the repair|Be kunden godkänna åtgärden
+Der Hausbesitzer sieht den Mangel unter „Mängel & Reparaturen“ und kann den Auftrag annehmen. Danach erscheint er hier als neuer Auftrag.|The homeowner sees the defect under “Defects & repairs” and can accept the order. It then appears here as a new order.|Husägaren ser bristen under ”Brister & reparationer” och kan godkänna uppdraget. Det visas sedan här som nytt uppdrag.
+Mangel *|Defect *|Brist *
+Was ist zu tun?|What needs to be done?|Vad behöver göras?
+Dringlichkeit|Urgency|Brådska
+Beim Kunden anfragen|Ask the customer|Fråga kunden
+Mangel melden|Report defect|Rapportera brist
+Festgestellte Mängel fragst du beim Kunden an. Nimmt er an, entsteht ein Auftrag: Termin festlegen, beseitigen und abrechnen wie bei jedem Auftrag.|Ask the customer about defects you found. If accepted, an order is created: set a date, fix and bill like any order.|Fråga kunden om brister du hittat. Godkänns det skapas ett uppdrag: boka tid, åtgärda och fakturera som vanligt.
+Beim Kunden angefragt|Requested from customer|Förfrågat hos kunden
+Beauftragt|Commissioned|Beställt
+Behoben|Fixed|Åtgärdat
+Erledigt & abgelehnt|Done & declined|Klart & avböjt
+Mangel festgestellt – Beseitigung anfragen|Defect found – ask for repair approval|Brist hittad – be om godkännande
+Mangel beim Kunden angefragt – sobald er annimmt, erscheint der Auftrag unter Mängel.|Defect sent to the customer – once accepted, the order appears under Defects.|Bristen skickad till kunden – när den godkänns visas uppdraget under Brister.
+Auftrag annehmen|Accept order|Godkänn uppdrag
+Auftrag erteilt – der Servicepartner legt den Termin fest.|Order placed – the service partner sets the date.|Uppdraget beställt – servicepartnern bokar tid.
+Anfrage abgelehnt.|Request declined.|Förfrågan avböjd.
+Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus.
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -5920,6 +5950,8 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
       [/^Abrechnen: (.+) \((\d+)\)$/, { en: 'Bill: $1 ($2)', sv: 'Fakturera: $1 ($2)' }],
       [/^Abgerechnet je Monat \((\w+), letzte 12 Monate\)$/, { en: 'Billed per month ($1, last 12 months)', sv: 'Fakturerat per månad ($1, senaste 12 månaderna)' }],
       [/^(\d+) offen · (\d+) Kontrollen · abgerechnet (.+)$/, { en: '$1 open · $2 inspections · billed $3', sv: '$1 öppna · $2 tillsyner · fakturerat $3' }],
+      [/^Beauftragt – Termin festlegen \((\d+)\)$/, { en: 'Commissioned – set a date ($1)', sv: 'Beställt – boka tid ($1)' }],
+      [/^Offene Mängel aus Kontrollen \((\d+)\)$/, { en: 'Open defects from inspections ($1)', sv: 'Öppna brister från tillsyner ($1)' }],
       [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
       [/^(\d+) überfällig$/, { en: '$1 overdue', sv: '$1 försenade' }],
       [/^(\d+) % erledigt$/, { en: '$1 % done', sv: '$1 % klart' }],
@@ -7302,6 +7334,8 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
     function syncRepairsAndRenovations(next, newId, added, completed, today) {
       let changed = false;
       issues.forEach((issue) => {
+        // Vom Servicepartner gemeldete Mängel laufen über dessen Auftrag – keine eigene Reparaturaufgabe, Status kommt aus der Cloud
+        if (issue.cloudRepairId) return;
         const property = properties.find((item) => item.id === issue.propertyId);
         const index = next.findIndex((task) => task.auto === 'repair' && task.issueId === issue.id);
         const task = index >= 0 ? next[index] : null;
@@ -9156,13 +9190,14 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
       const invoices = documents.filter((doc) => doc.issueId === issue.id);
       const total = invoices.reduce((sum, doc) => sum + Number(expenses.find((expense) => expense.id === doc.expenseId)?.amount || 0), 0);
       return `<div class="issue-extras">
-        ${!partnerId && !assignedPartnerCount(issue.propertyId) ? `<div class="issue-partner"><span>Servicepartner</span>${noPartnerLinkHtml(issue.propertyId)}</div>` : `<label class="issue-partner"><span>Servicepartner${partner ? ` <i class="tcard-ptype cat-${escapeHtml(partner.category)}">${partnerCategoryLabel(partner)}</i>` : ''}</span><select class="filter-select partner-select ${partnerId ? 'has-partner' : ''}" data-issue-partner="${escapeHtml(issue.id)}" aria-label="Servicepartner für diesen Mangel">${partnerOptionsHtml(propertyName, partnerId)}</select></label>`}
+        ${issue.cloudRepairId ? '' : !partnerId && !assignedPartnerCount(issue.propertyId) ? `<div class="issue-partner"><span>Servicepartner</span>${noPartnerLinkHtml(issue.propertyId)}</div>` : `<label class="issue-partner"><span>Servicepartner${partner ? ` <i class="tcard-ptype cat-${escapeHtml(partner.category)}">${partnerCategoryLabel(partner)}</i>` : ''}</span><select class="filter-select partner-select ${partnerId ? 'has-partner' : ''}" data-issue-partner="${escapeHtml(issue.id)}" aria-label="Servicepartner für diesen Mangel">${partnerOptionsHtml(propertyName, partnerId)}</select></label>`}
         <div class="issue-invoices"><span class="issue-invoices-head">Rechnungen${invoices.length ? ` (${invoices.length})` : ''}${total ? ` · <b>${escapeHtml(formatCost(total))}</b>` : ''}</span>
           ${invoices.map((doc) => { const expense = expenses.find((entry) => entry.id === doc.expenseId); return `<span class="issue-invoice"><button type="button" class="issue-invoice-name" data-open-document="${escapeHtml(doc.id)}" title="${escapeHtml(doc.name)}">${icon('document')} ${escapeHtml(doc.name)}</button>${expense ? `<em>${escapeHtml(formatCost(Number(expense.amount)))}</em>` : `<button type="button" class="issue-invoice-read" data-invoice-read="${escapeHtml(doc.id)}">Auslesen</button>`}</span>`; }).join('')}
           <label class="ap-upload">${icon('plus')} Rechnung hochladen<input type="file" data-issue-invoice="${escapeHtml(issue.id)}" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden></label></div>
       </div>`;
     }
     function repairPlanningPage(mode) {
+      try { if (cloudReady() && !ownerSide.repairsAsked && entitlements.can('service_portal')) { ownerSide.repairsAsked = true; ownerLoadPartners().then(() => { if (currentPage === 'repairs') render(); }).catch(() => {}); } } catch (error) { /* Partnerdaten optional */ }
       const today = localDateKey(new Date());
       const dateText = (date) => (date ? fmtDate(date) : 'offen');
       const propertyName = (id) => properties.find((property) => property.id === id)?.name || 'Ferienhaus entfernt';
@@ -9175,8 +9210,9 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
         const prio = { urgent: 'Dringend', soon: 'Wichtig', normal: 'Normal' }[issue.priority] || 'Wichtig';
         return `<article class="issue-card ${issue.status}"><div class="issue-main"><strong>${escapeHtml(issue.text)}</strong><small>${singleHouse() ? '' : `${escapeHtml(propertyName(issue.propertyId))} · `}${partLabel(issue.part) ? `${escapeHtml(partLabel(issue.part))} · ` : ''}${escapeHtml(issue.source || 'Meldung')} · ${escapeHtml(fmtDate(issue.date))}</small>${repair ? `<small class="issue-repair">${repair.done ? 'Reparatur erledigt' : `Reparatur geplant für ${escapeHtml(fmtDate(repair.date))}`}</small>` : ''}${issue.details ? `<small class="issue-details">${escapeHtml(issue.details).replace(/\n/g, '<br>')}</small>` : ''}</div>
           <div class="issue-side"><span class="task-tag ${issue.priority === 'urgent' ? 'urgent' : issue.priority === 'soon' ? 'soon' : ''}">${prio}</span><span class="issue-status">${ISSUE_STATUS[issue.status] || ''}</span></div>
+          ${ownerRepairOfferHtml(issue)}
           ${issueExtrasHtml(issue, repair)}
-          ${issue.orderedAt ? `<p class="issue-ordered">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(issue.orderedAt))} bei ${escapeHtml(issue.orderedTo || '')}</p>` : ''}<div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' ? `<button type="button" class="small-action order-btn" data-issue-order="${issue.id}">${icon('document')} ${issue.orderedAt ? 'Erneut beauftragen' : 'Mangel beauftragen'}</button><button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}${issueActive(issue) ? `<button type="button" class="small-action" data-issue-cancel="${issue.id}">Abbrechen</button>` : issue.status === 'cancelled' ? `<button type="button" class="small-action" data-issue-reopen="${issue.id}">Wieder öffnen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div>${issueHistoryHtml(issue)}</article>`;
+          ${issue.orderedAt ? `<p class="issue-ordered">${icon('check')} Beauftragt am ${escapeHtml(fmtDate(issue.orderedAt))} bei ${escapeHtml(issue.orderedTo || '')}</p>` : ''}<div class="issue-actions">${issue.status !== 'fixed' && issue.status !== 'renovation' && !issue.cloudRepairId ? `<button type="button" class="small-action order-btn" data-issue-order="${issue.id}">${icon('document')} ${issue.orderedAt ? 'Erneut beauftragen' : 'Mangel beauftragen'}</button><button type="button" class="small-action" data-issue-fixed="${issue.id}">Als behoben markieren</button><button type="button" class="small-action" data-issue-renovation="${issue.id}">Als Sanierung planen</button>` : ''}${issueActive(issue) ? `<button type="button" class="small-action" data-issue-cancel="${issue.id}">Abbrechen</button>` : issue.status === 'cancelled' ? `<button type="button" class="small-action" data-issue-reopen="${issue.id}">Wieder öffnen</button>` : ''}<button type="button" class="small-action" data-issue-delete="${issue.id}">Löschen</button></div>${issueHistoryHtml(issue)}</article>`;
       };
       const projectCard = (project) => {
         const linked = tasks.filter((task) => task.auto === 'renovation' && task.projectId === project.id);
@@ -18455,7 +18491,7 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -18476,9 +18512,10 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
             ppQ('property_service_assignments?status=eq.active&select=id,property_id,service_partner_id,access_level,start_date,end_date,status').catch(() => []),
             ppQ(`partner_property_notes?organization_id=eq.${org.id}&select=*`).catch(() => []),
             self ? ppQ(`service_partner_areas?service_partner_id=eq.${self}&select=*&order=created_at.asc`).catch(() => []) : [],
-            ppQ(`service_partner_absences?organization_id=eq.${org.id}&end_at=gte.${encodeURIComponent(new Date(Date.now() - 31 * 86400000).toISOString())}&select=*&order=start_at.asc&limit=300`).catch(() => [])
+            ppQ(`service_partner_absences?organization_id=eq.${org.id}&end_at=gte.${encodeURIComponent(new Date(Date.now() - 31 * 86400000).toISOString())}&select=*&order=start_at.asc&limit=300`).catch(() => []),
+            ppQ('repairs?service_partner_id=not.is.null&select=id,organization_id,property_id,inspection_id,inspection_item_id,service_order_id,title,description,priority,status,estimated_cost,actual_cost,offered_at,response_note,created_at&order=created_at.desc&limit=300').catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences };
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs };
           pp.access = {};
         } else {
           pp.data = null;
@@ -18862,6 +18899,7 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
         </div>
         ${ORDER_RUNNING.includes(o.status) ? ppAccessHtml(o) : ''}
         ${o.description ? `<div class="pp-card"><span class="pp-eyebrow">Beschreibung</span><p class="pp-text">${escapeHtml(o.description)}</p></div>` : ''}
+        ${o.organization_id !== ppOrg()?.id && lead && ['accepted', 'scheduled', ...ORDER_RUNNING, 'completed'].includes(o.status) ? (pp.form === `repair-order:${o.id}` ? ppRepairFormHtml({ key: o.id, propertyId: o.property_id, orderId: o.id }) : `<button type="button" class="secondary-btn pp-repair-btn" data-pp-action="repair-form-order" data-id="${o.id}">${icon('alert')} Mangel festgestellt – Beseitigung anfragen</button>`) : ''}
         ${o.response_note ? `<div class="pp-card"><span class="pp-eyebrow">Deine Antwort</span><p class="pp-text">${escapeHtml(o.response_note)}</p></div>` : ''}
         ${actions}
         ${ppSection('Fotos & Dokumente', `<div class="pp-gallery">${photos.map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(ph.caption || 'Foto')}"><img data-pp-thumb="${ph.id}" alt="${escapeHtml(ph.caption || 'Foto')}"></button>`).join('')}</div>
@@ -19594,7 +19632,7 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
       const today = ppToday();
       if (id === 'orders') { const open = ppOpenOrders(); const offered = ppD('orders').filter((o) => o.status === 'offered').length; return { value: open.length, unit: 'offen', note: offered ? `${offered} neue Anfrage${offered === 1 ? '' : 'n'}` : 'keine neuen Anfragen', tone: offered ? 'amber' : '' }; }
       if (id === 'inspections') { const list = ppD('inspections'); const open = list.filter((i) => i.status === 'scheduled').length; const running = list.filter((i) => i.status === 'in_progress').length; return { value: open + running, unit: 'offen', note: running ? `${running} in Bearbeitung` : `${list.filter((i) => i.status === 'completed').length} abgeschlossen` }; }
-      if (id === 'defects') { const n = ppOpenDefects().length; return { value: n, unit: n === 1 ? 'Mangel' : 'Mängel', note: n ? 'aus Kontrollen gemeldet' : 'alles in Ordnung', tone: n ? 'red' : '' }; }
+      if (id === 'defects') { const rep = ppD('repairs'); const asked = rep.filter((r) => r.status === 'reported').length; const work = rep.filter((r) => ['approved', 'assigned', 'in_progress'].includes(r.status)).length; const n = ppOpenDefects().filter((item) => !ppRepairForItem(item.id)).length + asked + work; return { value: n, unit: n === 1 ? 'Mangel' : 'Mängel', note: work ? `${work} beauftragt` : asked ? `${asked} angefragt` : n ? 'aus Kontrollen gemeldet' : 'alles in Ordnung', tone: work ? 'amber' : n ? 'red' : '' }; }
       if (id === 'finance') { const unpaid = ppD('invoices').filter((i) => ['received', 'approved', 'overdue'].includes(i.status)); const sum = unpaid.reduce((s, x) => s + Number(x.amount_gross || 0), 0); return { value: unpaid.length, unit: 'offen', note: unpaid.length ? ppMoney(sum, unpaid[0]?.currency) : `${ppD('quotes').filter((q) => ['requested', 'received'].includes(q.status)).length} offene Angebote` }; }
       if (id === 'calendar') { const n = [...ppD('orders').filter((o) => ppDayKey(o.scheduled_at) === today && !['completed', 'cancelled', 'rejected'].includes(o.status)), ...ppD('inspections').filter((i) => ppDayKey(i.scheduled_at) === today && i.status !== 'cancelled')].length; return { value: n, unit: n === 1 ? 'Termin' : 'Termine', note: 'heute' }; }
       if (id === 'customers') { const c = ppD('customers').length; return { value: c, unit: c === 1 ? 'Kunde' : 'Kunden', note: `${ppD('properties').length} Objekte` }; }
@@ -19606,12 +19644,56 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
     function ppTilesHtml() {
       return `<div class="pp-home-tiles">${ppTiles().map((id) => { const [, label, ic, img] = PP_TILES.find(([t]) => t === id); const info = ppTileInfo(id); return `<button type="button" class="pp-home-tile ${info.tone || ''}" data-pp-view="${id}"><img src="${img}" alt="" aria-hidden="true"><span class="pp-home-tile-head"><span>${escapeHtml(label)}</span><span class="pp-home-tile-icon">${icon(ic)}</span></span><span class="pp-home-tile-value">${escapeHtml(String(info.value))} <small>${escapeHtml(info.unit)}</small></span><span class="pp-home-tile-note">${escapeHtml(info.note)}</span></button>`; }).join('')}</div>`;
     }
-    function ppDefectsHtml() {
-      const list = ppOpenDefects();
-      return `${ppBack()}<div class="pp-page-head"><h1>Mängel</h1></div>
-        <p class="pp-muted">Offene Mängel aus deinen Kontrollen – tippe einen Mangel an, um die Kontrolle zu öffnen.</p>
-        <div class="pp-list">${list.map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml([item.inspection.property?.name || ppPropertyName(item.inspection.property_id), ppOwnerName(item.inspection.organization_id, item.inspection.property_id)].filter(Boolean).join(' · '))}</small>${item.notes ? `<small>${escapeHtml(item.notes)}</small>` : ''}</span>${item.estimated_cost ? `<span class="pp-amount">${escapeHtml(ppMoney(item.estimated_cost))}</span>` : ''}${ppBadge(PP_INSPECTION_STATUS, item.inspection.status)}</button>`).join('') || ppEmpty('Keine offenen Mängel', 'Mängel, die du bei Kontrollen meldest, erscheinen hier.')}</div>`;
+    // ----- Mängel: beim Kunden anfragen → beauftragt → Auftrag (wie Serviceaufgaben) -----
+    const PP_REPAIR_STATUS = { reported: ['Beim Kunden angefragt', 'amber'], approved: ['Beauftragt', 'green'], assigned: ['Beauftragt', 'green'], in_progress: ['In Arbeit', 'blue'], completed: ['Behoben', 'done'], cancelled: ['Abgelehnt', 'muted'] };
+    const ppRepairForItem = (itemId) => ppD('repairs').find((r) => r.inspection_item_id === itemId && r.status !== 'cancelled');
+    function ppRepairFormHtml({ key, propertyId = '', title = '', description = '', cost = '', itemId = '', orderId = '', choose = false }) {
+      const houses = ppD('properties').filter((p) => p.organization_id !== ppOrg()?.id);
+      return `<form class="pp-card pp-form pp-subform" data-pp-form="repair-offer" data-item="${itemId}" data-order="${orderId}"><h3>Beseitigung beim Kunden anfragen</h3>
+        <p class="pp-hint">Der Hausbesitzer sieht den Mangel unter „Mängel & Reparaturen“ und kann den Auftrag annehmen. Danach erscheint er hier als neuer Auftrag.</p>
+        <div class="pp-grid">${choose ? `<label class="full"><span class="form-label">Ferienhaus *</span><select class="form-control" name="property_id" required>${houses.map((p) => `<option value="${p.id}" ${p.id === propertyId ? 'selected' : ''}>${escapeHtml(p.name)} – ${escapeHtml(ppCustomerName(p.organization_id))}</option>`).join('')}</select></label>` : `<input type="hidden" name="property_id" value="${propertyId}">`}
+        <label class="full"><span class="form-label">Mangel *</span><input class="form-control" name="title" required maxlength="160" value="${escapeHtml(title)}" placeholder="z. B. Dachrinne undicht"></label>
+        <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="2000" placeholder="Was ist zu tun?">${escapeHtml(description)}</textarea></label>
+        <label><span class="form-label">Kosten ca. (${escapeHtml(ppOrg()?.currency || 'EUR')})</span><input class="form-control" type="number" min="0" step="0.01" name="cost" value="${cost ?? ''}"></label>
+        <label><span class="form-label">Dringlichkeit</span><select class="form-control" name="priority"><option value="normal">Normal</option><option value="high">Wichtig</option><option value="urgent">Dringend</option></select></label></div>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>${icon('check')} Beim Kunden anfragen</button></div></form>`;
     }
+    function ppDefectsHtml() {
+      const repairs = ppD('repairs');
+      const orderOf = (r) => ppD('orders').find((o) => o.id === r.service_order_id);
+      const asked = repairs.filter((r) => r.status === 'reported');
+      const commissioned = repairs.filter((r) => r.service_order_id && orderOf(r) && !['completed', 'cancelled', 'rejected'].includes(orderOf(r).status));
+      const closed = repairs.filter((r) => ['completed', 'cancelled'].includes(r.status) || (r.service_order_id && ['completed'].includes(orderOf(r)?.status))).slice(0, 10);
+      const list = ppOpenDefects();
+      const lead = ppIsLead();
+      const repairCard = (r) => `<div class="pp-item pp-repair"><span class="pp-item-main"><strong>${escapeHtml(r.title)}</strong><small>${escapeHtml([ppPropertyName(r.property_id), ppCustomerName(r.organization_id)].filter(Boolean).join(' · '))}${r.offered_at ? ` · ${escapeHtml(ppDate(r.offered_at))}` : ''}</small>${r.response_note ? `<small>„${escapeHtml(r.response_note)}“</small>` : ''}</span>${r.estimated_cost != null ? `<span class="pp-amount">${escapeHtml(ppMoney(r.estimated_cost))}</span>` : ''}${ppBadge(PP_REPAIR_STATUS, r.status)}</div>`;
+      const defectRow = (item) => {
+        const r = ppRepairForItem(item.id);
+        const customer = item.inspection.organization_id !== ppOrg()?.id;
+        const formOpen = pp.form === `repair:${item.id}`;
+        return `<div class="pp-defect-row"><button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml([item.inspection.property?.name || ppPropertyName(item.inspection.property_id), ppOwnerName(item.inspection.organization_id, item.inspection.property_id)].filter(Boolean).join(' · '))}</small>${item.notes ? `<small>${escapeHtml(item.notes)}</small>` : ''}</span>${item.estimated_cost ? `<span class="pp-amount">${escapeHtml(ppMoney(item.estimated_cost))}</span>` : ''}${r ? ppBadge(PP_REPAIR_STATUS, r.status) : ppBadge(PP_INSPECTION_STATUS, item.inspection.status)}</button>
+          ${customer && lead && !r && !formOpen ? `<button type="button" class="text-btn pp-defect-ask" data-pp-action="repair-form" data-item="${item.id}">${icon('alert')} Beseitigung beim Kunden anfragen</button>` : ''}
+          ${formOpen ? ppRepairFormHtml({ key: item.id, propertyId: item.inspection.property_id, title: item.name, description: item.notes || '', cost: item.estimated_cost ?? '', itemId: item.id }) : ''}</div>`;
+      };
+      return `${ppBack()}<div class="pp-page-head"><h1>Mängel</h1>${lead && ppD('properties').some((p) => p.organization_id !== ppOrg()?.id) ? `<button type="button" class="primary-btn" data-pp-action="repair-form" data-item="new">${icon('plus')} Mangel melden</button>` : ''}</div>
+        <p class="pp-muted">Festgestellte Mängel fragst du beim Kunden an. Nimmt er an, entsteht ein Auftrag: Termin festlegen, beseitigen und abrechnen wie bei jedem Auftrag.</p>
+        ${pp.form === 'repair:new' ? ppRepairFormHtml({ key: 'new', choose: true }) : ''}
+        ${commissioned.length ? ppSection(`Beauftragt – Termin festlegen (${commissioned.length})`, `<div class="pp-list">${commissioned.map((r) => ppOrderCard(orderOf(r))).join('')}</div>`) : ''}
+        ${asked.length ? ppSection(`Beim Kunden angefragt (${asked.length})`, `<div class="pp-list">${asked.map(repairCard).join('')}</div>`) : ''}
+        ${ppSection(`Offene Mängel aus Kontrollen (${list.length})`, `<div class="pp-list">${list.map(defectRow).join('') || ppEmpty('Keine offenen Mängel', 'Mängel, die du bei Kontrollen meldest, erscheinen hier.')}</div>`)}
+        ${closed.length ? ppSection('Erledigt & abgelehnt', `<div class="pp-list">${closed.map(repairCard).join('')}</div>`) : ''}`;
+    }
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('#partner-portal [data-pp-form="repair-offer"]');
+      if (!form) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      if (!v.property_id) { showToast('Bitte ein Ferienhaus wählen.'); return; }
+      ppRun('repair', async () => {
+        await ppRpc('partner_offer_repair', { p_property_id: v.property_id, p_title: String(v.title || '').trim(), p_description: String(v.description || '').trim() || null, p_estimated_cost: v.cost === '' || v.cost === undefined ? null : Number(v.cost), p_inspection_item_id: form.dataset.item || null, p_service_order_id: form.dataset.order || null, p_priority: v.priority || 'normal' });
+        pp.form = null;
+      }, { notice: 'Mangel beim Kunden angefragt – sobald er annimmt, erscheint der Auftrag unter Mängel.' });
+    });
     // Einstellungen des Partner-Portals
     function ppSettingsHtml() {
       const tiles = ppTiles();
@@ -20130,6 +20212,8 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
       if (a === 'back') { pp.detail = pp.prev?.detail && pp.prev.detail.id !== pp.detail?.id ? pp.prev.detail : null; pp.prev = null; pp.form = null; ppRender(); return; }
       if (a === 'cancel-form') { pp.form = null; ppRender(); return; }
       if (a === 'new-order') { pp.form = 'new-order'; pp.formProperty = ''; ppRender(); return; }
+      if (a === 'repair-form') { pp.form = `repair:${action.dataset.item}`; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'repair-form-order') { pp.form = `repair-order:${action.dataset.id}`; pp.keepScroll = true; ppRender(); return; }
       if (a === 'prop-notes') { pp.form = `prop-notes:${action.dataset.property}`; pp.keepScroll = true; ppRender(); return; }
       if (a === 'order-for') { pp.form = 'new-order'; pp.formProperty = action.dataset.property; pp.keepScroll = true; ppRender(); return; }
       if (a === 'new-customer') { pp.form = 'new-customer'; ppRender(); return; }
@@ -20346,6 +20430,54 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
 
     // ----- Hausbesitzer-Seite: Servicepartner einladen und beauftragen -----
     const ownerSide = { partners: null, tasks: [], orders: [], messages: [], invites: [], me: '', busy: '', error: '', code: null };
+    // ----- Mängel, die ein Servicepartner gemeldet hat: als Auffälligkeit unter „Mängel & Reparaturen“ -----
+    const REPAIR_TO_ISSUE = { reported: 'open', approved: 'in_progress', assigned: 'in_progress', in_progress: 'in_progress', completed: 'fixed', cancelled: 'cancelled' };
+    function ownerSyncRepairIssues() {
+      if (!Array.isArray(ownerSide.repairOffers)) return;
+      let changed = false;
+      ownerSide.repairOffers.forEach((r) => {
+        const property = properties.find((pr) => pr.id === r.property?.app_ref) || properties.find((pr) => pr.name === r.property?.name);
+        if (!property) return;
+        const partner = r.partner?.company_name || 'Servicepartner';
+        let issue = issues.find((x) => x.cloudRepairId === r.id);
+        if (!issue) {
+          issue = { id: `pr-${r.id}`, propertyId: property.id, text: r.title, date: String(r.offered_at || new Date().toISOString()).slice(0, 10), status: REPAIR_TO_ISSUE[r.status] || 'open',
+            priority: r.priority === 'urgent' ? 'urgent' : r.priority === 'high' ? 'soon' : 'normal', source: `Gemeldet von ${partner}`, cloudRepairId: r.id, history: [] };
+          issues = [issue, ...issues]; changed = true;
+        }
+        const offer = { partner, cost: r.estimated_cost, description: r.description || '', status: r.status, orderId: r.service_order_id || '' };
+        if (JSON.stringify(issue.partnerOffer) !== JSON.stringify(offer)) { issue.partnerOffer = offer; changed = true; }
+        const target = REPAIR_TO_ISSUE[r.status];
+        if (target && issue.status !== target && !(issue.status === 'fixed' && target !== 'fixed')) { setIssueStatus(issue, target, r.status === 'approved' ? `Auftrag an ${partner}` : r.status === 'completed' ? `Behoben durch ${partner}` : r.status === 'cancelled' ? 'Anfrage abgelehnt' : 'Status vom Servicepartner'); changed = true; }
+      });
+      if (changed) { persistIssues(); if (['repairs', 'dashboard'].includes(currentPage)) render(); }
+    }
+    function ownerRepairOfferHtml(issue) {
+      const o = issue.partnerOffer;
+      if (!o) return '';
+      const cost = o.cost != null ? ` · ca. ${escapeHtml(formatCost(Number(o.cost)))}` : '';
+      if (o.status === 'reported') return `<div class="issue-offer"><p><strong>${escapeHtml(o.partner)} bietet die Beseitigung an${cost}</strong>${o.description ? `<span>${escapeHtml(o.description)}</span>` : ''}</p>
+        <div class="issue-offer-actions"><button type="button" class="secondary-btn" data-repair-offer="${escapeHtml(issue.cloudRepairId)}" data-accept="0">Ablehnen</button><button type="button" class="primary-btn" data-repair-offer="${escapeHtml(issue.cloudRepairId)}" data-accept="1">${icon('check')} Auftrag annehmen</button></div></div>`;
+      const label = { approved: 'Beauftragt – der Servicepartner plant den Termin', assigned: 'Beauftragt', in_progress: 'In Bearbeitung beim Servicepartner', completed: 'Behoben – Rechnung unter Dokumente', cancelled: 'Anfrage abgelehnt' }[o.status] || '';
+      return label ? `<p class="issue-offer-state">${icon(o.status === 'completed' ? 'check' : 'users')} ${escapeHtml(o.partner)}: ${escapeHtml(label)}${cost}</p>` : '';
+    }
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-repair-offer]');
+      if (!btn) return;
+      const accept = btn.dataset.accept === '1';
+      const issue = issues.find((x) => x.cloudRepairId === btn.dataset.repairOffer);
+      let note = null;
+      if (!accept) { note = window.prompt('Anfrage ablehnen? Grund (optional, sieht der Servicepartner):', ''); if (note === null) return; }
+      btn.disabled = true;
+      cloudFetch('/rest/v1/rpc/respond_repair_offer', { method: 'POST', body: { p_repair_id: btn.dataset.repairOffer, p_accept: accept, p_note: note } })
+        .then(() => {
+          if (issue) { setIssueStatus(issue, accept ? 'in_progress' : 'cancelled', accept ? `Auftrag an ${issue.partnerOffer?.partner || 'Servicepartner'}` : 'Anfrage abgelehnt'); if (issue.partnerOffer) issue.partnerOffer.status = accept ? 'approved' : 'cancelled'; persistIssues(); }
+          showToast(accept ? 'Auftrag erteilt – der Servicepartner legt den Termin fest.' : 'Anfrage abgelehnt.');
+          return ownerLoadPartners();
+        })
+        .catch((error) => showToast(error instanceof TypeError ? 'Keine Verbindung.' : error.message))
+        .finally(() => render());
+    });
     async function ownerLoadPartners() {
       if (!cloudReady()) return;
       const org = cloud.org.id;
@@ -20370,6 +20502,8 @@ Abgelehnt/Storniert|Declined/cancelled|Avböjt/avbrutet
         ownerSide.consentAsked = new Set([...(ownerSide.consentAsked || []), ...undecided.map((p) => p.id)]);
         showToast(`${undecided.map((p) => p.company_name).join(', ')} ist verbunden – bitte unter Partner-Portal → Partner die Kontaktfreigabe bestätigen.`);
       }
+      ownerSide.repairOffers = await cloudFetch(`/rest/v1/repairs?organization_id=eq.${org}&service_partner_id=not.is.null&select=id,title,description,priority,status,estimated_cost,actual_cost,offered_at,response_note,service_order_id,service_partner_id,partner:service_partners(company_name),property:properties(name,app_ref)&order=created_at.desc&limit=300`).catch(() => null);
+      ownerSyncRepairIssues();
       ownerSide.assignments = await cloudFetch(`/rest/v1/property_service_assignments?organization_id=eq.${org}&status=neq.ended&select=id,property_id,service_partner_id,access_level,start_date,end_date,status`).catch(() => null);
       [ownerSide.agreements, ownerSide.cloudProperties] = await Promise.all([
         cloudFetch(`/rest/v1/service_agreements?organization_id=eq.${org}&select=*,partner:service_partners(company_name),property:properties(name,app_ref)&order=starts_on.desc&limit=300`).catch(() => []),
