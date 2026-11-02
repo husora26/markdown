@@ -653,6 +653,17 @@
     html.ts-large .pp-main { zoom: 1.12; }
     html.ts-xlarge .pp-main { zoom: 1.25; }
     #legal-modal { z-index: 960; }
+    .tile-group-title { margin: 14px 0 -6px; color: var(--muted); font-size: 11.5px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+    .tab-picker button, .tab-picker .tab-more { position: relative; display: grid; justify-items: center; gap: 3px; padding: 6px 2px 16px; border: 1px solid transparent; border-radius: 11px; background: transparent; color: #4d5a51; cursor: pointer; font: inherit; }
+    .tab-picker button.active { border-color: var(--green); background: var(--green-soft); color: var(--green); }
+    .tab-picker button i { position: absolute; bottom: 2px; font-style: normal; font-size: 9.5px; color: var(--muted); }
+    .tab-picker .tab-more { opacity: .55; cursor: default; }
+    .tab-pick-title { margin: 4px 0 8px; font-size: 13px; font-weight: 700; }
+    .tab-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+    .tab-option { position: relative; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 11px; background: white; color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; text-align: left; cursor: pointer; }
+    .tab-option svg { flex: none; width: 17px; height: 17px; }
+    .tab-option small { margin-left: auto; color: var(--muted); font-size: 10.5px; font-weight: 600; }
+    .tab-option.on { border-color: var(--green); background: var(--green-soft); color: var(--green); }
     .pf-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 18px; }
     .pf-kpi { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); border-left: 4px solid var(--green); }
     .pf-kpi > span { color: var(--muted); font-size: 12.5px; }
@@ -3807,6 +3818,7 @@
   
   
   
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -3918,6 +3930,8 @@ html.dark .pp-company-mark { background: var(--green-solid); }
 html.dark .pp-home-tile { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.31); }
 html.dark .pp-home-tile-icon { background: rgba(255, 255, 255, 0.02); }
 html.dark .pp-tile-pick input { accent-color: var(--green-solid); }
+html.dark .tab-picker button, html.dark .tab-picker .tab-more { color: #c0c8c3; }
+html.dark .tab-option { background: #1c1c1c; }
 html.dark .pf-facts em, html.dark .pf-over { color: #d09288; }
 html.dark .pf-reasons b { color: #d09288; }
 html.dark .pf-fine { color: #a5dabe; }
@@ -7801,7 +7815,7 @@ Morgen|Tomorrow|Imorgon
           renovations: `<button class="stat" data-page="renovations"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Sanierung & Renovierung</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">${openProjects.length} <span class="stat-open-word">${openProjects.length === 1 ? 'Projekt' : 'Projekte'}</span></div><div class="stat-note">${openProjects.length ? `<em>Budget</em> ${escapeHtml(formatCost(openProjects.reduce((sum, project) => sum + (Number(project.budget) || 0), 0)))}` : '<em>Kein Projekt</em> geplant'}</div></button>`,
           providers: `<button class="stat" data-page="providers"><img class="stat-art" src="assets/schweden-landschaft.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Servicepartner finden</span><span class="stat-icon">${icon('search')}</span></div><div class="stat-value">${providers.length} <span class="stat-open-word">Betriebe</span></div><div class="stat-note"><em>Datenbank</em> mit Karte · ${favorites.length} Favoriten</div></button>`,
           documents: `<button class="stat" data-page="documents"><img class="stat-art" src="assets/dokumente.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Dokumente</span><span class="stat-icon">${icon('document')}</span></div><div class="stat-value">${documents.length}</div><div class="stat-note"><em>${documents.length === 1 ? 'Datei' : 'Dateien'}</em> gespeichert</div></button>`,
-          plans: `<button class="stat" data-page="plans"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Versionen</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${isPro() ? 'Pro' : 'Free'}</div><div class="stat-note"><em>${isPro() ? 'Alle Funktionen' : 'Pro-Funktionen'}</em> ${isPro() ? 'freigeschaltet' : 'ansehen'}</div></button>`,
+          plans: `<button class="stat" data-page="plans"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Versionen</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${escapeHtml(entitlements.plan().name)}</div><div class="stat-note"><em>${currentPlanId() === 'ultimate' ? 'Alle Funktionen' : 'Mehr Funktionen'}</em> ${currentPlanId() === 'ultimate' ? 'freigeschaltet' : 'ansehen'}</div></button>`,
           profile: `<button class="stat" data-page="profile"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Benutzerprofil</span><span class="stat-icon">${icon('users')}</span></div><div class="stat-value stat-value-sm">${escapeHtml(profileData.name || 'Profil')}</div><div class="stat-note">${profileData.mailAccount ? '<em>Mailkonto</em> verbunden' : '<em>Mailkonto</em> noch nicht verbunden'}</div></button>`
           , ...extraDashboardTiles()
         };
@@ -8342,11 +8356,13 @@ Morgen|Tomorrow|Imorgon
     (() => { try { const flag = new URLSearchParams(location.search).get('checkout'); if (!flag) return; history.replaceState(null, '', location.pathname); setTimeout(() => { showToast(flag === 'success' ? 'Danke! Dein Tarif wird freigeschaltet – das dauert nur einen Moment.' : 'Bezahlung abgebrochen – dein Tarif bleibt unverändert.'); currentPage = 'plans'; render(); setTimeout(loadOrgPlan, 2500); }, 800); } catch (error) { /* optional */ } })();
     const assignedProviderCount = () => new Set(Object.values(servicePartnerAssignments || {}).flat().filter((id) => providerById(id))).size;
     // Kacheln der Startseite: zu jedem Menüpunkt eine Kachel, im Profil frei wählbar (höchstens 10).
+    // Reihenfolge wie im Menü; [id, Name, verfügbar?, Hinweis, Gruppe]
     const DASHBOARD_TILES = [
-      ['properties', 'Mein Haus / Ferienhäuser'], ['tasks', 'Serviceaufgaben'], ['bookings', 'Buchungen', () => bookingsEnabled(), 'nur bei Vermietung'], ['calendar', 'Kalender'],
-      ['inspections', 'Hauskontrolle'], ['repairs', 'Reparatur & Instandhaltung'], ['renovations', 'Sanierung & Renovierung'], ['partners', 'Zugeordnete Servicepartner'],
-      ['providers', 'Servicepartner finden'], ['documents', 'Dokumente'], ['costs', 'Kosten'], ['automation', 'Automatisierung'],
-      ['house3d', 'Hausmodell (3D)', () => entitlements.can('house_model'), 'ab PLUS'], ['plans', 'Versionen'], ['profile', 'Benutzerprofil']
+      ['properties', 'Mein Haus / Ferienhäuser', null, '', 'Haus & Planung'], ['calendar', 'Kalender', null, '', 'Haus & Planung'], ['bookings', 'Buchungen', () => bookingsEnabled(), 'nur bei Vermietung', 'Haus & Planung'], ['tasks', 'Serviceaufgaben', null, '', 'Haus & Planung'], ['automation', 'Automatisierung', null, '', 'Haus & Planung'],
+      ['inspections', 'Hauskontrolle', null, '', 'Kontrolle & Pflege'], ['seasons', 'Saison-Checklisten', null, '', 'Kontrolle & Pflege'], ['repairs', 'Reparatur & Instandhaltung', null, '', 'Kontrolle & Pflege'], ['renovations', 'Sanierung & Renovierung', null, '', 'Kontrolle & Pflege'], ['house3d', 'Hausmodell (3D)', () => entitlements.can('house_model'), 'ab PLUS', 'Kontrolle & Pflege'],
+      ['partnerHub', 'Partner-Portal & Messenger', () => entitlements.can('service_portal'), 'ab PRO', 'Servicepartner'], ['partners', 'Zugeordnete Servicepartner', null, '', 'Servicepartner'], ['providers', 'Servicepartner finden', null, '', 'Servicepartner'],
+      ['documents', 'Dokumente', null, '', 'Verwaltung & Kosten'], ['emergency', 'Notfall & Zugang', null, '', 'Verwaltung & Kosten'], ['contracts', 'Verträge & Fristen', null, '', 'Verwaltung & Kosten'], ['meters', 'Zählerstände', null, '', 'Verwaltung & Kosten'], ['costs', 'Kosten', null, '', 'Verwaltung & Kosten'], ['portfolio', 'Portfolio', () => entitlements.can('portfolio'), 'ab ULTIMATE', 'Verwaltung & Kosten'],
+      ['plans', 'Versionen', null, '', 'Konto & App'], ['profile', 'Benutzerprofil', null, '', 'Konto & App'], ['settings', 'Einstellungen', null, '', 'Konto & App'], ['help', 'Hilfe & Support', null, '', 'Konto & App']
     ];
     const DASHBOARD_TILE_LIMIT = 10;
     const DEFAULT_DASHBOARD_TILES = ['properties', 'tasks', 'bookings', 'inspections', 'partners', 'costs', 'automation', 'house3d'];
@@ -8359,8 +8375,8 @@ Morgen|Tomorrow|Imorgon
       const chosen = dashboardTileSelection();
       const full = chosen.length >= DASHBOARD_TILE_LIMIT;
       return `<section class="card profile-form"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Kacheln auf der Startseite</h2><p class="card-caption">Wähle bis zu ${DASHBOARD_TILE_LIMIT} Kacheln, die auf der Übersicht erscheinen.</p></div><span class="tile-count ${full ? 'full' : ''}" id="tile-count">${chosen.length} von ${DASHBOARD_TILE_LIMIT}</span></div>
-        <div class="tile-choices">${DASHBOARD_TILES.map(([id, label, available, hint]) => { const on = chosen.includes(id); const off = available && !available(); return `<label class="tile-choice ${on ? 'on' : ''} ${off ? 'unavailable' : ''}"><input type="checkbox" data-dashboard-tile="${id}" ${on ? 'checked' : ''} ${!on && full ? 'disabled' : ''}><span class="tile-check">${icon('check')}</span><span>${escapeHtml(label)}${off ? `<small>${escapeHtml(hint)}</small>` : ''}</span></label>`; }).join('')}</div>
-        <div class="form-actions" style="justify-content:space-between;margin-top:12px"><span class="card-caption">${full ? 'Maximum erreicht – entferne eine Kachel, um eine andere zu wählen.' : 'Die Reihenfolge folgt dem Menü.'}</span><button type="button" class="text-btn" data-action="reset-dashboard-tiles">Standard wiederherstellen</button></div>
+        ${[...new Set(DASHBOARD_TILES.map((t) => t[4]))].map((group) => `<p class="tile-group-title">${escapeHtml(group)}</p><div class="tile-choices">${DASHBOARD_TILES.filter((t) => t[4] === group).map(([id, label, available, hint]) => { const on = chosen.includes(id); const off = available && !available(); return `<label class="tile-choice ${on ? 'on' : ''} ${off ? 'unavailable' : ''}"><input type="checkbox" data-dashboard-tile="${id}" ${on ? 'checked' : ''} ${!on && full ? 'disabled' : ''}><span class="tile-check">${icon('check')}</span><span>${escapeHtml(label)}${off ? `<small>${escapeHtml(hint)}</small>` : ''}</span></label>`; }).join('')}</div>`).join('')}
+        <div class="form-actions" style="justify-content:space-between;margin-top:12px"><span class="card-caption">${full ? 'Maximum erreicht – entferne eine Kachel, um eine andere zu wählen.' : 'Die Reihenfolge auf der Startseite folgt dem Menü.'}</span><button type="button" class="text-btn" data-action="reset-dashboard-tiles">Standard wiederherstellen</button></div>
       </section>`;
     }
     function saveDashboardTiles(next) {
@@ -15388,10 +15404,12 @@ Morgen|Tomorrow|Imorgon
         contracts: tile('contracts', 'Verträge & Fristen', 'contract', contractsAll.length, 'Verträge', dueContracts ? `<span class="stat-alert">${dueContracts} Frist${dueContracts === 1 ? '' : 'en'} bald</span>` : 'keine Frist in den nächsten 60 Tagen', 'dokumente.jpg'),
         meters: tile('meters', 'Zählerstände', 'meter', meterCount, 'Zähler', meterCount ? 'Ablesung eintragen' : 'Zähler anlegen', 'kosten.jpg'),
         settings: tile('settings', 'Einstellungen', 'gear', `${storageUsage().percent} %`, 'Speicher', 'Datensicherung & Darstellung', 'meine-haeuser.jpg'),
-        help: tile('help', 'Hilfe & Support', 'help', FAQ.length, 'Antworten', 'FAQ, Kontakt, Fehler melden', 'schweden-landschaft.jpg')
+        help: tile('help', 'Hilfe & Support', 'help', FAQ.length, 'Antworten', 'FAQ, Kontakt, Fehler melden', 'schweden-landschaft.jpg'),
+        partnerHub: (() => { if (!entitlements.can('service_portal')) return tile('partnerHub', 'Partner-Portal', 'note', 'PRO', '', 'Messenger und Aufträge an Servicepartner', 'gaestewechsel.jpg'); let unread = 0; try { unread = hubTotalUnread(); } catch (error) { unread = 0; } const running = (ownerSide.orders || []).filter((o) => ['offered', 'accepted', 'scheduled', 'in_progress'].includes(o.status)).length; return tile('partnerHub', 'Partner-Portal', 'note', unread || running, unread ? 'ungelesen' : 'laufend', unread ? `<span class="stat-alert">${unread} neue Nachricht${unread === 1 ? '' : 'en'}</span>` : cloudReady() ? 'Aufträge und Messenger' : 'Mit der Cloud anmelden', 'gaestewechsel.jpg'); })(),
+        portfolio: (() => { if (!entitlements.can('portfolio')) return tile('portfolio', 'Portfolio', 'cost', 'ULTIMATE', '', 'Zustands-Score, Prognose, Eskalationen', 'meine-haeuser.jpg'); const scores = properties.map((p) => conditionScore(p).score); const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0; const esc = escalatedTasks().filter((e) => e.stage >= 2).length; return tile('portfolio', 'Portfolio', 'cost', avg, '/100', esc ? `<span class="stat-alert">${esc} Eskalation${esc === 1 ? '' : 'en'}</span>` : 'Ø Zustands-Score', 'meine-haeuser.jpg'); })()
       };
     }
-    DASHBOARD_TILES.push(['seasons', 'Saison-Checklisten'], ['emergency', 'Notfall & Zugang'], ['contracts', 'Verträge & Fristen'], ['meters', 'Zählerstände'], ['settings', 'Einstellungen'], ['help', 'Hilfe & Support']);
+
     const dashboardExtrasHtml = () => demoBannerHtml();
 
     // --- Ereignisse ---
@@ -15566,7 +15584,7 @@ Morgen|Tomorrow|Imorgon
     }
     buildGroupedNav();
     // Symbole der unteren Leiste: unter Einstellungen → Startseite gestalten wählbar (vier Plätze plus „Mehr“).
-    const TAB_OPTIONS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar'], ['seasons', 'Saison', 'snow'], ['bookings', 'Buchungen', 'calendar'], ['repairs', 'Reparatur', 'alert'], ['renovations', 'Sanierung', 'cube'], ['properties', 'Mein Haus', 'property'], ['documents', 'Dokumente', 'document'], ['costs', 'Kosten', 'cost'], ['assignedProviders', 'Partner', 'users'], ['providers', 'Partner finden', 'search'], ['contracts', 'Verträge', 'contract'], ['meters', 'Zähler', 'meter'], ['emergency', 'Notfall', 'key'], ['automation', 'Automatik', 'bolt'], ['settings', 'Einstellungen', 'gear'], ['help', 'Hilfe', 'help']];
+    const TAB_OPTIONS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar'], ['seasons', 'Saison', 'snow'], ['bookings', 'Buchungen', 'calendar'], ['repairs', 'Reparatur', 'alert'], ['renovations', 'Sanierung', 'cube'], ['properties', 'Mein Haus', 'property'], ['documents', 'Dokumente', 'document'], ['costs', 'Kosten', 'cost'], ['assignedProviders', 'Partner', 'users'], ['providers', 'Partner finden', 'search'], ['contracts', 'Verträge', 'contract'], ['meters', 'Zähler', 'meter'], ['emergency', 'Notfall', 'key'], ['automation', 'Automatik', 'bolt'], ['partnerHub', 'Partner-Portal', 'note'], ['house3d', 'Hausmodell', 'cube'], ['portfolio', 'Portfolio', 'cost'], ['settings', 'Einstellungen', 'gear'], ['help', 'Hilfe', 'help']];
     const DEFAULT_TABS = ['dashboard', 'tasks', 'inspections', 'calendar'];
     const TABBAR_ITEMS = [];
     function applyTabChoice(ids) {
@@ -15575,32 +15593,47 @@ Morgen|Tomorrow|Imorgon
       TABBAR_ITEMS.splice(0, TABBAR_ITEMS.length, ...chosen.map((id) => TAB_OPTIONS.find(([key]) => key === id)));
     }
     applyTabChoice(loadStore('stugliv-tabbar', DEFAULT_TABS));
+    // Untere Leiste: Platz antippen, dann Bereich antippen (keine Auswahlfelder, die sich beim Neuzeichnen schließen)
+    let tabSlotPick = 0;
     function tabbarSettingsHtml() {
       const current = TABBAR_ITEMS.map(([id]) => id);
       const options = TAB_OPTIONS.filter(([id]) => id !== 'bookings' || bookingsEnabled());
-      return `<section class="card profile-form" id="tabbar-settings"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Untere Leiste</h2><p class="card-caption">Wähle die vier Symbole der unteren Leiste am Handy und der Bereichs-Buttons im Kopf am Computer. „Mehr“ öffnet immer das Menü.</p></div></div>
-        <div class="tab-preview" aria-hidden="true">${TABBAR_ITEMS.map(([, label, iconName]) => `<span>${icon(iconName)}<small>${escapeHtml(label)}</small></span>`).join('')}<span>${icon('menu')}<small>Mehr</small></span></div>
-        <div class="tab-slots">${current.map((id, index) => `<label><span class="form-label">Platz ${index + 1}</span><select class="form-control" data-tab-slot="${index}">${options.map(([key, label]) => `<option value="${key}" ${key === id ? 'selected' : ''}>${escapeHtml(label)}</option>`).join('')}</select></label>`).join('')}</div>
-        <div class="form-actions" style="justify-content:flex-end;margin-top:12px"><button type="button" class="text-btn" data-tab-reset>Standard wiederherstellen</button></div>
+      const pick = Math.min(Math.max(tabSlotPick, 0), 3);
+      return `<section class="card profile-form" id="tabbar-settings"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Untere Leiste</h2><p class="card-caption">Tippe oben auf einen Platz und darunter auf den Bereich, der dort erscheinen soll. „Mehr“ bleibt immer rechts. Am Computer gelten dieselben vier Bereiche für die Buttons im Kopf.</p></div></div>
+        <div class="tab-preview tab-picker" role="radiogroup" aria-label="Platz wählen">${TABBAR_ITEMS.map(([, label, iconName], index) => `<button type="button" role="radio" aria-checked="${index === pick}" class="${index === pick ? 'active' : ''}" data-tab-pick="${index}">${icon(iconName)}<small>${escapeHtml(label)}</small><i>Platz ${index + 1}</i></button>`).join('')}<span class="tab-more">${icon('menu')}<small>Mehr</small></span></div>
+        <p class="tab-pick-title">Platz ${pick + 1}: Bereich wählen</p>
+        <div class="tab-options">${options.map(([key, label, iconName]) => { const at = current.indexOf(key); return `<button type="button" class="tab-option ${at === pick ? 'on' : ''}" data-tab-assign="${key}" aria-pressed="${at === pick}">${icon(iconName)}<span>${escapeHtml(label)}</span>${at >= 0 && at !== pick ? `<small>Platz ${at + 1}</small>` : ''}</button>`; }).join('')}</div>
+        <p class="settings-hint" style="margin-top:8px">Ist ein Bereich schon auf einem anderen Platz, tauschen die beiden Plätze.</p>
+        <div class="form-actions" style="justify-content:flex-end;margin-top:8px"><button type="button" class="text-btn" data-tab-reset>Standard wiederherstellen</button></div>
       </section>`;
     }
-    document.addEventListener('change', (event) => {
-      const slot = event.target.closest?.('[data-tab-slot]');
-      if (!slot) return;
+    function refreshTabbarSettings() {
+      const card = document.getElementById('tabbar-settings');
+      if (card) card.outerHTML = tabbarSettingsHtml();
+      renderTabbar();
+    }
+    document.addEventListener('click', (event) => {
+      const pickBtn = event.target.closest('[data-tab-pick]');
+      if (pickBtn) { tabSlotPick = Number(pickBtn.dataset.tabPick); refreshTabbarSettings(); return; }
+      const assign = event.target.closest('[data-tab-assign]');
+      if (!assign) return;
       const ids = TABBAR_ITEMS.map(([id]) => id);
-      const index = Number(slot.dataset.tabSlot);
-      const other = ids.indexOf(slot.value);
-      if (other >= 0 && other !== index) ids[other] = ids[index];
-      ids[index] = slot.value;
+      const index = Math.min(Math.max(tabSlotPick, 0), 3);
+      const value = assign.dataset.tabAssign;
+      if (ids[index] === value) return;
+      const other = ids.indexOf(value);
+      if (other >= 0) ids[other] = ids[index];
+      ids[index] = value;
       saveStore('stugliv-tabbar', ids);
       applyTabChoice(ids);
-      const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
-      showToast('Untere Leiste angepasst.');
+      if (tabSlotPick < 3) tabSlotPick += 1; // nächster Platz vorausgewählt
+      refreshTabbarSettings();
+      showToast(`Platz ${index + 1}: ${TAB_OPTIONS.find(([key]) => key === value)?.[1] || value}`);
     });
     document.addEventListener('click', (event) => {
       if (!event.target.closest('[data-tab-reset]')) return;
       saveStore('stugliv-tabbar', DEFAULT_TABS); applyTabChoice(DEFAULT_TABS);
-      const scroll = window.scrollY; render(); window.scrollTo(0, scroll);
+      tabSlotPick = 0; refreshTabbarSettings();
       showToast('Untere Leiste auf Standard zurückgesetzt.');
     });
     // Kopfzeile: Startseite mit Marke und Bereichen, Unterseiten mit Zurück und dem aktuellen Menüpunkt.
@@ -17438,7 +17471,15 @@ Morgen|Tomorrow|Imorgon
         rerenderCloud();
       }
     }
+    // Hintergrund-Aktualisierung (Cloud-Abgleich, Nachrichten): nicht neu zeichnen, solange jemand ein Feld bearbeitet
+    // oder eine Auswahl geöffnet hat – sonst schließt sich z. B. ein Auswahlfeld in den Einstellungen.
+    const userIsEditing = () => { const el = document.activeElement; return Boolean(el && el.closest?.('#page-content') && /^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName) && el.type !== 'checkbox' && el.type !== 'radio'); };
+    let rerenderDeferred = false;
     function rerenderCloud() {
+      if (currentPage !== 'partnerHub' && currentPage === 'settings' && userIsEditing()) {
+        if (!rerenderDeferred) { rerenderDeferred = true; document.addEventListener('focusout', () => setTimeout(() => { rerenderDeferred = false; if (!userIsEditing()) rerenderCloud(); }, 300), { once: true }); }
+        return;
+      }
       if (currentPage === 'partnerHub') { hubRerender(); return; }
       if (currentPage !== 'settings') return;
       const scroll = window.scrollY;
