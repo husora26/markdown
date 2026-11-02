@@ -47,6 +47,7 @@ select '00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated
 from (values ('chef@pa.test', 'Paula'), ('sub@pa.test', 'Sven'), ('fremd@pa.test', 'Fred')) v(e, f);
 
 -- Testdaten am Haus 1 (als Systemnutzer)
+delete from public.photos where property_id = 'dddddddd-0000-4000-8000-000000000001' and inspection_id is null and service_order_id is null and service_task_id is null and repair_id is null;
 insert into public.photos (organization_id, property_id, storage_bucket, storage_path, caption)
 values ('cccccccc-0000-4000-8000-000000000001', 'dddddddd-0000-4000-8000-000000000001', 'husora-property-photos',
         'organization/cccccccc-0000-4000-8000-000000000001/property/dddddddd-0000-4000-8000-000000000001/photos/pa.jpg', 'PA-Test');
@@ -88,7 +89,7 @@ select pa_test.ok('organization_id kommt vom Haus', (select organization_id from
 select pa_test.denied('Haus nur für Partner der eigenen Organisation', format($$ insert into property_service_assignments (property_id, service_partner_id) values ('dddddddd-0000-4000-8000-000000000001', %L) $$, pa_test.get('foreign_sp')));
 reset role;
 select pa_test.login('chef@pa.test');
-select pa_test.ok('basic: genau 1 Haus, keine Fotos/Dokumente/Kontrollen (' || pa_test.view() || ')', pa_test.view() = '1|0||0');
+select pa_test.ok('basic: genau 1 Haus mit Titelbild, keine Dokumente/Kontrollen (' || pa_test.view() || ')', pa_test.view() = '1|1||0');
 select pa_test.ok('Partner sieht seine Freigabe', (select access_level from property_service_assignments) = 'basic');
 select pa_test.ok('Partner kann die Stufe nicht ändern', pa_test.affected($$ update property_service_assignments set access_level = 'full' $$) = 0);
 reset role;

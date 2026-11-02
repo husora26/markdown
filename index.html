@@ -2908,6 +2908,18 @@
     .pp-home-toggle input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--green); flex: none; }
     .pp-home-toggle span { display: grid; gap: 2px; }
     .pp-home-toggle small { color: var(--muted); font-size: 12px; }
+    .pp-prop-notes dl { display: grid; gap: 8px; margin: 0 0 6px; }
+    .pp-prop-notes dt { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+    .pp-prop-notes dd { margin: 1px 0 0; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .pp-prop-orders > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
+    .pp-prop-orders > summary::-webkit-details-marker { display: none; }
+    .pp-prop-orders > summary span { display: grid; gap: 1px; }
+    .pp-prop-orders > summary small { color: var(--muted); font-size: 12.5px; }
+    .pp-prop-orders > summary svg { width: 16px; height: 16px; transform: rotate(-90deg); transition: transform .15s; color: var(--muted); }
+    .pp-prop-orders[open] > summary svg { transform: rotate(90deg); }
+    .pp-prop-orders[open] > summary { margin-bottom: 10px; }
+    .pp-compact .pp-item { padding: 9px 11px; }
+    .pp-compact .pp-item small { font-size: 12px; }
     .pp-grant { display: inline-flex; align-items: center; gap: 4px; color: var(--green); font-weight: 700; }
     .pp-grant svg { width: 13px; height: 13px; }
     .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
@@ -3802,6 +3814,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
   
   
@@ -5653,6 +5666,17 @@ Zuordnen|Assign|Tilldela
 Bitte zuerst einen Mitarbeiter wählen.|Please choose a staff member first.|Välj först en medarbetare.
 Neue Anfragen erscheinen auf der Startseite.|New requests are shown on the home screen.|Nya förfrågningar visas på startsidan.
 Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on the home screen.|Nya förfrågningar döljs på startsidan.
+Schlüssel|Keys|Nycklar
+Zugang & Anfahrt|Access & directions|Åtkomst & vägbeskrivning
+Technik|Technical|Teknik
+Entsorgung|Waste|Avfall
+Weitere Notizen|Further notes|Övriga anteckningar
+Nur für deinen Betrieb sichtbar – das Haus des Kunden bleibt unverändert.|Only visible to your company – the customer's house stays unchanged.|Endast synligt för ditt företag – kundens hus ändras inte.
+Noch keine eigenen Infos zu diesem Haus.|No own information about this house yet.|Ingen egen information om detta hus ännu.
+Infos bearbeiten|Edit information|Redigera information
+Objekt mit Infos ergänzen|Add information to the property|Komplettera objektet med information
+Noch keine Aufträge für dieses Haus.|No orders for this house yet.|Inga uppdrag för detta hus ännu.
+Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property information saved – your team also sees it in the order.|Objektinformation sparad – ditt team ser den även i uppdraget.
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -5677,6 +5701,8 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
       [/^Eingeteilt: (.+)$/, { en: 'Assigned: $1', sv: 'Tilldelad: $1' }],
       [/^(\d+) annehmen$/, { en: 'Accept $1', sv: 'Acceptera $1' }],
       [/^(\d+) zuordnen$/, { en: 'Assign $1', sv: 'Tilldela $1' }],
+      [/^Ergänzende Infos zu (.+)$/, { en: 'Additional information on $1', sv: 'Kompletterande information om $1' }],
+      [/^(\d+) offen · (\d+) Kontrollen$/, { en: '$1 open · $2 inspections', sv: '$1 öppna · $2 tillsyner' }],
       [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
       [/^(\d+) überfällig$/, { en: '$1 overdue', sv: '$1 försenade' }],
       [/^(\d+) % erledigt$/, { en: '$1 % done', sv: '$1 % klart' }],
@@ -17463,6 +17489,8 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
     // Zuordnung App-Haus-ID → Haus-UUID in Supabase (für Storage-Pfade je Haus)
     async function cloudPropertyMap(entries) {
       const appIds = properties.map((property) => property.id);
+      // Zuordnung gilt nur für die Organisation, für die sie geladen wurde (sonst landen Dateien unter fremden Haus-IDs)
+      if (cloud.propertyMapOrg !== cloud.org.id) { cloud.propertyMap = {}; cloud.propertyMapOrg = cloud.org.id; }
       if (appIds.every((id) => cloud.propertyMap[id])) return cloud.propertyMap;
       const raw = entries.find(([key]) => key === 'stugliv-properties')?.[1] || JSON.stringify(properties);
       // Häuser zuerst ohne Dateien anlegen, damit es die UUIDs für die Pfade gibt
@@ -17470,6 +17498,7 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
       await cloudFetch('/rest/v1/app_data?on_conflict=organization_id,key', { method: 'POST', body: [{ organization_id: cloud.org.id, key: 'stugliv-properties', value: stripped, device_id: cloud.deviceId }], headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
       const rows = await cloudFetch(`/rest/v1/properties?organization_id=eq.${cloud.org.id}&app_ref=not.is.null&select=id,app_ref`);
       cloud.propertyMap = Object.fromEntries(rows.map((row) => [row.app_ref, row.id]));
+      cloud.propertyMapOrg = cloud.org.id;
       persistCloud();
       return cloud.propertyMap;
     }
@@ -18139,7 +18168,7 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -18157,9 +18186,10 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
             ppQ('service_agreements?select=*,property:properties(name)&order=starts_on.desc&limit=300').catch(() => []),
             ppQ('invoice_orders?select=invoice_id,service_order_id,amount_gross&limit=2000').catch(() => []),
             ppQ(`document_archive?organization_id=eq.${org.id}&select=document_id,archived_at`).catch(() => []),
-            ppQ('property_service_assignments?status=eq.active&select=id,property_id,service_partner_id,access_level,start_date,end_date,status').catch(() => [])
+            ppQ('property_service_assignments?status=eq.active&select=id,property_id,service_partner_id,access_level,start_date,end_date,status').catch(() => []),
+            ppQ(`partner_property_notes?organization_id=eq.${org.id}&select=*`).catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments };
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes };
           pp.access = {};
         } else {
           pp.data = null;
@@ -18469,7 +18499,7 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
       else if (o.status === 'completed' && lead) actions += ppReopenHtml(o);
       return `${ppBack()}
         <div class="pp-detail-head"><div><span class="pp-eyebrow">${escapeHtml(o.order_number)} · ${escapeHtml(ppCustomerName(o.organization_id))}</span><h1>${escapeHtml(o.title)}</h1></div>${ppBadge(PP_ORDER_STATUS, o.status)}</div>
-        ${ppPropertyCard(ppD('properties').find((x) => x.id === p?.id) || p, { maps })}
+        ${ppPropertyCard(ppD('properties').find((x) => x.id === p?.id) || p, { maps })}${p ? ppPropNotesHtml(p, { readOnly: true }) : ''}
         <div class="pp-card pp-facts">
           <div><span>Termin</span><strong>${escapeHtml(ppDateTime(o.scheduled_at))}</strong></div>
           <div><span>Preis</span><strong>${escapeHtml(ppMoney(o.actual_cost ?? o.estimated_cost, o.currency))}</strong>${o.actual_cost != null ? '<small>Ist-Kosten</small>' : '<small>geschätzt</small>'}</div>
@@ -18509,6 +18539,49 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
         <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>${kind === 'invoice' ? `${icon('check')} PDF an Hausbesitzer senden` : 'Angebot senden'}</button></div></form>`;
     }
     // Objektkarte: Foto, Adresse und Eckdaten des Ferienhauses
+    // ----- Übertragenes Haus: eigene Ergänzungen des Partners und aufklappbare Auftragsliste -----
+    const PP_PROP_NOTE_FIELDS = [['key_info', 'Schlüssel', 'z. B. Schlüsselkasten links neben der Tür, Code beim Kunden', 500], ['access_info', 'Zugang & Anfahrt', 'z. B. Zufahrt im Winter nur mit Allrad, Parken am Tor', 1000], ['technical_info', 'Technik', 'z. B. Hauptwasserhahn im Keller, Sicherungskasten im Flur, Wärmepumpe Typ …', 2000], ['waste_info', 'Entsorgung', 'z. B. Müllabholung dienstags, Sortierstation am Dorfeingang', 500], ['notes', 'Weitere Notizen', 'alles, was dein Team vor Ort wissen sollte', 4000]];
+    const ppPropNote = (propertyId) => ppD('propNotes').find((n) => n.property_id === propertyId);
+    function ppPropNotesHtml(p, { readOnly = false } = {}) {
+      const note = ppPropNote(p.id);
+      const canEdit = !readOnly && ['admin', 'service_manager', 'dispatcher'].includes(ppRole());
+      if (pp.form === `prop-notes:${p.id}` && canEdit) {
+        return `<form class="pp-card pp-form pp-prop-notes" data-pp-form="prop-notes" data-property="${p.id}"><h3>Ergänzende Infos zu ${escapeHtml(p.name)}</h3>
+          <p class="pp-hint">Nur für deinen Betrieb sichtbar – das Haus des Kunden bleibt unverändert.</p>
+          <div class="pp-grid">${PP_PROP_NOTE_FIELDS.map(([k, l, ph, max]) => `<label class="full"><span class="form-label">${l}</span><textarea class="form-control" name="${k}" rows="${k === 'notes' || k === 'technical_info' ? 3 : 2}" maxlength="${max}" placeholder="${escapeHtml(ph)}">${escapeHtml(note?.[k] || '')}</textarea></label>`).join('')}</div>
+          <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>${icon('check')} Speichern</button></div></form>`;
+      }
+      const filled = PP_PROP_NOTE_FIELDS.filter(([k]) => note?.[k]);
+      if (!filled.length && !canEdit) return '';
+      return `<div class="pp-card pp-prop-notes">${filled.length ? `<dl>${filled.map(([k, l]) => `<div><dt>${l}</dt><dd>${escapeHtml(note[k])}</dd></div>`).join('')}</dl>` : '<p class="pp-muted">Noch keine eigenen Infos zu diesem Haus.</p>'}${canEdit ? `<button type="button" class="text-btn" data-pp-action="prop-notes" data-property="${p.id}">${icon('edit')} ${filled.length ? 'Infos bearbeiten' : 'Objekt mit Infos ergänzen'}</button>` : ''}</div>`;
+    }
+    document.addEventListener('toggle', (event) => {
+      const box = event.target.closest?.('#partner-portal [data-pp-prop-orders]');
+      if (!box) return;
+      pp.openProps = pp.openProps || new Set();
+      if (box.open) pp.openProps.add(box.dataset.ppPropOrders); else pp.openProps.delete(box.dataset.ppPropOrders);
+    }, true);
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('#partner-portal [data-pp-form="prop-notes"]');
+      if (!form) return;
+      event.preventDefault();
+      const values = Object.fromEntries(new FormData(form));
+      const body = { organization_id: ppOrg().id, property_id: form.dataset.property };
+      PP_PROP_NOTE_FIELDS.forEach(([k]) => { body[k] = String(values[k] || '').trim() || null; });
+      ppRun('prop-notes', async () => {
+        await cloudFetch('/rest/v1/partner_property_notes?on_conflict=organization_id,property_id', { method: 'POST', body: [body], headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+        pp.form = null;
+      }, { notice: 'Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.' });
+    });
+    function ppPropOrdersHtml(p, c) {
+      const orders = ppD('orders').filter((o) => o.property_id === p.id).slice().sort((a, b) => new Date(b.scheduled_at || b.created_at) - new Date(a.scheduled_at || a.created_at));
+      const inspections = ppD('inspections').filter((i) => i.property_id === p.id).length;
+      const open = orders.filter((o) => o.status === 'offered' || ORDER_RUNNING.includes(o.status)).length;
+      const add = !c?.linked_organization_id && ppIsLead() ? `<button type="button" class="text-btn" data-pp-action="order-for" data-property="${p.id}">Auftrag anlegen</button>` : '';
+      const isOpen = pp.openProps?.has(p.id);
+      return `<details class="pp-card pp-prop-orders" data-pp-prop-orders="${p.id}" ${isOpen ? 'open' : ''}><summary><span><strong>Aufträge (${orders.length})</strong><small>${open} offen · ${inspections} Kontrollen</small></span>${icon('arrow')}</summary>
+        ${orders.length ? `<div class="pp-list pp-compact">${orders.map(ppOrderCard).join('')}</div>` : '<p class="pp-muted">Noch keine Aufträge für dieses Haus.</p>'}${add}</details>`;
+    }
     function ppPropertyCard(p, { maps = '' } = {}) {
       if (!p) return '';
       const photos = ppD('photos').filter((x) => x.property_id === p.id && !x.service_order_id && !x.inspection_id);
@@ -18633,7 +18706,7 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
         <div class="pp-card pp-facts"><div><span>Kontakt</span><strong>${escapeHtml([c.first_name, c.last_name].filter(Boolean).join(' ') || '–')}</strong><small>${[c.email ? `<a href="mailto:${escapeHtml(c.email)}">${escapeHtml(c.email)}</a>` : '', c.phone ? `<a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a>` : ''].filter(Boolean).join(' · ')}</small></div><div><span>Adresse</span><strong>${escapeHtml(ppAddress(c) || '–')}</strong></div></div>
         ${c.linked_organization_id && !c.phone && !ppAddress(c) ? '<p class="pp-hint">Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail kommen aus seinem Husora-Konto.</p>' : ''}
         ${c.notes ? `<div class="pp-card"><p class="pp-text">${escapeHtml(c.notes)}</p></div>` : ''}
-        ${ppSection(`Objekte (${props.length})`, `${props.map((p) => `${ppPropertyCard(p)}<div class="pp-card pp-prop"><div class="pp-prop-stats"><span>${ppD('orders').filter((o) => o.property_id === p.id).length} Aufträge</span><span>${ppD('inspections').filter((i) => i.property_id === p.id).length} Kontrollen</span></div>${!c.linked_organization_id && ppIsLead() ? `<button type="button" class="text-btn" data-pp-action="order-for" data-property="${p.id}">Auftrag anlegen</button>` : ''}</div>`).join('') || `<p class="pp-muted">${c.linked_organization_id ? 'Häuser dieses Kunden erscheinen, sobald er dir einen Auftrag gibt.' : 'Noch kein Objekt.'}</p>`}
+        ${ppSection(`Objekte (${props.length})`, `${props.map((p) => `${ppPropertyCard(p)}${ppPropNotesHtml(p)}${ppPropOrdersHtml(p, c)}`).join('') || `<p class="pp-muted">${c.linked_organization_id ? 'Häuser dieses Kunden erscheinen, sobald er dir einen Auftrag gibt oder sie für dich freigibt.' : 'Noch kein Objekt.'}</p>`}
           ${!c.linked_organization_id && ppIsLead() ? `<form class="pp-form pp-subform" data-pp-form="property" data-customer="${c.id}"><h3>Objekt hinzufügen</h3><div class="pp-grid"><label class="full"><span class="form-label">Name *</span><input class="form-control" name="name" required maxlength="80" placeholder="z. B. Ferienhaus am See"></label><label class="full"><span class="form-label">Straße</span><input class="form-control" name="street" maxlength="120" value="${escapeHtml(c.street || '')}"></label><label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12" value="${escapeHtml(c.postal_code || '')}"></label><label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" value="${escapeHtml(c.city || '')}"></label></div><div class="pp-actions"><button class="secondary-btn" type="submit" ${ppDisabled()}>Objekt speichern</button></div></form>` : ''}`)}
         ${pp.form === 'new-order' ? ppNewOrderForm(pp.formProperty) : ''}`;
     }
@@ -19556,6 +19629,7 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
       if (a === 'back') { pp.detail = pp.prev?.detail && pp.prev.detail.id !== pp.detail?.id ? pp.prev.detail : null; pp.prev = null; pp.form = null; ppRender(); return; }
       if (a === 'cancel-form') { pp.form = null; ppRender(); return; }
       if (a === 'new-order') { pp.form = 'new-order'; pp.formProperty = ''; ppRender(); return; }
+      if (a === 'prop-notes') { pp.form = `prop-notes:${action.dataset.property}`; pp.keepScroll = true; ppRender(); return; }
       if (a === 'order-for') { pp.form = 'new-order'; pp.formProperty = action.dataset.property; pp.keepScroll = true; ppRender(); return; }
       if (a === 'new-customer') { pp.form = 'new-customer'; ppRender(); return; }
       if (a === 'member-edit') { pp.form = `member-edit:${id}`; ppRender(); return; }
@@ -20303,7 +20377,7 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
         .forEach((p) => ownerShareContact(p.id, p.share_phone, p.share_address).catch((error) => console.warn('Kontakt nicht aktualisiert:', error)));
     }
     // ----- Häuser für einen verbundenen Partner freigeben (Phase 3: property_service_assignments) -----
-    const PSA_LEVELS = { basic: ['Basis', 'Name, Adresse und Lage des Hauses'], service: ['Service', 'zusätzlich Hausfotos, Ausstattung und technische Unterlagen'], full: ['Voll', 'zusätzlich alle Hausdokumente (ohne Rechnungen) und Hauskontrollen'] };
+    const PSA_LEVELS = { basic: ['Basis', 'Name, Adresse, Lage und Titelbild des Hauses'], service: ['Service', 'zusätzlich Hausfotos, Ausstattung und technische Unterlagen'], full: ['Voll', 'zusätzlich alle Hausdokumente (ohne Rechnungen) und Hauskontrollen'] };
     function hubAssignHtml(p) {
       if (!Array.isArray(ownerSide.assignments) || p.partner_organization_id === cloud.org?.id) return '';
       const mine = ownerSide.assignments.filter((a) => a.service_partner_id === p.id);
@@ -20797,6 +20871,16 @@ Neue Anfragen werden auf der Startseite ausgeblendet.|New requests are hidden on
         }
       } catch (error) { /* offline: später erneut */ }
     })();
+    // Einmalige Reparatur: Die Haus-Zuordnung konnte von einer anderen Organisation stammen (Kontowechsel) –
+    // dann lagen Hausfotos unter fremden Haus-IDs und kamen nicht beim Servicepartner an. Häuser mit Fotos neu hochladen.
+    setTimeout(() => {
+      try {
+        if (cloudCanWrite() && cloud.autoSync && properties.length && cloud.propertyMapOrg !== cloud.org.id) {
+          cloud.propertyMap = {}; cloud.propertyMapOrg = ''; persistCloud();
+          cloudDirty.add('stugliv-properties'); cloudFlush();
+        }
+      } catch (error) { /* beim nächsten Start erneut */ }
+    }, 6000);
     // Link für Servicepartner (…/?partner): startet direkt im Partner-Portal
     const startAsPartner = (() => { try { return new URLSearchParams(location.search).has('partner'); } catch (error) { return false; } })();
     if (startAsPartner && !onboardingState) { onboardingState = { status: 'done', at: new Date().toISOString(), partnerLink: true }; saveStore('stugliv-onboarding', onboardingState); }

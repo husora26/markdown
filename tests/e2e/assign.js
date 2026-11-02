@@ -69,6 +69,27 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const badge = await P.textContent('.pp-grant'); await P.screenshot({ path: OUT + '/2-partner.png', fullPage: true });
     if (!/Freigegeben: Service/.test(badge)) throw new Error(badge); return badge.trim();
   });
+  await step('Partner ergänzt das Objekt mit eigenen Infos (nur für den Betrieb)', async () => {
+    await P.click(`[data-pp-action=prop-notes][data-property="${HOUSE}"]`); await P.waitForTimeout(200);
+    await P.fill('[data-pp-form=prop-notes] [name=key_info]', 'Schlüsselkasten links, Code 4711');
+    await P.fill('[data-pp-form=prop-notes] [name=technical_info]', 'Hauptwasserhahn im Keller');
+    await P.click('[data-pp-form=prop-notes] button[type=submit]'); await wait(); await noErr();
+    const n = sql(`select key_info||' | '||technical_info from partner_property_notes where property_id='${HOUSE}' and organization_id=(select id from organizations where name='${FIRM}')`);
+    const ownerSees = sql(`select count(*) from partner_property_notes where organization_id='cccccccc-0000-4000-8000-000000000001'`);
+    if (!n.includes('4711') || ownerSees !== '0') throw new Error(`${n} · ${ownerSees}`);
+    return n;
+  });
+  await step('Aufträge unter dem Haus aufklappen', async () => {
+    sql(`insert into service_orders (organization_id, property_id, service_partner_id, title, status) values ('cccccccc-0000-4000-8000-000000000001', '${HOUSE}', '${spId}', 'Fenster putzen ${N}', 'offered')`);
+    const cid = sql(`select id from customers where organization_id=(select id from organizations where name='${FIRM}') limit 1`);
+    await P.evaluate(async (id) => { await ppLoad(); pp.view = 'customers'; pp.detail = { type: 'customer', id }; ppRender(); }, cid); await P.waitForTimeout(300);
+    const closed = await P.$eval(`[data-pp-prop-orders="${HOUSE}"]`, (e) => e.open);
+    await P.click(`[data-pp-prop-orders="${HOUSE}"] summary`); await P.waitForTimeout(200);
+    const items = await P.$$eval(`[data-pp-prop-orders="${HOUSE}"] .pp-item`, (e) => e.length);
+    await P.screenshot({ path: OUT + '/3-objekt.png', fullPage: true });
+    if (closed || items < 1) throw new Error(`${closed} / ${items}`);
+    return `${items} Auftrag/Aufträge aufgeklappt · Infos: ${(await P.textContent('.pp-prop-notes')).replace(/\s+/g, ' ').slice(0, 80)}`;
+  });
   await step('Hausbesitzer: Stufe „Voll“ mit Enddatum', async () => {
     await hubLoad(); await H.click(`[data-owner-action=assign-edit][data-id="${spId}"]`); await H.waitForTimeout(200);
     const end = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
@@ -77,6 +98,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const g = grant(); if (g !== `${HOUSE}:full:${end}`) throw new Error(g); return g;
   });
   await step('Hausbesitzer: Freigabe entfernen → Partner sieht das Haus nicht mehr', async () => {
+    sql(`update service_orders set status = 'cancelled' where title = 'Fenster putzen ${N}'`); // Auftrag würde das Haus sonst weiter freigeben
     await hubLoad(); await H.click(`[data-owner-action=assign-edit][data-id="${spId}"]`); await H.waitForTimeout(200);
     await H.selectOption(`[data-hub-assign="${spId}"] [name="level:${HOUSE}"]`, '');
     await H.click(`[data-hub-assign="${spId}"] button[type=submit]`); await H.waitForFunction(() => !ownerSide.busy, null, { timeout: 20000 }); await H.waitForTimeout(300);
