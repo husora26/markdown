@@ -2934,6 +2934,49 @@
     .tchip.progress { background: #e4eefb; color: #2b5f99; font-weight: 700; }
     .tchip.progress svg { width: 12px; height: 12px; }
     .tcard.is-progress { border-left: 4px solid #3b7bbf; }
+    /* Kacheln: Farbe statt Bild */
+    html.owner-tiles-color .stat { border-color: transparent; background: linear-gradient(145deg, var(--owner-tile-bg), var(--owner-tile-bg2)); }
+    html.owner-tiles-color .stat-art, html.owner-tiles-color .stat::after { display: none; }
+    html.owner-tiles-color .stat-head, html.owner-tiles-color .stat-value { color: var(--owner-tile-fg); text-shadow: none; }
+    html.owner-tiles-color .stat-note { color: var(--owner-tile-muted); text-shadow: none; }
+    html.owner-tiles-color .stat-progress { color: var(--owner-tile-fg); }
+    html.owner-tiles-color .stat-note .stat-urgent, html.owner-tiles-color .stat-note .stat-alert { color: var(--owner-tile-fg); text-decoration: underline; text-underline-offset: 2px; }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+1) { --owner-tile-bg: #2f6b4f; --owner-tile-bg2: #24533d; --owner-tile-fg: #fff; --owner-tile-muted: rgba(255,255,255,.82); }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+2) { --owner-tile-bg: #1f6f8b; --owner-tile-bg2: #18566c; --owner-tile-fg: #fff; --owner-tile-muted: rgba(255,255,255,.82); }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+3) { --owner-tile-bg: #7048e8; --owner-tile-bg2: #5738b5; --owner-tile-fg: #fff; --owner-tile-muted: rgba(255,255,255,.82); }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+4) { --owner-tile-bg: #c2255c; --owner-tile-bg2: #971d48; --owner-tile-fg: #fff; --owner-tile-muted: rgba(255,255,255,.82); }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+5) { --owner-tile-bg: #e8590c; --owner-tile-bg2: #b54509; --owner-tile-fg: #fff; --owner-tile-muted: rgba(255,255,255,.85); }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+6) { --owner-tile-bg: #0c8599; --owner-tile-bg2: #096877; --owner-tile-fg: #fff; --owner-tile-muted: rgba(255,255,255,.82); }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+7) { --owner-tile-bg: #3b5bdb; --owner-tile-bg2: #2e47ab; --owner-tile-fg: #fff; --owner-tile-muted: rgba(255,255,255,.82); }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+8) { --owner-tile-bg: #f08c00; --owner-tile-bg2: #bb6d00; --owner-tile-fg: #16241d; --owner-tile-muted: rgba(22,36,29,.75); }
+    html.owner-tiles-rainbow .stats > .stat:nth-child(9n+9) { --owner-tile-bg: #2b8a3e; --owner-tile-bg2: #216b30; --owner-tile-fg: #fff; --owner-tile-muted: rgba(255,255,255,.82); }
+    #partner-portal.pp-tiles-color .pp-home-tile { background: linear-gradient(145deg, var(--pp-tile-bg), var(--pp-tile-bg2)); color: var(--pp-tile-fg); }
+    #partner-portal.pp-tiles-color .pp-home-tile img, #partner-portal.pp-tiles-color .pp-home-tile::after { display: none; }
+    #partner-portal.pp-tiles-color .pp-home-tile-note { color: var(--pp-tile-muted); }
+    #partner-portal.pp-tiles-color .pp-home-tile-icon { background: rgba(255, 255, 255, .22); }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+1) { --pp-tile-bg: #2f6b4f; --pp-tile-bg2: #24533d; --pp-tile-fg: #fff; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+2) { --pp-tile-bg: #1f6f8b; --pp-tile-bg2: #18566c; --pp-tile-fg: #fff; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+3) { --pp-tile-bg: #7048e8; --pp-tile-bg2: #5738b5; --pp-tile-fg: #fff; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+4) { --pp-tile-bg: #c2255c; --pp-tile-bg2: #971d48; --pp-tile-fg: #fff; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+5) { --pp-tile-bg: #e8590c; --pp-tile-bg2: #b54509; --pp-tile-fg: #fff; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+6) { --pp-tile-bg: #0c8599; --pp-tile-bg2: #096877; --pp-tile-fg: #fff; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+7) { --pp-tile-bg: #3b5bdb; --pp-tile-bg2: #2e47ab; --pp-tile-fg: #fff; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+8) { --pp-tile-bg: #f08c00; --pp-tile-bg2: #bb6d00; --pp-tile-fg: #16241d; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile:nth-child(9n+9) { --pp-tile-bg: #2b8a3e; --pp-tile-bg2: #216b30; --pp-tile-fg: #fff; }
+    #partner-portal.pp-tiles-rainbow .pp-home-tile-note { color: inherit; opacity: .85; }
+    .tile-look { display: grid; gap: 12px; }
+    .tile-look-colors { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .tile-look-picker { position: relative; display: inline-flex; align-items: center; gap: 6px; margin-right: 6px; cursor: pointer; }
+    .tile-look-picker input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .tile-look-picker span { width: 34px; height: 34px; border: 2px solid var(--paper); border-radius: 50%; box-shadow: 0 0 0 1px var(--line); background-image: conic-gradient(red, yellow, lime, cyan, blue, magenta, red) !important; }
+    .tile-look-picker small { color: var(--muted); font-size: 12px; font-weight: 600; }
+    .tile-swatch { width: 30px; height: 30px; padding: 0; border: 2px solid var(--paper); border-radius: 50%; box-shadow: 0 0 0 1px var(--line); cursor: pointer; }
+    .tile-swatch.on { box-shadow: 0 0 0 2px var(--ink, #1d2b24); }
+    .tile-look-preview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    .tile-look-preview span { display: flex; align-items: flex-end; min-height: 44px; padding: 6px 8px; border-radius: 9px; background: #1d3b33 url("assets/hausservice.jpg") center / cover; color: #fff; font-size: 11.5px; font-weight: 700; }
+    .tile-look-preview.photo span:nth-child(2) { background-image: url("assets/hauskontrolle.jpg"); }
+    .tile-look-preview.photo span:nth-child(3) { background-image: url("assets/gaestewechsel.jpg"); }
+    .hub-order-filters { margin: 4px 0 10px; }
     .pp-grant { display: inline-flex; align-items: center; gap: 4px; color: var(--green); font-weight: 700; }
     .pp-grant svg { width: 13px; height: 13px; }
     .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
@@ -3899,6 +3942,9 @@
   
   
   
+  
+  
+  
     /* DARK-MODE-START */
     @media screen {
 html.dark { color-scheme: dark; --ink: #e3e8e2; --muted: #9da89f; --line: #2e3732; --paper: #1a201d; --canvas: #111513; --green: #84c2a2; --green-dark: #0f2219; --green-soft: #1e3229; --amber: #d6ae74; --amber-soft: #30281a; --red: #ea9085; --red-soft: #3b211e; --shadow: 0 10px 34px rgba(0, 0, 0, .35); --green-solid: #2f6b51; --green-solid-dark: #0f2219; --red-solid: #a94e44; }
@@ -4518,6 +4564,8 @@ html.dark .hub-access { border: 1px solid #424e45; }
 html.dark .hub-check input { accent-color: var(--green-solid); }
 html.dark .pp-home-toggle input { accent-color: var(--green-solid); }
 html.dark .tchip.progress { background: #182331; color: #9dbbdc; }
+html.dark #partner-portal.pp-tiles-color .pp-home-tile-icon { background: rgba(255, 255, 255, 0.03); }
+html.dark .tile-swatch.on { box-shadow: 0 0 0 2px var(--ink, #000000); }
 html.dark .issue-card.in_progress .issue-status { color: #9ebfe0; }
 html.dark .hub-nav-count { background: var(--red-solid); }
 html.dark .hub-code { border: 1px dashed #495348; }
@@ -5724,6 +5772,19 @@ Kostenlos|Free|Kostnadsfritt
 Servicegebiet hinzugefügt.|Service area added.|Serviceområde tillagt.
 Abwesenheit eingetragen.|Absence added.|Frånvaro registrerad.
 ohne Datum|no date|inget datum
+Aussehen der Kacheln|Tile appearance|Rutornas utseende
+Bilder oder farbige Kacheln auf der Startseite – die Farbe wählst du frei.|Photos or coloured tiles on the home screen – you choose the colour.|Bilder eller färgade rutor på startsidan – du väljer färgen fritt.
+Bild|Photo|Bild
+Farbe|Colour|Färg
+Bunt|Colourful|Färgglad
+Eigene Farbe|Own colour|Egen färg
+Eigene Farbe wählen|Choose your own colour|Välj egen färg
+Anfrage zurückziehen|Withdraw request|Dra tillbaka förfrågan
+Ins Archiv|Archive|Arkivera
+Das Archiv ist leer. Erledigte Aufträge verschiebst du mit „Ins Archiv“ hierher.|The archive is empty. Move completed orders here with “Archive”.|Arkivet är tomt. Flytta klara uppdrag hit med ”Arkivera”.
+Anfrage zurückgezogen – der Partner wird informiert.|Request withdrawn – the partner is informed.|Förfrågan återkallad – partnern informeras.
+Auftrag ins Archiv verschoben – zu finden unter „Archiv“.|Order archived – see “Archive”.|Uppdraget arkiverat – finns under ”Arkiv”.
+Auftrag wieder in der Übersicht.|Order back in the overview.|Uppdraget är tillbaka i översikten.
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -8588,6 +8649,73 @@ ohne Datum|no date|inget datum
       const chosen = dashboardTileSelection();
       return DASHBOARD_TILES.filter(([id, , available]) => chosen.includes(id) && (!available || available())).map(([id]) => id).slice(0, DASHBOARD_TILE_LIMIT);
     };
+    // ===== Kacheln der Startseite: Bild, eigene Farbe oder bunt (Hausbesitzer und Servicepartner) =====
+    const TILE_SWATCHES = ['#2f6b4f', '#1f6f8b', '#3b5bdb', '#7048e8', '#c2255c', '#e8590c', '#f08c00', '#2b8a3e', '#0c8599', '#495057'];
+    const TILE_RAINBOW = ['#2f6b4f', '#1f6f8b', '#7048e8', '#c2255c', '#e8590c', '#0c8599', '#3b5bdb', '#f08c00', '#2b8a3e'];
+    const tileHex = (value) => (/^#[0-9a-f]{6}$/i.test(String(value || '')) ? String(value).toLowerCase() : '#2f6b4f');
+    function tileColorVars(hex) {
+      const h = tileHex(hex);
+      const [r, g, b] = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+      const lin = (c) => { const v = c / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+      const lum = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+      const light = lum > 0.42;
+      const shade = (c) => Math.max(0, Math.round(c * 0.78)).toString(16).padStart(2, '0');
+      return { bg: h, bg2: `#${shade(r)}${shade(g)}${shade(b)}`, fg: light ? '#16241d' : '#ffffff', muted: light ? 'rgba(22,36,29,.72)' : 'rgba(255,255,255,.82)' };
+    }
+    function applyTileLook(el, prefix, style, color) {
+      if (!el) return;
+      el.classList.toggle(`${prefix}-tiles-color`, style === 'color' || style === 'rainbow');
+      el.classList.toggle(`${prefix}-tiles-rainbow`, style === 'rainbow');
+      const v = tileColorVars(color);
+      el.style.setProperty(`--${prefix}-tile-bg`, v.bg); el.style.setProperty(`--${prefix}-tile-bg2`, v.bg2);
+      el.style.setProperty(`--${prefix}-tile-fg`, v.fg); el.style.setProperty(`--${prefix}-tile-muted`, v.muted);
+    }
+    function tileLookControlsHtml(attr, style, color) {
+      const c = tileHex(color);
+      const opts = [['photo', 'Bild', 'Fotos hinter den Kacheln'], ['color', 'Farbe', 'eine frei wählbare Farbe'], ['rainbow', 'Bunt', 'jede Kachel in eigener Farbe']];
+      return `<div class="tile-look">
+        <div class="segmented" role="radiogroup" aria-label="Aussehen der Kacheln">${opts.map(([id, label, title]) => `<button type="button" role="radio" aria-checked="${style === id}" class="${style === id ? 'active' : ''}" data-${attr}-look="${id}" title="${title}">${label}</button>`).join('')}</div>
+        ${style === 'color' ? `<div class="tile-look-colors"><label class="tile-look-picker" title="Eigene Farbe wählen"><input type="color" value="${c}" data-${attr}-color aria-label="Eigene Farbe wählen"><span style="background:${c}"></span><small>Eigene Farbe</small></label>
+          ${TILE_SWATCHES.map((hex) => `<button type="button" class="tile-swatch ${hex === c ? 'on' : ''}" style="background:${hex}" data-${attr}-swatch="${hex}" aria-label="Farbe ${hex}"></button>`).join('')}</div>` : ''}
+        <div class="tile-look-preview ${style}" aria-hidden="true">${[0, 1, 2].map((i) => { const v = tileColorVars(style === 'rainbow' ? TILE_RAINBOW[i] : c); return `<span style="${style === 'photo' ? '' : `background:linear-gradient(145deg, ${v.bg}, ${v.bg2});color:${v.fg}`}">${['Aufgaben', 'Kontrolle', 'Kalender'][i]}</span>`; }).join('')}</div>
+      </div>`;
+    }
+    document.addEventListener('click', (event) => {
+      const look = event.target.closest('[data-owner-tile-look], [data-pp-tile-look]');
+      const swatch = event.target.closest('[data-owner-tile-swatch], [data-pp-tile-swatch]');
+      if (!look && !swatch) return;
+      const pp = Boolean(event.target.closest('[data-pp-tile-look], [data-pp-tile-swatch]'));
+      const style = look ? (look.dataset.ownerTileLook || look.dataset.ppTileLook) : 'color';
+      const color = swatch ? (swatch.dataset.ownerTileSwatch || swatch.dataset.ppTileSwatch) : undefined;
+      saveTileLook(pp, { tileStyle: style, ...(color ? { tileColor: color } : {}) }, true);
+    });
+    document.addEventListener('input', (event) => {
+      const input = event.target.closest?.('[data-owner-tile-color], [data-pp-tile-color]');
+      if (!input) return;
+      saveTileLook(input.hasAttribute('data-pp-tile-color'), { tileStyle: 'color', tileColor: input.value }, false);
+      const dot = input.parentElement?.querySelector('span'); if (dot) dot.style.background = input.value;
+    });
+    document.addEventListener('change', (event) => {
+      const input = event.target.closest?.('[data-owner-tile-color], [data-pp-tile-color]');
+      if (input) saveTileLook(input.hasAttribute('data-pp-tile-color'), { tileStyle: 'color', tileColor: input.value }, true);
+    });
+    function saveTileLook(partner, change, rerender) {
+      if (partner) {
+        try { localStorage.setItem(PP_HOME_KEY, JSON.stringify({ ...ppHomePrefs(), ...change })); } catch (error) { /* optional */ }
+        const prefs = ppHomePrefs();
+        applyTileLook(document.getElementById('partner-portal'), 'pp', prefs.tileStyle || 'photo', prefs.tileColor);
+        if (rerender) { pp.keepScroll = true; ppRender(); }
+        return;
+      }
+      displaySettings = { ...displaySettings, ...change };
+      if (rerender) saveStore('stugliv-display', displaySettings); else { try { localStorage.setItem('stugliv-display', JSON.stringify(displaySettings)); } catch (error) { /* optional */ } }
+      applyDisplaySettings();
+      if (rerender) render();
+    }
+    function tileLookSettingsHtml() {
+      return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('home')}</span><div><h2 class="card-title">Aussehen der Kacheln</h2><p class="card-caption">Bilder oder farbige Kacheln auf der Startseite – die Farbe wählst du frei.</p></div></div>
+        <div style="padding:0 18px 18px">${tileLookControlsHtml('owner-tile', displaySettings.tileStyle || 'photo', displaySettings.tileColor)}</div></section>`;
+    }
     function dashboardTilesSettingsHtml() {
       const chosen = dashboardTileSelection();
       const full = chosen.length >= DASHBOARD_TILE_LIMIT;
@@ -14941,7 +15069,7 @@ ohne Datum|no date|inget datum
     }
     function settingsPage() {
       const groups = [
-        ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
+        ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, tileLookSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
         ['settings-look', 'Darstellung & Erinnerungen', 'Hell oder dunkel, Schriftgröße, Sprache der Aufträge und was dir die Glocke meldet.', settingsCardBuilders.filter((build) => build !== backupCardHtml && build !== appInfoCardHtml)],
         ['settings-data', 'Daten & App', 'Cloud-Speicher, Servicepartner, Datensicherung und Informationen zur App.', [cloudCardHtml, ownerMembersCardHtml, ownerPartnerCardHtml, backupCardHtml, appInfoCardHtml]]
       ];
@@ -15076,6 +15204,7 @@ ohne Datum|no date|inget datum
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#111513' : '#f4efe4');
       document.documentElement.classList.toggle('ts-large', displaySettings.textSize === 'large');
       document.documentElement.classList.toggle('ts-xlarge', displaySettings.textSize === 'xlarge');
+      try { applyTileLook(document.documentElement, 'owner', displaySettings.tileStyle || 'photo', displaySettings.tileColor); } catch (error) { /* Kacheln optional */ }
     }
     applyDisplaySettings();
     darkQuery?.addEventListener?.('change', () => { if (displaySettings.theme === 'system') applyDisplaySettings(); });
@@ -18338,6 +18467,7 @@ ohne Datum|no date|inget datum
     function ppRender() {
       if (!pp.open) return;
       const root = ppEnsureRoot();
+      try { const prefs = ppHomePrefs(); applyTileLook(root, 'pp', prefs.tileStyle || 'photo', prefs.tileColor); } catch (error) { /* optional */ }
       const scroll = root.querySelector('.pp-main')?.scrollTop || 0;
       const org = ppOrg();
       const signedIn = cloudSignedIn();
@@ -19262,6 +19392,7 @@ ohne Datum|no date|inget datum
       const card = (title, caption, ic, body, id = '') => `<section class="pp-card pp-settings-card" ${id ? `id="${id}"` : ''}><div class="pp-settings-head"><span class="pp-settings-icon">${icon(ic)}</span><div><h2>${title}</h2><p>${caption}</p></div></div>${body}</section>`;
       return `${ppBack()}<div class="pp-page-head"><h1>Einstellungen</h1></div>
         ${card('Startseite', 'Welche Kacheln die Startseite zeigt.', 'home', `<div class="pp-tile-picks">${PP_TILES.map(([id, label, ic]) => `<label class="pp-tile-pick ${tiles.includes(id) ? 'on' : ''}"><input type="checkbox" data-pp-tile-toggle="${id}" ${tiles.includes(id) ? 'checked' : ''}><span>${icon(ic)} ${escapeHtml(label)}</span></label>`).join('')}</div><div class="pp-actions flat"><button type="button" class="secondary-btn" data-pp-tile-reset>Standard wiederherstellen</button></div>`)}
+        ${card('Aussehen der Kacheln', 'Bilder oder farbige Kacheln auf der Startseite – die Farbe wählst du frei.', 'home', tileLookControlsHtml('pp-tile', ppHomePrefs().tileStyle || 'photo', ppHomePrefs().tileColor))}
         ${card('Darstellung & Sprache', 'Hell oder dunkel, Schriftgröße und Sprache der App.', 'text', `<span class="form-label">Erscheinungsbild</span>
           <div class="segmented" role="radiogroup" aria-label="Erscheinungsbild">${themes.map(([id, label, ic]) => `<button type="button" role="radio" aria-checked="${displaySettings.theme === id}" class="${displaySettings.theme === id ? 'active' : ''}" data-display-theme="${id}">${icon(ic)} ${label}</button>`).join('')}</div>
           <label class="pp-check pp-home-toggle"><input type="checkbox" data-pp-home-pref="showOffered" ${ppHomePrefs().showOffered ? 'checked' : ''}><span><strong>Neue Anfragen auf der Startseite</strong><small>Ausgeschaltet findest du neue Anfragen weiter unter „Aufträge → Neu“ und an der Zahl im Menü.</small></span></label>
@@ -20621,9 +20752,14 @@ ohne Datum|no date|inget datum
           ${tasksOpen.length ? `<div class="hub-send-bar"><span>${count ? `<b>${count}</b> Aufgabe${count === 1 ? '' : 'n'} ausgewählt` : 'Noch keine Aufgabe ausgewählt'}</span><button type="button" class="primary-btn" data-hub-send-picked ${count && !ownerSide.busy ? '' : 'disabled'}>${ownerSide.busy === 'send' ? 'Sende …' : `${icon('check')} An ${escapeHtml(partner.company_name)} senden`}</button></div>` : ''}
         </section>` : '';
       // Aufträge je Servicepartner, darin nach Ferienhaus
+      const archived = hubArchived();
+      const filters = [['all', 'Alle', (o) => !archived.has(o.id)], ['offered', 'Neue Anfrage', (o) => o.status === 'offered' && !archived.has(o.id)], ['accepted', 'Angenommen', (o) => ['accepted', 'scheduled'].includes(o.status) && !archived.has(o.id)], ['running', 'In Arbeit', (o) => ['in_progress', ...ORDER_WAITING].includes(o.status) && !archived.has(o.id)], ['completed', 'Erledigt', (o) => o.status === 'completed' && !archived.has(o.id)], ['archive', 'Archiv', (o) => archived.has(o.id)]];
+      const [, , keep] = filters.find(([id]) => id === hub.orderFilter) || filters[0];
+      const shown = orders.filter(keep);
+      const chips = `<div class="pp-filters hub-order-filters">${filters.map(([id, label, f]) => `<button type="button" class="${(hub.orderFilter || 'all') === id ? 'active' : ''}" data-hub-order-filter="${id}">${label} <b>${orders.filter(f).length}</b></button>`).join('')}</div>`;
       const groups = new Map();
-      orders.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
-      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
+      shown.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
+      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${o.status === 'offered' && cloudCanWrite() ? `<button type="button" class="secondary-btn danger" data-hub-withdraw="${o.id}">Anfrage zurückziehen</button>` : ''}${['completed', 'cancelled', 'rejected'].includes(o.status) ? `<button type="button" class="secondary-btn" data-hub-archive="${o.id}">${hubArchived().has(o.id) ? 'Aus dem Archiv holen' : 'Ins Archiv'}</button>` : ''}${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
       const rank = (o) => ({ in_progress: 0, scheduled: 1, accepted: 2, offered: 3, completed: 4 }[o.status] ?? 5);
       const list = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0], 'de')).map(([name, list]) => {
         const houses = new Map();
@@ -20631,8 +20767,38 @@ ohne Datum|no date|inget datum
         const openCount = list.filter((o) => !['completed', 'rejected', 'cancelled'].includes(o.status)).length;
         return `<section class="hub-section hub-group"><h3 class="hub-section-title">${icon('users')} ${escapeHtml(name)} <small>${openCount} offen · ${list.length} gesamt</small></h3>${[...houses.entries()].map(([h, os]) => `<div class="hub-house-label">${icon('property')} ${escapeHtml(h)}</div>${os.map(orderCard).join('')}`).join('')}</section>`;
       }).join('');
-      return `${send}${orders.length ? `<h2 class="hub-list-title">Aufträge an Partner</h2>${list}` : ''}`;
+      return `${send}${orders.length ? `<h2 class="hub-list-title">Aufträge an Partner</h2>${chips}${list || `<p class="settings-hint">${hub.orderFilter === 'archive' ? 'Das Archiv ist leer. Erledigte Aufträge verschiebst du mit „Ins Archiv“ hierher.' : 'In dieser Ansicht gibt es keine Aufträge.'}</p>`}` : ''}`;
     }
+    // ----- Aufträge an Partner: Archiv (pro Konto, über den Cloud-Abgleich gesichert) -----
+    // Funktionsdeklaration (gehoben): darf schon beim ersten Zeichnen aufgerufen werden
+    function hubArchived() { return new Set(loadStore('stugliv-hub-archive', [])); }
+    document.addEventListener('click', (event) => {
+      const filter = event.target.closest('[data-hub-order-filter]');
+      const archive = event.target.closest('[data-hub-archive]');
+      const withdraw = event.target.closest('[data-hub-withdraw]');
+      if (filter) { hub.orderFilter = filter.dataset.hubOrderFilter; render(); return; }
+      if (archive) {
+        const set = hubArchived(); const id = archive.dataset.hubArchive;
+        const was = set.has(id); if (was) set.delete(id); else set.add(id);
+        saveStore('stugliv-hub-archive', [...set]); render();
+        showToast(was ? 'Auftrag wieder in der Übersicht.' : 'Auftrag ins Archiv verschoben – zu finden unter „Archiv“.');
+        return;
+      }
+      if (withdraw) {
+        const order = (ownerSide.orders || []).find((o) => o.id === withdraw.dataset.hubWithdraw);
+        if (!order) return;
+        const reason = window.prompt(`Anfrage „${order.title}“ bei ${order.partner?.company_name || 'dem Servicepartner'} zurückziehen?\n\nGrund (optional, sieht der Partner):`, '');
+        if (reason === null) return;
+        ownerRun('withdraw', async () => {
+          const note = `Zurückgezogen${reason.trim() ? `: ${reason.trim()}` : ' vom Hausbesitzer'}.`;
+          await cloudFetch(`/rest/v1/service_orders?id=eq.${order.id}`, { method: 'PATCH', body: { status: 'cancelled', response_note: note }, headers: { Prefer: 'return=minimal' } });
+          await cloudFetch('/rest/v1/messages', { method: 'POST', body: { organization_id: cloud.org.id, service_order_id: order.id, message: `Anfrage „${order.title}“ zurückgezogen${reason.trim() ? ` – ${reason.trim()}` : ''}.` }, headers: { Prefer: 'return=minimal' } }).catch(() => {});
+          const local = tasks.find((t) => String(t.id) === order.task?.app_ref);
+          if (local && taskStatus(local) === 'In Bearbeitung') { setTaskStatus(local, 'Offen'); persistTasks(); }
+          showToast('Anfrage zurückgezogen – der Partner wird informiert.');
+        });
+      }
+    });
     // ----- Auftragsverlauf aus dem Audit-Protokoll (nur Admins der Organisation) -----
     const hubHistory = {};
     const ORDER_STATUS_DE = { offered: 'angefragt', accepted: 'angenommen', rejected: 'abgelehnt', scheduled: 'terminiert', in_progress: 'begonnen', waiting_customer: 'wartet auf Kunde', waiting_parts: 'wartet auf Material', completed: 'erledigt', cancelled: 'zurückgezogen', draft: 'Entwurf' };
