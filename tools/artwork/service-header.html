@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Husora – Titelleiste Servicepartner-App</title>
+<style>body{margin:0;background:#222}svg{display:block}</style></head>
+<body>
+<!-- Titelleiste der Servicepartner-App (Startseite): rotes Schwedenhaus am Waldrand, davor ein Husora-Servicewagen.
+     Gerendert mit: node tools/artwork/render-service-header.js  →  assets/pp/header-service.jpg (1600×360) -->
+<svg id="owner-header" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 360" width="1600" height="360">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c4a63"/><stop offset=".55" stop-color="#d48a5c"/><stop offset="1" stop-color="#f1c48d"/>
+    </linearGradient>
+    <radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2c9"/><stop offset=".4" stop-color="#ffd58e" stop-opacity=".8"/><stop offset="1" stop-color="#ffd58e" stop-opacity="0"/></radialGradient>
+    <linearGradient id="hillFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f6a64"/><stop offset="1" stop-color="#3a524c"/></linearGradient>
+    <linearGradient id="forestMid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b4a3c"/><stop offset="1" stop-color="#1d3529"/></linearGradient>
+    <linearGradient id="meadow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f8a4a"/><stop offset="1" stop-color="#3d5a2e"/></linearGradient>
+    <linearGradient id="road" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9a588"/><stop offset="1" stop-color="#8f7c62"/></linearGradient>
+    <linearGradient id="falu" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8e2a1f"/><stop offset="1" stop-color="#a8352a"/></linearGradient>
+    <linearGradient id="faluSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6e2018"/><stop offset="1" stop-color="#7f261c"/></linearGradient>
+    <linearGradient id="roof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3d3b"/><stop offset="1" stop-color="#232625"/></linearGradient>
+    <linearGradient id="window" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe2a3"/><stop offset="1" stop-color="#f3b45e"/></linearGradient>
+    <linearGradient id="vanBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#eef0ec"/><stop offset="1" stop-color="#c9cdc6"/></linearGradient>
+    <linearGradient id="vanGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f4b5c"/><stop offset=".5" stop-color="#6f93a6"/><stop offset="1" stop-color="#29404d"/></linearGradient>
+    <linearGradient id="vanStripe" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f6b4f"/><stop offset="1" stop-color="#3d8a63"/></linearGradient>
+    <radialGradient id="tyre" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#9aa29c"/><stop offset=".35" stop-color="#5d635f"/><stop offset=".42" stop-color="#1b1e1c"/><stop offset="1" stop-color="#101211"/></radialGradient>
+    <radialGradient id="lampGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3c4" stop-opacity=".95"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></radialGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="haze"><feGaussianBlur stdDeviation="1.4"/></filter>
+    <symbol id="spruce" viewBox="0 0 60 160"><path d="M30 0 L38 22 L33 22 L44 46 L37 46 L50 74 L41 74 L56 106 L44 106 L60 140 L34 140 L34 160 L26 160 L26 140 L0 140 L16 106 L4 106 L19 74 L10 74 L23 46 L16 46 L27 22 L22 22Z"/></symbol>
+  </defs>
+
+  <rect width="1600" height="360" fill="url(#sky)"/>
+  <circle cx="1180" cy="168" r="120" fill="url(#sun)"/>
+  <g fill="#fff" opacity=".35"><ellipse cx="380" cy="70" rx="120" ry="10"/><ellipse cx="520" cy="58" rx="80" ry="7"/><ellipse cx="1350" cy="90" rx="140" ry="9"/></g>
+
+  <!-- ferne Hügel und Wald -->
+  <path d="M0 200 C200 160 380 175 560 168 S900 150 1100 165 S1400 155 1600 170 V260 H0Z" fill="url(#hillFar)" filter="url(#haze)"/>
+  <g fill="#2f4a40" opacity=".85">
+    <use href="#spruce" x="20" y="120" width="40" height="110"/><use href="#spruce" x="60" y="105" width="48" height="128"/><use href="#spruce" x="110" y="128" width="36" height="100"/>
+    <use href="#spruce" x="300" y="122" width="40" height="110"/><use href="#spruce" x="345" y="110" width="44" height="124"/>
+    <use href="#spruce" x="1440" y="118" width="44" height="120"/><use href="#spruce" x="1490" y="104" width="52" height="140"/><use href="#spruce" x="1545" y="125" width="40" height="110"/>
+  </g>
+  <!-- Waldrand hinter dem Haus -->
+  <path d="M520 240 C640 200 760 196 900 204 S1180 196 1420 220 V290 H520Z" fill="url(#forestMid)"/>
+  <g fill="#1c3428">
+    <use href="#spruce" x="560" y="96" width="62" height="168"/><use href="#spruce" x="612" y="76" width="74" height="196"/><use href="#spruce" x="676" y="100" width="58" height="160"/>
+    <use href="#spruce" x="1080" y="88" width="66" height="180"/><use href="#spruce" x="1136" y="70" width="78" height="206"/><use href="#spruce" x="1206" y="104" width="56" height="158"/>
+    <use href="#spruce" x="1260" y="92" width="62" height="172"/><use href="#spruce" x="1318" y="116" width="50" height="140"/>
+  </g>
+  <g fill="#2a4a3a" opacity=".9"><use href="#spruce" x="726" y="122" width="44" height="124"/><use href="#spruce" x="1040" y="118" width="46" height="128"/></g>
+
+  <!-- Wiese und Kiesweg -->
+  <path d="M0 262 C260 246 520 250 760 252 S1200 246 1600 256 V360 H0Z" fill="url(#meadow)"/>
+  <g transform="translate(-170 0)">
+  <path d="M700 360 C760 318 840 294 960 282 L1010 282 C980 300 960 330 980 360Z" fill="url(#road)" opacity=".9"/>
+
+  <!-- rotes Schwedenhaus (Falunrot, weiße Ecken) -->
+  <g transform="translate(770 132)">
+    <ellipse cx="150" cy="150" rx="190" ry="14" fill="#13261b" opacity=".45" filter="url(#soft)"/>
+    <!-- Seitenwand -->
+    <path d="M230 62 L310 62 L310 148 L230 148Z" fill="url(#faluSide)"/>
+    <!-- Giebelfront -->
+    <path d="M0 62 L115 0 L230 62 L230 148 L0 148Z" fill="url(#falu)"/>
+    <!-- Dach -->
+    <path d="M-14 66 L115 -8 L236 58 L230 66 L115 4 L-6 70Z" fill="#f4efe4"/>
+    <path d="M115 -8 L236 58 L322 58 L206 -8Z" fill="url(#roof)"/>
+    <path d="M206 -8 L322 58" stroke="#f4efe4" stroke-width="5"/>
+    <rect x="262" y="8" width="16" height="34" fill="#5a2a22"/><rect x="259" y="6" width="22" height="6" fill="#3a3d3b"/>
+    <!-- weiße Eckbretter -->
+    <rect x="0" y="62" width="8" height="86" fill="#f4efe4"/><rect x="222" y="62" width="8" height="86" fill="#f4efe4"/><rect x="302" y="62" width="8" height="86" fill="#efe9dc"/>
+    <!-- Holzverkleidung -->
+    <g stroke="#7a2219" stroke-width="2" opacity=".55"><path d="M30 70 V148 M60 52 V148 M90 36 V148 M140 36 V148 M170 52 V148 M200 66 V148"/><path d="M250 62 V148 M275 62 V148"/></g>
+    <!-- Fenster (warmes Licht) -->
+    <g><rect x="28" y="84" width="42" height="40" fill="url(#window)"/><rect x="160" y="84" width="42" height="40" fill="url(#window)"/><rect x="246" y="86" width="36" height="34" fill="url(#window)" opacity=".9"/><rect x="100" y="34" width="30" height="28" fill="url(#window)"/></g>
+    <g fill="none" stroke="#f4efe4" stroke-width="5"><rect x="28" y="84" width="42" height="40"/><rect x="160" y="84" width="42" height="40"/><rect x="246" y="86" width="36" height="34"/><rect x="100" y="34" width="30" height="28"/></g>
+    <g stroke="#f4efe4" stroke-width="3"><path d="M49 84 V124 M28 104 H70 M181 84 V124 M160 104 H202 M264 86 V120 M115 34 V62"/></g>
+    <!-- Tür mit Vordach -->
+    <rect x="96" y="92" width="38" height="56" fill="#2f6b4f"/><rect x="96" y="92" width="38" height="56" fill="none" stroke="#f4efe4" stroke-width="5"/>
+    <path d="M86 90 L115 74 L144 90Z" fill="#f4efe4"/><circle cx="127" cy="122" r="2.5" fill="#f4e2a4"/>
+    <rect x="88" y="146" width="54" height="6" fill="#cfc8b6"/>
+    <!-- Lichtschein -->
+    <ellipse cx="49" cy="104" rx="46" ry="34" fill="url(#lampGlow)" opacity=".35"/><ellipse cx="181" cy="104" rx="46" ry="34" fill="url(#lampGlow)" opacity=".35"/>
+  </g>
+  <!-- Birke und Büsche am Haus -->
+  <g><path d="M748 290 C750 240 746 200 752 150" stroke="#eae6dc" stroke-width="7" fill="none"/><g stroke="#3b3b38" stroke-width="2"><path d="M748 270 h6 M750 240 h5 M749 210 h6 M751 180 h5"/></g>
+    <g fill="#7f9a4b" opacity=".95"><circle cx="752" cy="146" r="26"/><circle cx="730" cy="164" r="20"/><circle cx="774" cy="166" r="22"/><circle cx="752" cy="178" r="18"/></g></g>
+  <g fill="#3f5f33"><ellipse cx="800" cy="286" rx="34" ry="14"/><ellipse cx="1060" cy="284" rx="40" ry="15"/><ellipse cx="1092" cy="290" rx="26" ry="10"/></g>
+
+  <!-- Husora-Servicewagen -->
+  <g transform="translate(1086 196)">
+    <ellipse cx="128" cy="110" rx="150" ry="13" fill="#0f1d14" opacity=".55" filter="url(#soft)"/>
+    <!-- Karosserie -->
+    <path d="M6 30 Q6 14 22 14 L176 14 Q190 14 198 26 L228 62 Q252 66 256 80 L258 96 Q258 104 250 104 L14 104 Q6 104 6 96Z" fill="url(#vanBody)"/>
+    <!-- Fenster -->
+    <path d="M180 22 L200 28 L224 62 L180 62Z" fill="url(#vanGlass)"/>
+    <rect x="140" y="22" width="34" height="40" rx="4" fill="url(#vanGlass)"/>
+    <!-- Streifen und Schriftzug -->
+    <path d="M6 66 L256 66 L257 78 L6 78Z" fill="url(#vanStripe)"/>
+    <g transform="translate(22 30)">
+      <path d="M0 18 L13 6 L26 18 V30 H0Z" fill="none" stroke="#2f6b4f" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M-2 33 C6 28 14 36 28 31" stroke="#2f6b4f" stroke-width="3" fill="none"/>
+      <text x="36" y="26" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" letter-spacing="2.5" fill="#1f3d2f">HUSORA</text>
+      <text x="37" y="38" font-family="Arial, Helvetica, sans-serif" font-size="8.5" letter-spacing=".8" fill="#4a6357">SMART HOUSE CARE · SERVICE</text>
+    </g>
+    <!-- Türfugen, Griff, Spiegel, Licht -->
+    <g stroke="#a6aca4" stroke-width="1.6" fill="none"><path d="M134 16 V102 M178 16 V102"/><path d="M60 16 V102"/></g>
+    <rect x="166" y="44" width="10" height="3" rx="1.5" fill="#8d938b"/>
+    <path d="M226 56 l10 -6 l4 8 l-10 4z" fill="#2f3532"/>
+    <rect x="246" y="82" width="10" height="9" rx="2" fill="#fff4c8"/><ellipse cx="270" cy="88" rx="26" ry="10" fill="url(#lampGlow)" opacity=".8"/>
+    <rect x="6" y="80" width="6" height="12" rx="2" fill="#b3261e"/>
+    <rect x="232" y="96" width="26" height="8" rx="3" fill="#5c625e"/><rect x="4" y="96" width="22" height="8" rx="3" fill="#5c625e"/>
+    <!-- Dachträger mit Leiter -->
+    <g stroke="#7b827d" stroke-width="3"><path d="M20 12 V6 M168 12 V6"/><path d="M14 6 H176"/></g>
+    <g stroke="#c4c9c3" stroke-width="2.4"><path d="M30 2 H160"/><path d="M40 0 V6 M60 0 V6 M80 0 V6 M100 0 V6 M120 0 V6 M140 0 V6"/></g>
+    <!-- Räder -->
+    <g><circle cx="58" cy="104" r="19" fill="url(#tyre)"/><circle cx="58" cy="104" r="7" fill="#c9ceca"/><circle cx="204" cy="104" r="19" fill="url(#tyre)"/><circle cx="204" cy="104" r="7" fill="#c9ceca"/></g>
+    <path d="M34 94 Q58 74 82 94" fill="none" stroke="#9da39d" stroke-width="3"/><path d="M180 94 Q204 74 228 94" fill="none" stroke="#9da39d" stroke-width="3"/>
+  </g>
+
+  </g>
+  <!-- Vordergrund-Gräser -->
+  <g stroke="#2e4a26" stroke-width="2.4" stroke-linecap="round" opacity=".85">
+    <path d="M40 360 l6 -26 M52 360 l-4 -20 M60 360 l8 -30 M1500 360 l-6 -24 M1514 360 l4 -30 M1526 360 l-8 -22 M880 360 l4 -18 M892 360 l-3 -14"/>
+  </g>
+  <rect width="1600" height="360" fill="#0c1f17" opacity=".08"/>
+</svg>
+</body></html>
