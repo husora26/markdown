@@ -2943,6 +2943,38 @@
     .hub-approvals-card .hub-approval + .hub-approval { margin-top: 8px; }
     .hub-limit-form { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
     .hub-limit-form label { flex: 1 1 200px; }
+    /* Legal & Beta Compliance */
+    #consent-sheet { position: fixed; left: 50%; bottom: 16px; z-index: 990; width: min(560px, calc(100vw - 24px)); transform: translateX(-50%); }
+    .consent-sheet-inner { display: grid; gap: 10px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); color: var(--ink); box-shadow: var(--shadow); max-height: calc(100dvh - 40px); overflow: auto; }
+    .consent-sheet-inner h2 { margin: 0; font-size: 18px; }
+    .consent-sheet-inner p { margin: 0; font-size: 13.5px; color: var(--muted); }
+    .consent-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .consent-actions button { flex: 1 1 140px; }
+    .consent-links { font-size: 12.5px; }
+    .consent-placeholder { display: grid; place-items: center; gap: 8px; height: 100%; min-height: 140px; padding: 16px; text-align: center; color: var(--muted); font-size: 13px; background: var(--canvas); border-radius: 12px; }
+    .legal-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; margin-top: 8px; }
+    .legal-hub-item { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+    .legal-hub-item small { color: var(--muted); font-size: 12px; }
+    .legal-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 8px 0; }
+    .legal-table th, .legal-table td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .legal-table th { width: 34%; color: var(--muted); font-weight: 600; }
+    .legal-table.small { font-size: 12px; }
+    .legal-table.small th { width: auto; }
+    .legal-scroll { overflow-x: auto; }
+    .inspection-disclaimer { display: flex; align-items: flex-start; gap: 8px; margin: 8px 0 12px; padding: 8px 12px; border-radius: 10px; background: var(--amber-soft); color: var(--ink); font-size: 12.5px; line-height: 1.45; }
+    .inspection-disclaimer svg { width: 16px; height: 16px; flex: none; margin-top: 1px; }
+    .sensitive-badge { margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--amber-soft); color: #87622b; font-size: 10.5px; font-style: normal; font-weight: 700; }
+    .hub-verify { margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--canvas); color: var(--muted); font-size: 11px; }
+    .hub-verify.ok { background: var(--green-soft); color: var(--green); font-weight: 700; }
+    .ai-notice { font-weight: 600; }
+    .mfa-card .card-title { display: flex; align-items: center; gap: 8px; }
+    .mfa-card .card-title svg { width: 20px; height: 20px; }
+    .mfa-qr { width: 180px; height: 180px; background: #fff; padding: 8px; border-radius: 12px; }
+    .gate-list { display: grid; gap: 4px; margin: 6px 0 0; padding: 0; list-style: none; }
+    .gate-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+    .gate-list li.ok span { color: var(--green); }
+    .gate-list li small { color: var(--muted); }
+    .cost-confirm .legal-table th { width: 30%; }
     /* Phase 12: KI-Vorschläge */
     .ai-card { display: grid; gap: 6px; margin: 10px 0; padding: 12px 14px; border: 1px dashed #8b6fd1; border-radius: 12px; background: rgba(139, 111, 209, .07); }
     .ai-card.accepted { border-style: solid; }
@@ -5050,6 +5082,8 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       <ol class="import-progress" id="import-progress" hidden><li data-step="read">Inserat lesen</li><li data-step="translate">Ins Deutsche übersetzen</li><li data-step="analyze">Zustand & Sanierungen analysieren</li><li data-step="photos">Fotos laden</li></ol>
       <p class="import-status" id="import-status" role="status" aria-live="polite" hidden></p>
       <p class="import-hint">Du kannst alles vor dem Speichern prüfen und ändern. Für die Übersetzung werden die Inseratstexte an einen Übersetzungsdienst gesendet. Inserate von Booli und Svensk Fastighetsförmedling werden über einen öffentlichen Weiterleitungsdienst abgerufen.</p>
+      <p class="import-hint import-legal">Quelle: Die Daten stammen vom jeweiligen Maklerportal. Texte und Fotos können urheberrechtlich geschützt sein – Husora übernimmt sie nur zur privaten Verwaltung deines eigenen Objekts, nennt die Quelle und speichert sie nur auf deinem Gerät bzw. in deiner Cloud. Für den Abruf werden Daten an das Portal und ggf. an Weiterleitungs- und Übersetzungsdienste übertragen (Einwilligung „Externe Inhalte“).</p>
+      <label class="consent-row"><input type="checkbox" id="import-rights"><span>Ich übernehme nur Daten zu meinem eigenen bzw. von mir verwalteten Objekt und nutze sie nicht öffentlich weiter.</span></label>
       <div class="form-actions"><button type="button" class="secondary-btn" id="import-cancel">Abbrechen</button><button type="button" class="primary-btn" id="import-run">Daten einlesen</button></div>
     </section>
   </div>
@@ -7061,7 +7095,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       });
     }
     async function fetchIcalText(url) {
-      const attempts = [url, ...(icalSync.allowProxy ? [`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, `https://api.cors.lol/?url=${encodeURIComponent(url)}`] : [])];
+      const attempts = [url, ...(icalSync.allowProxy && externalAllowed('listing_import') ? [`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, `https://api.cors.lol/?url=${encodeURIComponent(url)}`] : [])];
       let reachedInvalid = false;
       for (const target of attempts) {
         try {
@@ -7158,6 +7192,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     async function refreshFxRate(force = false) {
       const fresh = fxRate.live && fxRate.fetchedAt && Date.now() - fxRate.fetchedAt < 12 * 3600 * 1000;
       if (fxLoading || (fresh && !force)) return;
+      if (!externalAllowed('exchange_rates')) return;
       fxLoading = true;
       let next = null;
       try {
@@ -9020,7 +9055,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       });
       box.querySelector('input[name=terms]').focus();
     }
+    function paymentsDisabled() { try { const c = betaS().config; return c.enabled !== false && !(lcStore('husora-payments', null)?.enabled); } catch (error) { return true; } }
     async function startCheckout(body) {
+      if (body?.plan_id && paymentsDisabled()) throw new Error('Zahlungen sind während der Beta deaktiviert');
       const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
       const response = await fetch(`${base}/functions/v1/stripe-checkout`, { method: 'POST', headers: { apikey: cloud.key || CLOUD_DEFAULT.key, Authorization: `Bearer ${cloud.session.access_token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, return_url: `${location.origin}${location.pathname}` }) });
       const data = await response.json().catch(() => ({}));
@@ -9031,6 +9068,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const checkout = event.target.closest('[data-plan-checkout], [data-plan-portal]');
       if (!checkout) return;
       // Vor dem Bezahlfenster: AGB, Datenschutz und Beginn der Leistung vor Ablauf der Widerrufsfrist ausdrücklich bestätigen.
+      if (checkout.dataset.planCheckout && paymentsDisabled()) { trackEvent('subscription_interest', { entity_type: 'plan', entity_ref: `plan:${checkout.dataset.planCheckout}`, metadata: { feature: `plan_${checkout.dataset.planCheckout}`.slice(0, 40) } }); showToast('Während der Beta gibt es keine Zahlungen – dein Interesse ist vorgemerkt. Wir melden uns vor dem Start.'); return; }
       if (checkout.dataset.planCheckout && !checkout.dataset.consent) { openCheckoutConsent(checkout.dataset.planCheckout); return; }
       checkout.disabled = true;
       startCheckout(checkout.dataset.planPortal !== undefined ? { portal: true } : { plan_id: checkout.dataset.planCheckout, consent: { terms: true, waiver: true, at: new Date().toISOString() } })
@@ -10928,7 +10966,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const winterKey = `${new Date().getFullYear()}:${property.id}`;
       const checkedWinterItems = winterChecks[winterKey] || {};
       const winterComplete = winterChecklist.filter((item) => checkedWinterItems[item.id]).length;
-      const pageHeader = `<div class="welcome"><div><p class="eyebrow">${SEASON_CHECKLISTS[inspectionView] ? SEASON_CHECKLISTS[inspectionView].eyebrow : 'Bei längerer Abwesenheit'}</p><h1>${SEASON_CHECKLISTS[inspectionView] ? SEASON_CHECKLISTS[inspectionView].title : 'Hauskontrolle'}</h1><p class="subtitle">${SEASON_CHECKLISTS[inspectionView] ? escapeHtml(SEASON_CHECKLISTS[inspectionView].subtitle(property.name)) : `Prüfpunkte, Kontrolltaktung und durchgeführte Besuche ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} verwalten.`}</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>`;
+      const pageHeader = `<div class="welcome"><div><p class="eyebrow">${SEASON_CHECKLISTS[inspectionView] ? SEASON_CHECKLISTS[inspectionView].eyebrow : 'Bei längerer Abwesenheit'}</p><h1>${SEASON_CHECKLISTS[inspectionView] ? SEASON_CHECKLISTS[inspectionView].title : 'Hauskontrolle'}</h1><p class="subtitle">${SEASON_CHECKLISTS[inspectionView] ? escapeHtml(SEASON_CHECKLISTS[inspectionView].subtitle(property.name)) : `Prüfpunkte, Kontrolltaktung und durchgeführte Besuche ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} verwalten.`}</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>${inspectionDisclaimerHtml()}`;
       const propertyAndTabs = `${singleHouse() ? '' : `<div class="section-toolbar"><label><span class="form-label">Ferienhaus</span><select id="inspection-property" class="filter-select" aria-label="Ferienhaus für Hauskontrolle wählen">${properties.map((item) => `<option value="${item.id}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)} · ${escapeHtml(item.region)}</option>`).join('')}</select></label></div>`}
         <div class="inspection-tabs" role="tablist" aria-label="Hauskontrolllisten"><div class="inspection-tab-group"><span class="inspection-tab-group-label">Laufend</span><button class="inspection-tab ${inspectionView === 'absence' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'absence'}" data-inspection-view="absence"><strong>Abwesenheitskontrolle</strong><small>monatlich bei Leerstand</small></button></div><span class="inspection-tab-divider" aria-hidden="true"></span><div class="inspection-tab-group season"><span class="inspection-tab-group-label">Saison-Checklisten</span><div class="inspection-tab-pair"><button class="inspection-tab ${inspectionView === 'spring' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'spring'}" data-inspection-view="spring"><strong>Frühjahrscheckliste</strong><small>bis ${escapeHtml(fmtDate(seasonDue('spring', property.id)))}${springIsReady(property.id) ? ' · erledigt' : ''}</small></button><button class="inspection-tab ${inspectionView === 'winter' ? 'active' : ''}" type="button" role="tab" aria-selected="${inspectionView === 'winter'}" data-inspection-view="winter"><strong>Wintercheckliste</strong><small>bis ${escapeHtml(fmtDate(seasonDue('winter', property.id)))}${winterIsReady(property.id) ? ' · erledigt' : ''}</small></button></div></div></div>`;
       if (SEASON_CHECKLISTS[inspectionView]) {
@@ -12430,6 +12468,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (Object.prototype.hasOwnProperty.call(geoCache, query)) return geoCache[query];
         let result = null;
         try {
+          if (!externalAllowed('nominatim')) return null;
           const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=se&accept-language=de&q=${encodeURIComponent(query)}`);
           if (!response.ok) throw new Error(`Geocoding ${response.status}`);
           const hit = (await response.json())[0];
@@ -12488,6 +12527,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       document.getElementById('partner-map-subtitle').textContent = `${points.length} Servicepartner · ${homes.length} ${homes.length === 1 ? 'Ferienhaus' : 'Ferienhäuser'}${providers.length > points.length ? ` · ${providers.length - points.length} ohne Ortsangabe` : ''}`;
       renderPartnerMapFilters(counts);
       if (partnerMap) { partnerMap.remove(); partnerMap = null; }
+      if (!externalAllowed('osm_tiles')) { container.innerHTML = externalBlockedHtml('Die Karte'); return; }
       container.innerHTML = '';
       partnerMap = L.map(container, { scrollWheelZoom: true });
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>' }).addTo(partnerMap);
@@ -12551,6 +12591,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const status = (text) => { if (token === propertyMapToken && container.isConnected) container.innerHTML = text ? `<p class="house-map-status">${escapeHtml(text)}</p>` : ''; };
       const fallback = () => {
         if (token !== propertyMapToken || !container.isConnected) return;
+        if (!externalAllowed('google_maps')) { container.innerHTML = externalBlockedHtml('Die Kartenvorschau'); return; }
         const query = [property.address, property.region, 'Schweden'].filter(Boolean).join(', ') || property.name;
         container.innerHTML = `<iframe title="Google Maps: Standort von ${escapeHtml(property.name)}" style="width:100%;height:100%;border:0" src="https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=11&output=embed&hl=de" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`;
       };
@@ -12585,6 +12626,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         points.push({ kind: entry.provider.category === 'inspection' ? 'inspection' : entry.provider.category === 'renovation' ? 'renovation' : 'service', coords: [entry.coords[0] + offset * Math.sin(angle), entry.coords[1] + offset * 1.8 * Math.cos(angle)], title: entry.provider.name, text: `${partnerCategoryLabel(entry.provider)} · ${entry.provider.town || entry.place}`, approximate: entry.approximate, initials: entry.provider.initials || entry.provider.name.slice(0, 2).toUpperCase() });
       });
       if (!points.length) { fallback(); return; }
+      if (!externalAllowed('osm_tiles')) { container.innerHTML = externalBlockedHtml('Die Karte'); return; }
       container.innerHTML = '';
       propertyMap = L.map(container, { scrollWheelZoom: false });
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>' }).addTo(propertyMap);
@@ -12631,8 +12673,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const prefix = toast.classList.contains('show') ? `${toast.textContent} ` : '';
         showToast(`${prefix}${plannedCount} ${plannedCount === 1 ? 'Aufgabe' : 'Aufgaben'} automatisch geplant.`);
       }, 0);
-      const pages = { dashboard, portfolio: portfolioPage, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage, betaAdmin: betaAdminPage };
-      const labels = { dashboard: 'Übersicht', portfolio: 'Portfolio', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' , betaAdmin: 'Husora Beta Dashboard' };
+      const pages = { dashboard, portfolio: portfolioPage, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage, betaAdmin: betaAdminPage, adminCompliance: complianceAdminPage };
+      const labels = { dashboard: 'Übersicht', portfolio: 'Portfolio', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' , betaAdmin: 'Husora Beta Dashboard' , adminCompliance: 'Husora Admin' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -14637,6 +14679,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     ];
     const isBlockedPage = (html) => html.length < 800 || /cf-chl|challenge-platform|just a moment|attention required|captcha/i.test(html.slice(0, 6000));
     async function fetchListingPage(link) {
+      if (!externalAllowed('listing_import')) throw new Error('Der Inseratsimport lädt Daten von Drittanbietern – bitte „Externe Inhalte“ in den Datenschutz-Einstellungen erlauben.');
       for (const proxy of PAGE_PROXIES) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 15000);
@@ -14804,6 +14847,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return chunks;
     }
     async function translateWithGoogle(text) {
+      if (!externalAllowed('translation')) throw new Error('Übersetzung ist ausgeschaltet – „Externe Inhalte“ in den Datenschutz-Einstellungen erlauben.');
       const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=sv&tl=de&dt=t&q=${encodeURIComponent(text)}`);
       if (!response.ok) throw new Error(`Übersetzung ${response.status}`);
       const data = await response.json();
@@ -14925,6 +14969,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     async function runPropertyImport() {
       const run = document.getElementById('import-run');
+      if (!document.getElementById('import-rights')?.checked) { showToast('Bitte zuerst den Hinweis zu Quelle und Rechten bestätigen.'); document.getElementById('import-rights')?.focus(); return; }
       if (!(await consumeUsage('listing_imports_month', 'Inseratimporte'))) return;
       const raw = document.getElementById('import-url').value.trim();
       const full = document.querySelector('input[name="import-mode"]:checked')?.value === 'full';
@@ -14973,7 +15018,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       let points = [];
       if (full) {
         setImportStep('translate');
-        setImportStatus('Texte werden ins Deutsche übersetzt …');
+        setImportStatus('Texte werden maschinell ins Deutsche übersetzt (Übersetzungsdienst) …');
         await translateImportResult(result, (done, total) => setImportStatus(`Texte werden ins Deutsche übersetzt … (${done}/${total})`));
         setImportStep('analyze');
         setImportStatus('Zustand und Sanierungen werden ausgewertet …');
@@ -15482,7 +15527,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const groups = [
         ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, tileLookSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
         ['settings-look', 'Darstellung & Erinnerungen', 'Hell oder dunkel, Schriftgröße, Sprache der Aufträge und was dir die Glocke meldet.', settingsCardBuilders.filter((build) => build !== backupCardHtml && build !== appInfoCardHtml)],
-        ['settings-data', 'Daten & App', 'Cloud-Speicher, Servicepartner, Datensicherung und Informationen zur App.', [cloudCardHtml, ownerMembersCardHtml, ownerPartnerCardHtml, backupCardHtml, appInfoCardHtml]]
+        ['settings-data', 'Daten & App', 'Cloud-Speicher, Servicepartner, Datensicherung und Informationen zur App.', [cloudCardHtml, ownerMembersCardHtml, ownerPartnerCardHtml, backupCardHtml, appInfoCardHtml]],
+        ['settings-legal', 'Rechtliches', 'Impressum, Datenschutz, Nutzungs- und Beta-Bedingungen, Datenschutz-Einstellungen, Datenexport und Konto löschen.', [() => `${legalHubHtml()}${betaS().admin?.is_super_admin || (admS().status?.roles || []).length ? `<section class="card"><h2 class="card-title">Husora-Team</h2><div class="settings-actions"><button type="button" class="primary-btn" data-page="adminCompliance">${icon('shield')} Husora Admin (Compliance)</button><button type="button" class="secondary-btn" data-page="betaAdmin">Beta Dashboard</button></div></section>` : ''}`]]
       ];
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Startseite, Darstellung, Erinnerungen und Datensicherung.</p></div></div>
         <nav class="settings-jump" aria-label="Bereiche der Einstellungen">${groups.map(([id, title]) => `<button type="button" data-settings-jump="${id}">${title}</button>`).join('')}</nav>
@@ -15556,8 +15602,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return missing ? `<div class="legal-draft">${icon('alert')}<span><strong>Entwurf:</strong> Markierte Angaben fehlen noch. Lass die Texte vor der Veröffentlichung im App Store rechtlich prüfen.</span></div>` : '';
     }
     function legalPage() {
+      const tool = ['consent', 'export', 'request', 'delete', 'versions'].includes(legalTab) ? legalToolHtml(legalTab) : '';
       const section = LEGAL_SECTIONS[legalTab] || LEGAL_SECTIONS.imprint;
-      return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Rechtliches</h1><p class="subtitle">Impressum, Datenschutz, AGB und Lizenzen.</p></div></div>
+      if (tool) return `<div class="welcome"><div><p class="eyebrow">Einstellungen</p><h1>Rechtliches</h1><p class="subtitle">Rechtstexte, Datenschutz-Einstellungen, Export und Konto.</p></div></div>${legalHubHtml()}${tool}`;
+      return `<div class="welcome"><div><p class="eyebrow">Einstellungen</p><h1>Rechtliches</h1><p class="subtitle">Rechtstexte, Datenschutz-Einstellungen, Export und Konto.</p></div></div>${legalHubHtml()}
         ${legalDraftNote()}
         <div class="legal-tabs" role="tablist">${Object.entries(LEGAL_SECTIONS).map(([id, entry]) => `<button type="button" role="tab" aria-selected="${id === legalTab}" class="${id === legalTab ? 'active' : ''}" data-legal-tab="${id}">${entry.title}</button>`).join('')}</div>
         <article class="card legal-text"><h2>${section.title}</h2>${section.html()}</article>`;
@@ -15705,6 +15753,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const failedAt = weatherCache[property.id]?.failedAt;
       if (!force && failedAt && Date.now() - new Date(failedAt).getTime() < 30 * 60 * 1000) return;
       if (!force && cached && Date.now() - new Date(cached.fetchedAt).getTime() < WEATHER_TTL) return;
+      if (!externalAllowed('open_meteo')) return;
       weatherLoading.add(property.id);
       try {
         const [lat, lon] = origin.coords;
@@ -15902,6 +15951,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const data = emergencyFor(property.id);
       const filled = EMERGENCY_FIELDS.flatMap(([, fields]) => fields).filter(([key]) => data[key]).length;
       return `<div class="welcome"><div><p class="eyebrow">Mein Ferienhaus · ${escapeHtml(property.name)}</p><h1>Notfall & Zugang</h1><p class="subtitle">Alles, was du, Gäste oder Servicepartner im Ernstfall schnell finden müssen.</p></div></div>
+        <p class="inspection-disclaimer">${icon('key')} Zugangsdaten (Schlüsselbox, Codes, Alarm) sind nie öffentlich und gehen nicht automatisch an Servicepartner. Du gibst sie je Auftrag ausdrücklich und befristet frei („Zugang teilen“), kannst die Freigabe jederzeit widerrufen, und jeder Abruf wird protokolliert.</p>
         ${sectionPropertySelect()}
         ${emergencyRequestHtml(property)}
         <div class="emergency-numbers">${SWEDISH_EMERGENCY_NUMBERS.map(([number, label]) => `<a href="tel:${number.replace(/[^0-9+]/g, '')}" class="emergency-number ${number === '112' ? 'main' : ''}"><strong>${number}</strong><span>${label}</span></a>`).join('')}</div>
@@ -16149,7 +16199,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       try { if (navigator.webdriver && localStorage.getItem('husora-beta-ui') !== '1') return false; } catch (error) { /* egal */ }
       return true;
     }
-    function betaAnalyticsAllowed() { try { return betaOn('analytics') && localStorage.getItem('husora-analytics') !== '0'; } catch (error) { return false; } }
+    function betaAnalyticsAllowed() { try { return betaOn('analytics') && consentGet('analytics') && localStorage.getItem('husora-analytics') !== '0'; } catch (error) { return false; } }
     function betaRole() { try { return pp.open ? 'partner' : 'owner'; } catch (error) { return 'owner'; } }
     function betaScreen() { try { return pp.open ? `partner:${pp.detail?.type || pp.view || 'start'}` : String(currentPage || ''); } catch (error) { return ''; } }
     function betaPlatform() {
@@ -16204,6 +16254,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (!queue.length) return;
       s.flushing = true;
       try {
+        await consentSyncAfterLogin();  // Einwilligung zuerst serverseitig festhalten
         const batch = queue.slice(0, 50);
         let org = null;
         try { org = (pp.open ? ppOrg()?.id : null) || (cloudReady() ? cloud.org.id : null); } catch (error) { org = null; }
@@ -16422,6 +16473,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     document.addEventListener('change', (event) => {
       if (!event.target.matches?.('[data-beta-analytics]')) return;
       try { localStorage.setItem('husora-analytics', event.target.checked ? '1' : '0'); } catch (error) { /* optional */ }
+      { const c = consentState() || {}; consentSet({ analytics: event.target.checked, external_content: Boolean(c.external_content && c.v === legalVersionId()) }, 'settings'); }
       if (!event.target.checked) betaSave('husora-beta-events', []);
       showToast(event.target.checked ? 'Danke! Nutzungsstatistik ist an.' : 'Nutzungsstatistik ist aus – es werden keine Ereignisse mehr gesendet.');
     });
@@ -16439,6 +16491,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     // ----- Husora Beta Dashboard (nur Super-Admins; der Server prüft das selbst) -----
     function betaAdminPage() {
       const s = betaS();
+      if (cloudSignedIn()) { const gate = admMfaGateHtml(); if (gate) return gate; }
       if (!cloudSignedIn()) return `<section class="card"><h2 class="card-title">Husora Beta Dashboard</h2><p class="card-caption">Bitte mit dem Husora-Team-Konto anmelden (Einstellungen → Daten & App → Cloud-Speicher).</p></section>`;
       if (!s.dash) { betaLoadDashboard(); return '<section class="card"><p class="settings-hint">Kennzahlen werden geladen …</p></section>'; }
       if (s.dash.error) return `<section class="card"><h2 class="card-title">Husora Beta Dashboard</h2><p class="card-caption">${escapeHtml(s.dash.error)}</p><div class="settings-actions"><button type="button" class="secondary-btn" data-beta-dash-reload>Erneut laden</button></div></section>`;
@@ -16701,7 +16754,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function hubPartnerFactsHtml(partnerId) {
       const f = ownerSide.partnerFacts?.[partnerId];
       if (!f) return '';
-      return `${f.rating_count ? `<small class="hub-stars" title="${String(f.rating_avg).replace('.', ',')} von 5 (${f.rating_count} Bewertungen)">★ ${String(Number(f.rating_avg).toFixed(1)).replace('.', ',')}</small>` : ''}${f.emergency_service ? '<small class="hub-emergency-tag" title="Bietet Notdienst an">Notdienst</small>' : ''}`;
+      const ver = f.verification_status === 'verified' ? '<small class="hub-verify ok" title="Nachweise von Husora geprüft">Nachweise geprüft</small>' : '<small class="hub-verify" title="Angaben macht der Betrieb selbst">Nachweise nicht geprüft</small>';
+      return `${ver}${f.rating_count ? `<small class="hub-stars" title="${String(f.rating_avg).replace('.', ',')} von 5 (${f.rating_count} Bewertungen)">★ ${String(Number(f.rating_avg).toFixed(1)).replace('.', ',')}</small>` : ''}${f.emergency_service ? '<small class="hub-emergency-tag" title="Bietet Notdienst an">Notdienst</small>' : ''}`;
     }
     const QUOTE_STATUS = { requested: ['Angefragt', 'amber'], received: ['Neu', 'amber'], approved: ['Angenommen', 'green'], rejected: ['Abgelehnt', 'red'], expired: ['Abgelaufen', 'muted'] };
     function hubQuoteRow(q, { compare = false } = {}) {
@@ -16732,6 +16786,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (p11S().reviewForm !== o.id) return `<button type="button" class="secondary-btn hub-review-btn" data-hub-review-open="${o.id}">★ ${escapeHtml(o.partner?.company_name || 'Servicepartner')} bewerten</button>`;
       return `<form class="hub-review-form" data-hub-review="${o.id}"><div class="beta-stars" role="radiogroup" aria-label="Bewertung">${[1, 2, 3, 4, 5].map((n) => `<label title="${n} von 5"><input type="radio" name="rating" value="${n}" required><span>★</span></label>`).join('')}</div>
         <textarea class="form-control textarea" name="comment" rows="2" maxlength="2000" placeholder="Wie lief der Auftrag? (optional, sieht der Partner)"></textarea>
+        <small class="settings-hint">Bitte sachlich – siehe <button type="button" class="text-btn" data-legal-open="review_rules">Bewertungsregeln</button>.</small>
         <div class="pp-actions"><button type="button" class="secondary-btn" data-hub-review-cancel>Abbrechen</button><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Bewertung senden</button></div></form>`;
     }
     document.addEventListener('click', (event) => {
@@ -16742,6 +16797,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const approve = q.dataset.approve === '1';
         let note = '';
         if (!approve) { note = window.prompt(`Angebot ${quote.quote_number || ''} (${ppMoney(quote.amount_gross, quote.currency)}) ablehnen?\n\nGrund (optional, sieht der Partner):`, ''); if (note === null) return; }
+        if (approve) {
+          const order = (ownerSide.orders || []).find((o) => o.id === quote.service_order_id);
+          costConfirm({ title: 'Angebot annehmen', button: 'Angebot kostenpflichtig annehmen', rows: [['Auftragnehmer', order?.partner?.company_name || 'Servicepartner'], ['Leistung', `${order?.title || 'Auftrag'}${quote.description ? ` – ${quote.description}` : ''}`], ['Preis', `${ppMoney(quote.amount_gross, quote.currency)} brutto laut Angebot ${quote.quote_number || ''}`], ['Termin', order?.scheduled_at ? fmtDateTime(order.scheduled_at) : 'nach Absprache mit dem Partner'], ['Kosten', 'Ja – andere Angebote derselben Aufgabe werden abgelehnt']] })
+            .then((ok) => { if (ok) ownerRun('quote', async () => { const r = await cloudFetch('/rest/v1/rpc/respond_quote', { method: 'POST', body: { p_quote_id: quote.id, p_approve: true, p_note: null } }); showToast(`Angebot angenommen${r?.others_rejected ? ` – ${r.others_rejected} weitere${r.others_rejected === 1 ? 's' : ''} abgelehnt` : ''}.`); }); });
+          return;
+        }
         ownerRun('quote', async () => {
           const r = await cloudFetch('/rest/v1/rpc/respond_quote', { method: 'POST', body: { p_quote_id: quote.id, p_approve: approve, p_note: note.trim() || null } });
           showToast(approve ? `Angebot angenommen${r?.others_rejected ? ` – ${r.others_rejected} weitere${r.others_rejected === 1 ? 's' : ''} abgelehnt` : ''}.` : 'Angebot abgelehnt – der Partner wird informiert.');
@@ -16785,11 +16846,13 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const v = Object.fromEntries(new FormData(form));
       const s = p11S();
       const exclude = s.emergency?.tried || [];
+      costConfirm({ title: 'Notdienst anfordern', button: 'Notdienst kostenpflichtig anfordern', rows: [['Auftragnehmer', 'dein verbundener Servicepartner mit Notdienst'], ['Leistung', String(v.title || '')], ['Preis', 'nach den Notdienst-Konditionen des Partners (Anfahrt, Stundensatz, Zuschläge)'], ['Termin', 'sofort nach Annahme durch den Partner'], ['Kosten', 'Ja, sobald der Partner annimmt']] }).then((ok) => { if (!ok) return;
       ownerRun('emergency', async () => {
         const r = await cloudFetch('/rest/v1/rpc/request_emergency', { method: 'POST', body: { p_property_id: form.dataset.property, p_title: v.title, p_description: String(v.description || '').trim() || null, p_exclude: exclude.length ? exclude : null } });
         s.emergency = { result: r, tried: [...exclude, r.service_partner_id], title: v.title };
         showToast(`Notfall an ${r.company_name} gesendet.`);
       }).then(() => { if (currentPage === 'emergency') render(); });
+      });
     });
     document.addEventListener('click', (event) => {
       if (!event.target.closest('[data-emergency-next]')) return;
@@ -16805,6 +16868,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (!list.length) return `<section class="pp-card"><h2 class="pp-section-title">Bewertungen</h2><p class="pp-muted">Noch keine Bewertungen. Hausbesitzer können dich nach jedem abgeschlossenen Auftrag bewerten.</p></section>`;
       return `<section class="pp-card pp-reviews"><h2 class="pp-section-title">Bewertungen <small>${o?.rating_avg != null ? `${starsText(o.rating_avg)} ${String(Number(o.rating_avg).toFixed(1)).replace('.', ',')} · ` : ''}${list.length} Bewertung${list.length === 1 ? '' : 'en'}</small></h2>
         ${list.map((r) => `<div class="pp-review"><div><span class="hub-review-stars">${starsText(r.rating)}</span><small>${escapeHtml(ppCustomerName(r.organization_id))} · ${escapeHtml(ppDate(r.created_at))}</small></div>${r.comment ? `<p>„${escapeHtml(r.comment)}“</p>` : ''}
+          <button type="button" class="text-btn" data-review-report="${r.id}">Bewertung melden</button>
           ${r.partner_reply ? `<p class="pp-review-reply"><b>Deine Antwort:</b> ${escapeHtml(r.partner_reply)}</p>` : ppIsLead() ? `<form class="pp-send" data-pp-form="review-reply" data-id="${r.id}"><input class="form-control" name="reply" maxlength="2000" placeholder="Antworten (sieht der Kunde) …" required><button class="secondary-btn" type="submit" ${ppDisabled()}>Antworten</button></form>` : ''}</div>`).join('')}</section>`;
     }
     document.addEventListener('submit', (event) => {
@@ -16856,7 +16920,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const AI_SEV = { minor: 'gering', moderate: 'mittel', severe: 'schwer' };
     function aiCardHtml(entityId, kind, inner) {
       const it = aiS().items[entityId] || {};
-      return `<div class="ai-card ${it.status || ''}"><div class="ai-card-head"><span class="ai-chip">KI-Vorschlag</span><small>${it.status === 'accepted' ? 'von dir übernommen' : 'bitte prüfen – nichts wird automatisch übernommen'}</small></div>${inner}
+      return `<div class="ai-card ${it.status || ''}"><div class="ai-card-head"><span class="ai-chip">KI-Vorschlag</span><small class="ai-notice">Du nutzt hier ein KI-System. <button type="button" class="text-btn" data-legal-open="ai_transparency">Mehr</button></small><small>${it.status === 'accepted' ? 'von dir übernommen' : 'bitte prüfen – nichts wird automatisch übernommen'}</small></div>${inner}
         ${it.status === 'suggested' && it.id ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-ai-decide="${it.id}" data-entity="${entityId}" data-accept="0">Verwerfen</button><button type="button" class="primary-btn" data-ai-decide="${it.id}" data-entity="${entityId}" data-accept="1" data-kind="${kind}">${icon('check')} ${kind === 'cost_estimate' ? 'Mittelwert übernehmen' : 'Übernehmen'}</button></div>` : ''}</div>`;
     }
     function aiInspectionHtml(i) {
@@ -16919,6 +16983,442 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         .catch((error) => showToast(error.message));
     });
 
+    // ===== Legal & Beta Compliance (Spezifikation v1.0) – technisch umgesetzt, juristische Prüfung offen =====
+    function legalVersionId() { return '2026-11-02'; }
+    function lcS() { return window.__husoraLegal || (window.__husoraLegal = { flags: null, imprint: null, docs: null, admin: null, adminTab: 'gate', pending: null }); }
+    function lcStore(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return v ?? fallback; } catch (error) { return fallback; } }
+    function lcSave(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (error) { /* optional */ } }
+    function lcUiOn() { try { return !navigator.webdriver || localStorage.getItem('husora-consent-ui') === '1'; } catch (error) { return true; } }
+    // ----- Einwilligungen: notwendig immer; Analytics, Marketing, externe Inhalte nur nach Einwilligung -----
+    function consentState() { return lcStore('husora-consent', null); }
+    function consentGet(category) {
+      if (category === 'necessary') return true;
+      const c = consentState();
+      return Boolean(c && c.v === legalVersionId() && c[category]);
+    }
+    function consentSet(next, source = 'settings') {
+      const prev = consentState() || {};
+      const state = { v: legalVersionId(), analytics: Boolean(next.analytics), marketing: false, external_content: Boolean(next.external_content), decidedAt: new Date().toISOString() };
+      lcSave('husora-consent', state);
+      if (!state.analytics) { try { localStorage.setItem('husora-beta-events', '[]'); } catch (error) { /* optional */ } }
+      ['analytics', 'external_content'].forEach((purpose) => { if (prev[purpose] !== state[purpose] || prev.v !== legalVersionId()) consentSync(purpose, state[purpose], source); });
+      document.getElementById('consent-sheet')?.remove();
+      return state;
+    }
+    function consentSync(purpose, accepted, source) {
+      try { if (!cloudSignedIn()) return Promise.resolve(); } catch (error) { return Promise.resolve(); }
+      return cloudFetch('/rest/v1/consent_log', { method: 'POST', body: { purpose, version: legalVersionId(), accepted, source }, headers: { Prefer: 'return=minimal' } }).catch(() => {});
+    }
+    // Nach der Anmeldung: lokale Entscheidung ins Consent-Log übernehmen (einmal je Konto)
+    async function consentSyncAfterLogin() {
+      try {
+        const c = consentState(); if (!c || !cloudSignedIn()) return;
+        const sub = tokenSub(cloud.session.access_token); const done = lcStore('husora-consent-synced', {});
+        if (done[sub] === c.decidedAt) return;
+        lcSave('husora-consent-synced', { ...done, [sub]: c.decidedAt });
+        await Promise.all([consentSync('analytics', Boolean(c.analytics && c.v === legalVersionId()), 'login'), consentSync('external_content', Boolean(c.external_content && c.v === legalVersionId()), 'login')]);
+      } catch (error) { /* optional */ }
+    }
+    // Drittanbieter: Einwilligung + nicht gesperrt (Register)
+    function externalAllowed(providerKey) {
+      const flags = lcS().flags || lcStore('husora-provider-flags', {});
+      if (flags[providerKey]?.blocked) return false;
+      const category = flags[providerKey]?.consent_category || 'external_content';
+      return consentGet(category);
+    }
+    async function lcLoadFlags() {
+      try {
+        const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, ''); const key = cloud.key || CLOUD_DEFAULT.key;
+        const res = await fetch(`${base}/rest/v1/rpc/provider_flags`, { method: 'POST', headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }, body: '{}' });
+        if (!res.ok) return;
+        const rows = await res.json();
+        lcS().flags = Object.fromEntries(rows.map((r) => [r.key, r])); lcSave('husora-provider-flags', lcS().flags);
+      } catch (error) { /* offline */ }
+      try {
+        const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, ''); const key = cloud.key || CLOUD_DEFAULT.key;
+        const [imp, docs] = await Promise.all([
+          fetch(`${base}/rest/v1/app_config?key=eq.imprint&select=value`, { headers: { apikey: key, Authorization: `Bearer ${key}` } }).then((r) => (r.ok ? r.json() : [])),
+          fetch(`${base}/rest/v1/legal_documents?select=document_type,version,title,effective_from,published_at,requires_acceptance&published_at=not.is.null&order=effective_from.desc`, { headers: { apikey: key, Authorization: `Bearer ${key}` } }).then((r) => (r.ok ? r.json() : []))
+        ]);
+        if (imp?.[0]?.value) { lcS().imprint = imp[0].value; lcSave('husora-imprint', imp[0].value); }
+        fetch(`${base}/rest/v1/app_config?key=eq.payments&select=value`, { headers: { apikey: key, Authorization: `Bearer ${key}` } }).then((r) => (r.ok ? r.json() : [])).then((rows) => { if (rows?.[0]?.value) lcSave('husora-payments', rows[0].value); }).catch(() => {});
+        if (Array.isArray(docs)) { lcS().docs = docs; lcSave('husora-legal-docs', docs); }
+      } catch (error) { /* offline */ }
+    }
+    function externalBlockedHtml(what) {
+      return `<div class="consent-placeholder"><p>${escapeHtml(what)} wird von einem externen Anbieter geladen und ist deshalb ausgeschaltet.</p><button type="button" class="secondary-btn" data-consent-enable="external_content">Externe Inhalte erlauben</button> <button type="button" class="text-btn" data-legal-tab-open="consent">Datenschutz-Einstellungen</button></div>`;
+    }
+    function consentSheetHtml(detail = false) {
+      const c = consentState() || {};
+      return `<div class="consent-sheet-inner" role="dialog" aria-modal="false" aria-labelledby="consent-title"><h2 id="consent-title">Datenschutz-Einstellungen</h2>
+        <p>Husora speichert notwendige Daten auf deinem Gerät, damit die App funktioniert. Alles Weitere nur mit deiner Einwilligung – du kannst sie jederzeit unter Einstellungen → Rechtliches → Datenschutz-Einstellungen ändern.</p>
+        ${detail ? `<div class="consent-cats">
+          <label class="settings-switch"><span><strong>Notwendig</strong><small>Speicherung deiner Daten auf dem Gerät, Anmeldung, Husora Cloud. Immer aktiv.</small></span><span class="switch"><input type="checkbox" checked disabled><span></span></span></label>
+          <label class="settings-switch"><span><strong>Nutzungsstatistik (Beta)</strong><small>Zählt, welche Funktionen genutzt werden – ohne Inhalte, nur mit Konto. Nur Husora, keine Dritten.</small></span><span class="switch"><input type="checkbox" data-consent-cat="analytics" ${c.analytics ? 'checked' : ''}><span></span></span></label>
+          <label class="settings-switch"><span><strong>Externe Inhalte</strong><small>Karten (OpenStreetMap, Google), Adresssuche, Wetter, Wechselkurse, Übersetzung und Inseratsimport laden Daten von Drittanbietern – dabei wird deine IP-Adresse übertragen.</small></span><span class="switch"><input type="checkbox" data-consent-cat="external_content" ${c.external_content ? 'checked' : ''}><span></span></span></label>
+          <label class="settings-switch"><span><strong>Marketing</strong><small>Husora nutzt kein Marketing-Tracking.</small></span><span class="switch"><input type="checkbox" disabled><span></span></span></label></div>` : ''}
+        <div class="consent-actions"><button type="button" class="secondary-btn" data-consent-choice="necessary">Nur notwendige</button>${detail ? '<button type="button" class="secondary-btn" data-consent-choice="save">Auswahl speichern</button>' : '<button type="button" class="secondary-btn" data-consent-choice="details">Einstellungen</button>'}<button type="button" class="primary-btn" data-consent-choice="all">Alle akzeptieren</button></div>
+        <p class="consent-links"><button type="button" class="text-btn" data-legal-open="privacy">Datenschutzerklärung</button> · <button type="button" class="text-btn" data-legal-open="imprint">Impressum</button></p></div>`;
+    }
+    function consentShowSheet(detail = false) {
+      let el = document.getElementById('consent-sheet');
+      if (!el) { el = document.createElement('div'); el.id = 'consent-sheet'; document.body.appendChild(el); }
+      el.innerHTML = consentSheetHtml(detail);
+    }
+    document.addEventListener('click', (event) => {
+      const choice = event.target.closest('[data-consent-choice]');
+      if (choice) {
+        const c = choice.dataset.consentChoice;
+        if (c === 'details') { consentShowSheet(true); return; }
+        const sheet = choice.closest('#consent-sheet, .consent-settings');
+        const pick = (cat) => Boolean(sheet?.querySelector(`[data-consent-cat="${cat}"]`)?.checked);
+        consentSet(c === 'all' ? { analytics: true, external_content: true } : c === 'save' ? { analytics: pick('analytics'), external_content: pick('external_content') } : { analytics: false, external_content: false }, sheet?.id === 'consent-sheet' ? 'banner' : 'settings');
+        showToast(c === 'all' ? 'Danke – Einstellungen gespeichert.' : 'Einstellungen gespeichert.');
+        if (currentPage === 'legal') render();
+        return;
+      }
+      const enable = event.target.closest('[data-consent-enable]');
+      if (enable) { const c = consentState() || {}; consentSet({ analytics: Boolean(c.analytics && c.v === legalVersionId()), external_content: true }, 'inline'); showToast('Externe Inhalte erlaubt.'); render(); return; }
+      const tab = event.target.closest('[data-legal-tab-open]');
+      if (tab) { legalTab = tab.dataset.legalTabOpen; currentPage = 'legal'; try { document.getElementById('legal-modal')?.classList.remove('open'); } catch (e) { /* optional */ } render(); window.scrollTo(0, 0); }
+    });
+    // ----- Rechtliches: zusätzliche Texte (Entwurf – juristische Prüfung offen) -----
+    function imprintValue(key, label) {
+      const imp = lcS().imprint || lcStore('husora-imprint', {}) || {};
+      const fallback = { operator: LEGAL_INFO.owner, company: LEGAL_INFO.company, address: [LEGAL_INFO.street, `${LEGAL_INFO.zip || ''} ${LEGAL_INFO.city || ''}`.trim(), LEGAL_INFO.country].filter(Boolean).join(', '), email: LEGAL_INFO.email, phone: LEGAL_INFO.phone, vat_id: LEGAL_INFO.vatId }[key];
+      const v = imp[key] || fallback;
+      return v ? escapeHtml(v) : `<mark class="legal-todo">[${label}]</mark>`;
+    }
+    function imprintHtml() {
+      const row = (key, label) => `<tr><th>${label}</th><td>${imprintValue(key, label)}</td></tr>`;
+      return `<p class="legal-lead">Anbieterkennzeichnung nach § 5 Digitale-Dienste-Gesetz (DDG). Leere Felder sind Platzhalter und werden vom Betreiber ausgefüllt.</p>
+        <table class="legal-table">${row('operator', 'Betreiber')}${row('company', 'Unternehmensname')}${row('legal_form', 'Rechtsform')}${row('address', 'Anschrift')}${row('email', 'E-Mail')}${row('phone', 'Telefon')}${row('representatives', 'Vertretungsberechtigte')}${row('register', 'Register')}${row('register_court', 'Registergericht')}${row('vat_id', 'USt-ID')}${row('other', 'Weitere Angaben')}</table>
+        <h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3><p>${imprintValue('operator', 'Name')}, Anschrift wie oben</p>
+        <h3>Verbraucherstreitbeilegung</h3><p>Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen. <mark class="legal-todo">[juristisch prüfen]</mark></p>`;
+    }
+    const LEGAL_PROVIDERS = [
+      ['Supabase Inc.', 'Husora Cloud: Datenbank, Anmeldung, Dateien', 'Konto-, Haus-, Auftrags-, Kommunikationsdaten, Dateien', 'Art. 6 Abs. 1 lit. b', 'Projektregion (EU, prüfen); Unternehmen USA', 'bis zur Löschung', 'Auftragsverarbeiter', 'USA möglich', 'AVV, Standardvertragsklauseln/DPF – Prüfung offen'],
+      ['GitHub (Microsoft)', 'Hosting der App', 'IP-Adresse, technische Zugriffsdaten', 'Art. 6 Abs. 1 lit. f', 'USA', 'laut Anbieter', 'zu prüfen', 'USA', 'DPF/SCC – Prüfung offen'],
+      ['OpenStreetMap Foundation', 'Karten, Adresssuche (nur nach Einwilligung)', 'IP-Adresse, Kartenausschnitt, Suchbegriff', 'Art. 6 Abs. 1 lit. a', 'UK/EU', 'laut Anbieter', 'eigener Verantwortlicher', 'UK (Angemessenheitsbeschluss)', '–'],
+      ['Google Ireland Ltd.', 'Kartenvorschau, Übersetzung (nur nach Einwilligung)', 'IP-Adresse, Koordinaten, zu übersetzender Text', 'Art. 6 Abs. 1 lit. a', 'Irland/USA', 'laut Anbieter', 'eigener Verantwortlicher', 'USA', 'DPF'],
+      ['Open-Meteo, frankfurter.dev, open.er-api.com', 'Wetter, Wechselkurse (nur nach Einwilligung)', 'IP-Adresse, Koordinaten', 'Art. 6 Abs. 1 lit. a', 'EU/unbekannt', 'laut Anbieter', 'eigener Verantwortlicher', 'möglich', 'Prüfung offen'],
+      ['MyMemory, allorigins.win, cors.lol, Maklerportale', 'Übersetzung, Inseratsimport (nur nach Einwilligung)', 'IP-Adresse, Inserats-URL/-Text', 'Art. 6 Abs. 1 lit. a', 'unbekannt', 'laut Anbieter', 'eigener Verantwortlicher', 'möglich', 'Prüfung offen'],
+      ['cdnjs (Cloudflare), unpkg, jsDelivr', 'Programmbibliotheken (PDF, Karte, Texterkennung)', 'IP-Adresse', 'Art. 6 Abs. 1 lit. f', 'USA/weltweit', 'laut Anbieter', 'zu prüfen', 'USA', 'Prüfung offen'],
+      ['Anthropic PBC', 'KI-Vorschläge (nur auf Klick, derzeit deaktiviert)', 'Prüfpunkte, Fotos, Hausmerkmale – keine Namen/Kontakte', 'Art. 6 Abs. 1 lit. b/f – prüfen', 'USA', 'Husora: 24 Monate', 'Auftragsverarbeiter', 'USA', 'AVV, DPF/SCC – Prüfung offen'],
+      ['Resend Inc.', 'E-Mail-Benachrichtigungen (nur nach Einschalten, derzeit nicht eingerichtet)', 'E-Mail-Adresse, Titel/Kurztext', 'Art. 6 Abs. 1 lit. b', 'USA', 'laut Anbieter', 'Auftragsverarbeiter', 'USA', 'AVV, DPF/SCC – Prüfung offen'],
+      ['Push-Dienste der Browser', 'Push-Benachrichtigungen (nur nach Aktivierung)', 'Push-Adresse, Titel/Kurztext', 'Art. 6 Abs. 1 lit. b', 'je Browser', '6 Monate ohne Nutzung', 'zu prüfen', 'USA möglich', 'Prüfung offen'],
+      ['Stripe Payments Europe, Ltd.', 'Zahlungen (während der Beta deaktiviert)', 'Name, E-Mail, Zahlungsdaten', 'Art. 6 Abs. 1 lit. b', 'Irland/USA', 'steuerliche Fristen', 'eigener Verantwortlicher', 'USA', 'SCC/DPF']
+    ];
+    function privacyOverviewHtml() {
+      const areas = [['Registrierung, Login, Profil', 'E-Mail, Passwort (nur als Hash bei Supabase), Name, Telefon optional'], ['Häuser, Adressen, Räume', 'Adresse, Koordinaten aus der Adresse, Hausmerkmale – nie öffentlich'], ['Fotos, Dokumente, Rechnungen', 'Dateien in privaten Speicherbereichen, Zugriff nur für Berechtigte'], ['Aufgaben, Kontrollen, Termine', 'Inhalte deiner Planung und Kontrollergebnisse'], ['Servicepartner, Anfragen, Aufträge, Nachrichten', 'nur das, was zu einem gesendeten Auftrag gehört'], ['Notfall & Zugang', 'Schlüssel-/Zugangsangaben – nur bei ausdrücklicher, befristeter, widerrufbarer Freigabe je Auftrag; Abrufe werden protokolliert'], ['Bewertungen', 'Sterne und Text zu abgeschlossenen Aufträgen, sichtbar für den bewerteten Betrieb'], ['Standortdaten', 'kein GPS-Tracking; nur Koordinaten zu Hausadressen'], ['Analytics, Fehlerberichte, Feedback', 'siehe Abschnitt 2 – Statistik nur mit Einwilligung'], ['KI und Übersetzung', 'siehe Abschnitt 2 und „KI- und Übersetzungstransparenz“']];
+      return `<h3>Verarbeitungen im Überblick</h3><table class="legal-table">${areas.map(([a, b]) => `<tr><th>${a}</th><td>${b}</td></tr>`).join('')}</table>
+        <h3>Dienste und Empfänger</h3><div class="legal-scroll"><table class="legal-table small"><tr><th>Anbieter</th><th>Zweck</th><th>Daten</th><th>Rechtsgrundlage</th><th>Ort</th><th>Speicherdauer</th><th>Rolle</th><th>Drittland</th><th>Garantien</th></tr>${LEGAL_PROVIDERS.map((r) => `<tr>${r.map((c) => `<td>${escapeHtml(c)}</td>`).join('')}</tr>`).join('')}</table></div>
+        <p class="legal-lead">Stand der Prüfung: Verträge und Einstellungen der Anbieter werden derzeit geprüft – diese Übersicht ist ein Entwurf, keine Bestätigung der Rechtskonformität.</p>
+        <h3>Deine Rechte und Kontakt</h3><p>Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit kannst du unter „Einstellungen → Rechtliches → Datenschutz-Anfrage“ oder per E-Mail an ${imprintValue('email', 'E-Mail-Adresse')} geltend machen. Deinen Export erstellst du selbst unter „Datenexport“.</p>`;
+    }
+    const LEGAL_EXTRA = {
+      beta_terms: ['Husora Beta – Bedingungen', () => `<p class="legal-lead">Version ${legalVersionId()} · Entwurf – juristische Prüfung offen</p>
+        <h3>1. Beta-Status</h3><p>Husora befindet sich in einer Testphase. Funktionen sind teilweise experimentell, können sich ändern, eingeschränkt verfügbar sein oder entfallen.</p>
+        <h3>2. Verfügbarkeit und Daten</h3><p>Wir bemühen uns um einen stabilen Betrieb, können aber während der Beta keine bestimmte Verfügbarkeit zusagen. Bitte sichere wichtige Daten regelmäßig (Einstellungen → Datensicherung bzw. Datenexport).</p>
+        <h3>3. Feedback und Support</h3><p>Feedback und Fehlerberichte sendest du über die Schaltflächen in der App. Support erreichst du unter ${imprintValue('email', 'E-Mail-Adresse')}.</p>
+        <h3>4. Kosten</h3><p>Während der Beta entstehen für die Nutzung von Husora keine Kosten; Premium-Funktionen sind nur als Vorschau sichtbar („Interesse vormerken“). Aufträge an Servicepartner sind eigene Verträge mit dem jeweiligen Betrieb und können Kosten auslösen – darauf weist die App vor jeder Beauftragung hin.</p>
+        <h3>5. Testende</h3><p>Wir informieren rechtzeitig über das Ende der Beta und darüber, wie es mit deinem Konto und deinen Daten weitergeht.</p>
+        <h3>6. Datenverarbeitung</h3><p>Es gilt die Datenschutzerklärung. Die Beta-Nutzungsstatistik verwenden wir nur mit deiner Einwilligung.</p>
+        <h3>7. Gesetzliche Rechte</h3><p>Diese Bedingungen schränken zwingende gesetzliche Rechte, insbesondere Verbraucherrechte, nicht ein.</p>`],
+      partner_rules: ['Regeln für Servicepartner', () => `<p class="legal-lead">Version ${legalVersionId()} · Entwurf – juristische Prüfung offen</p>
+        <h3>Husora als Plattform</h3><p>Husora stellt Software bereit, über die Hausbesitzer und Servicepartner zusammenarbeiten. Husora führt keine Handwerks- oder Serviceleistungen aus und ist nicht Vertragspartner der Aufträge.</p>
+        <h3>Vertrag, Preis, Leistung, Haftung</h3><ul><li><strong>Vertragspartner</strong> des Hausbesitzers wird der Servicepartner, der die Anfrage annimmt.</li><li><strong>Preis</strong> legt der Servicepartner fest (Angebot, Stundensatz, Pauschale); Mehrkosten bedürfen der Freigabe des Hausbesitzers.</li><li><strong>Leistung</strong> erbringt der Servicepartner selbst bzw. sein Team.</li><li><strong>Mängelhaftung</strong> und <strong>Rechnungsstellung</strong> liegen beim Servicepartner.</li><li><strong>Provision:</strong> Husora erhält derzeit keine Vermittlungsprovision.</li></ul>
+        <h3>Profil und Nachweise</h3><p>Angaben im Profil (Leistungen, Gebiet, Verfügbarkeit, Qualifikationen) macht der Betrieb selbst. Nachweise gelten erst als „verifiziert“, wenn Husora sie in einem festgelegten Prüfprozess geprüft hat; sonst wird „nicht geprüft“ angezeigt. Werbliche Aussagen wie „zertifiziert“ oder „garantierte Qualität“ sind nur zulässig, wenn sie zutreffen.</p>
+        <h3>Umgang mit Kundendaten</h3><p>Kundendaten (Adresse, Zugangsinformationen, Fotos, Dokumente) dürfen nur für den jeweiligen Auftrag genutzt werden. Zugangsdaten werden nur befristet freigegeben; Abrufe werden protokolliert.</p>`],
+      liability: ['Haftungs- und Prüfhinweise', () => `<p class="legal-lead">Version ${legalVersionId()} · Entwurf – juristische Prüfung offen</p>
+        <h3>Hauskontrolle</h3><p>${escapeHtml(inspectionDisclaimerText())}</p><p>Bei <strong>Elektro, Gas, Feuerstätten, Trinkwasser, Statik, Dach und Brandschutz</strong> ist eine Husora-Kontrolle reine Dokumentation von Beobachtungen; fachliche Prüfungen nehmen dafür zugelassene Fachbetriebe bzw. Sachverständige vor.</p>
+        <h3>Kostenschätzungen und KI-Vorschläge</h3><p>Schätzungen und Vorschläge sind unverbindliche Orientierung. Verbindlich sind nur Angebote bzw. Preise des beauftragten Servicepartners.</p>
+        <h3>Wetter, Karten, Wechselkurse, Importe</h3><p>Daten externer Anbieter können ungenau oder veraltet sein.</p>
+        <h3>Haftung von Husora</h3><p>Es gelten die Haftungsregeln der Nutzungsbedingungen; zwingende gesetzliche Haftung bleibt unberührt.</p>`],
+      review_rules: ['Regeln für Bewertungen', () => `<p class="legal-lead">Version ${legalVersionId()}</p>
+        <ul><li>Bewerten können nur Auftraggeber eines abgeschlossenen Auftrags – eine Bewertung je Auftrag.</li><li>Erlaubt sind sachliche Erfahrungen. Nicht erlaubt: Beleidigungen, falsche Tatsachenbehauptungen, gekaufte oder gefälschte Bewertungen, Bewertungen zur Manipulation oder aus Rache.</li><li>Betroffene können Bewertungen melden; Husora prüft Meldungen und kann Bewertungen ausblenden. Ausgeblendete Bewertungen zählen nicht zum Durchschnitt.</li><li>Servicepartner können öffentlich antworten.</li></ul>`],
+      ai_transparency: ['KI- und Übersetzungstransparenz', () => `<p class="legal-lead">Version ${legalVersionId()} · Kennzeichnung nach Art. 50 KI-Verordnung, soweit einschlägig – Prüfung offen</p>
+        <table class="legal-table"><tr><th>Funktion</th><td>KI-Vorschläge: Kontrollbericht auswerten, Schaden auf Foto erkennen, Kosten schätzen</td></tr><tr><th>Anbieter / Modell</th><td>Anthropic PBC (USA) · claude-opus-5-5</td></tr><tr><th>Eingabe</th><td>Prüfpunkte, Notizen zum Mangel, Foto, Haustyp, Baujahr, Region – keine Namen, Kontaktdaten oder Adressen</td></tr><tr><th>Ausgabe</th><td>Vorschlag, gekennzeichnet als „KI-Vorschlag“, nie automatisch übernommen</td></tr><tr><th>Speicherung</th><td>bei Husora 24 Monate; beim Anbieter laut Vertrag (Prüfung offen)</td></tr><tr><th>Training</th><td>laut Anbieter keine Verwendung von API-Daten zum Training – Vertrag prüfen</td></tr><tr><th>Status</th><td>derzeit deaktiviert</td></tr></table>
+        <h3>Maschinelle Übersetzung</h3><p>Schwedische Inseratstexte können über Google Übersetzer bzw. MyMemory übersetzt werden (nur nach Einwilligung „Externe Inhalte“). Übersetzungen werden als „maschinell übersetzt“ gekennzeichnet.</p>`]
+    };
+    function inspectionDisclaimerText() { return 'Eine in Husora dokumentierte Hauskontrolle ersetzt keine gesetzlich vorgeschriebene, fachkundige oder regelmäßig vorgeschriebene Prüfung, Wartung oder Begutachtung.'; }
+    function sensitiveRe() { return /elektr|strom|sicherung|gas|kamin|ofen|feuerst|schornstein|trinkwasser|wasserleit|statik|tragend|dach|brand|rauchmelder/i; }
+    function inspectionDisclaimerHtml() { return `<p class="inspection-disclaimer">${icon('alert')} ${escapeHtml(inspectionDisclaimerText())} <button type="button" class="text-btn" data-legal-open="liability">Mehr</button></p>`; }
+    function sensitiveBadgeHtml(text) { return sensitiveRe().test(String(text || '')) ? '<em class="sensitive-badge" title="Fachprüfung durch zugelassenen Fachbetrieb nötig">Dokumentation – keine Fachprüfung</em>' : ''; }
+    // ----- Kostenpflichtige Schritte eindeutig bestätigen -----
+    function costConfirm({ title, rows, button = 'Kostenpflichtig beauftragen', note = '' }) {
+      return new Promise((resolve) => {
+        const el = document.createElement('div'); el.className = 'beta-modal-backdrop cost-confirm';
+        el.innerHTML = `<div class="beta-modal" role="dialog" aria-modal="true"><div class="beta-modal-head"><div><h2>${escapeHtml(title)}</h2></div></div>
+          <table class="legal-table">${rows.map(([k, v]) => `<tr><th>${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('')}</table>
+          <p class="beta-auto">${escapeHtml(note || 'Der Vertrag kommt direkt mit dem Servicepartner zustande. Husora ist Software-Anbieter und nicht Vertragspartner.')}</p>
+          <div class="beta-actions"><button type="button" class="secondary-btn" data-cost-confirm="cancel">Abbrechen</button><button type="button" class="primary-btn" data-cost-confirm="ok">${escapeHtml(button)}</button></div></div>`;
+        document.body.appendChild(el);
+        el.addEventListener('click', (e) => { const b = e.target.closest('[data-cost-confirm]'); if (!b && e.target !== el) return; el.remove(); resolve(b?.dataset.costConfirm === 'ok'); });
+      });
+    }
+    // ----- Rechtliches-Hub (Einstellungen → Rechtliches) -----
+    function legalHubHtml() {
+      const docs = lcS().docs || lcStore('husora-legal-docs', []);
+      const ver = (type) => docs.find((d) => d.document_type === type);
+      const items = [['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'Nutzungsbedingungen'], ['beta_terms', 'Beta-Bedingungen'], ['partner_rules', 'Servicepartner-Regeln'], ['liability', 'Haftungs- & Prüfhinweise'], ['review_rules', 'Bewertungsregeln'], ['ai_transparency', 'KI-Transparenz']];
+      return `<section class="card legal-hub"><h2 class="card-title">Rechtliches</h2><div class="legal-hub-grid">
+        ${items.map(([id, label]) => `<button type="button" class="legal-hub-item" data-legal-tab-open="${id}"><strong>${label}</strong><small>${ver(id) ? `Version ${escapeHtml(ver(id).version)} · gültig ab ${escapeHtml(fmtDate(ver(id).effective_from))}` : 'Entwurf'}</small></button>`).join('')}
+        <button type="button" class="legal-hub-item" data-legal-tab-open="consent"><strong>Datenschutz-Einstellungen</strong><small>Statistik, externe Inhalte</small></button>
+        <button type="button" class="legal-hub-item" data-legal-tab-open="export"><strong>Datenexport</strong><small>Alle deine Daten als Datei</small></button>
+        <button type="button" class="legal-hub-item" data-legal-tab-open="request"><strong>Datenschutz-Anfrage</strong><small>Auskunft, Löschung, Widerspruch …</small></button>
+        <button type="button" class="legal-hub-item" data-legal-tab-open="delete"><strong>Konto löschen</strong><small>Konto und Cloud-Daten entfernen</small></button>
+        <button type="button" class="legal-hub-item" data-legal-tab-open="versions"><strong>Versionen</strong><small>Fassungen und deine Zustimmungen</small></button></div></section>`;
+    }
+    function legalToolHtml(tab) {
+      if (tab === 'consent') return `<article class="card legal-text consent-settings"><h2>Datenschutz-Einstellungen</h2>${consentSheetHtml(true).replace('<h2 id="consent-title">Datenschutz-Einstellungen</h2>', '')}<p class="settings-hint">Widerruf: Schalter aus und speichern – so einfach wie die Zustimmung. Wirkt sofort; bereits gezählte Ereignisse werden nach der Aufbewahrungsfrist gelöscht oder auf Wunsch über eine Datenschutz-Anfrage.</p></article>`;
+      if (tab === 'export') return `<article class="card legal-text"><h2>Meine Daten exportieren</h2><p>Der Export enthält deine Daten auf diesem Gerät (Häuser, Räume, Aufgaben, Kontrollen, Kosten, Buchungen, Einstellungen) und – mit Konto – deine Cloud-Daten: Profil, Mitgliedschaften, Häuser, Aufgaben, Kontrollen, Mängel, Serviceaufträge, deine Nachrichten, Bewertungen, Feedback, Einwilligungen und Anfragen. Nur Daten deines Kontos bzw. deiner Organisationen.</p><p class="settings-hint">Fotos und Dokumente sind als Verweise enthalten; die Dateien selbst lädst du in der App herunter.</p><div class="settings-actions"><button type="button" class="primary-btn" data-legal-export ${lcS().busy ? 'disabled' : ''}>${icon('download')} ${lcS().busy === 'export' ? 'Erstelle Export …' : 'Export herunterladen (JSON)'}</button></div></article>`;
+      if (tab === 'request') {
+        const signed = (() => { try { return cloudSignedIn(); } catch (e) { return false; } })();
+        const mine = lcS().requests || [];
+        if (signed && !lcS().requests && !lcS().requestsLoading) { lcS().requestsLoading = true; cloudFetch('/rest/v1/privacy_requests?select=id,request_type,status,created_at,due_at&order=created_at.desc').then((r) => { lcS().requests = r; }).catch(() => { lcS().requests = []; }).finally(() => { lcS().requestsLoading = false; if (currentPage === 'legal') render(); }); }
+        const types = [['access', 'Auskunft (Art. 15)'], ['rectification', 'Berichtigung (Art. 16)'], ['erasure', 'Löschung (Art. 17)'], ['restriction', 'Einschränkung (Art. 18)'], ['objection', 'Widerspruch (Art. 21)'], ['portability', 'Datenübertragbarkeit (Art. 20)']];
+        return `<article class="card legal-text"><h2>Datenschutz-Anfrage</h2>${signed ? `<form class="hub-form" data-privacy-request><label><span class="form-label">Art der Anfrage</span><select class="form-control" name="type">${types.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select></label><label><span class="form-label">Nachricht (optional)</span><textarea class="form-control textarea" name="message" rows="3" maxlength="4000"></textarea></label><div class="settings-actions"><button type="submit" class="primary-btn">Anfrage senden</button></div></form>
+          ${mine.length ? `<ul class="beta-list">${mine.map((r) => `<li><span>${escapeHtml((types.find(([v]) => v === r.request_type) || [, r.request_type])[1])} · ${escapeHtml(fmtDate(r.created_at))}</span><b>${escapeHtml({ new: 'eingegangen', verified: 'Identität bestätigt', in_progress: 'in Bearbeitung', completed: 'erledigt', rejected: 'abgelehnt' }[r.status] || r.status)}</b></li>`).join('')}</ul>` : ''}`
+          : `<p>Ohne Husora-Konto liegen deine Daten nur auf diesem Gerät. Für Anfragen schreibe an ${imprintValue('email', 'E-Mail-Adresse')}.</p>`}<p class="settings-hint">Wir antworten in der Regel innerhalb eines Monats (Art. 12 Abs. 3 DSGVO).</p></article>`;
+      }
+      if (tab === 'delete') return `<article class="card legal-text"><h2>Konto löschen</h2><p>Das Löschen findest du unter Einstellungen → Daten & App → Cloud-Speicher → „Konto und Cloud-Daten löschen“. Ablauf: Passwort bestätigen, Folgen prüfen, endgültig bestätigen. Danach sind alle Anmeldungen ungültig; Konto, Organisationen ohne weitere Mitglieder, Häuser, Fotos, Dokumente, Statistik, Einwilligungen und Benachrichtigungen werden gelöscht. Aufträge und Rechnungen, die du mit anderen Betrieben ausgetauscht hast, bleiben dort wegen gesetzlicher Nachweispflichten ohne deinen Kontobezug erhalten.</p><div class="settings-actions"><button type="button" class="danger-btn" data-legal-goto-delete>Zum Löschen</button></div></article>`;
+      if (tab === 'versions') {
+        const docs = lcS().docs || lcStore('husora-legal-docs', []);
+        if (!lcS().acceptances && !lcS().accLoading) { try { if (cloudSignedIn()) { lcS().accLoading = true; cloudFetch('/rest/v1/legal_acceptances?select=document_type,version,accepted_at').then((r) => { lcS().acceptances = r; }).catch(() => { lcS().acceptances = []; }).finally(() => { lcS().accLoading = false; if (currentPage === 'legal') render(); }); } } catch (e) { /* optional */ } }
+        const acc = lcS().acceptances || [];
+        return `<article class="card legal-text"><h2>Versionen / Rechtliche Dokumente</h2><table class="legal-table small"><tr><th>Dokument</th><th>Version</th><th>Gültig ab</th><th>Zustimmung</th></tr>${docs.map((d) => { const a = acc.find((x) => x.document_type === d.document_type && x.version === d.version); return `<tr><td>${escapeHtml(d.title)}</td><td>${escapeHtml(d.version)}</td><td>${escapeHtml(fmtDate(d.effective_from))}</td><td>${d.requires_acceptance ? (a ? `zugestimmt ${escapeHtml(fmtDate(a.accepted_at))}` : 'offen') : '–'}</td></tr>`; }).join('')}</table></article>`;
+      }
+      return '';
+    }
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('[data-legal-export]')) { lcExport(); return; }
+      if (event.target.closest('[data-legal-goto-delete]')) { currentPage = 'settings'; settingsView = 'settings-data'; render(); setTimeout(() => { const d = document.querySelector('details.cloud-danger'); if (d) { d.open = true; d.scrollIntoView({ block: 'center' }); } }, 60); }
+    });
+    async function lcExport() {
+      const s = lcS(); s.busy = 'export'; render();
+      try {
+        const { keys } = storageUsage();
+        const local = Object.fromEntries(keys.map((key) => [key, (() => { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return localStorage.getItem(key); } })()]));
+        let cloudData = null;
+        if (cloudSignedIn()) cloudData = await cloudFetch('/rest/v1/rpc/export_my_data', { method: 'POST', body: {} });
+        const out = { app: 'husora', type: 'data_export', version: APP_VERSION, exportedAt: new Date().toISOString(), device: local, cloud: cloudData };
+        const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `husora-datenexport-${localDateKey(new Date())}.json`;
+        document.body.appendChild(link); link.click(); setTimeout(() => { URL.revokeObjectURL(link.href); link.remove(); }, 1000);
+        showToast(cloudData ? 'Export erstellt – Gerät und Cloud.' : 'Export erstellt (Daten auf diesem Gerät).');
+      } catch (error) { showToast(`Export fehlgeschlagen: ${error.message}`); }
+      finally { s.busy = null; render(); }
+    }
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-privacy-request]');
+      if (!form) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      cloudFetch('/rest/v1/privacy_requests', { method: 'POST', body: { request_type: v.type, message: String(v.message || '').trim() || null }, headers: { Prefer: 'return=minimal' } })
+        .then(() => { lcS().requests = null; showToast('Anfrage eingegangen – wir melden uns.'); render(); })
+        .catch((error) => showToast(error.message));
+    });
+    // ----- Neue Fassungen zustimmen (Nutzungs- und Beta-Bedingungen) -----
+    async function lcCheckPending() {
+      try {
+        if (!cloudSignedIn() || !lcUiOn()) return;
+        const rows = await cloudFetch('/rest/v1/rpc/my_pending_legal', { method: 'POST', body: {} });
+        if (!rows?.length || document.getElementById('legal-accept')) return;
+        const el = document.createElement('div'); el.id = 'legal-accept'; el.className = 'beta-modal-backdrop';
+        el.innerHTML = `<div class="beta-modal" role="dialog" aria-modal="true"><div class="beta-modal-head"><div><span class="beta-chip">Rechtliches</span><h2>Neue Fassung bestätigen</h2><p>Bitte lies die folgenden Dokumente und bestätige sie, um Husora mit deinem Konto weiter zu nutzen.</p></div></div>
+          <ul class="beta-list">${rows.map((r) => `<li><span><button type="button" class="text-btn" data-legal-open="${r.document_type === 'beta_terms' ? 'beta_terms' : r.document_type}">${escapeHtml(r.title)}</button></span><b>Version ${escapeHtml(r.version)}</b></li>`).join('')}</ul>
+          <label class="consent-row"><input type="checkbox" data-legal-accept-check><span>Ich habe die Dokumente gelesen und stimme zu.</span></label>
+          <div class="beta-actions"><button type="button" class="secondary-btn" data-legal-accept="later">Später</button><button type="button" class="primary-btn" data-legal-accept="ok" disabled>Zustimmen</button></div></div>`;
+        document.body.appendChild(el);
+        el.querySelector('[data-legal-accept-check]').addEventListener('change', (e) => { el.querySelector('[data-legal-accept="ok"]').disabled = !e.target.checked; });
+        el.addEventListener('click', async (e) => {
+          const b = e.target.closest('[data-legal-accept]'); if (!b) return;
+          if (b.dataset.legalAccept === 'ok') {
+            await cloudFetch('/rest/v1/legal_acceptances?on_conflict=user_id,document_type,version', { method: 'POST', body: rows.map((r) => ({ document_type: r.document_type, version: r.version, source: 'prompt' })), headers: { Prefer: 'resolution=ignore-duplicates,return=minimal' } }).catch((err) => showToast(err.message));
+            lcS().acceptances = null; showToast('Danke – Zustimmung gespeichert.');
+          }
+          el.remove();
+        });
+      } catch (error) { /* optional */ }
+    }
+    // ----- Sicherheits-Audit vom Client (Login, Dokument geöffnet) -----
+    function lcAudit(event, entityType = null, entityId = null, orgId = null) {
+      try { if (!cloudSignedIn()) return; cloudFetch('/rest/v1/rpc/log_client_security_event', { method: 'POST', body: { p_event: event, p_entity_type: entityType, p_entity_id: entityId, p_organization_id: orgId } }).catch(() => {}); } catch (error) { /* optional */ }
+    }
+    function lcAfterLogin() {
+      const sub = (() => { try { return tokenSub(cloud.session.access_token); } catch (e) { return ''; } })();
+      if (!sub || lcS().loggedSub === sub) return;
+      lcS().loggedSub = sub;
+      lcAudit('user_login'); consentSyncAfterLogin(); lcCheckPending();
+    }
+    // Start
+    setTimeout(() => {
+      lcLoadFlags().then(() => { if (currentPage === 'legal') render(); });
+      if (!consentState() && lcUiOn()) consentShowSheet(false);
+      setInterval(() => { try { if (cloudSignedIn()) lcAfterLogin(); } catch (e) { /* optional */ } }, 4000);
+    }, 0);
+    // ===== Admin: MFA-Schutz + Compliance-Bereich (Release-Gate, Impressum, Moderation, Anfragen, Vorfälle, Audit, Anbieter, Nachweise) =====
+    function admS() { return window.__husoraAdm || (window.__husoraAdm = { status: null, mfa: null, tab: 'gate', data: {} }); }
+    async function admLoadStatus(force = false) {
+      const s = admS();
+      if (s.loading || (s.status && !force)) return s.status;
+      s.loading = true;
+      try { s.status = await cloudFetch('/rest/v1/rpc/my_admin_status', { method: 'POST', body: {} }); } catch (error) { s.status = { roles: [], error: error.message }; }
+      finally { s.loading = false; }
+      return s.status;
+    }
+    const ADMIN_ROLE_LABELS = { super_admin: 'Super-Admin', support_admin: 'Support', content_admin: 'Inhalte', security_admin: 'Sicherheit' };
+    // MFA-Hürde: zeigt Einrichtung oder Code-Abfrage, solange die Sitzung nicht aal2 ist
+    function admMfaGateHtml() {
+      const s = admS(); const st = s.status;
+      if (!st) { admLoadStatus().then(() => render()); return '<section class="card"><p class="settings-hint">Rechte werden geprüft …</p></section>'; }
+      if (!st.roles?.length) return '';
+      if (!st.mfa_required || st.aal === 'aal2') return '';
+      const m = s.mfa || {};
+      if (!m.loaded) {
+        s.mfa = { loaded: true, loading: true };
+        cloudFetch('/auth/v1/user').then((u) => { s.mfa = { loaded: true, factors: (u?.factors || []).filter((f) => f.factor_type === 'totp') }; }).catch((e) => { s.mfa = { loaded: true, factors: [], error: e.message }; }).finally(() => render());
+        return '<section class="card"><p class="settings-hint">Zweiter Faktor wird geprüft …</p></section>';
+      }
+      const verified = (m.factors || []).find((f) => f.status === 'verified');
+      return `<section class="card mfa-card"><h2 class="card-title">${icon('key')} Zwei-Faktor-Anmeldung erforderlich</h2><p class="card-caption">Admin-Bereiche sind nur mit zweitem Faktor (Authenticator-App, TOTP) zugänglich.</p>
+        ${verified ? `<form class="hub-form" data-mfa-verify="${verified.id}"><label><span class="form-label">6-stelliger Code aus deiner Authenticator-App</span><input class="form-control" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label><div class="settings-actions"><button type="submit" class="primary-btn">Bestätigen</button></div></form>`
+          : m.enroll ? `<p>Scanne den QR-Code mit deiner Authenticator-App (z. B. 1Password, Google Authenticator) und gib den Code ein.</p><img class="mfa-qr" src="${escapeHtml(m.enroll.totp.qr_code)}" alt="QR-Code für die Authenticator-App"><p class="settings-hint">Manuell: <code>${escapeHtml(m.enroll.totp.secret)}</code></p>
+            <form class="hub-form" data-mfa-verify="${m.enroll.id}"><label><span class="form-label">Code</span><input class="form-control" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required></label><div class="settings-actions"><button type="submit" class="primary-btn">Einrichten</button></div></form>`
+          : `<div class="settings-actions"><button type="button" class="primary-btn" data-mfa-enroll>Zweiten Faktor einrichten</button></div>`}
+        ${m.error ? `<p class="settings-hint">${escapeHtml(m.error)}</p>` : ''}</section>`;
+    }
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-mfa-enroll]')) return;
+      const s = admS();
+      cloudFetch('/auth/v1/factors', { method: 'POST', body: { factor_type: 'totp', friendly_name: `Husora Admin ${new Date().toISOString().slice(0, 10)}` } })
+        .then((r) => { s.mfa = { ...s.mfa, enroll: r, error: '' }; }).catch((e) => { s.mfa = { ...s.mfa, error: e.message }; }).finally(() => render());
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-mfa-verify]');
+      if (!form) return;
+      event.preventDefault();
+      const factor = form.dataset.mfaVerify; const code = String(new FormData(form).get('code') || '').trim();
+      (async () => {
+        const ch = await cloudFetch(`/auth/v1/factors/${factor}/challenge`, { method: 'POST', body: {} });
+        const session = await cloudFetch(`/auth/v1/factors/${factor}/verify`, { method: 'POST', body: { challenge_id: ch.id, code } });
+        cloudSetSession(session);
+        const s = admS(); s.mfa = null; s.status = null; betaS().dash = null;
+        lcAudit('user_login', 'mfa', null);
+        showToast('Zweiter Faktor bestätigt.');
+      })().catch((e) => { admS().mfa = { ...admS().mfa, error: /invalid|code/i.test(e.message) ? 'Der Code stimmt nicht – bitte erneut versuchen.' : e.message }; }).finally(() => render());
+    });
+    const hasRole = (role) => { const r = admS().status?.roles || []; return r.includes('super_admin') || r.includes(role); };
+    function complianceAdminPage() {
+      if (!cloudSignedIn()) return '<section class="card"><h2 class="card-title">Husora Admin</h2><p class="card-caption">Bitte mit dem Husora-Team-Konto anmelden.</p></section>';
+      const gate = admMfaGateHtml();
+      const st = admS().status;
+      if (!st) return gate;
+      if (!st.roles?.length) return '<section class="card"><h2 class="card-title">Husora Admin</h2><p class="card-caption">Dieser Bereich ist nur für das Husora-Team freigegeben.</p></section>';
+      if (gate) return gate;
+      const s = admS();
+      const tabs = [['gate', 'Release-Gate', true], ['imprint', 'Impressum', hasRole('content_admin')], ['reviews', 'Bewertungen', hasRole('content_admin')], ['partners', 'Partner-Nachweise', hasRole('content_admin')], ['requests', 'Datenschutz-Anfragen', hasRole('support_admin')], ['incidents', 'Vorfälle', hasRole('security_admin')], ['audit', 'Audit-Log', hasRole('security_admin')], ['providers', 'Drittanbieter', true]].filter(([, , ok]) => ok);
+      if (!tabs.some(([id]) => id === s.tab)) s.tab = tabs[0][0];
+      const d = s.data[s.tab];
+      if (d === undefined) { admLoadTab(s.tab); }
+      return `<section class="card beta-dash-head"><div><h2 class="card-title"><span class="beta-chip">Admin</span> Husora Compliance</h2><p class="card-caption">Rollen: ${(st.roles || []).map((r) => ADMIN_ROLE_LABELS[r] || r).join(', ')} · Zwei-Faktor: ${st.aal === 'aal2' ? 'aktiv' : 'nicht erforderlich'}</p></div><button type="button" class="secondary-btn" data-page="betaAdmin">Beta Dashboard</button></section>
+        <div class="pp-filters">${tabs.map(([id, label]) => `<button type="button" class="${s.tab === id ? 'active' : ''}" data-adm-tab="${id}">${label}</button>`).join('')}</div>
+        <section class="card">${d === undefined || d?.loading ? '<p class="settings-hint">Wird geladen …</p>' : d?.error ? `<p class="settings-hint">${escapeHtml(d.error)}</p>` : admTabHtml(s.tab, d)}</section>`;
+    }
+    async function admLoadTab(tab) {
+      const s = admS(); s.data[tab] = { loading: true };
+      const q = {
+        gate: () => cloudFetch('/rest/v1/rpc/release_gate', { method: 'POST', body: {} }),
+        imprint: () => cloudFetch('/rest/v1/app_config?key=eq.imprint&select=value').then((r) => r?.[0]?.value || {}),
+        reviews: () => cloudFetch('/rest/v1/review_reports?select=id,reason,note,status,created_at,review:service_partner_reviews(id,rating,comment,moderation_status,created_at)&order=created_at.desc&limit=100'),
+        partners: () => cloudFetch('/rest/v1/rpc/admin_partner_list', { method: 'POST', body: {} }),
+        requests: () => cloudFetch('/rest/v1/privacy_requests?select=id,request_type,message,status,due_at,created_at,handler_note&order=created_at.desc&limit=200'),
+        incidents: () => cloudFetch('/rest/v1/security_incidents?select=*&order=detected_at.desc&limit=100'),
+        audit: () => cloudFetch('/rest/v1/security_audit_log?select=event_type,entity_type,metadata,created_at,actor_user_id&order=created_at.desc&limit=200'),
+        providers: () => cloudFetch('/rest/v1/third_party_providers?select=key,provider_name,service,country,consent_category,processor_status,dpa_status,status,notes&order=consent_category,key')
+      }[tab];
+      try { s.data[tab] = await q(); } catch (error) { s.data[tab] = { error: /42501|Husora-Team|permission/.test(error.message) ? 'Keine Berechtigung für diesen Bereich.' : error.message }; }
+      if (currentPage === 'adminCompliance') render();
+    }
+    function admTabHtml(tab, d) {
+      const opt = (list, cur) => list.map(([v, l]) => `<option value="${v}" ${cur === v ? 'selected' : ''}>${l}</option>`).join('');
+      if (tab === 'gate') {
+        const groups = { legal: 'Rechtlich', security: 'Sicherheit', product: 'Produkt' };
+        return `<h2 class="card-title">Beta Release Gate ${d.passed ? '<span class="pp-badge green">bestanden</span>' : '<span class="pp-badge red">nicht bestanden</span>'}</h2><p class="card-caption">Automatische Prüfungen werden vom Server ausgewertet, manuelle Punkte bestätigt ein Super-Admin. Open Beta lässt sich erst nach bestandenem Gate aktivieren – die finale Entscheidung bleibt eine menschliche.</p>
+          ${Object.entries(groups).map(([g, label]) => `<h3 class="beta-sub">${label}</h3><ul class="gate-list">${d.checks.filter((c) => c.group === g).map((c) => `<li class="${c.ok ? 'ok' : 'open'}"><span>${c.ok ? '✓' : '○'} ${escapeHtml(c.label)}</span>${c.auto ? '<small>automatisch</small>' : hasRole('super_admin') ? `<label class="switch"><input type="checkbox" data-gate-manual="${c.key}" ${c.ok ? 'checked' : ''}><span></span></label>` : '<small>manuell</small>'}</li>`).join('')}</ul>`).join('')}`;
+      }
+      if (tab === 'imprint') {
+        const fields = [['operator', 'Betreiber'], ['company', 'Unternehmensname'], ['legal_form', 'Rechtsform'], ['address', 'Anschrift'], ['email', 'E-Mail'], ['phone', 'Telefon'], ['representatives', 'Vertretungsberechtigte'], ['register', 'Register'], ['register_court', 'Registergericht'], ['vat_id', 'USt-ID'], ['other', 'Weitere gesetzlich erforderliche Angaben']];
+        return `<h2 class="card-title">Impressum</h2><p class="card-caption">Nur echte Angaben eintragen. Leere Felder erscheinen im Impressum als Platzhalter.</p><form class="hub-form" data-adm-imprint><div class="pp-grid">${fields.map(([k, l]) => `<label class="${k === 'other' || k === 'address' ? 'full' : ''}"><span class="form-label">${l}</span><input class="form-control" name="${k}" maxlength="500" value="${escapeHtml(d[k] || '')}"></label>`).join('')}</div><div class="settings-actions"><button type="submit" class="primary-btn">Speichern</button></div></form>`;
+      }
+      if (tab === 'reviews') return `<h2 class="card-title">Gemeldete Bewertungen</h2>${(d || []).length ? d.map((r) => `<div class="beta-report"><div class="beta-report-head"><strong>${'★'.repeat(r.review?.rating || 0)} · Meldung: ${escapeHtml({ insult: 'Beleidigung', false_claim: 'falsche Tatsachenbehauptung', fake: 'Fake', manipulation: 'Manipulation', revenge: 'Rachebewertung', other: 'Sonstiges' }[r.reason] || r.reason)}</strong><em class="beta-sev">${escapeHtml(r.status)}</em></div><p>„${escapeHtml(r.review?.comment || '')}“</p>${r.note ? `<p class="beta-report-ea">${escapeHtml(r.note)}</p>` : ''}${r.status === 'open' ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-moderate="${r.review?.id}" data-status="visible">Sichtbar lassen</button><button type="button" class="primary-btn" data-moderate="${r.review?.id}" data-status="hidden">Ausblenden</button></div>` : ''}</div>`).join('') : '<p class="settings-hint">Keine Meldungen.</p>'}`;
+      if (tab === 'partners') return `<h2 class="card-title">Partner-Nachweise</h2><p class="card-caption">„Verifiziert“ nur nach dokumentierter Prüfung der Nachweise (Beschreibung Pflicht).</p>${(d || []).map((p) => `<div class="beta-report"><div class="beta-report-head"><strong>${escapeHtml(p.name)}</strong><select class="form-control" data-verify-partner="${p.id}">${opt([['not_checked', 'nicht geprüft'], ['in_review', 'in Prüfung'], ['verified', 'verifiziert'], ['rejected', 'abgelehnt'], ['expired', 'abgelaufen']], p.verification_status)}</select></div>${p.verification_note ? `<small>${escapeHtml(p.verification_note)}</small>` : ''}</div>`).join('') || '<p class="settings-hint">Keine Partnerbetriebe.</p>'}`;
+      if (tab === 'requests') return `<h2 class="card-title">Datenschutz-Anfragen</h2>${(d || []).map((r) => `<div class="beta-report"><div class="beta-report-head"><strong>${escapeHtml(r.request_type)}</strong><small>fällig ${escapeHtml(fmtDate(r.due_at))}</small><select class="form-control" data-dsr="${r.id}">${opt([['new', 'neu'], ['verified', 'Identität geprüft'], ['in_progress', 'in Bearbeitung'], ['completed', 'erledigt'], ['rejected', 'abgelehnt']], r.status)}</select></div>${r.message ? `<p>${escapeHtml(r.message)}</p>` : ''}<small>${escapeHtml(fmtDateTime(r.created_at))}</small></div>`).join('') || '<p class="settings-hint">Keine Anfragen.</p>'}`;
+      if (tab === 'incidents') return `<h2 class="card-title">Datenpannen / Sicherheitsvorfälle</h2><p class="card-caption">Ob eine Meldung an die Aufsichtsbehörde (72 Stunden) bzw. Betroffene nötig ist, wird rechtlich bewertet – die App entscheidet das nicht.</p>
+        <form class="hub-form" data-incident-new><div class="pp-grid"><label class="full"><span class="form-label">Titel *</span><input class="form-control" name="title" required maxlength="200"></label><label><span class="form-label">Betroffenes System</span><input class="form-control" name="affected_system" maxlength="200"></label><label><span class="form-label">Schwere</span><select class="form-control" name="severity">${opt([['low', 'gering'], ['medium', 'mittel'], ['high', 'hoch'], ['critical', 'kritisch']], 'medium')}</select></label><label class="full"><span class="form-label">Betroffene Daten</span><input class="form-control" name="affected_data" maxlength="1000"></label></div><div class="settings-actions"><button type="submit" class="primary-btn">Vorfall erfassen</button></div></form>
+        ${(d || []).map((i) => `<div class="beta-report"><div class="beta-report-head"><strong>${escapeHtml(i.title)}</strong><em class="beta-sev ${i.severity}">${escapeHtml(i.severity)}</em><select class="form-control" data-incident="${i.id}" data-field="notification_required">${opt([['to_assess', 'Meldepflicht: zu bewerten'], ['yes', 'Meldepflicht: ja'], ['no', 'Meldepflicht: nein']], i.notification_required)}</select>${i.resolved_at ? '<small>gelöst</small>' : `<button type="button" class="secondary-btn" data-incident-resolve="${i.id}">Als gelöst markieren</button>`}</div><small>erkannt ${escapeHtml(fmtDateTime(i.detected_at))}${i.affected_system ? ` · ${escapeHtml(i.affected_system)}` : ''}${i.affected_data ? ` · ${escapeHtml(i.affected_data)}` : ''}</small></div>`).join('')}`;
+      if (tab === 'audit') return `<h2 class="card-title">Sicherheits-Audit-Log</h2><div class="legal-scroll"><table class="legal-table small"><tr><th>Zeit</th><th>Ereignis</th><th>Objekt</th><th>Details</th></tr>${(d || []).map((e) => `<tr><td>${escapeHtml(fmtDateTime(e.created_at))}</td><td>${escapeHtml(e.event_type)}</td><td>${escapeHtml(e.entity_type || '')}</td><td><code>${escapeHtml(JSON.stringify(e.metadata || {}))}</code></td></tr>`).join('')}</table></div>`;
+      if (tab === 'providers') return `<h2 class="card-title">Drittanbieter-Register</h2><p class="card-caption">Kein Anbieter gilt als „freigegeben“, bevor Vertrag und Einstellungen geprüft sind. Gesperrte Anbieter lädt die App nicht.</p><div class="legal-scroll"><table class="legal-table small"><tr><th>Anbieter</th><th>Dienst</th><th>Land</th><th>Kategorie</th><th>AVV</th><th>Status</th></tr>${(d || []).map((p) => `<tr><td>${escapeHtml(p.provider_name)}</td><td>${escapeHtml(p.service)}</td><td>${escapeHtml(p.country)}</td><td>${escapeHtml(p.consent_category)}</td><td>${escapeHtml(p.dpa_status)}</td><td>${hasRole('super_admin') ? `<select class="form-control" data-provider-status="${p.key}">${opt([['unknown', 'unbekannt'], ['under_review', 'in Prüfung'], ['approved', 'freigegeben'], ['blocked', 'gesperrt']], p.status)}</select>` : escapeHtml(p.status)}</td></tr>`).join('')}</table></div>`;
+      return '';
+    }
+    document.addEventListener('click', (event) => {
+      const t = event.target.closest('[data-adm-tab]'); if (t) { admS().tab = t.dataset.admTab; delete admS().data[t.dataset.admTab]; render(); return; }
+      const m = event.target.closest('[data-moderate]');
+      if (m) { cloudFetch('/rest/v1/rpc/moderate_review', { method: 'POST', body: { p_review_id: m.dataset.moderate, p_status: m.dataset.status } }).then(() => { showToast('Moderation gespeichert.'); delete admS().data.reviews; render(); }).catch((e) => showToast(e.message)); return; }
+      const r = event.target.closest('[data-incident-resolve]');
+      if (r) cloudFetch(`/rest/v1/security_incidents?id=eq.${r.dataset.incidentResolve}`, { method: 'PATCH', body: { resolved_at: new Date().toISOString() }, headers: { Prefer: 'return=minimal' } }).then(() => { delete admS().data.incidents; render(); }).catch((e) => showToast(e.message));
+    });
+    document.addEventListener('change', (event) => {
+      const el = event.target;
+      const done = (tab, msg = 'Gespeichert.') => { showToast(msg); delete admS().data[tab]; render(); };
+      if (el.matches?.('[data-gate-manual]')) {
+        const gate = admS().data.gate; const manual = Object.fromEntries((gate?.checks || []).filter((c) => !c.auto).map((c) => [c.key, c.ok]));
+        manual[el.dataset.gateManual] = el.checked;
+        cloudFetch('/rest/v1/app_config?key=eq.release_gate', { method: 'PATCH', body: { value: { manual } }, headers: { Prefer: 'return=minimal' } }).then(() => done('gate')).catch((e) => showToast(e.message));
+      } else if (el.matches?.('[data-verify-partner]')) {
+        let note = null;
+        if (el.value === 'verified') { note = window.prompt('Welche Nachweise wurden wie geprüft? (Pflicht, z. B. „Gewerbeanmeldung und Haftpflichtversicherung gesichtet, gültig bis 12/2027“)', ''); if (!note) { el.value = 'in_review'; return; } }
+        cloudFetch('/rest/v1/rpc/set_partner_verification', { method: 'POST', body: { p_organization_id: el.dataset.verifyPartner, p_status: el.value, p_note: note } }).then(() => done('partners')).catch((e) => showToast(e.message));
+      } else if (el.matches?.('[data-dsr]')) {
+        cloudFetch(`/rest/v1/privacy_requests?id=eq.${el.dataset.dsr}`, { method: 'PATCH', body: { status: el.value, handled_by: null }, headers: { Prefer: 'return=minimal' } }).then(() => done('requests')).catch((e) => showToast(e.message));
+      } else if (el.matches?.('[data-incident]')) {
+        cloudFetch(`/rest/v1/security_incidents?id=eq.${el.dataset.incident}`, { method: 'PATCH', body: { [el.dataset.field]: el.value }, headers: { Prefer: 'return=minimal' } }).then(() => done('incidents')).catch((e) => showToast(e.message));
+      } else if (el.matches?.('[data-provider-status]')) {
+        cloudFetch(`/rest/v1/third_party_providers?key=eq.${el.dataset.providerStatus}`, { method: 'PATCH', body: { status: el.value, review_date: localDateKey(new Date()) }, headers: { Prefer: 'return=minimal' } }).then(() => done('providers')).catch((e) => showToast(e.message));
+      }
+    });
+    document.addEventListener('submit', (event) => {
+      const imp = event.target.closest('[data-adm-imprint]');
+      const inc = event.target.closest('[data-incident-new]');
+      if (!imp && !inc) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(imp || inc));
+      Object.keys(v).forEach((k) => { v[k] = String(v[k] || '').trim() || null; });
+      const req = imp ? cloudFetch('/rest/v1/app_config?key=eq.imprint', { method: 'PATCH', body: { value: v }, headers: { Prefer: 'return=minimal' } })
+        : cloudFetch('/rest/v1/security_incidents', { method: 'POST', body: v, headers: { Prefer: 'return=minimal' } });
+      req.then(() => { showToast(imp ? 'Impressum gespeichert.' : 'Vorfall erfasst.'); if (imp) { lcS().imprint = v; lcSave('husora-imprint', v); } delete admS().data[imp ? 'imprint' : 'incidents']; render(); }).catch((e) => showToast(e.message));
+    });
+    // Partner: Bewertung melden
+    document.addEventListener('click', (event) => {
+      const b = event.target.closest('[data-review-report]');
+      if (!b) return;
+      const reason = window.prompt('Warum meldest du diese Bewertung?\n1 = Beleidigung, 2 = falsche Tatsachenbehauptung, 3 = Fake, 4 = Manipulation, 5 = Rachebewertung, 6 = Sonstiges', '2');
+      if (reason === null) return;
+      const map = { 1: 'insult', 2: 'false_claim', 3: 'fake', 4: 'manipulation', 5: 'revenge', 6: 'other' };
+      const note = window.prompt('Kurze Begründung (optional):', '') || null;
+      cloudFetch('/rest/v1/rpc/report_review', { method: 'POST', body: { p_review_id: b.dataset.reviewReport, p_reason: map[String(reason).trim()] || 'other', p_note: note } })
+        .then(() => showToast('Danke – Husora prüft die Meldung.')).catch((e) => showToast(e.message));
+    });
+
+    // Rechtstexte ergänzen: Impressum aus Konfiguration, Datenschutz-Übersicht, Plattform-Klausel, neue Dokumente
+    (() => {
+      const origPrivacy = LEGAL_SECTIONS.privacy.html; LEGAL_SECTIONS.privacy.html = () => origPrivacy() + privacyOverviewHtml();
+      const origTerms = LEGAL_SECTIONS.terms.html;
+      LEGAL_SECTIONS.terms = { title: 'Nutzungsbedingungen / AGB', html: () => origTerms() + `<h3>9. Husora als Plattform</h3><p>Husora ist Software- und Plattformanbieter und nicht ausführender Handwerks- oder Servicebetrieb. Servicepartner sind eigenständige Anbieter. Vertragspartner, Preis, Leistung, Mängelhaftung und Rechnung eines Auftrags liegen beim jeweiligen Servicepartner; Husora erhält derzeit keine Vermittlungsprovision (Einzelheiten: „Regeln für Servicepartner“).</p><h3>10. Beta</h3><p>Während der Beta gelten ergänzend die Beta-Bedingungen. Zwingende gesetzliche Rechte bleiben unberührt.</p><p class="legal-lead">Version ${legalVersionId()} · Entwurf – juristische Prüfung offen</p>` };
+      LEGAL_SECTIONS.imprint.html = imprintHtml;
+      Object.entries(LEGAL_EXTRA).forEach(([k, [title, html]]) => { LEGAL_SECTIONS[k] = { title, html }; });
+    })();
     // --- Ersteinrichtung ---
     let onboardingState = loadStore('stugliv-onboarding', null);
     let onboardingStep = 0;
@@ -17136,7 +17636,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const usageLabel = target.closest('.ob-usage label');
       if (usageLabel) setTimeout(() => { document.querySelectorAll('.ob-usage label').forEach((label) => label.classList.toggle('on', label.querySelector('input').checked)); }, 0);
       const anchor = target.closest('[data-settings-anchor]');
-      if (anchor) { if (/^settings-(home|look|data)$/.test(anchor.dataset.settingsAnchor)) settingsView = anchor.dataset.settingsAnchor; else if (anchor.dataset.settingsAnchor === 'settings-notify') settingsView = 'settings-look'; setTimeout(() => { if (currentPage === 'settings') render(); document.getElementById(anchor.dataset.settingsAnchor)?.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
+      if (anchor) { if (/^settings-(home|look|data|legal)$/.test(anchor.dataset.settingsAnchor)) settingsView = anchor.dataset.settingsAnchor; else if (anchor.dataset.settingsAnchor === 'settings-notify') settingsView = 'settings-look'; setTimeout(() => { if (currentPage === 'settings') render(); document.getElementById(anchor.dataset.settingsAnchor)?.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
     });
     function saveEmergencyForm(notify = true) {
       const form = document.getElementById('emergency-form');
@@ -19202,7 +19702,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <p class="settings-hint">Gespeichert werden alle Bereiche – Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Dokumente und Einstellungen. Ferienhäuser, Buchungen und Aufgaben stehen zusätzlich in den Husora-Tabellen für Auswertungen und Partnerzugänge.</p>
         <details class="cloud-danger"><summary>Konto und Cloud-Daten löschen</summary>
           <p class="settings-hint">Löscht dein Husora-Konto, deine Organisation(en) mit allen Häusern, Aufgaben, Fotos und Dokumenten in der Cloud. Aufträge und Rechnungen, die du mit anderen Betrieben ausgetauscht hast, bleiben dort zur Nachweisführung erhalten. Das lässt sich nicht rückgängig machen – lege vorher eine Datensicherung an.</p>
-          <form class="cloud-danger-form" data-account-delete><label><span class="form-label">Zur Bestätigung <b>LÖSCHEN</b> eingeben</span><input class="form-control" name="confirm" autocomplete="off" placeholder="LÖSCHEN" required></label>
+          <form class="cloud-danger-form" data-account-delete><label><span class="form-label">Passwort zur Bestätigung deiner Identität</span><input class="form-control" type="password" name="password" autocomplete="current-password" required></label><label><span class="form-label">Zur Bestätigung <b>LÖSCHEN</b> eingeben</span><input class="form-control" name="confirm" autocomplete="off" placeholder="LÖSCHEN" required></label>
           <label class="settings-switch"><span><strong>Auch die Daten auf diesem Gerät löschen</strong><small>sonst bleiben sie lokal erhalten</small></span><span class="switch"><input type="checkbox" name="local"><span></span></span></label>
           <button type="submit" class="danger-btn" ${cloudState.busy ? 'disabled' : ''}>${icon('trash')} Konto endgültig löschen</button></form>
         </details>
@@ -19247,12 +19747,20 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       render();
       return result;
     }
-    document.addEventListener('submit', (event) => {
+    document.addEventListener('submit', async (event) => {
       const form = event.target.closest('[data-account-delete]');
       if (!form) return;
       event.preventDefault();
       const confirmText = String(new FormData(form).get('confirm') || '').trim();
       if (confirmText !== 'LÖSCHEN') { showToast('Bitte genau LÖSCHEN eingeben.'); return; }
+      const pw = String(new FormData(form).get('password') || '');
+      try { await cloudFetch('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: cloud.session?.email || cloudState.draftEmail, password: pw }, auth: false }); }
+      catch (error) { showToast('Das Passwort stimmt nicht – Konto wurde nicht gelöscht.'); return; }
+      try {
+        const pre = await cloudFetch('/rest/v1/rpc/my_deletion_preview', { method: 'POST', body: {} });
+        const orgs = (pre?.organizations || []).map((o) => o.name).filter(Boolean);
+        if (!window.confirm(`Folgen der Löschung:\n• Dein Konto und alle Anmeldungen werden ungültig.\n• Gelöscht werden: ${orgs.length ? `Organisation(en) ${orgs.join(', ')} mit Häusern, Fotos und Dokumenten` : 'deine Mitgliedschaften'}, Statistik, Einwilligungen, Benachrichtigungen.\n• Aufträge und Rechnungen bei anderen Betrieben bleiben dort ohne deinen Kontobezug (Nachweispflichten).\n\nEndgültig löschen?`)) return;
+      } catch (error) { /* Vorschau optional */ }
       if (!window.confirm('Konto und alle Cloud-Daten jetzt endgültig löschen?')) return;
       const button = form.querySelector('button[type=submit]');
       button.disabled = true; button.textContent = 'Lösche …';
@@ -20240,9 +20748,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return `${ppBack()}
         <div class="pp-detail-head"><div><span class="pp-eyebrow">${escapeHtml(ppCustomerName(i.organization_id))} · ${escapeHtml(ppDateTime(i.scheduled_at))}</span><h1>${escapeHtml(i.property?.name || 'Kontrolle')}</h1><small class="pp-muted">${escapeHtml((i.notes || '').replace(/^Vorlage: /, 'Vorlage: '))}</small></div>${ppBadge(PP_INSPECTION_STATUS, i.status)}</div>
         <div class="pp-progress"><span style="width:${items.length ? Math.round(checked / items.length * 100) : 0}%"></span></div><p class="pp-muted">${checked} von ${items.length} Punkten geprüft${defects.length ? ` · ${defects.length} Mängel` : ''}${warnings.length ? ` · ${warnings.length} Hinweise` : ''}</p>
+        ${inspectionDisclaimerHtml()}
         ${aiInspectionHtml(i)}
         ${i.status === 'scheduled' ? `<div class="pp-actions"><button type="button" class="primary-btn big" data-pp-action="inspection-status" data-id="${i.id}" data-status="in_progress" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}
-        ${Object.entries(groups).map(([category, list]) => `<section class="pp-section"><div class="pp-section-head"><h2>${escapeHtml(category)}</h2></div>${list.map((item) => `<div class="pp-check-item ${item.status}"><div class="pp-check-title"><strong>${escapeHtml(item.name)}</strong>${item.checked_at ? `<small>${escapeHtml(ppTime(item.checked_at))}</small>` : ''}</div>
+        ${Object.entries(groups).map(([category, list]) => `<section class="pp-section"><div class="pp-section-head"><h2>${escapeHtml(category)}</h2></div>${list.map((item) => `<div class="pp-check-item ${item.status}"><div class="pp-check-title"><strong>${escapeHtml(item.name)}</strong>${sensitiveBadgeHtml(`${category} ${item.name}`)}${item.checked_at ? `<small>${escapeHtml(ppTime(item.checked_at))}</small>` : ''}</div>
           <div class="pp-check-btns">${btn(item, 'ok', 'OK')}${btn(item, 'warning', 'Hinweis')}${btn(item, 'defect', 'Mangel')}${btn(item, 'not_applicable', 'n. v.')}</div>
           ${['warning', 'defect'].includes(item.status) || item.notes ? `<div class="pp-inline"><input class="form-control" data-pp-note="${item.id}" placeholder="Beschreibung des Mangels …" value="${escapeHtml(item.notes || '')}" ${editable ? '' : 'disabled'}>${item.status === 'defect' ? `<input class="form-control pp-cost" type="number" min="0" step="1" data-pp-cost="${item.id}" placeholder="Kosten ca." value="${item.estimated_cost ?? ''}" ${editable ? '' : 'disabled'}>` : ''}</div>` : ''}</div>`).join('')}</section>`).join('')}
         ${ppSection('Fotos', `<div class="pp-gallery">${photos.map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|Foto"><img data-pp-thumb="${ph.id}" alt="Foto"></button>`).join('')}</div>${editable ? `<div class="pp-actions"><label class="secondary-btn pp-file">${icon('plus')} Foto aufnehmen<input type="file" accept="image/*" capture="environment" multiple hidden data-pp-upload="inspection:${i.id}"></label></div>` : ''}`)}
@@ -20474,6 +20983,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const d = ppD('documents').find((x) => x.id === btn.dataset.id);
       if (!d) return;
       const kind = btn.dataset.ppDoc;
+      lcAudit('document_access', 'document', d.id, d.organization_id);
       if (kind === 'view' || kind === 'pdf') {
         btn.disabled = true;
         ppDocumentPdf(d).then(({ bytes, name }) => {
@@ -21290,6 +21800,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         y -= 3;
       });
       if (i.notes && !/^Vorlage: /.test(i.notes)) { need(60); y -= 10; text('Zusammenfassung', M, 12, true); y -= 16; pdfWrap(i.notes, 10, W - 2 * M, false).forEach((l) => { need(14); text(l, M, 10); y -= 13; }); }
+      need(50); y -= 10; pdfWrap(`Hinweis: ${inspectionDisclaimerText()} Bei Elektro, Gas, Feuerstätten, Trinkwasser, Statik, Dach und Brandschutz dokumentiert dieser Bericht nur Beobachtungen; Fachprüfungen nehmen zugelassene Fachbetriebe vor.`, 8, W - 2 * M, false).forEach((l) => { need(12); text(l, M, 8); y -= 11; });
       newPage();
       const stream = (data) => `<< /Length ${data.length} >>\nstream\n${data}\nendstream`;
       const objs = ['<< /Type /Catalog /Pages 2 0 R >>', '', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
@@ -21671,11 +22182,16 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const label = { approved: 'Beauftragt – der Servicepartner plant den Termin', assigned: 'Beauftragt', in_progress: 'In Bearbeitung beim Servicepartner', completed: 'Behoben – Rechnung unter Dokumente', cancelled: 'Anfrage abgelehnt' }[o.status] || '';
       return label ? `<p class="issue-offer-state">${icon(o.status === 'completed' ? 'check' : 'users')} ${escapeHtml(o.partner)}: ${escapeHtml(label)}${cost}</p>` : '';
     }
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', async (event) => {
       const btn = event.target.closest('[data-repair-offer]');
       if (!btn) return;
       const accept = btn.dataset.accept === '1';
       const issue = issues.find((x) => x.cloudRepairId === btn.dataset.repairOffer);
+      if (accept) {
+        const o = issue?.partnerOffer || {};
+        const ok = await costConfirm({ title: 'Mangelbeseitigung beauftragen', button: 'Kostenpflichtig beauftragen', rows: [['Auftragnehmer', o.partner || 'Servicepartner'], ['Leistung', `Beseitigung: ${issue?.text || 'Mangel'}`], ['Preis', o.cost != null ? `ca. ${formatCost(Number(o.cost))} (Schätzung des Partners; verbindlich ist seine Rechnung bzw. sein Angebot)` : 'nach Aufwand bzw. Angebot des Partners'], ['Termin', 'legt der Servicepartner nach der Beauftragung fest'], ['Kosten', 'Ja – mit der Beauftragung entsteht eine Zahlungspflicht gegenüber dem Servicepartner']] });
+        if (!ok) return;
+      }
       let note = null;
       if (!accept) { note = window.prompt('Anfrage ablehnen? Grund (optional, sieht der Servicepartner):', ''); if (note === null) return; }
       btn.disabled = true;
@@ -22335,7 +22851,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       };
       const count = partner ? [...picked].filter((id) => !sentTo(id).some((o) => o.service_partner_id === partner.id)).length : 0;
       const send = connected.length ? `<section class="card hub-card hub-dispatch">
-          <div class="hub-send-head"><h2 class="card-title">Aufgaben an Partner senden</h2><p class="card-caption">Partner wählen, Aufgaben ankreuzen – sie erscheinen sofort in dessen Partner-Portal.</p></div>
+          <div class="hub-send-head"><h2 class="card-title">Aufgaben an Partner senden</h2><p class="card-caption">Partner wählen, Aufgaben ankreuzen – sie erscheinen sofort in dessen Partner-Portal. Das ist eine Anfrage: Ein Auftrag kommt erst zustande, wenn der Partner annimmt – direkt zwischen dir und ihm, zu seinen Preisen.</p></div>
           <div class="hub-partner-chips" role="radiogroup" aria-label="Servicepartner">${connected.map((p) => `<button type="button" role="radio" aria-checked="${p.id === partner.id}" class="${p.id === partner.id ? 'on' : ''}" data-hub-send-partner="${p.id}"><span class="hub-avatar">${escapeHtml(p.company_name.slice(0, 1).toUpperCase())}</span>${escapeHtml(p.company_name)}${hubPartnerFactsHtml(p.id)}</button>`).join('')}</div>
           ${tasksOpen.length ? [...byHouse.entries()].map(([house, list]) => { const free = list.filter((t) => !sentTo(t.id).some((o) => o.service_partner_id === partner.id)); const all = free.length && free.every((t) => picked.has(t.id)); return `<div class="hub-house"><div class="hub-house-head">${icon('property')}<strong>${escapeHtml(house)}</strong><small>${list.length} offen</small>${free.length ? `<button type="button" class="text-btn" data-hub-pick-house="${escapeHtml(house)}">${all ? 'Keine' : 'Alle'} wählen</button>` : ''}</div><div class="hub-picks">${list.map(taskRow).join('')}</div></div>`; }).join('')
             : '<p class="settings-hint">Offene Aufgaben erscheinen hier, sobald sie per Cloud-Speicher abgeglichen sind (Einstellungen → Daten & App).</p>'}
@@ -22391,10 +22907,13 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const approve = btn.dataset.approve === '1';
       let note = '';
       if (!approve) { note = window.prompt(`Mehrkosten „${a.title}“ (${ppMoney(a.amount, a.currency)}) ablehnen?\n\nGrund (optional, sieht der Partner):`, ''); if (note === null) return; }
-      ownerRun('approval', async () => {
+      const go = () => ownerRun('approval', async () => {
         await cloudFetch('/rest/v1/rpc/respond_approval', { method: 'POST', body: { p_request_id: a.id, p_approve: approve, p_note: note.trim() || null } });
         showToast(approve ? `Mehrkosten freigegeben – ${ppMoney(a.amount, a.currency)}.` : 'Mehrkosten abgelehnt – der Partner wird informiert.');
       });
+      if (!approve) { go(); return; }
+      const order = (ownerSide.orders || []).find((o) => o.id === a.service_order_id);
+      costConfirm({ title: 'Mehrkosten freigeben', button: 'Mehrkosten kostenpflichtig freigeben', rows: [['Auftragnehmer', order?.partner?.company_name || 'Servicepartner'], ['Leistung', `${a.title}${a.description ? ` – ${a.description}` : ''}`], ['Betrag', ppMoney(a.amount, a.currency)], ['Auftrag', order?.title || ''], ['Kosten', 'Ja – der Betrag kommt zum Auftrag hinzu']] }).then((ok) => { if (ok) go(); });
     });
     document.addEventListener('submit', (event) => {
       const form = event.target.closest('[data-hub-limit-form]');

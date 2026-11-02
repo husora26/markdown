@@ -44,3 +44,11 @@ enable_signup = true
 enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
+
+# MFA (TOTP) – Pflicht für Admin-Funktionen (Compliance §35); gehostete Projekte: Dashboard → Auth → MFA
+[auth.mfa]
+max_enrolled_factors = 10
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true

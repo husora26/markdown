@@ -26,6 +26,7 @@ update app_config set value = value || '{"enabled": true, "analytics": true}' wh
 
 \echo '=== Datensparsamkeit: keine Inhalte/Geheimnisse in Analytics ==='
 select cp_test.login('weg@cp.test');
+insert into consent_log (purpose, version, accepted, source) values ('analytics', '2026-11-02', true, 'test');
 select public.track_events('[{"event_name":"task_created","entity_ref":"cp1","metadata":{"title":"Geheim","note":"privat","access_token":"x","email":"a@b.c","count":2}}]');
 reset role;
 select cp_test.ok('Nur unkritische Metadaten gespeichert', (select metadata = '{"count": 2}'::jsonb from analytics_events e join users u on u.id = e.user_id where u.email = 'weg@cp.test' and event_name = 'task_created'));

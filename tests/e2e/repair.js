@@ -80,7 +80,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   });
   await step('Hausbesitzer nimmt an → In Arbeit, Auftrag beim Partner', async () => {
     const rid = sql(`select id from repairs where title='${MANGEL}'`);
-    await H.click(`[data-repair-offer="${rid}"][data-accept="1"]`); await H.waitForTimeout(1500);
+    await H.click(`[data-repair-offer="${rid}"][data-accept="1"]`); await H.waitForSelector('[data-cost-confirm="ok"]'); await H.click('[data-cost-confirm="ok"]'); await H.waitForTimeout(1500);
     const st = await H.evaluate((m) => issues.find((i) => i.text === m)?.status, MANGEL);
     const order = sql(`select o.status||'/'||o.order_type||'/'||o.priority from repairs r join service_orders o on o.id=r.service_order_id where r.id='${rid}'`);
     if (st !== 'in_progress' || order !== 'accepted/repair/high') throw new Error(`${st} · ${order}`); return `Hausbesitzer: ${st} · Auftrag: ${order}`;

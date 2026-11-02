@@ -46,6 +46,11 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const returnUrl = safeReturn(body.return_url);
     if (!returnUrl) return json({ error: 'Ungültige Rücksprungadresse' }, 400);
+    // Beta: keine echten Zahlungen, solange app_config.payments.enabled nicht true ist (Compliance §29)
+    if (!body.portal) {
+      const [pay] = await rest('/rest/v1/app_config?key=eq.payments&select=value');
+      if (!pay?.value?.enabled) return json({ error: 'Zahlungen sind während der Beta deaktiviert.' }, 403);
+    }
 
     // Organisation des Nutzers serverseitig ermitteln (nie aus dem Browser übernehmen)
     const [org] = await rest('/rest/v1/rpc/ensure_my_organization', { method: 'POST', token: jwt, body: JSON.stringify({ p_name: 'Meine Ferienhäuser' }) }).then((r) => (Array.isArray(r) ? r : [r]));

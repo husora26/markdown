@@ -64,7 +64,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   });
   await step('Hausbesitzer nimmt das günstigere Angebot an → anderes abgelehnt, Anfrage zurückgezogen', async () => {
     const qid = sql(`select id from quotes where quote_number='B-${N}'`);
-    await H.click(`.hub-compare [data-hub-quote="${qid}"][data-approve="1"]`); await hWait();
+    await H.click(`.hub-compare [data-hub-quote="${qid}"][data-approve="1"]`); await H.waitForSelector('[data-cost-confirm="ok"]'); await H.click('[data-cost-confirm="ok"]'); await hWait();
     const r = sql(`select string_agg(q.quote_number||':'||q.status||':'||o.status, ' ' order by q.quote_number) from quotes q join service_orders o on o.id=q.service_order_id where q.quote_number in ('A-${N}','B-${N}')`);
     if (r !== `A-${N}:rejected:cancelled B-${N}:approved:offered`) throw new Error(r); return r;
   });
@@ -93,7 +93,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await H.evaluate(() => { currentPage = 'emergency'; render(); }); await H.waitForTimeout(800);
     // Haus ggf. mit dem Cloud-Haus verknüpfen (Testkonto ohne Cloud-Abgleich)
     await H.evaluate(() => { const f = document.querySelector('[data-emergency-form]'); if (f && !f.dataset.property) { f.dataset.property = 'dddddddd-0000-4000-8000-000000000001'; f.querySelector('button[type=submit]').disabled = false; } });
-    await H.fill('[data-emergency-form] [name=title]', `Wasserrohrbruch ${N}`); await H.click('[data-emergency-form] button[type=submit]'); await hWait();
+    await H.fill('[data-emergency-form] [name=title]', `Wasserrohrbruch ${N}`); await H.click('[data-emergency-form] button[type=submit]'); await H.waitForSelector('[data-cost-confirm="ok"]'); await H.click('[data-cost-confirm="ok"]'); await hWait();
     await H.screenshot({ path: OUT + '/3-notdienst.png' });
     const r = sql(`select priority||'/'||order_type||'/'||status||'/'||(service_partner_id='${spId}') from service_orders where title='NOTFALL: Wasserrohrbruch ${N}'`);
     const msg = await H.evaluate(() => document.querySelector('.emergency-sent')?.textContent || '');

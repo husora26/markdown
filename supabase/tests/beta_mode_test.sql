@@ -12,7 +12,7 @@ create function bt_test.login(p_email text) returns void language plpgsql as $$
 declare v_id uuid;
 begin
   select id into v_id from auth.users where email = p_email;
-  perform set_config('request.jwt.claims', json_build_object('sub', v_id, 'role', 'authenticated', 'email', p_email)::text, true);
+  perform set_config('request.jwt.claims', json_build_object('sub', v_id, 'role', 'authenticated', 'email', p_email, 'aal', 'aal2')::text, true);
   perform set_config('role', 'authenticated', true);
 end $$;
 create function bt_test.ok(p_label text, p_condition boolean) returns void language plpgsql as $$
@@ -35,7 +35,7 @@ from (values ('a@bt.test', 'Anna'), ('b@bt.test', 'Ben')) v(e, f);
 \set QUIET off
 
 \echo '=== Registrierung wird serverseitig gezählt ==='
-select bt_test.ok('user_registered für neue Nutzer', (select count(*) from analytics_events e join users u on u.id = e.user_id where u.email in ('a@bt.test', 'b@bt.test') and e.event_name = 'user_registered') = 2);
+select bt_test.ok('user_registered ohne Einwilligung nur anonym gezählt', (select count(*) from analytics_events e where e.event_name = 'user_registered' and e.user_id is null and e.created_at >= now() - interval '1 minute') >= 2);
 
 \echo '=== Konfiguration ==='
 select bt_test.login('a@bt.test');
@@ -45,6 +45,7 @@ reset role;
 
 \echo '=== Analytics: nur eigene, erlaubte, datensparsame Ereignisse ==='
 select bt_test.login('a@bt.test');
+insert into consent_log (purpose, version, accepted, source) values ('analytics', '2026-11-02', true, 'test');
 select bt_test.ok('Stapel gespeichert (2 gültig, 1 unbekannt verworfen)', public.track_events($$[
   {"event_name":"house_created","entity_type":"house","entity_ref":"p1","app_role":"owner","metadata":{"count":1,"password":"x","owner_name":"Anna","nested":{"a":1}}},
   {"event_name":"task_created","entity_type":"task","entity_ref":"t1"},

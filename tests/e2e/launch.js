@@ -69,7 +69,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const org = await p2.evaluate(() => cloud.org.id);
     const before = `${sql(`select count(*) from storage.objects where name like 'organization/${org}/%'`)} Dateien, ${sql(`select count(*) from app_data where organization_id='${org}'`)} Bereiche`;
     await p2.evaluate(() => { document.querySelector('.cloud-danger').open = true; document.querySelector('.cloud-danger').scrollIntoView(); }); await p2.screenshot({ path: OUT + '/4-loeschen.png' });
-    await p2.fill('[data-account-delete] [name=confirm]', 'LÖSCHEN'); await p2.$eval('[data-account-delete] button[type=submit]', (e) => e.click());
+    await p2.fill('[data-account-delete] [name=password]', 'Husora!2026'); await p2.fill('[data-account-delete] [name=confirm]', 'LÖSCHEN'); await p2.$eval('[data-account-delete] button[type=submit]', (e) => e.click());
     await p2.waitForFunction(() => !cloud.session, null, { timeout: 30000 }); await p2.waitForTimeout(500);
     const after = `${sql(`select count(*) from storage.objects where name like 'organization/${org}/%'`)} Dateien · Org: ${sql(`select count(*) from organizations where id='${org}'`)} · Konto: ${sql(`select count(*) from auth.users where email='${email}'`)} · lokal behalten: ${await p2.evaluate(() => properties.length)} Häuser`;
     if (!/^0 Dateien · Org: 0 · Konto: 0/.test(after)) throw new Error(`${before} → ${after}`); return `${before} → ${after}`; });

@@ -437,6 +437,9 @@ Edge Functions mit serverseitigem Schlüssel:
 
 Die Ergebnisse sind immer als „Vorschlag“ gekennzeichnet und werden nie automatisch freigegeben. Die bestehende Rechnungs-OCR wird wiederverwendet.
 
+
+> **Legal & Beta Compliance (Migration 4400, 02.11.2026):** Rechtliches-Hub, Einwilligung/Consent-Log, Admin-Rollen mit MFA, Rechtstext-Versionierung, Nachweisstatus, Moderation, Datenschutz-Anfragen, Datenpannen, Sicherheits-Audit, Aufbewahrungsregeln, Register, Datenexport, Release-Gate. Siehe `HUSORA_COMPLIANCE_IMPLEMENTATION_REPORT.md` und `GO_NO_GO_REPORT.md`.
+
 ### Abschluss
 E2E-Suite `fullflow` mit den 24 Schritten aus §63. Volle Suite, SQL-Tests und Advisors grün.
 

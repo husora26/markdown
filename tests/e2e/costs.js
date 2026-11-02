@@ -95,7 +95,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await H.screenshot({ path: OUT + '/2-besitzer-freigabe.png' });
     if (!card?.includes('Zusätzliches Rohrstück') || !(Number(badge) >= 1)) throw new Error(`${badge} ${card}`);
     const aid = sql(`select id from approval_requests where service_order_id='${ORDER}'`);
-    await H.click(`.hub-approvals-card [data-hub-approval="${aid}"][data-approve="1"]`); await hWait();
+    await H.click(`.hub-approvals-card [data-hub-approval="${aid}"][data-approve="1"]`); await H.waitForSelector('[data-cost-confirm="ok"]'); await H.click('[data-cost-confirm="ok"]'); await hWait();
     const r = sql(`select a.status||'/'||o.estimated_cost||'/'||o.approval_status from approval_requests a join service_orders o on o.id=a.service_order_id where a.id='${aid}'`);
     if (r !== 'approved/480.00/approved') throw new Error(r); return r;
   });

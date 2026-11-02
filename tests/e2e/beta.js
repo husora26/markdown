@@ -1,6 +1,6 @@
 // Husora Beta Mode: Banner, Feedback, Fehler melden, Analytics, Bewertung, Umfrage, Premium-Interesse, Admin-Dashboard, Schalter
 const { chromium } = require('playwright'); const fs = require('fs'); const { execSync } = require('child_process');
-const { SP, ANON } = require('./env'); const OUT = SP + '/audit/beta'; fs.mkdirSync(OUT, { recursive: true });
+const { SP, ANON } = require('./env'); const totp = require('./totp'); const OUT = SP + '/audit/beta'; fs.mkdirSync(OUT, { recursive: true });
 const URL_ = 'http://127.0.0.1:54321'; const N = Date.now() % 100000; const PW = 'Husora!2026';
 const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -At -c "${q.replace(/"/g, '\\"')}"`).toString().trim();
 (async () => {
@@ -12,7 +12,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const p = await ctx.newPage(); p.on('pageerror', (e) => errs.push(`${label}: ${e.message}`)); p.on('dialog', (d) => d.accept());
     await p.route(/unpkg|cdnjs|openstreetmap|nominatim|paypal|open-meteo|frankfurter|er-api|allorigins|cors\.lol|google|jsdelivr/, (r) => r.abort());
     await p.goto('http://127.0.0.1:8081/index.html');
-    await p.evaluate(({ url, key }) => { localStorage.clear(); localStorage.setItem('stugliv-onboarding', '{"status":"done"}'); localStorage.setItem('husora-cloud', JSON.stringify({ url, key })); localStorage.setItem('husora-beta-ui', '1'); }, { url: URL_, key: ANON });
+    await p.evaluate(({ url, key }) => { localStorage.clear(); localStorage.setItem('stugliv-onboarding', '{"status":"done"}'); localStorage.setItem('husora-cloud', JSON.stringify({ url, key })); localStorage.setItem('husora-beta-ui', '1'); localStorage.setItem('husora-consent', JSON.stringify({ v: '2026-11-02', analytics: true, external_content: false, decidedAt: new Date().toISOString() })); }, { url: URL_, key: ANON });
     await p.reload(); await p.waitForTimeout(800); return p;
   };
   const signIn = async (p, email) => {
@@ -103,7 +103,16 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
 
   const A = await device('A', 1280);
   await step('Husora-Team: Beta Dashboard mit Kennzahlen, Funnel, KPI-Zielen', async () => {
+    sql(`delete from auth.mfa_factors where user_id = (select id from auth.users where email = 'support@husora.test')`);
     await signIn(A, 'support@husora.test');
+    // Zwei-Faktor einrichten (TOTP) – Admin-Bereiche verlangen aal2
+    await A.evaluate(() => { betaS().dash = null; admS().status = null; admS().mfa = null; currentPage = 'betaAdmin'; render(); });
+    await A.waitForSelector('[data-mfa-enroll]', { timeout: 15000 }); await A.click('[data-mfa-enroll]');
+    await A.waitForSelector('.mfa-card code', { timeout: 15000 });
+    const secret = (await A.textContent('.mfa-card code')).trim();
+    await A.screenshot({ path: OUT + '/0-mfa.png' });
+    await A.fill('[data-mfa-verify] [name=code]', totp(secret)); await A.click('[data-mfa-verify] button[type=submit]');
+    await A.waitForFunction(() => admS().status?.aal === 'aal2', null, { timeout: 15000 });
     await A.evaluate(() => { betaS().dash = null; currentPage = 'betaAdmin'; render(); }); await A.waitForTimeout(2500);
     const v = await A.evaluate(() => ({ tiles: document.querySelectorAll('.beta-kpi').length, funnel: document.querySelectorAll('.beta-funnel li').length, targets: document.querySelectorAll('.beta-target').length, reports: document.querySelectorAll('.beta-report').length }));
     await A.screenshot({ path: OUT + '/5-dashboard.png', fullPage: true });

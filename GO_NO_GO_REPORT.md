@@ -1,73 +1,87 @@
-# Husora – GO/NO-GO-Bericht (Beta, Phasen 8–12, Security & Compliance)
+# HUSORA LEGAL & BETA COMPLIANCE – GO/NO-GO-Bericht
 
-Stand: 02.11.2026 · Grundlage: Beta-Mode-Brief, Architektur-Spezifikation (Phasen 8–12), Sicherheitsregeln des Projekts.
-**Hinweis:** Die zweite Spezifikation „Husora_Legal_Beta_Compliance_Specification.md“ kam leer an (0 Bytes). Der Compliance-Test unten prüft daher gegen den Beta-Brief (§20 Datenschutz), die DSGVO-Grundsätze und die vorhandene Datenschutzerklärung – nicht gegen dieses Dokument.
+Stand: 02.11.2026 · Grundlagen: „Husora Legal & Beta Compliance Specification“ v1.0, „Husora Beta Mode“, Architektur-Spezifikation Phasen 8–12.
+Technisch umgesetzt / juristische Prüfung offen. Rechtstexte: Entwurf – finale juristische Prüfung offen. Details: `HUSORA_COMPLIANCE_IMPLEMENTATION_REPORT.md`.
 
-## Gesamturteil
+## IMPLEMENTIERT
+1. Rechtliches-Hub (Einstellungen → Rechtliches): Impressum, Datenschutzerklärung, Nutzungsbedingungen, Beta-Bedingungen, Servicepartner-Regeln, Haftungs-/Prüfhinweise, Bewertungsregeln, KI-Transparenz, Datenschutz-Einstellungen, Datenexport, Datenschutz-Anfrage, Konto löschen, Versionen
+2. Rechtstext-Versionierung + kontrollierte erneute Zustimmung (Nutzungs- und Beta-Bedingungen)
+3. Editierbares Impressum (Admin, keine erfundenen Angaben, Platzhalter)
+4. Datenschutzerklärung passend zur Architektur inkl. Anbieter-Tabelle (Zweck, Daten, Rechtsgrundlage, Ort, Speicherdauer, Rolle, Drittland, Garantien)
+5. Einwilligung (notwendig / Statistik / externe Inhalte / Marketing), Widerruf so einfach wie Zustimmung, Consent-Log; Analytics serverseitig nur mit Einwilligung; externe Inhalte erst nach Einwilligung
+6. Admin-Rollen (super/support/content/security) mit Least Privilege + **MFA-Pflicht (TOTP)**
+7. Husora Admin: Release-Gate, Impressum, Bewertungsmoderation, Partner-Nachweise, Datenschutz-Anfragen, Datenpannen, Audit-Log, Drittanbieter-Register
+8. Konto löschen mit Passwort-Bestätigung, Folgenanzeige, Sitzungsende, Löschung/Pseudonymisierung
+9. Datenexport (Gerät + Cloud, nur eigene Organisationen)
+10. Zentrale Aufbewahrungsregeln (gesetzlich vs. Produktdaten), Bereinigung danach
+11. Register: Drittanbieter (15), Verarbeitungstätigkeiten (12), KI-Systeme (2)
+12. Sicherheits-Audit-Log (Login, Rechte, Dokumentzugriff/-löschung, Freigaben, Admin-Aktionen, Löschung, Export, Zuordnungen)
+13. Hauskontroll-Hinweis (App, Partner-Portal, Prüfbericht-PDF) + Kennzeichnung sensibler Bereiche
+14. Eindeutige kostenpflichtige Bestätigungen (Reparatur, Angebot, Mehrkosten, Notdienst); Anfragen als unverbindlich gekennzeichnet
+15. Husora als Plattform (Nutzungsbedingungen, Partner-Regeln); Partner-Nachweisstatus „nicht geprüft … verifiziert“ nur mit dokumentierter Prüfung
+16. Bewertungen melden, moderieren, Missbrauch markieren; ausgeblendete zählen nicht
+17. Notfall & Zugang: nie öffentlich, nur befristete, widerrufbare, protokollierte Freigabe je Auftrag
+18. KI-Kennzeichnung („Du nutzt hier ein KI-System“), maschinelle Übersetzung gekennzeichnet
+19. Immobilienimport: Quellen-/Rechtehinweis + Bestätigung, nur nach Einwilligung externe Inhalte
+20. Beta ohne Zahlungen (App + Edge Function), Premium nur als Vorschau/„Interesse vormerken“
+21. Beta Release Gate (automatisch + manuell) – Open Beta serverseitig erst nach bestandenem Gate
+22. Storage: private Buckets mit Größen- und Typbegrenzung (auch `husora-private`)
 
-| Stufe | Urteil | Bedingung |
-|---|---|---|
-| Code & lokale Datenbank | **GO** | alle Tests grün (siehe unten) |
-| Live-Datenbank (Supabase) | **NO-GO – sofort handeln** | Migrationen 3600–4300 sind noch nicht live; **4100 schließt eine kritische Sicherheitslücke, die live besteht** |
-| Geschlossene Alpha/Closed Beta (eingeladene Tester) | **GO nach** Einspielen der Migrationen | Datenschutzerklärung (Entwurf) kurz rechtlich prüfen lassen |
-| Öffentliche Beta / Launch | **NO-GO** | rechtliche Prüfung, Auftragsverarbeitungsverträge, leere Compliance-Spezifikation nachreichen, Push/E-Mail/KI einrichten |
+## NICHT IMPLEMENTIERT
+1. ZIP-Export inklusive Fotos/Dokumente (Export enthält Verweise)
+2. Admin-Oberfläche zur Vergabe von Admin-Rollen (derzeit per SQL durch Super-Admin)
+3. Marketing-Einwilligung (kein Marketing vorhanden – bewusst deaktiviert)
+4. Screenshot-Anhang bei Fehlerberichten
 
-## 1. Analyse (Bestand)
+## JURISTISCHE PRÜFUNG OFFEN
+1. Alle Rechtstexte (Impressum-Pflichtangaben, Datenschutzerklärung, Nutzungs-/Beta-Bedingungen, Haftung, Partner-Regeln, Bewertungsregeln)
+2. Rechtsgrundlagen: Analytics (derzeit Einwilligung), Fehlerberichte (berechtigtes Interesse), externe Inhalte (Einwilligung)
+3. Vermittlungsmodell (Vertragspartner, Haftung, Provision) und Verbraucherinformationen vor echtem Verkauf
+4. Aufbewahrungsfristen (u. a. Rechnungen 10 Jahre, Auftragsnachweise, Consent-Log)
+5. Datenschutz-Folgenabschätzung (Zugangsdaten, KI, Partnerzugriff)
+6. Immobilienimport (Nutzungsbedingungen der Portale, Urheberrecht an Texten/Fotos)
+7. KI-Verordnung Art. 50 – Umfang der Kennzeichnungspflicht
 
-Vanilla-JS-Einzeldatei-App (`index.html`, GitHub Pages) + Supabase (Postgres, Auth, Storage, RLS, Edge Functions). Hausbesitzer-Daten sind local-first (Browser, Abgleich über `app_data`), Servicepartner/Aufträge serverseitig. Mandanten = `organizations`, Rollen über `organization_members`. Vorhandenes wurde erweitert statt dupliziert (Details: `BETA_MODE.md`, `ARCHITECTURE_AUDIT.md`).
+## SECURITY RISIKEN
+1. **Live-Datenbank:** TRUNCATE-Lücke (alle Mandantendaten löschbar) besteht bis zum Einspielen der Migrationen 4100/4400 – höchste Priorität
+2. MFA muss im gehosteten Supabase-Projekt aktiv sein; ohne Einspielen gilt dort noch die alte Super-Admin-Regel ohne MFA
+3. Zugangsdaten liegen im Browser/`app_data` unverschlüsselt (nur Organisationsmitglieder) – Verschlüsselung erwägen
+4. Edge Functions (`notify-dispatch`, `ai-assist`) nicht deployt, lokal nicht typgeprüft (kein Deno)
 
-## 2. Umgesetzt
+## DATENSCHUTZ RISIKEN
+1. Drittlandübermittlungen (Supabase-Region, GitHub Pages, Google, Anthropic, Resend) ungeprüft; keine AVV im Register als unterschrieben markiert
+2. CDN-Bibliotheken übertragen IP-Adressen ohne Einwilligung (als notwendig eingestuft – prüfen bzw. selbst hosten)
+3. Inseratsimport über Weiterleitungsdienste unbekannter Anbieter
+4. Hosting der App auf GitHub Pages (USA) – EU-Hosting für Produktion erwägen
 
-| Bereich | Migration | Inhalt |
-|---|---|---|
-| Phase 8 Kosten & Freigaben | 3600 | Zeit/Material/Anfahrt je Auftrag, Rechnungsbetrag daraus, Mehrkosten-Freigaben, Auto-Freigabe-Limit |
-| Beta Mode | 3700 | Schalter ohne Codeänderung, Analytics (nur nach Erfolg, ohne Doppelte), Feedback, 🐞 Fehler melden, Bewertung, 7-/30-Tage-Umfrage, Premium vormerken, Beta-Gruppen, Husora Beta Dashboard (Kennzahlen, Funnels, KPI-Ziele) |
-| Phase 9 Benachrichtigungen & Chat | 3800 | Kategorien, Einstellungen je Kategorie (App/Push/E-Mail), Web-Push (Service Worker), E-Mail-Versand (Edge Function), Chat-Anhänge |
-| Phase 10 Automatisierung | 3900 | Vertragsbesuche automatisch planen (ohne Doppelte), Mangel → Reparaturauftrag (Regel), pg_cron-Zeitplan |
-| Phase 11 Matching/Bewertungen/Notdienst | 4000 | Bewertungen + Antwort, Angebotsvergleich, Notdienst anfordern, Bewertung/Notdienst in der Partnerauswahl |
-| Security-Härtung | 4100 | siehe Abschnitt 3 |
-| Phase 12 KI | 4200 | KI-Vorschläge (Kontrollbericht, Foto-Schaden, Kostenschätzung) über Edge Function `ai-assist`; nie automatisch übernommen |
-| Compliance-Nachträge | 4300 | Aufbewahrungsfristen, Analytics-Allowlist, Löschfehler behoben, FK-Fix für Neuinstallation |
+## DRITTANBIETER
+Supabase · GitHub Pages · Stripe (Beta: aus) · Resend (nicht eingerichtet) · Web-Push-Dienste (nach Aktivierung) · Anthropic (aus) · OpenStreetMap-Kacheln · Nominatim · Google Maps · Open-Meteo · Wechselkurs-APIs · CDN-Bibliotheken · Google Übersetzer/MyMemory · Inseratsimport (Portale, allorigins, cors.lol) · Repull — **alle Status `under_review` bzw. `unknown`, keiner `approved`**.
 
-## 3. Security-Test
+## MIGRATIONEN
+1. 3600 Kosten & Freigaben · 3700 Beta Mode · 3800 Benachrichtigungen & Chat · 3900 Wiederkehr & Automatik · 4000 Bewertungen/Angebote/Notdienst
+2. 4100 Security-Härtung (TRUNCATE/anon) · 4200 KI-Vorschläge · 4300 Aufbewahrung/Allowlist/Lösch-Fix
+3. **4400 Legal & Beta Compliance** (Rollen+MFA, Rechtstexte, Consent, Nachweise, Moderation, Anfragen, Vorfälle, Audit, Aufbewahrung, Register, Export, Release-Gate, Storage)
+Alle idempotent, Neuinstallation (46 Migrationen + Seed) erfolgreich. **Live noch nicht eingespielt.**
 
-| Prüfung | Ergebnis |
+## RLS POLICIES
+1. RLS auf allen Tabellen in `public`; neue Tabellen nur eigene Zeilen bzw. Admin-Rolle mit `aal2`
+2. Admin-Policies auf `private.has_admin_role()` umgestellt (Feedback, Bewertungen, Analytics, Beta-Dashboard, Konfiguration je Schlüssel)
+3. Schreiben sensibler Tabellen nur über geprüfte RPCs (Analytics, Freigaben, KI-Ergebnis, Moderation, Nachweise)
+4. Keine Client-Rolle mit TRUNCATE/TRIGGER/REFERENCES; `anon` nur Feedback-Insert, Tarife/Konfiguration/Rechtstexte lesen
+
+## TESTERGEBNIS
+**PASS** (automatisiert):
+- SQL auf frischer Datenbank: 15 Dateien, **398 Prüfungen, 0 Fehler** – davon Testmatrix §39 **48/48** (Tenant-, Partner-Isolation, Widerruf, Admin+MFA, Löschung, Export, Moderation, Einwilligung)
+- Browser-E2E: **46/46 Suiten grün** (u. a. `legal` 13/13, `beta` mit TOTP 13/13)
+- Release-Gate im System: **nicht bestanden** (13 von 21 Punkten offen – Impressum unvollständig, Drittanbieter ungeprüft, manuelle Prüfungen ausstehend)
+
+## BETA RELEASE
+
+| Stufe | Entscheidung |
 |---|---|
-| **Befund kritisch:** `anon`/`authenticated` hatten TRUNCATE/TRIGGER/REFERENCES auf allen Tabellen (Supabase-Standardrechte); TRUNCATE umgeht RLS | **behoben** (4100) – betrifft auch die Live-DB, dort noch offen |
-| `anon` mit Schreibrechten auf 9 Tabellen (RLS blockte, aber unnötig) | **behoben** – nur noch anonymes Feedback |
-| Sicherheits-Definer-Funktionen ohne Anmeldung ausführbar (4) | **behoben** |
-| Alle Tabellen mit RLS · fester `search_path` · Schema `private` nicht für anon · nur `husora-public` öffentlich | ✅ (`security_test.sql`, dauerhaft in CI) |
-| Organisation nie vom Client übernommen (Analytics, Feedback, Bewertungen, Kosten, Freigaben, KI) | ✅ serverseitig abgeleitet bzw. auf Mitgliedschaft geprüft |
-| Fremde Organisation sieht keine Daten (Kosten, Freigaben, Bewertungen, Analytics, KI, Push, Einstellungen) | ✅ je Phase im SQL-Test geprüft |
-| Hausbesitzer konnte Kostenpositionen in die Daten des Partners schreiben | **behoben** (3600) |
-| KI-Ergebnisse fälschbar | ✅ nur `service_role` (Edge Function) schreibt Ergebnisse |
-| Geheimnisse (Anthropic, VAPID, Resend, Dispatch-Secret) | ✅ nur Secrets/Vault, nicht im Code; kein Service-Role-Key im Client |
-| Edge Functions | ⚠️ nicht deployt, lokal nicht typgeprüft (kein Deno in der Umgebung) |
+| Code & lokale Umgebung | **GO** |
+| Live-Datenbank | **NO-GO bis Migrationen 3600–4400 eingespielt** (4100/4400 zuerst) und MFA im Dashboard aktiv |
+| Geschlossene Alpha (persönlich eingeladene Tester, keine Zahlungen) | **GO unter Bedingungen:** Migrationen live, Impressum vollständig, Rechtstexte kurz juristisch gesichtet, Tester über Beta-Status informiert |
+| **Open Beta** | **NO-GO** – Release-Gate nicht bestanden: juristische Prüfung, AV-Verträge/Drittanbieter, Impressum, DSFA, Importprüfung offen |
 
-## 4. Compliance-Test (DSGVO / Beta-Brief §20)
-
-| Prüfung | Ergebnis |
-|---|---|
-| Keine Inhalte/Geheimnisse in Analytics | **verbessert:** Sperrliste ließ z. B. „title“ mit Inhalt durch → jetzt Allowlist (4300) ✅ |
-| Recht auf Löschung | **Fehler behoben:** „Konto löschen“ scheiterte bei Nutzern mit Feedback (Trigger) ✅; Analytics, Bewertungen, Einstellungen, Push-Abos werden mitgelöscht ✅ |
-| Aufbewahrung | ✅ Analytics 13 Monate, Bewertungen/KI 24 Monate, Push 6 Monate, Feedback 12 Monate – wöchentlich per pg_cron |
-| Transparenz | **Datenschutzerklärung aktualisiert** (Entwurf): falsche Aussagen „keine Analyse“/„keine E-Mails“ korrigiert, Beta-Statistik, Benachrichtigungen und KI (Anthropic, USA, DPF/SCC) ergänzt |
-| Opt-out Statistik · freiwillige Umfragen · KI nur auf Klick | ✅ |
-| Datensparsamkeit KI | ✅ nur fachliche Angaben, keine Namen/Kontakte/Adressen |
-| Rechtsgrundlage Analytics (berechtigtes Interesse vs. Einwilligung) | ⚠️ rechtliche Prüfung offen **[ext]** |
-| Auftragsverarbeitungsverträge (Supabase, Stripe, Anthropic, Resend) | ⚠️ abschließen **[ext]** |
-| Impressum | ⚠️ USt-IdNr. leer (`LEGAL_INFO.vatId`) |
-
-## 5. Testergebnis
-
-- **SQL (frische Datenbank, alle Migrationen + Seed):** 14 Testdateien, 350 Prüfungen, 0 Fehler (u. a. `rls_test` 84, `partner_portal_test` 53, `beta_mode_test` 30, `costs_approvals_test` 28, `reviews_quotes_test` 22, `security_test` 8, `compliance_test` 8).
-- **E2E (Browser):** komplette Suite 44/44 grün, danach betroffene Suiten erneut grün; neue Suiten `costs`, `beta`, `notify`, `recurring`, `reviews`, `ai`.
-- Migrationen idempotent (je zweimal eingespielt) und Neuinstallation von Grund auf erfolgreich.
-
-## 6. Offene Punkte (priorisiert)
-
-1. **Migrationen 3600–4300 live einspielen** – 4100 zuerst (Sicherheitslücke). Die Supabase-Bestätigung lief zweimal ab; alternativ im SQL Editor ausführen (alle idempotent).
-2. Compliance-Spezifikation erneut hochladen (kam leer an) → Abgleich nachholen.
-3. Rechtliche Prüfung Datenschutzerklärung/AGB, AV-Verträge, USt-IdNr. **[ext]**
-4. Push/E-Mail einrichten (VAPID, Resend, Vault) und `ai-assist` deployen (`ANTHROPIC_API_KEY`) **[ext]** – bis dahin sind die Funktionen sichtbar deaktiviert bzw. Meldungen nur in der App.
-5. Kleinere Lücken: Screenshot-Anhang bei Fehlerberichten, Anhänge vom Hausbesitzer senden, lokale Wartung → Server, KI-Vorschläge beim Hausbesitzer anzeigen, Angebotsanfrage an mehrere Partner in einem Schritt.
+Die Entscheidung über den öffentlichen Beta-Start darf nicht allein aus dem automatisierten „PASS“ abgeleitet werden (§43) – sie bleibt eine menschliche, nach juristischer Prüfung.
