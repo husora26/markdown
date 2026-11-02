@@ -306,7 +306,9 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 - **Tests:** SQL-Matrix erlaubter und verbotener Übergänge (u. a. `completed → in_progress` verboten); E2E `orderflow`.
 - **Risiko:** Der Guard wird in 0700, 1700 und 2700 mehrfach neu definiert. Die neue Fassung muss alle bisherigen Sonderfälle übernehmen (Vertragsaufträge, Sammelabschluss, Aufgaben-Sync).
 
-### Phase 3 – Rollen + Objektfreigabe (Migration 3200)
+### Phase 3 – Rollen + Objektfreigabe (Migration 3200)  ✅ umgesetzt (02.11.2026)
+> Umgesetzt: Migration 3200 (Rolle `contractor`, `property_service_assignments` mit Stufen basic/service/full, Policies additiv, Übernahme bestehender Auftragshäuser als `service`, Korrektur Wartestatus), SQL-Test `property_assignment_test.sql`, E2E `assign`. Offen: lokale Zuordnungen (`stugliv-provider-assignments`) werden noch nicht projiziert.
+
 - **DB:**
   - Rolle `contractor` in den Members-CHECK.
   - Neue Tabelle `property_service_assignments` mit `access_level`.

@@ -2899,6 +2899,12 @@
     .hub-contact-line { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; color: var(--muted); font-size: 12.5px; }
     .hub-contact-line svg { width: 14px; height: 14px; flex: none; }
     .hub-contact-line .text-btn { margin-left: auto; }
+    .hub-assign-row { display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 6px 8px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); font-size: 14px; font-weight: 600; }
+    .hub-assign-row span { overflow-wrap: anywhere; }
+    .hub-assign-row input[type=date] { font-size: 13px; }
+    .hub-assign-until { color: var(--muted); font-size: 12px; font-weight: 500; }
+    .pp-grant { display: inline-flex; align-items: center; gap: 4px; color: var(--green); font-weight: 700; }
+    .pp-grant svg { width: 13px; height: 13px; }
     .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
     .pp-reopen summary { color: var(--green); font-weight: 700; cursor: pointer; }
     .pp-reopen[open] summary { margin-bottom: 8px; }
@@ -3791,6 +3797,8 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
+  
   
   
   
@@ -5622,6 +5630,15 @@ Im Profil nicht hinterlegt|Not in your profile|Saknas i profilen
 Kontaktfreigabe ändern|Change contact sharing|Ändra kontaktdelning
 Ändern|Change|Ändra
 Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail kommen aus seinem Husora-Konto.|The customer has not shared phone number and address. Name and email come from their Husora account.|Kunden har inte delat telefonnummer och adress. Namn och e-post kommer från kundens Husora-konto.
+Subunternehmer|Subcontractor|Underentreprenör
+Häuser freigeben|Share houses|Dela hus
+nicht freigegeben|not shared|inte delat
+Basis|Basic|Bas
+Voll|Full|Full
+Freigaben speichern|Save access|Spara åtkomst
+Freigaben gespeichert.|Access saved.|Åtkomst sparad.
+Noch keine Häuser freigegeben – der Partner sieht Häuser nur über Aufträge.|No houses shared yet – the partner only sees houses through orders.|Inga hus delade ännu – partnern ser hus endast via uppdrag.
+Freigabe bis (optional)|Shared until (optional)|Delad till (valfritt)
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -5641,6 +5658,7 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
       [/^(\d+) offene Angebote$/, { en: '$1 open quotes', sv: '$1 öppna offerter' }],
       [/^(\d+) ausgewählt$/, { en: '$1 selected', sv: '$1 valda' }],
       [/^(\d+) gemeinsam beenden$/, { en: 'Complete $1 together', sv: 'Avsluta $1 samtidigt' }],
+      [/^Freigegeben: (.+)$/, { en: 'Shared: $1', sv: 'Delat: $1' }],
       [/^Termin: (.+)$/, { en: 'Appointment: $1', sv: 'Tid: $1' }],
       [/^Eingeteilt: (.+)$/, { en: 'Assigned: $1', sv: 'Tilldelad: $1' }],
       [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
@@ -18026,7 +18044,7 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
     const PP_MODE_KEY = 'husora-mode';
     const PP_CACHE_KEY = 'husora-partner-cache';
     const PP_LEAD_ROLES = ['admin', 'dispatcher', 'service_manager', 'property_manager'];
-    const PP_ROLE_LABELS = { admin: 'Inhaber / Admin', dispatcher: 'Disposition', service_manager: 'Disposition', property_manager: 'Verwaltung', accounting: 'Buchhaltung', technician: 'Techniker', inspector: 'Kontrolleur', viewer: 'Nur lesen', owner: 'Eigentümer', cleaner: 'Reinigung', service_partner: 'Partner' };
+    const PP_ROLE_LABELS = { admin: 'Inhaber / Admin', dispatcher: 'Disposition', service_manager: 'Disposition', property_manager: 'Verwaltung', accounting: 'Buchhaltung', technician: 'Techniker', inspector: 'Kontrolleur', viewer: 'Nur lesen', owner: 'Eigentümer', cleaner: 'Reinigung', service_partner: 'Partner', contractor: 'Subunternehmer' };
     const PP_ORDER_STATUS = { draft: ['Entwurf', 'muted'], offered: ['Neue Anfrage', 'amber'], accepted: ['Angenommen', 'green'], scheduled: ['Terminiert', 'green'], in_progress: ['In Arbeit', 'blue'], waiting_customer: ['Wartet auf Kunde', 'amber'], waiting_parts: ['Wartet auf Material', 'amber'], completed: ['Erledigt', 'done'], rejected: ['Abgelehnt', 'red'], cancelled: ['Storniert', 'muted'] };
     const PP_INSPECTION_STATUS = { scheduled: ['Geplant', 'amber'], in_progress: ['Läuft', 'blue'], completed: ['Abgeschlossen', 'done'], cancelled: ['Abgesagt', 'muted'] };
     const PP_INVOICE_STATUS = { draft: ['Entwurf', 'muted'], received: ['Eingereicht', 'amber'], approved: ['Freigegeben', 'green'], paid: ['Bezahlt', 'done'], overdue: ['Überfällig', 'red'], cancelled: ['Storniert', 'muted'] };
@@ -18105,7 +18123,7 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -18122,9 +18140,10 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
             ppIsAdmin() ? ppQ(`organization_invites?organization_id=eq.${org.id}&accepted_at=is.null&select=*&order=created_at.desc`) : [],
             ppQ('service_agreements?select=*,property:properties(name)&order=starts_on.desc&limit=300').catch(() => []),
             ppQ('invoice_orders?select=invoice_id,service_order_id,amount_gross&limit=2000').catch(() => []),
-            ppQ(`document_archive?organization_id=eq.${org.id}&select=document_id,archived_at`).catch(() => [])
+            ppQ(`document_archive?organization_id=eq.${org.id}&select=document_id,archived_at`).catch(() => []),
+            ppQ('property_service_assignments?status=eq.active&select=id,property_id,service_partner_id,access_level,start_date,end_date,status').catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive };
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments };
           pp.access = {};
         } else {
           pp.data = null;
@@ -18483,7 +18502,7 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
       const cover = photos[0];
       return `<div class="pp-card pp-obj">
         ${cover ? `<button type="button" class="pp-obj-photo" data-pp-file="${cover.storage_bucket}|${cover.storage_path}|${escapeHtml(p.name)}" aria-label="Foto von ${escapeHtml(p.name)} öffnen"><img data-pp-thumb="${cover.id}" alt="${escapeHtml(p.name)}">${photos.length > 1 ? `<em>${photos.length}</em>` : ''}</button>` : `<span class="pp-obj-photo empty">${icon('property')}</span>`}
-        <div class="pp-obj-main"><span class="pp-eyebrow">Ferienhaus</span><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(address || 'Adresse nicht hinterlegt')}</small>${p.region && !address.includes(p.region) ? `<small>${escapeHtml(p.region)}</small>` : ''}${maps ? `<a class="pp-link" href="${maps}" target="_blank" rel="noopener">${icon('map')} Navigation</a>` : ''}</div>
+        <div class="pp-obj-main"><span class="pp-eyebrow">Ferienhaus</span><strong>${escapeHtml(p.name)}</strong>${(() => { const g = ppD('assignments').find((a) => a.property_id === p.id); return g ? `<small class="pp-grant">${icon('key')} Freigegeben: ${escapeHtml(PSA_LEVELS[g.access_level]?.[0] || g.access_level)}${g.end_date ? ` · bis ${escapeHtml(fmtDate(g.end_date))}` : ''}</small>` : ''; })()}<small>${escapeHtml(address || 'Adresse nicht hinterlegt')}</small>${p.region && !address.includes(p.region) ? `<small>${escapeHtml(p.region)}</small>` : ''}${maps ? `<a class="pp-link" href="${maps}" target="_blank" rel="noopener">${icon('map')} Navigation</a>` : ''}</div>
         ${facts.length ? `<div class="pp-obj-facts">${facts.map(([l, v]) => `<div><span>${l}</span><b>${escapeHtml(v)}</b></div>`).join('')}</div>` : '<p class="pp-hint" style="grid-column:1/-1;margin:8px 0 0">Baujahr und Fläche hat der Hausbesitzer noch nicht eingetragen.</p>'}
         ${photos.length > 1 ? `<div class="pp-obj-gallery">${photos.slice(1, 12).map((ph, n) => `<button type="button" aria-label="Foto ${n + 2} von ${escapeHtml(p.name)} öffnen" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(p.name)}"><img data-pp-thumb="${ph.id}" alt=""></button>`).join('')}</div>` : ''}
       </div>`;
@@ -19235,7 +19254,7 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
     });
     function ppTeamHtml() {
       const members = ppD('members');
-      const roles = [['dispatcher', 'Disposition – alle Aufträge, Mitarbeiter einteilen'], ['technician', 'Techniker – nur zugewiesene Aufträge'], ['inspector', 'Kontrolleur – zugewiesene Aufträge und Kontrollen'], ['accounting', 'Buchhaltung – Angebote und Rechnungen'], ['viewer', 'Nur lesen'], ['admin', 'Admin – volle Rechte']];
+      const roles = [['dispatcher', 'Disposition – alle Aufträge, Mitarbeiter einteilen'], ['technician', 'Techniker – nur zugewiesene Aufträge'], ['inspector', 'Kontrolleur – zugewiesene Aufträge und Kontrollen'], ['contractor', 'Subunternehmer – nur einzelne zugewiesene Aufträge'], ['accounting', 'Buchhaltung – Angebote und Rechnungen'], ['viewer', 'Nur lesen'], ['admin', 'Admin – volle Rechte']];
       return `${ppBack()}<div class="pp-page-head"><h1>Mitarbeiter</h1></div>
         <div class="pp-list">${members.map((m) => {
           const name = ppMemberName(m.user_id) || m.user?.email || '–';
@@ -19719,6 +19738,7 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
         ownerSide.consentAsked = new Set([...(ownerSide.consentAsked || []), ...undecided.map((p) => p.id)]);
         showToast(`${undecided.map((p) => p.company_name).join(', ')} ist verbunden – bitte unter Partner-Portal → Partner die Kontaktfreigabe bestätigen.`);
       }
+      ownerSide.assignments = await cloudFetch(`/rest/v1/property_service_assignments?organization_id=eq.${org}&status=neq.ended&select=id,property_id,service_partner_id,access_level,start_date,end_date,status`).catch(() => null);
       [ownerSide.agreements, ownerSide.cloudProperties] = await Promise.all([
         cloudFetch(`/rest/v1/service_agreements?organization_id=eq.${org}&select=*,partner:service_partners(company_name),property:properties(name,app_ref)&order=starts_on.desc&limit=300`).catch(() => []),
         cloudFetch(`/rest/v1/properties?organization_id=eq.${org}&select=id,name,app_ref&order=name.asc&limit=500`).catch(() => [])
@@ -20115,6 +20135,8 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
         });
         return;
       }
+      if (button.dataset.ownerAction === 'assign-edit') { ownerSide.assignEdit = button.dataset.id; render(); return; }
+      if (button.dataset.ownerAction === 'assign-cancel') { ownerSide.assignEdit = ''; render(); return; }
       if (button.dataset.ownerAction === 'contact-edit') { ownerSide.contactEdit = button.dataset.id; render(); return; }
       if (button.dataset.ownerAction === 'contact-share') {
         const box = button.closest('[data-hub-consent]');
@@ -20130,6 +20152,14 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
       if (button.dataset.ownerAction === 'invite') ownerRun('invite', async () => { const code = await cloudFetch('/rest/v1/rpc/create_service_partner_invite', { method: 'POST', body: { p_service_partner_id: button.dataset.id, p_email: (ownerSide.partners || []).find((p) => p.id === button.dataset.id)?.email || null } }); ownerSide.code = { id: button.dataset.id, code }; });
     });
     document.addEventListener('submit', (event) => {
+      const assignForm = event.target.closest('[data-hub-assign]');
+      if (assignForm) {
+        event.preventDefault();
+        const values = Object.fromEntries(new FormData(assignForm));
+        const partnerId = assignForm.dataset.hubAssign;
+        ownerRun('assign', async () => { await ownerSaveAssignments(partnerId, values); ownerSide.assignEdit = ''; showToast('Freigaben gespeichert.'); });
+        return;
+      }
       const form = event.target.closest('[data-owner-form]');
       if (!form) return;
       event.preventDefault();
@@ -20218,6 +20248,38 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
       (ownerSide.partners || []).filter((p) => p.partner_organization_id && p.contact_decided_at)
         .forEach((p) => ownerShareContact(p.id, p.share_phone, p.share_address).catch((error) => console.warn('Kontakt nicht aktualisiert:', error)));
     }
+    // ----- Häuser für einen verbundenen Partner freigeben (Phase 3: property_service_assignments) -----
+    const PSA_LEVELS = { basic: ['Basis', 'Name, Adresse und Lage des Hauses'], service: ['Service', 'zusätzlich Hausfotos, Ausstattung und technische Unterlagen'], full: ['Voll', 'zusätzlich alle Hausdokumente (ohne Rechnungen) und Hauskontrollen'] };
+    function hubAssignHtml(p) {
+      if (!Array.isArray(ownerSide.assignments) || p.partner_organization_id === cloud.org?.id) return '';
+      const mine = ownerSide.assignments.filter((a) => a.service_partner_id === p.id);
+      const props = ownerSide.cloudProperties || [];
+      const name = (id) => props.find((x) => x.id === id)?.name || 'Haus';
+      if (ownerSide.assignEdit !== p.id) {
+        return `<p class="hub-contact-line">${icon('property')}<span>${mine.length ? `Freigegeben: ${escapeHtml(mine.map((a) => `${name(a.property_id)} (${PSA_LEVELS[a.access_level]?.[0] || a.access_level})`).join(', '))}` : 'Noch keine Häuser freigegeben – der Partner sieht Häuser nur über Aufträge.'}</span>${cloudCanWrite() ? `<button type="button" class="text-btn" data-owner-action="assign-edit" data-id="${p.id}">Häuser freigeben</button>` : ''}</p>`;
+      }
+      if (!props.length) return `<div class="hub-consent"><p>Noch keine Häuser in der Cloud. Lade sie unter Einstellungen → Cloud-Speicher hoch.</p><div class="pp-actions flat"><button type="button" class="secondary-btn" data-owner-action="assign-cancel">Schließen</button></div></div>`;
+      return `<form class="hub-consent hub-assign" data-hub-assign="${p.id}">
+        <strong>Häuser für ${escapeHtml(p.company_name)} freigeben</strong>
+        <p>${Object.values(PSA_LEVELS).map(([l, d]) => `<b>${l}</b>: ${d}`).join(' · ')}. Über Aufträge sieht der Partner das jeweilige Haus weiterhin.</p>
+        ${props.map((pr) => { const a = mine.find((x) => x.property_id === pr.id); return `<div class="hub-assign-row"><span>${escapeHtml(pr.name)}</span><select class="form-control" name="level:${pr.id}" aria-label="Freigabe für ${escapeHtml(pr.name)}"><option value="">nicht freigegeben</option>${Object.entries(PSA_LEVELS).map(([k, [l]]) => `<option value="${k}" ${a?.access_level === k ? 'selected' : ''}>${l}</option>`).join('')}</select><small class="hub-assign-until">Freigabe bis (optional)</small><input class="form-control" type="date" name="end:${pr.id}" value="${escapeHtml(a?.end_date || '')}" aria-label="Freigabe bis (optional)" title="Freigabe bis (optional)"></div>`; }).join('')}
+        <div class="pp-actions flat"><button type="button" class="secondary-btn" data-owner-action="assign-cancel">Abbrechen</button><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>${icon('check')} Freigaben speichern</button></div>
+      </form>`;
+    }
+    async function ownerSaveAssignments(partnerId, values) {
+      const mine = (ownerSide.assignments || []).filter((a) => a.service_partner_id === partnerId);
+      const today = localDateKey(new Date());
+      for (const pr of ownerSide.cloudProperties || []) {
+        const level = values[`level:${pr.id}`] || '';
+        const end = values[`end:${pr.id}`] || null;
+        const current = mine.find((a) => a.property_id === pr.id);
+        if (!level && current) await cloudFetch(`/rest/v1/property_service_assignments?id=eq.${current.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+        else if (level && (!current || current.access_level !== level || (current.end_date || null) !== end)) {
+          if (end && end < today) throw new Error(`Das Enddatum für „${pr.name}“ liegt in der Vergangenheit.`);
+          await cloudFetch('/rest/v1/property_service_assignments?on_conflict=property_id,service_partner_id', { method: 'POST', body: [{ organization_id: cloud.org.id, property_id: pr.id, service_partner_id: partnerId, access_level: level, status: 'active', end_date: end, ...(current ? {} : { start_date: today }) }], headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+        }
+      }
+    }
     function hubPartnersHtml() {
       const partners = ownerSide.partners || [];
       const suggestions = hubAssignedProviders();
@@ -20229,7 +20291,7 @@ Telefonnummer und Adresse hat der Kunde nicht freigegeben. Name und E-Mail komme
           </form></section>
         <section class="hub-section"><h3 class="hub-section-title">Deine Servicepartner (${partners.length})</h3>
           ${partners.length ? partners.map((p) => { const [label, tone] = hubStatus(p); const unread = hubUnread(hubThreadMessages({ kind: 'partner', id: p.id })); return `<div class="card hub-partner"><div class="hub-partner-head"><div><strong>${escapeHtml(p.company_name)}</strong><small>${escapeHtml(p.email || 'keine E-Mail hinterlegt')}</small></div><span class="pp-badge ${tone}">${label}</span></div>
-            ${hubCodeBox(p)}${p.partner_organization_id ? hubContactHtml(p) : ''}
+            ${hubCodeBox(p)}${p.partner_organization_id ? hubContactHtml(p) + hubAssignHtml(p) : ''}
             <div class="pp-actions">${p.partner_organization_id ? `<button type="button" class="primary-btn" data-hub-chat="partner:${p.id}">${icon('note')} Nachricht${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button><button type="button" class="secondary-btn" data-hub-tab="orders" data-hub-partner="${p.id}">Auftrag senden</button>${cloudCanWrite() && p.partner_organization_id !== cloud.org?.id ? `<button type="button" class="secondary-btn danger" data-owner-action="disconnect" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>Verbindung trennen</button>` : ''}` : `<button type="button" class="secondary-btn" data-owner-action="invite" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>${hubStatus(p)[0] === 'Einladung offen' ? 'Neuen Code erzeugen' : 'Einladungscode erzeugen'}</button>`}</div></div>`; }).join('') : `<div class="pp-empty">${icon('users')}<strong>Noch keine Servicepartner</strong><p>Lade oben deinen ersten Partner ein.</p></div>`}
         </section>`;
     }
