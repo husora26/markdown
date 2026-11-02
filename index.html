@@ -2646,6 +2646,8 @@
     .pp-cal-dots i.insp { background: #3b7bbf; }
     .pp-cal-dots i.new { background: #c48a1d; }
     .pp-cal-dots i.done { background: #9aa59e; }
+    .pp-cal-dots i.away, .pp-cal-legend i.away { background: #b5523f; }
+    .pp-away { cursor: default; border-left: 3px solid #b5523f; }
     .pp-cal-day.sel .pp-cal-dots i { background: #fff; }
     .pp-cal-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; color: var(--muted); font-size: 12px; }
     .pp-cal-legend span { display: inline-flex; align-items: center; gap: 5px; }
@@ -2920,6 +2922,15 @@
     .pp-prop-orders[open] > summary { margin-bottom: 10px; }
     .pp-compact .pp-item { padding: 9px 11px; }
     .pp-compact .pp-item small { font-size: 12px; }
+    .pp-form-sub { margin: 10px 0 0; font-size: 15px; }
+    .pp-areas h3, .pp-absences h3 { margin: 0 0 4px; font-size: 16px; }
+    .pp-area-list { display: grid; gap: 0; margin: 8px 0; padding: 0; list-style: none; }
+    .pp-area-list li { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
+    .pp-area-list li.off { opacity: .6; }
+    .pp-area-list li > span:first-child { display: grid; gap: 1px; min-width: 0; }
+    .pp-area-list small { color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+    .pp-area-actions { display: flex; gap: 10px; flex: none; }
+    .pp-batch-spacer { height: 260px; }
     .pp-grant { display: inline-flex; align-items: center; gap: 4px; color: var(--green); font-weight: 700; }
     .pp-grant svg { width: 13px; height: 13px; }
     .order-event-msg { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
@@ -3814,6 +3825,7 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
   
   
   
@@ -5677,6 +5689,35 @@ Infos bearbeiten|Edit information|Redigera information
 Objekt mit Infos ergänzen|Add information to the property|Komplettera objektet med information
 Noch keine Aufträge für dieses Haus.|No orders for this house yet.|Inga uppdrag för detta hus ännu.
 Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property information saved – your team also sees it in the order.|Objektinformation sparad – ditt team ser den även i uppdraget.
+Leistungsprofil|Service profile|Tjänsteprofil
+Notdienst|Emergency service|Jourtjänst
+Ihr seid auch für dringende Einsätze erreichbar (Notfall-Telefon oben).|You can also be reached for urgent jobs (emergency phone above).|Ni nås även för akuta uppdrag (jourtelefon ovan).
+Neue Anfragen automatisch annehmen|Accept new requests automatically|Acceptera nya förfrågningar automatiskt
+Nicht bei Aufträgen unter dem Mindestauftragswert oder wenn der Betrieb am Termin abwesend ist.|Not for orders below the minimum order value or when the company is away on that date.|Inte för uppdrag under minsta ordervärde eller när företaget är frånvarande den dagen.
+Servicegebiete|Service areas|Serviceområden
+Hier bist du im Einsatz. Husora schlägt dich Hausbesitzern in diesen Gebieten vor.|This is where you work. Husora suggests you to homeowners in these areas.|Här arbetar du. Husora föreslår dig för husägare i dessa områden.
+Noch kein Servicegebiet hinterlegt.|No service area yet.|Inget serviceområde ännu.
+PLZ-Bereich|Postcode area|Postnummerområde
+Umkreis (km)|Radius (km)|Radie (km)
+Gebiet hinzufügen|Add area|Lägg till område
+Aktivieren|Activate|Aktivera
+Pausieren|Pause|Pausa
+Abwesenheiten|Absences|Frånvaro
+Urlaub, Krankheit oder Betriebsferien. Sie erscheinen im Kalender; ist der ganze Betrieb abwesend, werden Anfragen nicht automatisch angenommen.|Holidays, sickness or company closures. They appear in the calendar; if the whole company is away, requests are not accepted automatically.|Semester, sjukdom eller stängt. Visas i kalendern; är hela företaget borta accepteras förfrågningar inte automatiskt.
+Keine Abwesenheiten eingetragen.|No absences entered.|Ingen frånvaro registrerad.
+Wer|Who|Vem
+Ganzer Betrieb|Whole company|Hela företaget
+Von *|From *|Från *
+Bis *|Until *|Till *
+Grund|Reason|Anledning
+Abwesenheit eintragen|Add absence|Registrera frånvaro
+Abwesend|Away|Frånvarande
+Preisart|Price type|Pristyp
+Festpreis|Fixed price|Fast pris
+Stundensatz|Hourly rate|Timpris
+Kostenlos|Free|Kostnadsfritt
+Servicegebiet hinzugefügt.|Service area added.|Serviceområde tillagt.
+Abwesenheit eingetragen.|Absence added.|Frånvaro registrerad.
 `;
     // ===== Sprache der App: Deutsch (Original), Englisch, Schwedisch =====
     // Feste Oberflächentexte werden über ein Wörterbuch übersetzt (keine Übersetzungsdienste, keine Nutzerdaten nach außen).
@@ -5703,6 +5744,11 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
       [/^(\d+) zuordnen$/, { en: 'Assign $1', sv: 'Tilldela $1' }],
       [/^Ergänzende Infos zu (.+)$/, { en: 'Additional information on $1', sv: 'Kompletterande information om $1' }],
       [/^(\d+) offen · (\d+) Kontrollen$/, { en: '$1 open · $2 inspections', sv: '$1 öppna · $2 tillsyner' }],
+      [/^Umkreis um (.+)$/, { en: 'Radius around $1', sv: 'Radie runt $1' }],
+      [/^(.+) abwesend$/, { en: '$1 away', sv: '$1 frånvarande' }],
+      [/^Mindestauftragswert \((\w+)\)$/, { en: 'Minimum order value ($1)', sv: 'Minsta ordervärde ($1)' }],
+      [/^Anfahrtspauschale \((\w+)\)$/, { en: 'Travel fee ($1)', sv: 'Resekostnad ($1)' }],
+      [/^Stundensatz \((\w+)\)$/, { en: 'Hourly rate ($1)', sv: 'Timpris ($1)' }],
       [/^Sammelrechnung \((\d+)\)$/, { en: 'Combined invoice ($1)', sv: 'Samlingsfaktura ($1)' }],
       [/^(\d+) überfällig$/, { en: '$1 overdue', sv: '$1 försenade' }],
       [/^(\d+) % erledigt$/, { en: '$1 % done', sv: '$1 % klart' }],
@@ -18168,7 +18214,7 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -18187,9 +18233,11 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
             ppQ('invoice_orders?select=invoice_id,service_order_id,amount_gross&limit=2000').catch(() => []),
             ppQ(`document_archive?organization_id=eq.${org.id}&select=document_id,archived_at`).catch(() => []),
             ppQ('property_service_assignments?status=eq.active&select=id,property_id,service_partner_id,access_level,start_date,end_date,status').catch(() => []),
-            ppQ(`partner_property_notes?organization_id=eq.${org.id}&select=*`).catch(() => [])
+            ppQ(`partner_property_notes?organization_id=eq.${org.id}&select=*`).catch(() => []),
+            self ? ppQ(`service_partner_areas?service_partner_id=eq.${self}&select=*&order=created_at.asc`).catch(() => []) : [],
+            ppQ(`service_partner_absences?organization_id=eq.${org.id}&end_at=gte.${encodeURIComponent(new Date(Date.now() - 31 * 86400000).toISOString())}&select=*&order=start_at.asc&limit=300`).catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes };
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences };
           pp.access = {};
         } else {
           pp.data = null;
@@ -18352,6 +18400,7 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
     }
     // Im Portal wählbare Leistungsgruppen (service_types.code)
     const PP_SERVICE_GROUPS = [['inspection', 'Hauskontrolle', 'Abwesenheits-, Saison- und Ferienhauskontrollen'], ['service_work', 'Servicearbeiten', 'Hausservice, Reinigung, Garten, Winterdienst, kleine Reparaturen'], ['renovation', 'Sanierungen', 'Dach, Fassade, Fenster, Bad, Heizung und Technik']];
+    const PP_PRICE_TYPES = [['fixed', 'Festpreis'], ['hourly', 'Stundensatz'], ['quote', 'Preis auf Anfrage'], ['free', 'Kostenlos']];
     const PP_PRICE_UNITS = [['job', 'je Arbeitspaket'], ['hour', 'je Stunde'], ['visit', 'je Einsatz'], ['month', 'je Monat'], ['year', 'je Jahr'], ['m2', 'je m²']];
     const PP_DEFAULT_TYPES = [['inspection', 'Hauskontrolle'], ['holiday_home_inspection', 'Ferienhauskontrolle'], ['cleaning', 'Reinigung'], ['gardening', 'Gartenpflege'], ['snow_removal', 'Winterdienst'], ['repair', 'Reparatur'], ['plumbing', 'Sanitär'], ['heating', 'Heizung'], ['electrician', 'Elektro'], ['roofing', 'Dach'], ['facade', 'Fassade'], ['windows', 'Fenster'], ['key_service', 'Schlüsselservice'], ['general_maintenance', 'Technische Wartung']].map(([code, name]) => ({ code, name }));
 
@@ -18718,6 +18767,13 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         ...ppD('orders').filter((o) => o.scheduled_at && !['cancelled', 'rejected'].includes(o.status)).map((o) => ({ at: o.scheduled_at, kind: o.status === 'completed' ? 'done' : o.status === 'offered' ? 'new' : 'order', open: !['completed'].includes(o.status), html: ppOrderCard(o) })),
         ...ppD('inspections').filter((i) => i.scheduled_at && i.status !== 'cancelled').map((i) => ({ at: i.scheduled_at, kind: i.status === 'completed' ? 'done' : 'insp', open: i.status !== 'completed', html: ppInspectionCard(i) }))
       ].sort((x, y) => new Date(x.at) - new Date(y.at));
+      // Abwesenheiten: an jedem betroffenen Tag (höchstens 62 Tage je Eintrag)
+      ppD('absences').forEach((a) => {
+        const d = new Date(a.start_at); const end = new Date(a.end_at);
+        for (let n = 0; d < end && n < 62; n += 1, d.setDate(d.getDate() + 1)) {
+          entries.push({ at: d.toISOString(), kind: 'away', open: false, html: `<div class="pp-item pp-away"><span class="pp-item-main"><strong>${escapeHtml(a.user_id ? ppMemberName(a.user_id) || 'Mitarbeiter' : 'Ganzer Betrieb')} abwesend</strong><small>${escapeHtml(ppAbsenceLabel(a))}${a.reason ? ` · ${escapeHtml(a.reason)}` : ''}</small></span></div>` });
+        }
+      });
       const byDay = {};
       entries.forEach((e) => { (byDay[ppDayKey(e.at)] = byDay[ppDayKey(e.at)] || []).push(e); });
       const overdue = entries.filter((e) => e.open && ppDayKey(e.at) < today);
@@ -18740,7 +18796,7 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         <div class="pp-card pp-cal">
           <div class="pp-cal-head"><strong>${escapeHtml(first.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' }))}</strong><div class="pp-cal-nav"><button type="button" data-pp-cal-nav="-1" aria-label="Vorheriger Monat">‹</button><button type="button" data-pp-cal-nav="0">Heute</button><button type="button" data-pp-cal-nav="1" aria-label="Nächster Monat">›</button></div></div>
           <div class="pp-cal-grid">${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((w) => `<span class="pp-cal-wd">${w}</span>`).join('')}${cells.join('')}</div>
-          <div class="pp-cal-legend"><span><i></i>Auftrag</span><span><i class="new"></i>Neue Anfrage</span><span><i class="insp"></i>Kontrolle</span></div>
+          <div class="pp-cal-legend"><span><i></i>Auftrag</span><span><i class="new"></i>Neue Anfrage</span><span><i class="insp"></i>Kontrolle</span><span><i class="away"></i>Abwesend</span></div>
         </div>
         ${ppSection(`${selected === today ? 'Heute · ' : ''}${label}`, dayList.length ? `<div class="pp-list">${dayList.map((e) => e.html).join('')}</div>` : '<p class="pp-muted">An diesem Tag sind keine Aufträge oder Kontrollen geplant.</p>')}
         ${overdue.length ? ppSection(`Überfällig (${overdue.length})`, `<div class="pp-list">${overdue.map((e) => e.html).join('')}</div>`) : ''}
@@ -18902,7 +18958,7 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
       const customers = new Set(billable.map((o) => o.organization_id));
       const inAgreement = sel.filter((o) => o.agreement_id).length;
       const hint = customers.size > 1 ? 'Sammelrechnung nur für Aufträge desselben Kunden' : inAgreement ? `${inAgreement} im Jahresvertrag – nicht einzeln abrechenbar` : '';
-      return `<div class="pp-batch-bar" role="region" aria-label="Auswahl"><div class="pp-batch-info"><button type="button" class="pp-batch-x" data-pp-batch="clear" aria-label="Auswahl aufheben" title="Auswahl aufheben">✕</button><div><strong>${sel.length} ausgewählt</strong>${hint ? `<small>${escapeHtml(hint)}</small>` : ''}</div></div><div class="pp-actions">
+      return `<div class="pp-batch-spacer" aria-hidden="true"></div><div class="pp-batch-bar" role="region" aria-label="Auswahl"><div class="pp-batch-info"><button type="button" class="pp-batch-x" data-pp-batch="clear" aria-label="Auswahl aufheben" title="Auswahl aufheben">✕</button><div><strong>${sel.length} ausgewählt</strong>${hint ? `<small>${escapeHtml(hint)}</small>` : ''}</div></div><div class="pp-actions">
         
         ${assignable.length && members.length ? `<select class="form-control pp-batch-member" data-pp-batch-member aria-label="Mitarbeiter für die Auswahl"><option value="">Mitarbeiter wählen …</option>${members.map((m) => `<option value="${m.user_id}" ${pp.batchMember === m.user_id ? 'selected' : ''}>${escapeHtml(ppMemberName(m.user_id) || m.user_id)} (${escapeHtml(PP_ROLE_LABELS[m.role] || m.role)})</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-batch="assign" ${ppDisabled()}>${icon('users')} ${assignable.length === 1 ? 'Zuordnen' : `${assignable.length} zuordnen`}</button>` : ''}
         ${offered.length ? `<button type="button" class="primary-btn" data-pp-batch="accept" ${ppDisabled()}>${icon('check')} ${offered.length === 1 ? 'Annehmen' : `${offered.length} annehmen`}</button>` : ''}
@@ -19309,6 +19365,7 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         ${pkg ? '' : `<label class="full"><span class="form-label">Bereich *</span><select class="form-control" name="group" required>${PP_SERVICE_GROUPS.map(([code, name]) => `<option value="${code}">${escapeHtml(name)}</option>`).join('')}</select></label>`}
         <label class="full"><span class="form-label">Name des Pakets *</span><input class="form-control" name="name" required maxlength="120" value="${escapeHtml(pkg?.name || '')}" placeholder="z. B. Winterdienst Einfahrt, Gästewechsel komplett"></label>
         <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="1000" placeholder="Was ist enthalten?">${escapeHtml(pkg?.description || '')}</textarea></label>
+        <label><span class="form-label">Preisart</span><select class="form-control" name="price_type">${PP_PRICE_TYPES.map(([v, l]) => `<option value="${v}" ${(s.price_type || (s.price_from == null && pkg ? 'quote' : unit === 'hour' ? 'hourly' : 'fixed')) === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
         <label><span class="form-label">Preis</span><input class="form-control" type="number" min="0" step="0.01" inputmode="decimal" name="price" value="${s.price_from ?? ''}" placeholder="z. B. 450"></label>
         <label><span class="form-label">Abrechnung</span><select class="form-control" name="unit">${PP_PRICE_UNITS.map(([v, l]) => `<option value="${v}" ${unit === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
         ${ppCurrencySelect(s.currency || ppOrg()?.currency)}
@@ -19320,7 +19377,7 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
       const self = pp.ctx?.self_partner_id;
       const packages = ppPackages();
       const unitLabel = (u) => (PP_PRICE_UNITS.find(([v]) => v === u) || ['', ''])[1];
-      const card = (pkg) => pp.form === `svc-edit:${pkg.s.id}` ? ppPackageForm(pkg) : `<article class="pp-card pp-package"><div class="pp-package-head"><div><span class="pp-eyebrow">${escapeHtml(pkg.groupName)}${pkg.custom ? ' · eigenes Paket' : ''}</span><strong>${escapeHtml(pkg.name)}</strong></div>${pkg.s.price_from !== null && pkg.s.price_from !== undefined ? `<span class="pp-package-price">${escapeHtml(ppMoney(pkg.s.price_from, pkg.s.currency))}<small>${escapeHtml(unitLabel(pkg.s.price_unit))}</small></span>` : '<span class="pp-package-price muted">Preis auf Anfrage</span>'}</div>
+      const card = (pkg) => pp.form === `svc-edit:${pkg.s.id}` ? ppPackageForm(pkg) : `<article class="pp-card pp-package"><div class="pp-package-head"><div><span class="pp-eyebrow">${escapeHtml(pkg.groupName)}${pkg.custom ? ' · eigenes Paket' : ''}</span><strong>${escapeHtml(pkg.name)}</strong></div>${pkg.s.price_type === 'free' ? '<span class="pp-package-price">Kostenlos</span>' : pkg.s.price_type === 'quote' ? '<span class="pp-package-price muted">Preis auf Anfrage</span>' : pkg.s.price_from !== null && pkg.s.price_from !== undefined ? `<span class="pp-package-price">${escapeHtml(ppMoney(pkg.s.price_from, pkg.s.currency))}<small>${escapeHtml(unitLabel(pkg.s.price_unit))}</small></span>` : '<span class="pp-package-price muted">Preis auf Anfrage</span>'}</div>
           ${pkg.description ? `<p class="pp-svc-desc">${escapeHtml(pkg.description)}</p>` : ''}
           ${pkg.s.notes ? `<p class="pp-package-note">${icon('note')} ${escapeHtml(pkg.s.notes)}</p>` : ''}
           ${lead ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-svc="edit" data-id="${pkg.s.id}">${icon('edit')} Bearbeiten</button><button type="button" class="secondary-btn danger" data-pp-svc="delete" data-id="${pkg.s.id}">Löschen</button></div>` : ''}</article>`;
@@ -19351,7 +19408,8 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
       event.preventDefault();
       const v = Object.fromEntries(new FormData(form));
       const name = String(v.name || '').trim();
-      const fields = { price_from: v.price === '' || v.price === undefined ? null : Number(v.price), price_unit: v.unit || 'job', currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : (ppOrg()?.currency || 'EUR'), description: String(v.description || '').trim() || null, notes: String(v.notes || '').trim() || null };
+      const priceType = PP_PRICE_TYPES.some(([t]) => t === v.price_type) ? v.price_type : 'fixed';
+      const fields = { price_type: priceType, price_from: ['quote', 'free'].includes(priceType) || v.price === '' || v.price === undefined ? (priceType === 'free' ? 0 : null) : Number(v.price), price_unit: priceType === 'hourly' ? 'hour' : (v.unit || 'job'), currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : (ppOrg()?.currency || 'EUR'), description: String(v.description || '').trim() || null, notes: String(v.notes || '').trim() || null };
       if (!name) { pp.error = 'Bitte einen Namen für das Paket angeben.'; ppRender(); return; }
       if (form.dataset.ppForm === 'svc-edit') {
         const pkg = ppPackages().find((p) => p.s.id === form.dataset.id);
@@ -19395,9 +19453,76 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
             ${m.phone || m.info ? `<div class="pp-member-meta">${m.phone ? `<a href="tel:${escapeHtml(m.phone.replace(/[^\d+]/g, ''))}">${icon('phone')} ${escapeHtml(m.phone)}</a>` : ''}${m.info ? `<p>${escapeHtml(m.info)}</p>` : ''}</div>` : ''}
             ${ppIsAdmin() ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="member-edit" data-id="${m.id}">${icon('edit')} Bearbeiten</button>${m.user_id !== ppMe() ? `<button type="button" class="secondary-btn danger" data-pp-action="member-remove" data-id="${m.id}">Entfernen</button>` : ''}</div>` : ''}</div>`;
         }).join('')}</div>
+        ${ppAbsencesHtml()}
         ${ppIsAdmin() ? `<form class="pp-card pp-form" data-pp-form="member-invite"><h3>Mitarbeiter einladen</h3><div class="pp-grid"><label class="full"><span class="form-label">Name</span><input class="form-control" name="display_name" maxlength="120" placeholder="Vor- und Nachname"></label><label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" required></label><label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" inputmode="tel" maxlength="40"></label><label class="full"><span class="form-label">Info</span><input class="form-control" name="info" maxlength="1000" placeholder="z. B. Spezialgebiet, Arbeitszeiten"></label><label class="full"><span class="form-label">Rolle</span><select class="form-control" name="role">${roles.map(([r, l]) => `<option value="${r}" ${r === 'technician' ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label></div><div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>Einladung erstellen</button></div><p class="pp-hint">Der Mitarbeiter erstellt mit genau dieser E-Mail ein Husora-Konto, öffnet das Partner-Portal und gibt den Code ein.</p></form>
           ${ppD('invites').length ? ppSection('Offene Einladungen', ppD('invites').map((inv) => `<div class="pp-card pp-invite"><div><strong>${escapeHtml(inv.display_name || inv.email)}</strong><small>${inv.display_name ? `${escapeHtml(inv.email)} · ` : ''}${escapeHtml(PP_ROLE_LABELS[inv.role] || inv.role)} · gültig bis ${escapeHtml(fmtDate(inv.expires_at.slice(0, 10)))}</small></div><code>${escapeHtml(inv.code)}</code><a class="secondary-btn" href="mailto:${encodeURIComponent(inv.email)}?subject=${encodeURIComponent(`Einladung zu ${ppOrg().name} in Husora`)}&body=${encodeURIComponent(`Hallo,\n\ndu bist eingeladen, im Husora Partner-Portal für ${ppOrg().name} mitzuarbeiten.\n\n1. ${location.origin}${location.pathname} öffnen\n2. Mit dieser E-Mail-Adresse ein Konto erstellen\n3. Partner-Portal → Einladungscode: ${inv.code}\n\nViele Grüße`)}">E-Mail</a><button type="button" class="secondary-btn danger" data-pp-action="invite-delete" data-id="${inv.id}">Zurückziehen</button></div>`).join('')) : ''}` : ''}`;
     }
+    // ----- Servicegebiete (mehrere je Betrieb) -----
+    function ppAreasHtml() {
+      const areas = ppD('areas');
+      const lead = ppIsLead();
+      const label = (a) => a.name || [a.postal_code_prefix ? `PLZ ${a.postal_code_prefix}…` : a.postal_code, a.city, a.region].filter(Boolean).join(' · ') || `Umkreis um ${ppOrg()?.city || 'den Firmensitz'}`;
+      return `<section class="pp-card pp-areas"><h3>Servicegebiete</h3><p class="pp-hint">Hier bist du im Einsatz. Husora schlägt dich Hausbesitzern in diesen Gebieten vor.</p>
+        ${areas.length ? `<ul class="pp-area-list">${areas.map((a) => `<li class="${a.active === false ? 'off' : ''}"><span><strong>${escapeHtml(label(a))}</strong><small>${escapeHtml([a.name && a.postal_code_prefix ? `PLZ ${a.postal_code_prefix}…` : '', a.city && a.name ? a.city : '', a.region && a.name ? a.region : '', a.country, a.radius_km ? `Umkreis ${Number(a.radius_km)} km` : ''].filter(Boolean).join(' · ') || '–')}${a.active === false ? ' · pausiert' : ''}</small></span>${lead ? `<span class="pp-area-actions"><button type="button" class="text-btn" data-pp-area="toggle" data-id="${a.id}">${a.active === false ? 'Aktivieren' : 'Pausieren'}</button><button type="button" class="text-btn danger" data-pp-area="delete" data-id="${a.id}">Entfernen</button></span>` : ''}</li>`).join('')}</ul>` : '<p class="pp-muted">Noch kein Servicegebiet hinterlegt.</p>'}
+        ${lead && pp.ctx?.self_partner_id ? `<form class="pp-form pp-subform" data-pp-form="area-new"><div class="pp-grid">
+          <label class="full"><span class="form-label">Name</span><input class="form-control" name="name" maxlength="120" placeholder="z. B. Värmland Nord"></label>
+          <label><span class="form-label">PLZ-Bereich</span><input class="form-control" name="postal_code_prefix" maxlength="10" pattern="[0-9A-Za-z ]{1,10}" placeholder="z. B. 686"></label>
+          <label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" placeholder="z. B. Sunne"></label>
+          <label><span class="form-label">Region</span><input class="form-control" name="region" maxlength="80" placeholder="z. B. Värmland"></label>
+          <label><span class="form-label">Land</span><select class="form-control" name="country">${[['SE', 'Schweden'], ['DE', 'Deutschland'], ['NO', 'Norwegen'], ['DK', 'Dänemark'], ['FI', 'Finnland'], ['AT', 'Österreich']].map(([c, n]) => `<option value="${c}" ${(ppOrg()?.country || 'SE') === c ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+          <label><span class="form-label">Umkreis (km)</span><input class="form-control" name="radius_km" type="number" min="0" max="1000" step="1" placeholder="z. B. 40"></label></div>
+          <div class="pp-actions"><button type="submit" class="secondary-btn" ${ppDisabled()}>${icon('plus')} Gebiet hinzufügen</button></div></form>` : ''}
+      </section>`;
+    }
+    // ----- Abwesenheiten (Betrieb oder Mitarbeiter) -----
+    function ppAbsenceLabel(a) {
+      const from = fmtDate(a.start_at); const to = fmtDate(new Date(new Date(a.end_at).getTime() - 1000).toISOString());
+      return from === to ? from : `${from} – ${to}`;
+    }
+    function ppAbsencesHtml() {
+      const lead = ['admin', 'service_manager', 'dispatcher'].includes(ppRole());
+      const now = Date.now();
+      const list = ppD('absences').filter((a) => new Date(a.end_at).getTime() > now - 86400000);
+      const who = (a) => (a.user_id ? ppMemberName(a.user_id) || 'Mitarbeiter' : 'Ganzer Betrieb');
+      const mine = (a) => lead || a.user_id === ppMe();
+      const members = ppD('members').filter((m) => m.status === 'active');
+      const today = ppToday();
+      return `<section class="pp-card pp-absences"><h3>Abwesenheiten</h3><p class="pp-hint">Urlaub, Krankheit oder Betriebsferien. Sie erscheinen im Kalender; ist der ganze Betrieb abwesend, werden Anfragen nicht automatisch angenommen.</p>
+        ${list.length ? `<ul class="pp-area-list">${list.map((a) => `<li><span><strong>${escapeHtml(who(a))}</strong><small>${escapeHtml(ppAbsenceLabel(a))}${a.reason ? ` · ${escapeHtml(a.reason)}` : ''}</small></span>${mine(a) ? `<span class="pp-area-actions"><button type="button" class="text-btn danger" data-pp-absence="delete" data-id="${a.id}">Entfernen</button></span>` : ''}</li>`).join('')}</ul>` : '<p class="pp-muted">Keine Abwesenheiten eingetragen.</p>'}
+        <form class="pp-form pp-subform" data-pp-form="absence-new"><div class="pp-grid">
+          <label class="full"><span class="form-label">Wer</span><select class="form-control" name="user_id">${lead ? `<option value="">Ganzer Betrieb</option>${members.map((m) => `<option value="${m.user_id}">${escapeHtml(ppMemberName(m.user_id) || m.user_id)}</option>`).join('')}` : `<option value="${ppMe()}">${escapeHtml(ppMemberName(ppMe()) || 'Ich')}</option>`}</select></label>
+          <label><span class="form-label">Von *</span><input class="form-control" type="date" name="from" required value="${today}"></label>
+          <label><span class="form-label">Bis *</span><input class="form-control" type="date" name="to" required value="${today}"></label>
+          <label class="full"><span class="form-label">Grund</span><input class="form-control" name="reason" maxlength="300" placeholder="z. B. Urlaub, Fortbildung"></label></div>
+          <div class="pp-actions"><button type="submit" class="secondary-btn" ${ppDisabled()}>${icon('plus')} Abwesenheit eintragen</button></div></form>
+      </section>`;
+    }
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('#partner-portal [data-pp-form="area-new"], #partner-portal [data-pp-form="absence-new"]');
+      if (!form) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      const t = (x) => String(x || '').trim() || null;
+      if (form.dataset.ppForm === 'area-new') {
+        const body = { service_partner_id: pp.ctx.self_partner_id, name: t(v.name), postal_code_prefix: t(v.postal_code_prefix), city: t(v.city), region: t(v.region), country: t(v.country), radius_km: v.radius_km === '' ? null : Number(v.radius_km), active: true };
+        if (!body.postal_code_prefix && !body.city && !body.region && body.radius_km === null) { showToast('Bitte PLZ-Bereich, Ort, Region oder Umkreis angeben.'); return; }
+        ppRun('area', () => ppInsert('service_partner_areas', body), { notice: 'Servicegebiet hinzugefügt.' });
+        return;
+      }
+      if (!v.from || !v.to || v.to < v.from) { showToast('Bitte einen gültigen Zeitraum wählen (Bis nicht vor Von).'); return; }
+      const start = new Date(`${v.from}T00:00:00`); const end = new Date(`${v.to}T00:00:00`); end.setDate(end.getDate() + 1);
+      ppRun('absence', () => ppInsert('service_partner_absences', { organization_id: ppOrg().id, user_id: v.user_id || null, start_at: start.toISOString(), end_at: end.toISOString(), reason: t(v.reason) }), { notice: 'Abwesenheit eingetragen.' });
+    });
+    document.addEventListener('click', (event) => {
+      const area = event.target.closest('#partner-portal [data-pp-area]');
+      const absence = event.target.closest('#partner-portal [data-pp-absence]');
+      if (area) {
+        const a = ppD('areas').find((x) => x.id === area.dataset.id); if (!a) return;
+        if (area.dataset.ppArea === 'toggle') ppRun('area', () => ppPatch('service_partner_areas', a.id, { active: a.active === false }), { notice: a.active === false ? 'Gebiet aktiviert.' : 'Gebiet pausiert.' });
+        if (area.dataset.ppArea === 'delete' && confirm('Servicegebiet entfernen?')) ppRun('area', () => cloudFetch(`/rest/v1/service_partner_areas?id=eq.${a.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }), { notice: 'Servicegebiet entfernt.' });
+      }
+      if (absence && absence.dataset.ppAbsence === 'delete' && confirm('Abwesenheit entfernen?')) ppRun('absence', () => cloudFetch(`/rest/v1/service_partner_absences?id=eq.${absence.dataset.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }), { notice: 'Abwesenheit entfernt.' });
+    });
     function ppCompanyHtml() {
       const o = ppOrg();
       const f = (name, label, type = 'text', extra = '') => `<label ${extra}><span class="form-label">${label}</span><input class="form-control" name="${name}" type="${type}" value="${escapeHtml(o[name] ?? '')}" ${ppIsAdmin() ? '' : 'disabled'}></label>`;
@@ -19408,7 +19533,12 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         ${f('bank_name', 'Bank')}${f('iban', 'IBAN')}${f('bic', 'BIC')}${f('service_radius_km', 'Einsatzradius (km)', 'number')}
         <label class="full"><span class="form-label">Öffnungszeiten</span><input class="form-control" name="business_hours" value="${escapeHtml(o.business_hours?.text || '')}" placeholder="Mo–Fr 7–17 Uhr, Notdienst rund um die Uhr" ${ppIsAdmin() ? '' : 'disabled'}></label>
         <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="3" ${ppIsAdmin() ? '' : 'disabled'}>${escapeHtml(o.description || '')}</textarea></label>
-        </div>${ppIsAdmin() ? `<div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${icon('check')} Firmendaten speichern</button></div>` : '<p class="pp-hint">Nur Admins können die Firmendaten ändern.</p>'}</form>`;
+        <h3 class="full pp-form-sub">Leistungsprofil</h3>
+        <label class="pp-check pp-home-toggle full"><input type="checkbox" name="emergency_service" ${o.emergency_service ? 'checked' : ''} ${ppIsAdmin() ? '' : 'disabled'}><span><strong>Notdienst</strong><small>Ihr seid auch für dringende Einsätze erreichbar (Notfall-Telefon oben).</small></span></label>
+        <label class="pp-check pp-home-toggle full"><input type="checkbox" name="auto_accept_orders" ${o.auto_accept_orders ? 'checked' : ''} ${ppIsAdmin() ? '' : 'disabled'}><span><strong>Neue Anfragen automatisch annehmen</strong><small>Nicht bei Aufträgen unter dem Mindestauftragswert oder wenn der Betrieb am Termin abwesend ist.</small></span></label>
+        ${f('minimum_order_value', `Mindestauftragswert (${escapeHtml(o.currency || 'EUR')})`, 'number')}${f('travel_fee', `Anfahrtspauschale (${escapeHtml(o.currency || 'EUR')})`, 'number')}${f('hourly_rate', `Stundensatz (${escapeHtml(o.currency || 'EUR')})`, 'number')}
+        </div>${ppIsAdmin() ? `<div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${icon('check')} Firmendaten speichern</button></div>` : '<p class="pp-hint">Nur Admins können die Firmendaten ändern.</p>'}</form>
+        ${ppAreasHtml()}`;
     }
 
     // Rechnung: eigenes PDF hochladen oder aus den Angaben erzeugen, beim Kunden ablegen und per Nachricht melden
@@ -19818,6 +19948,9 @@ Objektinfos gespeichert – dein Team sieht sie auch im Auftrag.|Property inform
         const body = clean(v);
         body.business_hours = { text: body.business_hours || '' };
         body.service_radius_km = body.service_radius_km === null ? null : Number(body.service_radius_km);
+        body.emergency_service = v.emergency_service === 'on';
+        body.auto_accept_orders = v.auto_accept_orders === 'on';
+        ['minimum_order_value', 'travel_fee', 'hourly_rate'].forEach((k) => { body[k] = body[k] === null || body[k] === undefined ? null : Number(body[k]); });
         if (body.iban) body.iban = body.iban.replace(/\s+/g, '').toUpperCase();
         if (body.bic) body.bic = body.bic.replace(/\s+/g, '').toUpperCase();
         ppRun('company-edit', async () => {
