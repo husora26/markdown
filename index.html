@@ -17494,7 +17494,8 @@ Morgen|Tomorrow|Imorgon
     }
     // Hintergrund-Aktualisierung (Cloud-Abgleich, Nachrichten): nicht neu zeichnen, solange jemand ein Feld bearbeitet
     // oder eine Auswahl geöffnet hat – sonst schließt sich z. B. ein Auswahlfeld in den Einstellungen.
-    const userIsEditing = () => { const el = document.activeElement; return Boolean(el && el.closest?.('#page-content') && /^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName) && el.type !== 'checkbox' && el.type !== 'radio'); };
+    // nur Auswahlfelder schützen: Eingaben, die man abschickt, brauchen das Neuzeichnen (Anmelden, Verbinden …)
+    const userIsEditing = () => { const el = document.activeElement; return Boolean(el && el.closest?.('#page-content') && el.tagName === 'SELECT'); };
     let rerenderDeferred = false;
     function rerenderCloud() {
       if (currentPage !== 'partnerHub' && currentPage === 'settings' && userIsEditing()) {
