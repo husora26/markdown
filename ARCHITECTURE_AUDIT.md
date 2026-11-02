@@ -320,7 +320,8 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
   - Partner: Bereich „Häuser“ zeigt freigegebene Objekte.
 - **Tests:** RLS-Fälle (fremde Org sieht nichts, Contractor sieht nur seinen Auftrag, `basic` sieht keine Dokumente); E2E `assign`.
 
-### Phase 4 – Onboarding & Profil (Migration 3300)
+### Phase 4 – Onboarding & Profil (Migration 3400)  ✅ umgesetzt (02.11.2026)
+> Umgesetzt: Profilfelder an `organizations`, `price_type`, erweiterte Servicegebiete, `service_partner_absences`, automatische Annahme; SQL-Test `partner_profile_test.sql`, E2E `profile`. Neue globale Leistungsarten bewusst nicht angelegt (Gruppierung der Pakete).
 - **DB:**
   - `organizations` erweitern (G5).
   - `service_partner_services.price_type`.
