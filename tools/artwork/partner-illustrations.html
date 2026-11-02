@@ -1,0 +1,133 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#fff;font-family:Arial,sans-serif}
+.tile{width:800px;height:500px;display:block}
+.head{width:1600px;height:300px;display:block}
+</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0"><defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd7dd"/><stop offset="1" stop-color="#e9efe6"/></linearGradient>
+  <linearGradient id="skyDusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d3d36"/><stop offset=".55" stop-color="#3f6b5c"/><stop offset="1" stop-color="#8bb39d"/></linearGradient>
+  <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5f8f6f"/><stop offset="1" stop-color="#2f5b46"/></linearGradient>
+  <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf7"/><stop offset="1" stop-color="#efe8d8"/></linearGradient>
+  <g id="pine"><path d="M0 0 L-26 46 H-12 L-34 84 H-16 L-40 124 H40 L16 84 H34 L12 46 H26 Z" fill="#244b3d"/><rect x="-5" y="124" width="10" height="16" fill="#5a3b26"/></g>
+  <g id="cottage">
+    <rect x="0" y="60" width="170" height="110" fill="#9b2f24"/>
+    <path d="M-14 66 L85 -6 L184 66 Z" fill="#2b2b2b"/><path d="M-14 66 L85 -6 L184 66" fill="none" stroke="#f4efe4" stroke-width="7"/>
+    <rect x="20" y="88" width="38" height="34" fill="#f4efe4"/><rect x="24" y="92" width="13" height="12" fill="#bcd7dd"/><rect x="41" y="92" width="13" height="12" fill="#bcd7dd"/><rect x="24" y="107" width="13" height="12" fill="#bcd7dd"/><rect x="41" y="107" width="13" height="12" fill="#bcd7dd"/>
+    <rect x="112" y="104" width="36" height="66" fill="#f4efe4"/><rect x="117" y="109" width="26" height="61" fill="#6e2219"/>
+    <rect x="0" y="60" width="170" height="8" fill="#f4efe4"/><rect x="0" y="162" width="170" height="8" fill="#7a251c"/>
+    <rect x="120" y="4" width="16" height="34" fill="#4a4a4a"/>
+  </g>
+  <g id="person">
+    <circle cx="0" cy="-118" r="22" fill="#e9c4a2"/>
+    <path d="M-24 -126 Q0 -156 24 -126 L26 -120 H-26 Z" fill="#244b3d"/><rect x="-28" y="-124" width="56" height="7" rx="3" fill="#17372f"/>
+    <path d="M-36 -88 Q0 -100 36 -88 L42 -10 H-42 Z" fill="#2f6b51"/>
+    <path d="M-36 -88 L-24 -10 M36 -88 L24 -10" stroke="#e8b800" stroke-width="7"/>
+    <rect x="-40" y="-10" width="34" height="74" fill="#33403a"/><rect x="6" y="-10" width="34" height="74" fill="#33403a"/>
+    <rect x="-44" y="60" width="40" height="12" rx="5" fill="#1f2622"/><rect x="4" y="60" width="40" height="12" rx="5" fill="#1f2622"/>
+  </g>
+</defs></svg>
+
+<!-- 1 Aufträge: Klemmbrett mit Haken, Werkzeugkiste, Hütte -->
+<svg id="orders" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="url(#sky)"/>
+<path d="M0 360 Q200 300 420 340 T800 320 V500 H0 Z" fill="url(#hill)"/>
+<use href="#pine" x="70" y="230"/><use href="#pine" x="130" y="250"/>
+<use href="#cottage" x="560" y="200" transform="translate(0,0)"/>
+<g transform="translate(300 110) rotate(-6)"><rect width="230" height="300" rx="16" fill="#7a5a3c"/><rect x="16" y="26" width="198" height="262" rx="6" fill="url(#paper)"/><rect x="75" y="-6" width="80" height="34" rx="8" fill="#5f6b64"/>
+<g stroke="#2f6b51" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M38 78 l12 12 l22 -24"/><path d="M38 140 l12 12 l22 -24"/><path d="M38 202 l12 12 l22 -24"/></g>
+<g fill="#c9c1ad"><rect x="90" y="76" width="100" height="12" rx="6"/><rect x="90" y="138" width="86" height="12" rx="6"/><rect x="90" y="200" width="96" height="12" rx="6"/><rect x="38" y="248" width="150" height="12" rx="6"/></g></g>
+<g transform="translate(470 360)"><rect width="190" height="90" rx="10" fill="#c0503f"/><rect y="-14" width="190" height="26" rx="8" fill="#a8402f"/><path d="M60 -14 v-26 h70 v26" fill="none" stroke="#5f6b64" stroke-width="10"/><rect x="80" y="20" width="30" height="14" rx="4" fill="#f4efe4"/></g>
+</svg>
+
+<!-- 2 Kontrollen: Lupe über Haus mit Haken -->
+<svg id="inspections" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="url(#sky)"/>
+<path d="M0 380 Q260 330 520 370 T800 350 V500 H0 Z" fill="url(#hill)"/><use href="#pine" x="680" y="250"/><use href="#pine" x="740" y="270"/>
+<use href="#cottage" x="330" y="190"/>
+<g transform="translate(470 170)"><circle r="96" fill="rgba(255,255,255,.35)" stroke="#17372f" stroke-width="18"/><path d="M66 70 L150 160" stroke="#17372f" stroke-width="30" stroke-linecap="round"/><path d="M-40 0 l26 26 l52 -56" fill="none" stroke="#2f8a5b" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="translate(90 90)"><rect width="180" height="230" rx="14" fill="url(#paper)" stroke="#d8cfb9" stroke-width="3"/>
+<g stroke="#2f8a5b" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M24 50 l10 10 l18 -20"/><path d="M24 110 l10 10 l18 -20"/></g><path d="M24 168 l26 26 M50 168 l-26 26" stroke="#c0503f" stroke-width="8" stroke-linecap="round"/>
+<g fill="#c9c1ad"><rect x="70" y="46" width="86" height="11" rx="5"/><rect x="70" y="106" width="70" height="11" rx="5"/><rect x="70" y="174" width="80" height="11" rx="5"/></g></g>
+</svg>
+
+<!-- 3 Mängel: beschädigtes Dach, Tropfen, Warnschild -->
+<svg id="defects" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="url(#skyDusk)"/>
+
+<path d="M0 390 Q240 350 480 380 T800 360 V500 H0 Z" fill="#244b3d"/>
+<g transform="translate(330 170)"><use href="#cottage"/><path d="M60 22 l18 16 l-10 10 l16 14" fill="none" stroke="#e9efe6" stroke-width="7" stroke-linecap="round"/><rect x="98" y="24" width="30" height="16" fill="#c9c1ad" transform="rotate(18 113 32)"/></g>
+<g fill="#84c2ef"><path d="M415 255 q8 14 0 22 q-8 -8 0 -22z"/><path d="M432 290 q8 14 0 22 q-8 -8 0 -22z"/></g>
+<g transform="translate(560 120)"><path d="M90 0 L180 160 H0 Z" fill="#e8b800" stroke="#17372f" stroke-width="10" stroke-linejoin="round"/><rect x="82" y="50" width="16" height="60" rx="8" fill="#17372f"/><circle cx="90" cy="130" r="10" fill="#17372f"/></g>
+<g transform="translate(170 300) rotate(-40)"><rect x="-13" y="-70" width="26" height="150" rx="13" fill="#dcd5c3"/><circle cy="-92" r="40" fill="#dcd5c3"/><rect x="-14" y="-140" width="28" height="56" rx="4" fill="#3f6b5c"/><circle cy="62" r="6" fill="#8a8370"/></g><g fill="#fff" opacity=".7"><circle cx="160" cy="70" r="2"/><circle cx="260" cy="40" r="2"/><circle cx="720" cy="60" r="2"/></g>
+</svg>
+
+<!-- 4 Angebote & Rechnungen: Rechnung, Taschenrechner, Münzen -->
+<svg id="finance" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="#dfe8df"/>
+<circle cx="640" cy="110" r="160" fill="#c8dccf"/>
+<g transform="translate(250 70) rotate(4)"><rect width="260" height="340" rx="14" fill="url(#paper)" stroke="#d8cfb9" stroke-width="3"/><rect x="24" y="26" width="120" height="20" rx="6" fill="#244b3d"/><text x="24" y="92" font-size="26" font-weight="700" fill="#17372f">RECHNUNG</text>
+<g fill="#c9c1ad"><rect x="24" y="120" width="210" height="10" rx="5"/><rect x="24" y="146" width="170" height="10" rx="5"/><rect x="24" y="172" width="190" height="10" rx="5"/></g><rect x="24" y="214" width="212" height="2" fill="#c9c1ad"/><text x="236" y="262" text-anchor="end" font-size="34" font-weight="800" fill="#2f6b51">1 500 kr</text><text x="236" y="300" text-anchor="end" font-size="22" fill="#5d6a62">€ 135,00</text></g>
+<g transform="translate(520 220)"><rect width="150" height="200" rx="18" fill="#33403a"/><rect x="18" y="18" width="114" height="46" rx="8" fill="#b9d8c4"/><g fill="#5f6b64"><rect x="18" y="80" width="30" height="26" rx="6"/><rect x="60" y="80" width="30" height="26" rx="6"/><rect x="102" y="80" width="30" height="26" rx="6"/><rect x="18" y="116" width="30" height="26" rx="6"/><rect x="60" y="116" width="30" height="26" rx="6"/><rect x="18" y="152" width="30" height="26" rx="6"/><rect x="60" y="152" width="30" height="26" rx="6"/></g><rect x="102" y="116" width="30" height="62" rx="6" fill="#d9a21b"/></g>
+<g transform="translate(120 360)"><ellipse cx="60" cy="56" rx="60" ry="18" fill="#b8860b"/><rect y="20" width="120" height="36" fill="#d9a21b"/><ellipse cx="60" cy="20" rx="60" ry="18" fill="#f0c24a"/><ellipse cx="80" cy="-8" rx="60" ry="18" fill="#f0c24a" stroke="#b8860b" stroke-width="4"/></g>
+</svg>
+
+<!-- 5 Kalender: Kalenderblatt mit Terminen, Sonne/Schnee -->
+<svg id="calendar" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="#e6efe9"/>
+<circle cx="120" cy="110" r="56" fill="#f0c24a"/><g stroke="#f0c24a" stroke-width="10" stroke-linecap="round"><path d="M120 24 v-14 M120 196 v14 M34 110 h-14 M206 110 h14 M60 50 l-10 -10 M180 170 l10 10 M180 50 l10 -10 M60 170 l-10 10"/></g>
+<g transform="translate(680 120)" stroke="#5aa0c8" stroke-width="9" stroke-linecap="round"><path d="M0 -50 v100 M-43 -25 l86 50 M-43 25 l86 -50"/></g>
+<g transform="translate(240 90)"><rect width="330" height="320" rx="20" fill="url(#paper)" stroke="#d8cfb9" stroke-width="3"/><rect width="330" height="74" rx="20" fill="#244b3d"/><rect y="50" width="330" height="24" fill="#244b3d"/><circle cx="80" cy="-6" r="12" fill="#5f6b64"/><circle cx="250" cy="-6" r="12" fill="#5f6b64"/><text x="165" y="50" text-anchor="middle" font-size="30" font-weight="700" fill="#fff">NOVEMBER</text>
+
+<g transform="translate(26 96)">
+<rect x="0" y="0" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="46" y="0" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="92" y="0" width="40" height="36" rx="6" fill="#2f8a5b"/><rect x="138" y="0" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="184" y="0" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="230" y="0" width="40" height="36" rx="6" fill="#e3dccb"/>
+<rect x="0" y="46" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="46" y="46" width="40" height="36" rx="6" fill="#c0503f"/><rect x="92" y="46" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="138" y="46" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="184" y="46" width="40" height="36" rx="6" fill="#d9a21b"/><rect x="230" y="46" width="40" height="36" rx="6" fill="#e3dccb"/>
+<rect x="0" y="92" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="46" y="92" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="92" y="92" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="138" y="92" width="40" height="36" rx="6" fill="#2f8a5b"/><rect x="184" y="92" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="230" y="92" width="40" height="36" rx="6" fill="#e3dccb"/>
+<rect x="0" y="138" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="46" y="138" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="92" y="138" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="138" y="138" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="184" y="138" width="40" height="36" rx="6" fill="#e3dccb"/><rect x="230" y="138" width="40" height="36" rx="6" fill="#2f8a5b"/>
+<path d="M100 18 l7 7 l14 -14" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/></g></g>
+</svg>
+
+<!-- 6 Kunden & Objekte: mehrere Hütten mit Standortnadeln -->
+<svg id="customers" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="url(#sky)"/>
+<path d="M0 340 Q200 290 400 330 T800 300 V500 H0 Z" fill="url(#hill)"/><path d="M0 420 Q300 380 560 410 T800 400 V500 H0 Z" fill="#244b3d"/>
+<g transform="translate(70 210) scale(.7)"><use href="#cottage"/></g><g transform="translate(330 170) scale(.85)"><use href="#cottage"/></g><g transform="translate(590 230) scale(.65)"><use href="#cottage"/></g>
+<use href="#pine" x="300" y="240"/><use href="#pine" x="560" y="260"/>
+<g fill="#c0503f"><path d="M170 120 a34 34 0 1 1 68 0 c0 30 -34 62 -34 62 s-34 -32 -34 -62z"/><path d="M440 70 a40 40 0 1 1 80 0 c0 36 -40 72 -40 72 s-40 -36 -40 -72z"/><path d="M650 150 a30 30 0 1 1 60 0 c0 26 -30 54 -30 54 s-30 -28 -30 -54z"/></g>
+<g fill="#fff"><circle cx="204" cy="120" r="12"/><circle cx="480" cy="70" r="14"/><circle cx="680" cy="150" r="11"/></g>
+</svg>
+
+<!-- 7 Nachrichten: Handy mit Sprechblasen -->
+<svg id="messages" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="#dde9e2"/>
+<circle cx="140" cy="400" r="190" fill="#c8dccf"/>
+<g transform="translate(300 40)"><rect width="200" height="400" rx="34" fill="#17372f"/><rect x="14" y="40" width="172" height="320" rx="12" fill="#f4efe4"/><rect x="74" y="16" width="52" height="10" rx="5" fill="#3f4f47"/>
+<rect x="28" y="66" width="120" height="44" rx="16" fill="#e3dccb"/><rect x="52" y="126" width="120" height="44" rx="16" fill="#2f6b51"/><rect x="28" y="186" width="100" height="44" rx="16" fill="#e3dccb"/><rect x="62" y="246" width="110" height="44" rx="16" fill="#2f6b51"/>
+<g fill="#fff"><rect x="66" y="142" width="80" height="8" rx="4"/><rect x="76" y="262" width="80" height="8" rx="4"/></g></g>
+<g transform="translate(540 90)"><path d="M0 20 a20 20 0 0 1 20 -20 h170 a20 20 0 0 1 20 20 v80 a20 20 0 0 1 -20 20 h-120 l-36 32 v-32 h-14 a20 20 0 0 1 -20 -20z" fill="#fff" stroke="#2f6b51" stroke-width="6"/><circle cx="60" cy="60" r="10" fill="#2f6b51"/><circle cx="105" cy="60" r="10" fill="#2f6b51"/><circle cx="150" cy="60" r="10" fill="#2f6b51"/></g>
+<g transform="translate(70 120)"><path d="M0 20 a20 20 0 0 1 20 -20 h150 a20 20 0 0 1 20 20 v70 a20 20 0 0 1 -20 20 h-30 v30 l-34 -30 h-86 a20 20 0 0 1 -20 -20z" fill="#d9a21b"/><path d="M60 54 l18 18 l40 -40" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>
+
+<!-- 8 Jahresverträge: Vertrag mit Siegel und Jahreskreis -->
+<svg id="agreements" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="#e6efe9"/>
+<g transform="translate(560 250)" fill="none" stroke-width="22" stroke-linecap="round"><path d="M0 -150 A150 150 0 0 1 150 0" stroke="#84c2a2"/><path d="M150 0 A150 150 0 0 1 0 150" stroke="#d9a21b"/><path d="M0 150 A150 150 0 0 1 -150 0" stroke="#c0503f"/><path d="M-150 0 A150 150 0 0 1 0 -150" stroke="#5aa0c8"/></g>
+<g transform="translate(560 250)" font-size="22" font-weight="700" fill="#17372f" text-anchor="middle"><text y="-182">FRÜHLING</text><text x="0" y="200">HERBST</text></g>
+<g transform="translate(150 80) rotate(-4)"><rect width="270" height="340" rx="14" fill="url(#paper)" stroke="#d8cfb9" stroke-width="3"/><text x="26" y="62" font-size="26" font-weight="800" fill="#17372f">JAHRESVERTRAG</text>
+<g fill="#c9c1ad"><rect x="26" y="96" width="210" height="10" rx="5"/><rect x="26" y="122" width="180" height="10" rx="5"/><rect x="26" y="148" width="200" height="10" rx="5"/><rect x="26" y="174" width="150" height="10" rx="5"/></g>
+<path d="M26 268 q30 -30 60 0 t60 0" fill="none" stroke="#244b3d" stroke-width="5"/><circle cx="210" cy="270" r="40" fill="#c0503f"/><circle cx="210" cy="270" r="28" fill="none" stroke="#f4efe4" stroke-width="4"/><path d="M196 270 l10 10 l18 -20" stroke="#f4efe4" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+</svg>
+
+<!-- 9 Dokumente: Ordner und PDF-Stapel -->
+<svg id="documents" class="tile" viewBox="0 0 800 500"><rect width="800" height="500" fill="#e3ebe5"/>
+<g transform="translate(140 150)"><path d="M0 30 a14 14 0 0 1 14 -14 h110 l26 26 h200 a14 14 0 0 1 14 14 v230 a14 14 0 0 1 -14 14 h-336 a14 14 0 0 1 -14 -14z" fill="#d9a21b"/><path d="M0 76 h364 v202 a14 14 0 0 1 -14 14 h-336 a14 14 0 0 1 -14 -14z" fill="#f0c24a"/></g>
+<g transform="translate(420 70) rotate(8)"><rect width="200" height="260" rx="12" fill="url(#paper)" stroke="#d8cfb9" stroke-width="3"/><rect x="20" y="20" width="70" height="34" rx="6" fill="#c0503f"/><text x="55" y="45" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">PDF</text><g fill="#c9c1ad"><rect x="20" y="80" width="160" height="10" rx="5"/><rect x="20" y="104" width="130" height="10" rx="5"/><rect x="20" y="128" width="150" height="10" rx="5"/></g></g>
+<g transform="translate(360 120) rotate(-6)"><rect width="200" height="260" rx="12" fill="url(#paper)" stroke="#d8cfb9" stroke-width="3"/><rect x="20" y="20" width="70" height="34" rx="6" fill="#2f6b51"/><text x="55" y="45" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">PDF</text><g fill="#c9c1ad"><rect x="20" y="80" width="160" height="10" rx="5"/><rect x="20" y="104" width="120" height="10" rx="5"/><rect x="20" y="128" width="150" height="10" rx="5"/><rect x="20" y="152" width="100" height="10" rx="5"/></g></g>
+</svg>
+
+<!-- Kopfleiste: smarter Servicepartner mit Tablet, Transporter, Hütte, Vernetzung -->
+<svg id="header" class="head" viewBox="0 0 1600 300"><rect width="1600" height="300" fill="url(#skyDusk)"/>
+<g fill="#fff" opacity=".6"><circle cx="220" cy="40" r="2"/><circle cx="420" cy="70" r="2"/><circle cx="980" cy="30" r="2"/><circle cx="1300" cy="60" r="2"/></g>
+<path d="M0 230 Q300 200 600 222 T1200 212 T1600 205 V300 H0 Z" fill="#244b3d"/>
+<g opacity=".55"><use href="#pine" x="90" y="140"/><use href="#pine" x="160" y="160"/><use href="#pine" x="560" y="150"/></g>
+<g transform="translate(700 175) scale(.6)"><rect width="300" height="110" rx="20" fill="#f4efe4"/><path d="M200 0 h50 l50 50 v60 h-100z" fill="#e3dccb"/><path d="M210 12 h36 l38 38 h-74z" fill="#bcd7dd"/><rect x="0" y="54" width="200" height="16" fill="#2f6b51"/><circle cx="70" cy="112" r="24" fill="#1f2622"/><circle cx="70" cy="112" r="10" fill="#9aa59e"/><circle cx="240" cy="112" r="24" fill="#1f2622"/><circle cx="240" cy="112" r="10" fill="#9aa59e"/></g>
+<g transform="translate(940 268) scale(.85)"><use href="#person"/>
+<g transform="translate(26 -82) rotate(-12)"><rect width="70" height="96" rx="10" fill="#17372f"/><rect x="6" y="8" width="58" height="78" rx="5" fill="#bfe3cf"/><path d="M16 46 l10 10 l22 -24" stroke="#2f6b51" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+<path d="M38 -84 Q60 -70 54 -50" stroke="#2f6b51" stroke-width="14" fill="none" stroke-linecap="round"/></g>
+<g fill="none" stroke="#bfe3cf" stroke-width="5" stroke-linecap="round" opacity=".9"><path d="M1012 132 a34 34 0 0 1 48 0"/><path d="M998 118 a54 54 0 0 1 76 0"/></g><circle cx="1036" cy="150" r="6" fill="#bfe3cf"/>
+<g stroke="#bfe3cf" stroke-width="3" stroke-dasharray="6 8" fill="none" opacity=".75"><path d="M1080 130 Q1150 90 1210 130"/></g>
+<g transform="translate(1220 120) scale(.62)"><use href="#cottage"/></g>
+<g opacity=".55"><use href="#pine" x="1460" y="120"/><use href="#pine" x="1530" y="140"/></g>
+</svg>
+</body></html>

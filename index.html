@@ -606,7 +606,7 @@
     .pp-muted svg { width: 14px; height: 14px; vertical-align: -2px; }
     /* Partner-Portal: Kopfleiste wie beim Hausbesitzer, eigener Hintergrund */
     .pp-top { position: relative; isolation: isolate; min-height: 65px; padding: calc(8px + env(safe-area-inset-top)) 13px 8px; border-bottom: 1px solid rgba(255,253,248,.2); background: #14302f; }
-    .pp-top::before { position: absolute; inset: 0; z-index: -1; background: url("assets/hausservice.jpg") center 42% / cover no-repeat; content: ""; opacity: .38; }
+    .pp-top::before { position: absolute; inset: 0; z-index: -1; background: url("assets/pp/header.jpg") center 70% / cover no-repeat; content: ""; opacity: .6; }
     .pp-top .pp-brand-btn { gap: 9px; }
     .pp-top .pp-brand-btn:hover, .pp-top .pp-brand-btn:focus-visible { background: rgba(255, 254, 250, .12); }
     .pp-top-logo { display: block; width: 38px; height: 35px; object-fit: contain; flex: none; }
@@ -624,7 +624,8 @@
     .pp-home-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
     .pp-home-tile { position: relative; isolation: isolate; display: flex; flex-direction: column; gap: 4px; min-height: 118px; padding: 12px 12px 11px; overflow: hidden; border: 0; border-radius: 16px; background: #1d3b33; color: #fff; text-align: left; cursor: pointer; box-shadow: 0 4px 14px rgba(20, 40, 30, .12); }
     .pp-home-tile img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
-    .pp-home-tile::after { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(15, 30, 24, .55), rgba(15, 30, 24, .82)); content: ""; }
+    .pp-home-tile::after { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(15, 30, 24, .62) 0%, rgba(15, 30, 24, .28) 38%, rgba(15, 30, 24, .78) 100%); content: ""; }
+    .pp-home-tile img { object-position: 70% 50%; }
     .pp-home-tile-head { display: flex; justify-content: space-between; gap: 6px; font-size: 13.5px; font-weight: 700; }
     .pp-home-tile-icon { display: grid; place-items: center; flex: 0 0 28px; height: 28px; border-radius: 9px; background: rgba(255, 255, 255, .18); }
     .pp-home-tile-icon svg { width: 15px; height: 15px; }
@@ -3759,6 +3760,8 @@
     button.cost-figure:hover { transform: translateY(-2px); }
     .cost-mini-caption { margin: 12px 0 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
     .cost-mini-empty { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  
+  
   
   
   
@@ -18795,15 +18798,15 @@ Morgen|Tomorrow|Imorgon
     });
     // ----- Startseite des Partner-Portals: Kacheln (wählbar), Einstellungen -----
     const PP_TILES = [
-      ['orders', 'Aufträge', 'task', 'assets/hausservice.jpg'],
-      ['inspections', 'Kontrollen', 'inspection', 'assets/hauskontrolle.jpg'],
-      ['defects', 'Mängel', 'alert', 'assets/ferienhaus.jpg'],
-      ['finance', 'Angebote & Rechnungen', 'cost', 'assets/kosten.jpg'],
-      ['calendar', 'Kalender', 'calendar', 'assets/booking-planer.jpg'],
-      ['customers', 'Kunden & Objekte', 'property', 'assets/meine-haeuser.jpg'],
-      ['messages', 'Nachrichten', 'note', 'assets/gaestewechsel.jpg'],
-      ['agreements', 'Jahresverträge', 'calendar', 'assets/schweden-landschaft.jpg'],
-      ['documents', 'Dokumente', 'document', 'assets/dokumente.jpg']
+      ['orders', 'Aufträge', 'task', 'assets/pp/orders.jpg'],
+      ['inspections', 'Kontrollen', 'inspection', 'assets/pp/inspections.jpg'],
+      ['defects', 'Mängel', 'alert', 'assets/pp/defects.jpg'],
+      ['finance', 'Angebote & Rechnungen', 'cost', 'assets/pp/finance.jpg'],
+      ['calendar', 'Kalender', 'calendar', 'assets/pp/calendar.jpg'],
+      ['customers', 'Kunden & Objekte', 'property', 'assets/pp/customers.jpg'],
+      ['messages', 'Nachrichten', 'note', 'assets/pp/messages.jpg'],
+      ['agreements', 'Jahresverträge', 'calendar', 'assets/pp/agreements.jpg'],
+      ['documents', 'Dokumente', 'document', 'assets/pp/documents.jpg']
     ];
     const PP_TILES_DEFAULT = ['orders', 'inspections', 'defects', 'finance', 'calendar', 'customers'];
     const PP_TILES_KEY = 'husora-pp-tiles';
