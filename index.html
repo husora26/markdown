@@ -2912,6 +2912,37 @@
     .pp-home-toggle span { display: grid; gap: 2px; }
     .pp-home-toggle small { color: var(--muted); font-size: 12px; }
     .pp-prop-notes dl { display: grid; gap: 8px; margin: 0 0 6px; }
+    /* Phase 8: Zeit, Material & Anfahrt, Mehrkosten */
+    .pp-costs { display: grid; gap: 10px; }
+    .pp-timer { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--green-soft); }
+    .pp-timer > span:not(.pp-timer-dot) { flex: 1; display: grid; gap: 2px; min-width: 0; }
+    .pp-timer small, .pp-cost-main small, .pp-cost-total small, .pp-approval small, .hub-approval small { color: var(--muted); font-size: 12.5px; }
+    .pp-timer-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 4px var(--red-soft); flex: none; animation: pp-pulse 1.4s ease-in-out infinite; }
+    @keyframes pp-pulse { 50% { opacity: .35; } }
+    .pp-cost-list { display: grid; }
+    .pp-cost-row { display: grid; grid-template-columns: auto 1fr auto 28px; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+    .pp-cost-row.running { color: var(--muted); }
+    .pp-cost-main { display: grid; gap: 1px; min-width: 0; }
+    .pp-cost-main strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pp-cost-kind { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 3px 7px; border-radius: 999px; background: var(--amber-soft); color: var(--ink); }
+    .pp-cost-kind.work { background: var(--green-soft); }
+    .pp-cost-kind.travel { background: var(--red-soft); }
+    .pp-cost-row .text-btn.danger { font-size: 18px; line-height: 1; padding: 2px 6px; color: var(--red); }
+    .pp-cost-total { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding-top: 4px; font-size: 14px; }
+    .pp-cost-total b { font-size: 16px; }
+    .pp-cost-total small { grid-column: 1 / -1; text-align: right; }
+    .pp-approval > span:first-child { display: grid; gap: 2px; flex: 1; min-width: 0; }
+    .hub-approvals { display: grid; gap: 6px; margin-top: 10px; }
+    .hub-approval { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
+    .hub-approval.pending { border-color: var(--amber); background: var(--amber-soft); }
+    .hub-approval > span:first-child { display: grid; gap: 2px; flex: 1 1 200px; min-width: 0; }
+    .hub-approval-actions { display: flex; gap: 8px; }
+    .hub-approvals-card { border: 1px solid var(--amber); }
+    .hub-approvals-card .card-title { display: flex; align-items: center; gap: 8px; }
+    .hub-approvals-card .card-title svg { width: 20px; height: 20px; flex: none; color: var(--amber); }
+    .hub-approvals-card .hub-approval + .hub-approval { margin-top: 8px; }
+    .hub-limit-form { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+    .hub-limit-form label { flex: 1 1 200px; }
     .pp-prop-notes dt { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
     .pp-prop-notes dd { margin: 1px 0 0; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
     .pp-prop-orders > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
@@ -5910,6 +5941,46 @@ Beauftragt|Commissioned|Beställt
 Behoben|Fixed|Åtgärdat
 Erledigt & abgelehnt|Done & declined|Klart & avböjt
 Mangel festgestellt – Beseitigung anfragen|Defect found – ask for repair approval|Brist hittad – be om godkännande
+Zeit, Material & Anfahrt|Time, material & travel|Tid, material & resa
+Arbeitszeit erfassen|Track working time|Registrera arbetstid
+Start beim Beginn, Stopp am Ende – die Minuten werden automatisch berechnet.|Start when you begin, stop at the end – minutes are calculated automatically.|Starta när du börjar, stoppa i slutet – minuterna räknas ut automatiskt.
+Zeiterfassung läuft|Time tracking running|Tidregistrering pågår
+Stopp|Stop|Stopp
+Arbeitszeit|Working time|Arbetstid
+Material|Material|Material
+Anfahrt|Travel|Resa
+Zeit nachtragen|Add time|Lägg till tid
+Noch keine Positionen erfasst.|No items recorded yet.|Inga poster registrerade ännu.
+Summe netto|Total net|Summa netto
+Minuten *|Minutes *|Minuter *
+Menge|Quantity|Antal
+Einheit|Unit|Enhet
+Stundensatz netto|Hourly rate net|Timpris netto
+Preis je Einheit netto|Unit price net|Pris per enhet netto
+Dem Kunden berechnen|Charge the customer|Debitera kunden
+Position speichern|Save item|Spara post
+Position gespeichert.|Item saved.|Post sparad.
+Position gelöscht.|Item deleted.|Post borttagen.
+Diese Position löschen?|Delete this item?|Ta bort denna post?
+Zeiterfassung gestartet.|Time tracking started.|Tidregistrering startad.
+nicht berechnet|not charged|debiteras inte
+Mehrkosten & Freigaben|Extra costs & approvals|Merkostnader & godkännanden
+Mehrkosten zur Freigabe|Extra costs for approval|Merkostnader för godkännande
+Fallen unerwartete Kosten an, frag sie hier beim Kunden an, bevor du weitermachst.|If unexpected costs arise, ask the customer here before you continue.|Uppstår oväntade kostnader, fråga kunden här innan du fortsätter.
+Wofür? *|What for? *|För vad? *
+Begründung|Reason|Motivering
+Der Hausbesitzer gibt die Mehrkosten frei oder lehnt ab. Liegt der Betrag unter seinem Freigabelimit, ist er sofort freigegeben.|The homeowner approves or declines the extra costs. If the amount is below their approval limit, it is approved immediately.|Husägaren godkänner eller avböjer merkostnaderna. Ligger beloppet under godkännandegränsen godkänns det direkt.
+Freigabe anfragen|Request approval|Begär godkännande
+Wartet auf Freigabe|Awaiting approval|Väntar på godkännande
+Automatisch freigegeben|Approved automatically|Automatiskt godkänd
+Mehrkosten automatisch freigegeben (unter dem Limit des Kunden).|Extra costs approved automatically (below the customer's limit).|Merkostnader automatiskt godkända (under kundens gräns).
+Mehrkosten|Extra costs|Merkostnader
+Freigeben|Approve|Godkänn
+Der Servicepartner hat unerwartete Zusatzkosten gemeldet. Freigegebene Beträge erhöhen die Kostenschätzung des Auftrags.|The service partner reported unexpected extra costs. Approved amounts raise the order's cost estimate.|Servicepartnern har rapporterat oväntade extrakostnader. Godkända belopp höjer uppdragets kostnadsuppskattning.
+Mehrkosten automatisch freigeben|Approve extra costs automatically|Godkänn merkostnader automatiskt
+Mehrkosten bis zu diesem Betrag gibt Husora sofort frei – du wirst trotzdem informiert und alles steht im Verlauf. Leer lassen, um jede Mehrkostenanfrage selbst zu entscheiden.|Husora approves extra costs up to this amount immediately – you are still informed and everything is logged in the history. Leave empty to decide every request yourself.|Husora godkänner merkostnader upp till detta belopp direkt – du informeras ändå och allt finns i historiken. Lämna tomt för att själv besluta om varje förfrågan.
+Mehrkosten abgelehnt – der Partner wird informiert.|Extra costs declined – the partner is notified.|Merkostnader avböjda – partnern informeras.
+Automatische Freigabe ausgeschaltet.|Automatic approval turned off.|Automatiskt godkännande avstängt.
 Mangel beim Kunden angefragt – sobald er annimmt, erscheint der Auftrag unter Mängel.|Defect sent to the customer – once accepted, the order appears under Defects.|Bristen skickad till kunden – när den godkänns visas uppdraget under Brister.
 Auftrag annehmen|Accept order|Godkänn uppdrag
 Auftrag erteilt – der Servicepartner legt den Termin fest.|Order placed – the service partner sets the date.|Uppdraget beställt – servicepartnern bokar tid.
@@ -5926,6 +5997,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     // Texte mit Zahlen
     const I18N_PATTERNS = [
       [/^(\d+) offen$/, { en: '$1 open', sv: '$1 öppna' }],
+      [/^Mehrkosten warten auf deine Freigabe \((\d+)\)$/, { en: 'Extra costs awaiting your approval ($1)', sv: 'Merkostnader väntar på ditt godkännande ($1)' }],
+      [/^Freigabelimit je Anfrage \((\w+)\)$/, { en: 'Approval limit per request ($1)', sv: 'Godkännandegräns per förfrågan ($1)' }],
+      [/^Betrag brutto \((\w+)\) \*$/, { en: 'Amount gross ($1) *', sv: 'Belopp brutto ($1) *' }],
+      [/^Zeit erfasst: (.+)\.$/, { en: 'Time recorded: $1.', sv: 'Tid registrerad: $1.' }],
       [/^(\d+) neue Anfragen?$/, { en: '$1 new request(s)', sv: '$1 nya förfrågningar' }],
       [/^(\d+) in Bearbeitung$/, { en: '$1 in progress', sv: '$1 pågår' }],
       [/^(\d+) abgeschlossen$/, { en: '$1 completed', sv: '$1 avslutade' }],
@@ -18491,7 +18566,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -18513,9 +18588,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             ppQ(`partner_property_notes?organization_id=eq.${org.id}&select=*`).catch(() => []),
             self ? ppQ(`service_partner_areas?service_partner_id=eq.${self}&select=*&order=created_at.asc`).catch(() => []) : [],
             ppQ(`service_partner_absences?organization_id=eq.${org.id}&end_at=gte.${encodeURIComponent(new Date(Date.now() - 31 * 86400000).toISOString())}&select=*&order=start_at.asc&limit=300`).catch(() => []),
-            ppQ('repairs?service_partner_id=not.is.null&select=id,organization_id,property_id,inspection_id,inspection_item_id,service_order_id,title,description,priority,status,estimated_cost,actual_cost,offered_at,response_note,created_at&order=created_at.desc&limit=300').catch(() => [])
+            ppQ('repairs?service_partner_id=not.is.null&select=id,organization_id,property_id,inspection_id,inspection_item_id,service_order_id,title,description,priority,status,estimated_cost,actual_cost,offered_at,response_note,created_at&order=created_at.desc&limit=300').catch(() => []),
+            ppQ(`service_order_cost_items?organization_id=eq.${org.id}&select=*&order=created_at.asc&limit=3000`).catch(() => []),
+            ppQ('approval_requests?select=id,organization_id,service_order_id,service_partner_id,title,description,amount,currency,status,auto_approved,response_note,created_at,decided_at&order=created_at.desc&limit=500').catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs };
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals };
           pp.access = {};
         } else {
           pp.data = null;
@@ -18875,13 +18952,16 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const inAgreement = Boolean(o.agreement_id);
         const canBill = !inAgreement && o.organization_id !== ppOrg().id && (ppIsLead() || ppRole() === 'accounting');
         const number = ppNextNumber('R', ppD('invoices'), 'invoice_number');
+        const itemsNet = ppOrderCostTotal(o.id);
+        const itemsGross = itemsNet ? Math.round(itemsNet * (1 + vat / 100) * 100) / 100 : null;
         actions = `<form class="pp-card pp-form" data-pp-form="complete-invoice" data-order="${o.id}"><h3>Auftrag abschließen</h3>
           ${inAgreement ? `<p class="pp-hint">${icon('calendar')} Im Jahresvertrag „${escapeHtml(ppAgreementOf(o).title)}“ enthalten – wird nicht einzeln, sondern mit der Jahresrechnung abgerechnet.</p>` : ''}
-          <div class="pp-grid">${inAgreement ? '' : `<label><span class="form-label">Ist-Kosten brutto${canBill ? '' : ` (${escapeHtml(o.currency)})`}</span><input class="form-control" type="number" min="0" step="0.01" name="gross" data-pp-field="actual" value="${o.actual_cost ?? o.estimated_cost ?? ''}" ${canBill ? 'required' : ''}></label>`}
+          <div class="pp-grid">${inAgreement ? '' : `<label><span class="form-label">Ist-Kosten brutto${canBill ? '' : ` (${escapeHtml(o.currency)})`}</span><input class="form-control" type="number" min="0" step="0.01" name="gross" data-pp-field="actual" value="${o.actual_cost ?? itemsGross ?? o.estimated_cost ?? ''}" ${canBill ? 'required' : ''}></label>`}
           ${canBill ? `${ppCurrencySelect(o.currency)}<label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" value="${vat}"></label>
           <label><span class="form-label">Rechnungsnummer</span><input class="form-control" name="number" value="${escapeHtml(number)}" maxlength="40"></label>
           <label><span class="form-label">Zahlbar bis</span><input class="form-control" name="due" type="date" value="${localDateKey(new Date(Date.now() + 30 * 86400000))}"></label>` : ''}
           <label class="full"><span class="form-label">Abschlussnotiz</span><input class="form-control" name="note" data-pp-field="done-note" placeholder="Was wurde erledigt?"></label></div>
+          ${!inAgreement && itemsGross != null && o.actual_cost == null ? `<p class="pp-hint pp-cost-hint">${icon('clock')} Betrag aus „Zeit, Material & Anfahrt“ übernommen: netto ${escapeHtml(ppMoney(itemsNet, o.currency))} + ${vat} % MwSt.${o.estimated_cost != null && Math.abs(o.estimated_cost - itemsGross) > 0.005 ? ` (Kostenschätzung inkl. freigegebener Mehrkosten: ${escapeHtml(ppMoney(o.estimated_cost, o.currency))})` : ''}</p>` : ''}
           ${canBill ? `<label class="pp-pdf-pick">${icon('document')}<span><strong>Eigene Rechnung als PDF (optional)</strong><small>Ohne Datei erstellt Husora die Rechnung als PDF mit deinen Firmen- und Bankdaten.</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf" style="margin-top:8px"></span></label>` : ''}
           <div class="pp-actions">${canBill ? `<button type="button" class="secondary-btn" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>Nur als erledigt melden</button><button type="submit" class="primary-btn big" ${ppDisabled()}>${icon('check')} Auftrag erledigt und Rechnung an Kunden schicken</button>` : `<button type="button" class="primary-btn big" data-pp-action="complete" data-id="${o.id}" ${ppDisabled()}>${icon('check')} Erledigt</button>`}</div></form>`;
       }
@@ -18902,6 +18982,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ${o.organization_id !== ppOrg()?.id && lead && ['accepted', 'scheduled', ...ORDER_RUNNING, 'completed'].includes(o.status) ? (pp.form === `repair-order:${o.id}` ? ppRepairFormHtml({ key: o.id, propertyId: o.property_id, orderId: o.id }) : `<button type="button" class="secondary-btn pp-repair-btn" data-pp-action="repair-form-order" data-id="${o.id}">${icon('alert')} Mangel festgestellt – Beseitigung anfragen</button>`) : ''}
         ${o.response_note ? `<div class="pp-card"><span class="pp-eyebrow">Deine Antwort</span><p class="pp-text">${escapeHtml(o.response_note)}</p></div>` : ''}
         ${actions}
+        ${ppApprovalsHtml(o)}
+        ${ppCostsHtml(o)}
         ${ppSection('Fotos & Dokumente', `<div class="pp-gallery">${photos.map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(ph.caption || 'Foto')}"><img data-pp-thumb="${ph.id}" alt="${escapeHtml(ph.caption || 'Foto')}"></button>`).join('')}</div>
           ${docs.map((d) => `<button type="button" class="pp-doc" data-pp-doc="view" data-id="${d.id}" title="In der App öffnen">${icon('document')}<span>${escapeHtml(d.file_name)}${/^Kontrollplan/.test(d.file_name || '') ? '<small>Kontrollplan vom Hausbesitzer</small>' : ''}</span><small>${escapeHtml(formatBytes(d.file_size || 0))}</small></button>`).join('')}
           <div class="pp-actions"><label class="primary-btn pp-file">${icon('plus')} Foto aufnehmen<input type="file" accept="image/*" capture="environment" multiple hidden data-pp-upload="order:${o.id}"></label><label class="secondary-btn pp-file">Dokument<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" multiple hidden data-pp-upload="order:${o.id}"></label></div>`)}
@@ -18913,13 +18995,86 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ${[...ORDER_RUNNING, 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
           ${pp.form === `finance:${o.id}` ? ppFinanceForm(o) : o.agreement_id ? `<p class="pp-hint">${icon('calendar')} Im Jahresvertrag – Abrechnung einmal jährlich unter „Mehr → Jahresverträge“.</p>` : `${ppOrderBilled(o) ? '<p class="pp-hint">Dieser Auftrag ist bereits abgerechnet – eine weitere Rechnung nur für Korrekturen oder Zusatzleistungen.</p>' : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="quote">Angebot</button><button type="button" class="primary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice">Rechnung erstellen</button><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice" data-mode="upload">${icon('document')} PDF-Rechnung hochladen</button></div>`}`) : ''}`;
     }
+    // ----- Phase 8: Arbeitszeit, Material und Anfahrt je Auftrag, Mehrkosten zur Freigabe -----
+    // Funktionsdeklarationen (gehoben): dürfen schon beim ersten Zeichnen aufgerufen werden
+    function ppCostKinds() { return { work: ['Arbeitszeit', 'clock'], material: ['Material', 'box'], travel: ['Anfahrt', 'car'] }; }
+    function ppApprovalStatus() { return { pending: ['Wartet auf Freigabe', 'amber'], approved: ['Freigegeben', 'green'], rejected: ['Abgelehnt', 'red'], withdrawn: ['Zurückgezogen', 'muted'] }; }
+    function ppFmtMinutes(min) { const m = Math.max(0, Math.round(Number(min) || 0)); const h = Math.floor(m / 60); return h ? `${h} h${m % 60 ? ` ${m % 60} min` : ''}` : `${m} min`; }
+    function ppCostAmount(item) {
+      if (item.amount != null) return Number(item.amount);
+      if (item.kind === 'work') {
+        const rate = item.unit_price ?? ppOrg()?.hourly_rate;
+        const min = item.minutes ?? (item.started_at && !item.ended_at ? (Date.now() - new Date(item.started_at)) / 60000 : 0);
+        return rate ? Math.round(min / 60 * rate * 100) / 100 : 0;
+      }
+      return Math.round((Number(item.quantity ?? 1) * Number(item.unit_price || 0)) * 100) / 100;
+    }
+    function ppOrderCostItems(orderId) { return ppD('costItems').filter((c) => c.service_order_id === orderId); }
+    function ppOrderCostTotal(orderId) { return Math.round(ppOrderCostItems(orderId).filter((c) => c.billable !== false).reduce((s, c) => s + ppCostAmount(c), 0) * 100) / 100; }
+    function ppOrderVat(o) { return o.currency === 'SEK' || ppOrg()?.country === 'SE' ? 25 : 19; }
+    function ppRunningTimer(orderId) { return ppOrderCostItems(orderId).find((c) => c.kind === 'work' && c.user_id === ppMe() && c.started_at && !c.ended_at); }
+    function ppCostsHtml(o) {
+      if (!o.service_partner_id || ['offered', 'draft', 'rejected', 'cancelled'].includes(o.status)) return '';
+      const kinds = ppCostKinds();
+      const items = ppOrderCostItems(o.id);
+      const mine = (c) => ppIsLead() || ppRole() === 'accounting' || c.user_id === ppMe();
+      const open = o.status !== 'completed';
+      const timer = ppRunningTimer(o.id);
+      const cur = o.currency || ppOrg()?.currency || 'EUR';
+      const total = ppOrderCostTotal(o.id);
+      const vat = ppOrderVat(o);
+      const workMin = items.filter((c) => c.kind === 'work').reduce((s, c) => s + (c.minutes ?? (c.started_at && !c.ended_at ? (Date.now() - new Date(c.started_at)) / 60000 : 0)), 0);
+      const row = (c) => {
+        const [label] = kinds[c.kind] || [c.kind];
+        const running = c.kind === 'work' && c.started_at && !c.ended_at;
+        const detail = c.kind === 'work'
+          ? `${escapeHtml(ppMemberName(c.user_id) || 'Team')} · ${running ? `läuft seit ${escapeHtml(ppTime(c.started_at))}` : escapeHtml(ppFmtMinutes(c.minutes))}`
+          : `${c.quantity != null && Number(c.quantity) !== 1 ? `${escapeHtml(String(Number(c.quantity)))} ${escapeHtml(c.unit || '×')} · ` : ''}${c.unit_price != null ? escapeHtml(ppMoney(c.unit_price, cur)) : ''}`;
+        return `<div class="pp-cost-row ${running ? 'running' : ''}"><span class="pp-cost-kind ${c.kind}">${escapeHtml(label)}</span><span class="pp-cost-main"><strong>${escapeHtml(c.description || label)}</strong><small>${detail}${c.billable === false ? ' · nicht berechnet' : ''}</small></span><b>${escapeHtml(ppMoney(ppCostAmount(c), cur))}</b>${mine(c) && !running ? `<button type="button" class="text-btn danger" data-pp-action="cost-delete" data-id="${c.id}" aria-label="Position löschen" title="Position löschen">×</button>` : '<span></span>'}</div>`;
+      };
+      const form = pp.form === `cost:${o.id}` ? `<form class="pp-form pp-subform" data-pp-form="cost-item" data-order="${o.id}"><div class="pp-grid">
+          <label><span class="form-label">Art</span><select class="form-control" name="kind" data-pp-cost-kind>${Object.entries(kinds).map(([k, [l]]) => `<option value="${k}" ${k === (pp.costKind || 'material') ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+          <label><span class="form-label">Beschreibung</span><input class="form-control" name="description" maxlength="300" placeholder="${(pp.costKind || 'material') === 'work' ? 'z. B. Rasen gemäht' : (pp.costKind || 'material') === 'travel' ? 'z. B. Anfahrt Hin und Zurück' : 'z. B. Silikon, 2 Kartuschen'}"></label>
+          <label><span class="form-label">${(pp.costKind || 'material') === 'work' ? 'Minuten *' : 'Menge'}</span><input class="form-control" name="quantity" type="number" min="0" step="${(pp.costKind || 'material') === 'work' ? '5' : '0.01'}" value="${(pp.costKind || 'material') === 'work' ? '60' : '1'}" ${(pp.costKind || 'material') === 'work' ? 'required' : ''}></label>
+          ${(pp.costKind || 'material') === 'material' ? '<label><span class="form-label">Einheit</span><input class="form-control" name="unit" maxlength="20" placeholder="Stk, m, l …"></label>' : ''}
+          <label><span class="form-label">${(pp.costKind || 'material') === 'work' ? 'Stundensatz netto' : 'Preis je Einheit netto'}</span><input class="form-control" name="unit_price" type="number" min="0" step="0.01" value="${(pp.costKind || 'material') === 'work' ? (ppOrg()?.hourly_rate ?? '') : (pp.costKind || 'material') === 'travel' ? (ppOrg()?.travel_fee ?? '') : ''}"></label>
+          <label class="pp-check"><input type="checkbox" name="billable" checked> Dem Kunden berechnen</label>
+        </div><div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>${icon('plus')} Position speichern</button></div></form>` : '';
+      return ppSection('Zeit, Material & Anfahrt', `<div class="pp-card pp-costs" data-pp-costs="${o.id}">
+        ${open ? `<div class="pp-timer">${timer ? `<span class="pp-timer-dot"></span><span><strong>Zeiterfassung läuft</strong><small>seit ${escapeHtml(ppTime(timer.started_at))} · ${escapeHtml(ppFmtMinutes((Date.now() - new Date(timer.started_at)) / 60000))}</small></span><button type="button" class="primary-btn" data-pp-action="timer-stop" data-id="${timer.id}" ${ppDisabled()}>Stopp</button>` : `<span><strong>Arbeitszeit erfassen</strong><small>Start beim Beginn, Stopp am Ende – die Minuten werden automatisch berechnet.</small></span><button type="button" class="primary-btn" data-pp-action="timer-start" data-id="${o.id}" ${ppDisabled()}>${icon('clock')} Start</button>`}</div>` : ''}
+        ${items.length ? `<div class="pp-cost-list">${items.map(row).join('')}</div>` : '<p class="pp-muted">Noch keine Positionen erfasst.</p>'}
+        ${items.length ? `<div class="pp-cost-total"><span>${workMin ? `Arbeitszeit ${escapeHtml(ppFmtMinutes(workMin))} · ` : ''}Summe netto</span><b>${escapeHtml(ppMoney(total, cur))}</b><small>brutto ${escapeHtml(ppMoney(Math.round(total * (1 + vat / 100) * 100) / 100, cur))} inkl. ${vat} % MwSt.</small></div>` : ''}
+        ${form || `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cost-form" data-id="${o.id}" data-kind="material">${icon('plus')} Material</button><button type="button" class="secondary-btn" data-pp-action="cost-form" data-id="${o.id}" data-kind="travel">${icon('plus')} Anfahrt</button><button type="button" class="secondary-btn" data-pp-action="cost-form" data-id="${o.id}" data-kind="work">${icon('plus')} Zeit nachtragen</button></div>`}
+      </div>`);
+    }
+    document.addEventListener('change', (event) => {
+      const sel = event.target.closest?.('#partner-portal [data-pp-cost-kind]');
+      if (!sel) return;
+      pp.costKind = sel.value; pp.keepScroll = true; ppRender();
+    });
+    function ppApprovalsHtml(o) {
+      if (o.organization_id === ppOrg()?.id || !o.service_partner_id) return '';
+      const list = ppD('approvals').filter((a) => a.service_order_id === o.id);
+      const canAsk = ['accepted', 'scheduled', ...ORDER_RUNNING].includes(o.status) && (ppIsLead() || o.assigned_user_id === ppMe());
+      if (!list.length && !canAsk) return '';
+      const st = ppApprovalStatus();
+      const rows = list.map((a) => `<div class="pp-row pp-approval"><span><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(ppDate(a.created_at))}${a.description ? ` · ${escapeHtml(a.description)}` : ''}${a.response_note ? ` · „${escapeHtml(a.response_note)}“` : ''}</small></span><b>${escapeHtml(ppMoney(a.amount, a.currency))}</b><span class="pp-badge ${st[a.status]?.[1] || 'muted'}">${escapeHtml(a.auto_approved ? 'Automatisch freigegeben' : st[a.status]?.[0] || a.status)}</span></div>`).join('');
+      const form = pp.form === `approval:${o.id}` ? `<form class="pp-form pp-subform" data-pp-form="approval" data-order="${o.id}"><div class="pp-grid">
+          <label class="full"><span class="form-label">Wofür? *</span><input class="form-control" name="title" required maxlength="160" placeholder="z. B. Zusätzliches Rohrstück, Pumpe defekt"></label>
+          <label><span class="form-label">Betrag brutto (${escapeHtml(o.currency || 'EUR')}) *</span><input class="form-control" name="amount" type="number" min="0" step="0.01" required></label>
+          <label class="full"><span class="form-label">Begründung</span><textarea class="form-control" name="description" rows="2" maxlength="2000" placeholder="Was ist passiert und warum ist es nötig?"></textarea></label>
+        </div><p class="pp-hint">Der Hausbesitzer gibt die Mehrkosten frei oder lehnt ab. Liegt der Betrag unter seinem Freigabelimit, ist er sofort freigegeben.</p>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>Freigabe anfragen</button></div></form>` : canAsk ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="approval-form" data-id="${o.id}">${icon('alert')} Mehrkosten zur Freigabe</button></div>` : '';
+      return ppSection('Mehrkosten & Freigaben', `<div class="pp-card">${rows || '<p class="pp-muted">Fallen unerwartete Kosten an, frag sie hier beim Kunden an, bevor du weitermachst.</p>'}${form}</div>`);
+    }
     // Angebote und Rechnungen wahlweise in Euro oder Kronen
     const ppCurrencySelect = (current) => `<label><span class="form-label">Währung</span><select class="form-control" name="currency">${[['EUR', 'Euro (€)'], ['SEK', 'Schwedische Kronen (kr)']].map(([code, label]) => `<option value="${code}" ${(current || 'EUR') === code ? 'selected' : ''}>${label}</option>`).join('')}</select></label>`;
     function ppFinanceForm(o) {
       const kind = pp.formKind || 'invoice';
       const upload = kind === 'invoice' && pp.formMode === 'upload';
       const vat = o.currency === 'SEK' || ppOrg().country === 'SE' ? 25 : 19;
-      const net = o.actual_cost ?? o.estimated_cost ?? '';
+      const itemsNet = ppOrderCostTotal(o.id);
+      const net = o.actual_cost ?? (itemsNet ? Math.round(itemsNet * (1 + vat / 100) * 100) / 100 : null) ?? o.estimated_cost ?? '';
       const number = kind === 'invoice' ? ppNextNumber('R', ppD('invoices'), 'invoice_number') : ppNextNumber('A', ppD('quotes'), 'quote_number');
       return `<form class="pp-form pp-subform" data-pp-form="finance" data-order="${o.id}" data-kind="${kind}" data-mode="${upload ? 'upload' : 'create'}"><h3>${upload ? 'Eigene Rechnung (PDF)' : kind === 'invoice' ? 'Rechnung' : 'Angebot'} an ${escapeHtml(ppCustomerName(o.organization_id))}</h3>
         ${upload ? `<label class="pp-pdf-pick">${icon('document')}<span><strong>Rechnung als PDF auswählen *</strong><small>Deine fertige Rechnung aus dem eigenen Programm (max. 10 MB).</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf" required style="margin-top:8px"></span></label>` : ''}<div class="pp-grid">
@@ -20213,6 +20368,30 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (a === 'cancel-form') { pp.form = null; ppRender(); return; }
       if (a === 'new-order') { pp.form = 'new-order'; pp.formProperty = ''; ppRender(); return; }
       if (a === 'repair-form') { pp.form = `repair:${action.dataset.item}`; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'cost-form') { pp.form = `cost:${id}`; pp.costKind = action.dataset.kind || 'material'; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'approval-form') { pp.form = `approval:${id}`; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'timer-start') {
+        const o = ppD('orders').find((x) => x.id === id);
+        if (!o || ppRunningTimer(id)) return;
+        pp.keepScroll = true;
+        ppRun('timer', () => ppInsert('service_order_cost_items', { organization_id: ppOrg().id, service_order_id: id, kind: 'work', user_id: ppMe(), started_at: new Date().toISOString(), unit_price: ppOrg().hourly_rate ?? null, currency: o.currency || ppOrg().currency || 'EUR' }), { notice: 'Zeiterfassung gestartet.' });
+        return;
+      }
+      if (a === 'timer-stop') {
+        const c = ppD('costItems').find((x) => x.id === id);
+        if (!c) return;
+        const minutes = Math.max(1, Math.round((Date.now() - new Date(c.started_at)) / 60000));
+        const rate = c.unit_price ?? ppOrg().hourly_rate;
+        pp.keepScroll = true;
+        ppRun('timer', () => ppPatch('service_order_cost_items', id, { ended_at: new Date().toISOString(), minutes, amount: rate != null ? Math.round(minutes / 60 * rate * 100) / 100 : null }), { notice: `Zeit erfasst: ${ppFmtMinutes(minutes)}.` });
+        return;
+      }
+      if (a === 'cost-delete') {
+        if (!confirm('Diese Position löschen?')) return;
+        pp.keepScroll = true;
+        ppRun('cost', () => cloudFetch(`/rest/v1/service_order_cost_items?id=eq.${id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }), { notice: 'Position gelöscht.' });
+        return;
+      }
       if (a === 'repair-form-order') { pp.form = `repair-order:${action.dataset.id}`; pp.keepScroll = true; ppRender(); return; }
       if (a === 'prop-notes') { pp.form = `prop-notes:${action.dataset.property}`; pp.keepScroll = true; ppRender(); return; }
       if (a === 'order-for') { pp.form = 'new-order'; pp.formProperty = action.dataset.property; pp.keepScroll = true; ppRender(); return; }
@@ -20371,6 +20550,31 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           pp.form = null;
         }, { notice: form.dataset.kind === 'invoice' ? (o.organization_id === ppOrg().id ? 'Rechnung als PDF gespeichert.' : `Rechnung als PDF an ${ppCustomerName(o.organization_id)} gesendet.`) : 'Angebot gesendet.' });
       }
+      if (kind === 'cost-item') {
+        const o = ppD('orders').find((x) => x.id === form.dataset.order);
+        if (!o) return;
+        const k = ['work', 'material', 'travel'].includes(v.kind) ? v.kind : 'material';
+        const qty = v.quantity === '' || v.quantity == null ? null : Number(v.quantity);
+        const price = v.unit_price === '' || v.unit_price == null ? null : Number(v.unit_price);
+        if (k === 'work' && !(qty > 0)) { pp.error = 'Bitte die Arbeitszeit in Minuten angeben.'; ppRender(); return; }
+        const body = { organization_id: ppOrg().id, service_order_id: o.id, kind: k, user_id: ppMe(), description: (v.description || '').trim() || null, unit_price: price, currency: o.currency || ppOrg().currency || 'EUR', billable: fd.get('billable') === 'on' };
+        if (k === 'work') Object.assign(body, { minutes: Math.round(qty), amount: price != null ? Math.round(qty / 60 * price * 100) / 100 : null });
+        else Object.assign(body, { quantity: qty ?? 1, unit: (v.unit || '').trim() || null, amount: price != null ? Math.round((qty ?? 1) * price * 100) / 100 : null });
+        pp.keepScroll = true;
+        ppRun('cost', async () => { await ppInsert('service_order_cost_items', body); pp.form = null; }, { notice: 'Position gespeichert.' });
+        return;
+      }
+      if (kind === 'approval') {
+        const o = ppD('orders').find((x) => x.id === form.dataset.order);
+        if (!o) return;
+        pp.keepScroll = true;
+        ppRun('approval', async () => {
+          const r = await ppRpc('request_approval', { p_service_order_id: o.id, p_title: (v.title || '').trim(), p_amount: Number(v.amount), p_description: (v.description || '').trim() || null });
+          pp.form = null;
+          showToast(r?.auto_approved ? 'Mehrkosten automatisch freigegeben (unter dem Limit des Kunden).' : `Freigabe bei ${ppCustomerName(o.organization_id)} angefragt.`);
+        });
+        return;
+      }
       if (kind === 'complete-invoice') {
         const o = ppD('orders').find((x) => x.id === form.dataset.order);
         const gross = Math.round(Number(v.gross) * 100) / 100;
@@ -20504,6 +20708,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }
       ownerSide.repairOffers = await cloudFetch(`/rest/v1/repairs?organization_id=eq.${org}&service_partner_id=not.is.null&select=id,title,description,priority,status,estimated_cost,actual_cost,offered_at,response_note,service_order_id,service_partner_id,partner:service_partners(company_name),property:properties(name,app_ref)&order=created_at.desc&limit=300`).catch(() => null);
       ownerSyncRepairIssues();
+      [ownerSide.approvals, [ownerSide.approvalOrg]] = await Promise.all([
+        cloudFetch(`/rest/v1/approval_requests?organization_id=eq.${org}&select=id,service_order_id,title,description,amount,currency,status,auto_approved,response_note,created_at,decided_at&order=created_at.desc&limit=300`).catch(() => []),
+        cloudFetch(`/rest/v1/organizations?id=eq.${org}&select=auto_approval_limit,currency`).catch(() => [null])
+      ]);
+      ownerSide.approvalLimit = ownerSide.approvalOrg?.auto_approval_limit ?? null;
+      ownerSide.orgCurrency = ownerSide.approvalOrg?.currency || 'EUR';
       ownerSide.assignments = await cloudFetch(`/rest/v1/property_service_assignments?organization_id=eq.${org}&status=neq.ended&select=id,property_id,service_partner_id,access_level,start_date,end_date,status`).catch(() => null);
       [ownerSide.agreements, ownerSide.cloudProperties] = await Promise.all([
         cloudFetch(`/rest/v1/service_agreements?organization_id=eq.${org}&select=*,partner:service_partners(company_name),property:properties(name,app_ref)&order=starts_on.desc&limit=300`).catch(() => []),
@@ -21058,6 +21268,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             <div class="hub-grid"><label><span class="form-label">Firmenname *</span><input class="form-control" name="company_name" required maxlength="120"></label><label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120"></label></div>
             <div class="pp-actions"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>${icon('plus')} ${ownerSide.busy === 'invite' ? 'Erzeuge Code …' : 'Einladungscode erzeugen'}</button></div>
           </form></section>
+        ${(ownerSide.partners || []).some((p) => p.partner_organization_id) ? hubApprovalLimitHtml() : ''}
         <section class="hub-section"><h3 class="hub-section-title">Deine Servicepartner (${partners.length})</h3>
           ${partners.length ? partners.map((p) => { const [label, tone] = hubStatus(p); const unread = hubUnread(hubThreadMessages({ kind: 'partner', id: p.id })); return `<div class="card hub-partner"><div class="hub-partner-head"><div><strong>${escapeHtml(p.company_name)}</strong><small>${escapeHtml(p.email || 'keine E-Mail hinterlegt')}</small></div><span class="pp-badge ${tone}">${label}</span></div>
             ${hubCodeBox(p)}${p.partner_organization_id ? hubContactHtml(p) + hubAssignHtml(p) : ''}
@@ -21131,7 +21342,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const chips = `<div class="pp-filters hub-order-filters">${filters.map(([id, label, f]) => `<button type="button" class="${(hub.orderFilter || 'all') === id ? 'active' : ''}" data-hub-order-filter="${id}">${label} <b>${mine.filter(f).length}</b></button>`).join('')}</div>`;
       const groups = new Map();
       shown.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
-      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${['urgent', 'emergency', 'high'].includes(o.priority) ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : ''}${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${o.status === 'offered' && cloudCanWrite() ? `<button type="button" class="secondary-btn danger" data-hub-withdraw="${o.id}">Anfrage zurückziehen</button>` : ''}${['completed', 'cancelled', 'rejected'].includes(o.status) ? `<button type="button" class="secondary-btn" data-hub-archive="${o.id}">${hubArchived().has(o.id) ? 'Aus dem Archiv holen' : 'Ins Archiv'}</button>` : ''}${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
+      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${['urgent', 'emergency', 'high'].includes(o.priority) ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : ''}${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubOrderApprovalsHtml(o)}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${o.status === 'offered' && cloudCanWrite() ? `<button type="button" class="secondary-btn danger" data-hub-withdraw="${o.id}">Anfrage zurückziehen</button>` : ''}${['completed', 'cancelled', 'rejected'].includes(o.status) ? `<button type="button" class="secondary-btn" data-hub-archive="${o.id}">${hubArchived().has(o.id) ? 'Aus dem Archiv holen' : 'Ins Archiv'}</button>` : ''}${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
       const rank = (o) => ({ in_progress: 0, scheduled: 1, accepted: 2, offered: 3, completed: 4 }[o.status] ?? 5);
       const list = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0], 'de')).map(([name, list]) => {
         const houses = new Map();
@@ -21139,8 +21350,56 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const openCount = list.filter((o) => !['completed', 'rejected', 'cancelled'].includes(o.status)).length;
         return `<section class="hub-section hub-group"><h3 class="hub-section-title">${icon('users')} ${escapeHtml(name)} <small>${openCount} offen · ${list.length} gesamt</small></h3>${[...houses.entries()].map(([h, os]) => `<div class="hub-house-label">${icon('property')} ${escapeHtml(h)}</div>${os.map(orderCard).join('')}`).join('')}</section>`;
       }).join('');
-      return `${send}${orders.length ? `<h2 class="hub-list-title">Aufträge an Partner</h2>${chips}${list || `<p class="settings-hint">${hub.orderFilter === 'archive' ? 'Das Archiv ist leer. Erledigte Aufträge verschiebst du mit „Ins Archiv“ hierher.' : 'In dieser Ansicht gibt es keine Aufträge.'}</p>`}` : ''}`;
+      return `${hubPendingApprovalsHtml()}${send}${orders.length ? `<h2 class="hub-list-title">Aufträge an Partner</h2>${chips}${list || `<p class="settings-hint">${hub.orderFilter === 'archive' ? 'Das Archiv ist leer. Erledigte Aufträge verschiebst du mit „Ins Archiv“ hierher.' : 'In dieser Ansicht gibt es keine Aufträge.'}</p>`}` : ''}`;
     }
+    // ----- Phase 8: Mehrkosten des Servicepartners freigeben, automatisches Freigabelimit -----
+    function hubApprovalRow(a, { actions = false } = {}) {
+      const st = ppApprovalStatus();
+      const order = (ownerSide.orders || []).find((o) => o.id === a.service_order_id);
+      return `<div class="hub-approval ${a.status}"><span><strong>${escapeHtml(a.title)}</strong><small>${actions && order ? `${escapeHtml(order.partner?.company_name || 'Servicepartner')} · ${escapeHtml(order.title)}${order.property?.name ? ` · ${escapeHtml(order.property.name)}` : ''} · ` : ''}${escapeHtml(fmtDate(a.created_at))}${a.description ? ` · ${escapeHtml(a.description)}` : ''}${a.response_note ? ` · „${escapeHtml(a.response_note)}“` : ''}</small></span><b>${escapeHtml(ppMoney(a.amount, a.currency))}</b>${actions && a.status === 'pending' && cloudCanWrite()
+        ? `<span class="hub-approval-actions"><button type="button" class="secondary-btn" data-hub-approval="${a.id}" data-approve="0" ${ownerSide.busy ? 'disabled' : ''}>Ablehnen</button><button type="button" class="primary-btn" data-hub-approval="${a.id}" data-approve="1" ${ownerSide.busy ? 'disabled' : ''}>${icon('check')} Freigeben</button></span>`
+        : `<span class="pp-badge ${st[a.status]?.[1] || 'muted'}">${escapeHtml(a.auto_approved ? 'Automatisch freigegeben' : st[a.status]?.[0] || a.status)}</span>`}</div>`;
+    }
+    function hubOrderApprovalsHtml(o) {
+      const list = (ownerSide.approvals || []).filter((a) => a.service_order_id === o.id);
+      return list.length ? `<div class="hub-approvals"><span class="pp-eyebrow">Mehrkosten</span>${list.map((a) => hubApprovalRow(a, { actions: true })).join('')}</div>` : '';
+    }
+    function hubPendingApprovalsHtml() {
+      const pending = (ownerSide.approvals || []).filter((a) => a.status === 'pending');
+      if (!pending.length) return '';
+      return `<section class="card hub-card hub-approvals-card"><h2 class="card-title">${icon('alert')} Mehrkosten warten auf deine Freigabe (${pending.length})</h2><p class="card-caption">Der Servicepartner hat unerwartete Zusatzkosten gemeldet. Freigegebene Beträge erhöhen die Kostenschätzung des Auftrags.</p>${pending.map((a) => hubApprovalRow(a, { actions: true })).join('')}</section>`;
+    }
+    function hubApprovalLimitHtml() {
+      if (!cloud.org || !['admin'].includes(cloud.org.role)) return '';
+      const limit = ownerSide.approvalLimit;
+      return `<section class="card hub-card"><h2 class="card-title">Mehrkosten automatisch freigeben</h2><p class="card-caption">Mehrkosten bis zu diesem Betrag gibt Husora sofort frei – du wirst trotzdem informiert und alles steht im Verlauf. Leer lassen, um jede Mehrkostenanfrage selbst zu entscheiden.</p>
+        <form class="hub-form hub-limit-form" data-hub-limit-form><label><span class="form-label">Freigabelimit je Anfrage (${escapeHtml(ownerSide.orgCurrency || 'EUR')})</span><input class="form-control" name="limit" type="number" min="0" step="1" value="${limit ?? ''}" placeholder="z. B. 150"></label><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>${icon('check')} Speichern</button></form></section>`;
+    }
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-hub-approval]');
+      if (!btn) return;
+      const a = (ownerSide.approvals || []).find((x) => x.id === btn.dataset.hubApproval);
+      if (!a) return;
+      const approve = btn.dataset.approve === '1';
+      let note = '';
+      if (!approve) { note = window.prompt(`Mehrkosten „${a.title}“ (${ppMoney(a.amount, a.currency)}) ablehnen?\n\nGrund (optional, sieht der Partner):`, ''); if (note === null) return; }
+      ownerRun('approval', async () => {
+        await cloudFetch('/rest/v1/rpc/respond_approval', { method: 'POST', body: { p_request_id: a.id, p_approve: approve, p_note: note.trim() || null } });
+        showToast(approve ? `Mehrkosten freigegeben – ${ppMoney(a.amount, a.currency)}.` : 'Mehrkosten abgelehnt – der Partner wird informiert.');
+      });
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-hub-limit-form]');
+      if (!form) return;
+      event.preventDefault();
+      const raw = String(new FormData(form).get('limit') || '').trim();
+      const limit = raw === '' ? null : Math.max(0, Number(raw));
+      if (raw !== '' && !Number.isFinite(limit)) return;
+      ownerRun('limit', async () => {
+        await cloudFetch(`/rest/v1/organizations?id=eq.${cloud.org.id}`, { method: 'PATCH', body: { auto_approval_limit: limit }, headers: { Prefer: 'return=minimal' } });
+        showToast(limit === null ? 'Automatische Freigabe ausgeschaltet.' : `Mehrkosten bis ${ppMoney(limit, ownerSide.orgCurrency)} werden automatisch freigegeben.`);
+      });
+    });
     // ----- Aufträge an Partner: Archiv (pro Konto, über den Cloud-Abgleich gesichert) -----
     // Funktionsdeklaration (gehoben): darf schon beim ersten Zeichnen aufgerufen werden
     function hubArchived() { return new Set(loadStore('stugliv-hub-archive', [])); }
@@ -21336,7 +21595,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (hub.partnerFilter && !filterable.some((p) => p.id === hub.partnerFilter)) hub.partnerFilter = '';
       const partnerFilter = ['chat', 'orders', 'agreements'].includes(hub.tab) && !hub.thread && filterable.length > 1 ? `<label class="hub-partner-filter"><span>${icon('users')} Servicepartner</span><select class="form-control" data-hub-partner-filter aria-label="Servicepartner auswählen"><option value="">Alle Servicepartner</option>${filterable.map((p) => `<option value="${p.id}" ${hub.partnerFilter === p.id ? 'selected' : ''}>${escapeHtml(p.company_name)}</option>`).join('')}</select></label>` : '';
       return `${head}
-        <div class="pp-filters hub-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" aria-selected="${hub.tab === id}" class="${hub.tab === id ? 'active' : ''}" data-hub-tab="${id}">${label}${id === 'chat' && unread ? ` <b class="hub-count">${unread}</b>` : ''}${id === 'agreements' && (ownerSide.agreements || []).some((a) => a.status === 'proposed' && a.proposed_by === 'partner') ? ' <b class="hub-count">!</b>' : ''}</button>`).join('')}</div>
+        <div class="pp-filters hub-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" aria-selected="${hub.tab === id}" class="${hub.tab === id ? 'active' : ''}" data-hub-tab="${id}">${label}${id === 'chat' && unread ? ` <b class="hub-count">${unread}</b>` : ''}${id === 'orders' && (ownerSide.approvals || []).some((a) => a.status === 'pending') ? ` <b class="hub-count">${(ownerSide.approvals || []).filter((a) => a.status === 'pending').length}</b>` : ''}${id === 'agreements' && (ownerSide.agreements || []).some((a) => a.status === 'proposed' && a.proposed_by === 'partner') ? ' <b class="hub-count">!</b>' : ''}</button>`).join('')}</div>
         ${ownerSide.error ? `<p class="cloud-message error">${icon('alert')}<span>${escapeHtml(ownerSide.error)}</span></p>` : ''}
         ${ownerSide.partners === null ? '<div class="pp-skel"><i></i><i></i></div>' : `${partnerFilter}${body}`}`;
     }

@@ -361,7 +361,14 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 - **Tests:** SQL (Trigger, RLS); E2E `defects`.
 - **Risiko:** Doppelte Mängel durch lokale und Server-Quelle. Abgleich über `app_ref` und Herkunft.
 
-### Phase 8 – Kosten & Freigaben (Migration 3500)
+### Phase 8 – Kosten & Freigaben (Migration 3600)  ✅ umgesetzt (02.11.2026, ohne `quote_items`)
+> Umgesetzt (Migration 3600, SQL `costs_approvals_test.sql` mit 28 Prüfungen, E2E `costs`):
+> - **Eine** Tabelle `service_order_cost_items` mit `kind` work/material/travel statt drei Tabellen. `organization_id` setzt der Trigger auf den Partnerbetrieb (nie vom Client). Lesen: Leitung/Buchhaltung des Partners sowie zugewiesene Mitarbeiter. Schreiben: nur Mitglieder des Partnerbetriebs; Mitarbeiter nur eigene Einträge. Der Hausbesitzer sieht die internen Positionen nicht.
+> - `approval_requests`: Schreiben nur über die RPCs `request_approval` (nur der beauftragte Partner, nur laufende Aufträge) und `respond_approval` (nur Personal des Hausbesitzers). Freigegebene Beträge erhöhen `estimated_cost`. Jede Anfrage und Entscheidung landet im Auftragsverlauf und im Audit-Log.
+> - `organizations.auto_approval_limit` (Org-Ebene): Beträge bis zum Limit werden sofort freigegeben, aber nur bei gleicher Währung.
+> - UI Partner: Abschnitt „Zeit, Material & Anfahrt“ mit Start/Stopp-Zeiterfassung (Stundensatz und Anfahrtspauschale aus dem Profil vorbelegt) und Summe netto/brutto. Der Abschluss- bzw. Rechnungsbetrag wird daraus vorbelegt. Dazu „Mehrkosten zur Freigabe“ mit Statusliste.
+> - UI Hausbesitzer: Karte „Mehrkosten warten auf deine Freigabe“ im Reiter Aufträge (mit Zähler am Reiter); Freigeben/Ablehnen mit Grund; Mehrkosten je Auftragskarte; Limit-Einstellung unter „Partner & Codes“ (nur Admin).
+> - Offen: Angebotspositionen (`quote_items`). Angebote bleiben vorerst Gesamtbeträge.
 - **DB:**
   - Neue Tabellen `service_order_work_logs`, `service_order_travel_logs`, `service_order_materials`, `quote_items`, `approval_requests`.
   - `auto_approval_limit` (Objekt oder Org).
@@ -377,13 +384,13 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 - **Chat:** auf `messages` erweitern (Anhänge über `documents`); keine neuen Tabellen.
 - **Tests:** E2E `notify`.
 
-### Phase 10 – Automatisierung & Wiederkehr (Migration 3600)
+### Phase 10 – Automatisierung & Wiederkehr (Migration 3700)
 - **Serverseitige Regeln** über `automation_rules`: Kontrolle fällig → Auftrag, Mangel → Reparaturauftrag.
 - **Wiederkehrende Aufträge:** aus `service_agreements` und `maintenance` per pg_cron oder Edge Function erzeugen. Die lokalen Wiederholaufgaben bleiben für Hausbesitzer ohne Partner.
 - **Wartung:** lokale Intervalle → `maintenance` projizieren.
 - **Tests:** SQL plus E2E `recurring`.
 
-### Phase 11 – Matching, Bewertungen, Notdienst (Migration 3700)
+### Phase 11 – Matching, Bewertungen, Notdienst (Migration 3800)
 - **DB:** `service_partner_reviews` mit Trigger für den Durchschnitt.
 - **Matching:** UI für `match_service_partners`.
 - **Notdienst:** Ablauf `priority='emergency'` (Partner mit `emergency_service` im Gebiet, Sofort-Push).
