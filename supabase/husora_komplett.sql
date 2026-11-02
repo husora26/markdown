@@ -7,7 +7,6 @@
 -- Danach in der App: Einstellungen → Daten & App → Cloud-Speicher (Supabase).
 -- Datei wird erzeugt – Änderungen bitte in supabase/migrations vornehmen.
 
-
 -- >>> 20261030000100_extensions_and_utilities.sql
 -- =============================================================================
 -- HUSORA · Migration 0100 · Erweiterungen, privates Schema, Hilfsfunktionen
@@ -9731,4 +9730,581 @@ begin
   perform cron.schedule('husora-recurring-agreements', '41 4 * * *', 'select public.run_recurring_agreements()');
 exception when others then
   raise notice 'pg_cron nicht verfügbar – Zeitplan bitte im Dashboard anlegen: %', sqlerrm;
+end $$;
+
+-- >>> 20261030004000_reviews_quotes_emergency.sql
+-- =============================================================================
+-- HUSORA · Phase 11: Bewertungen, Kostenvergleich (Angebote), Notdienst, Matching-Daten
+-- =============================================================================
+--   * public.service_partner_reviews: eine Bewertung je abgeschlossenem Auftrag (nur der Hausbesitzer
+--     des Auftrags), Antwort des Partners. Durchschnitt per Trigger an service_partners.rating (alle
+--     Verbindungen dieses Partnerbetriebs) und organizations.rating_avg/rating_count.
+--   * public.respond_quote(): Hausbesitzer nimmt ein Angebot an oder lehnt ab. Annahme übernimmt den
+--     Betrag als Kostenschätzung; weitere Angebote derselben Aufgabe werden abgelehnt und noch offene
+--     Anfragen dort zurückgezogen (Kostenvergleich mehrerer Partner).
+--   * public.request_emergency(): Notfall → Anfrage mit Priorität „emergency“ an den besten verbundenen
+--     Partner mit Notdienst (Objektfreigabe vor Bewertung), sofortige Benachrichtigung.
+-- Idempotent.
+
+-- -----------------------------------------------------------------------------
+-- 1) Bewertungen
+-- -----------------------------------------------------------------------------
+alter table public.organizations
+  add column if not exists rating_avg   numeric(3, 2),
+  add column if not exists rating_count integer not null default 0;
+
+create table if not exists public.service_partner_reviews (
+  id                  uuid primary key default gen_random_uuid(),
+  organization_id     uuid not null references public.organizations(id) on delete cascade,
+  service_partner_id  uuid not null references public.service_partners(id) on delete cascade,
+  service_order_id    uuid not null unique references public.service_orders(id) on delete cascade,
+  rating              integer not null check (rating between 1 and 5),
+  comment             text check (comment is null or length(comment) <= 2000),
+  partner_reply       text check (partner_reply is null or length(partner_reply) <= 2000),
+  replied_at          timestamptz,
+  created_by          uuid references public.users(id) on delete set null,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
+comment on table public.service_partner_reviews is 'Bewertung eines abgeschlossenen Auftrags durch den Hausbesitzer (eine je Auftrag), Antwort des Partners';
+create index if not exists spr_partner_idx on public.service_partner_reviews (service_partner_id);
+create index if not exists spr_org_idx on public.service_partner_reviews (organization_id);
+create index if not exists spr_created_by_idx on public.service_partner_reviews (created_by) where created_by is not null;
+
+create or replace function private.review_check()
+returns trigger language plpgsql security definer set search_path = '' as $$
+declare v_o public.service_orders;
+begin
+  if tg_op = 'INSERT' then
+    select * into v_o from public.service_orders o where o.id = new.service_order_id;
+    if v_o.id is null or v_o.status <> 'completed' then raise exception 'Bewerten geht erst nach Abschluss des Auftrags' using errcode = '22023'; end if;
+    if not private.is_org_staff(v_o.organization_id) then raise exception 'Nur der Auftraggeber kann bewerten' using errcode = '42501'; end if;
+    new.organization_id := v_o.organization_id;
+    new.service_partner_id := v_o.service_partner_id;
+    new.created_by := private.current_user_id();
+    new.partner_reply := null; new.replied_at := null;
+  else
+    -- Inhalt bleibt fest; nur die Antwort des Partners (über reply_review) ändert sich
+    new.organization_id := old.organization_id; new.service_partner_id := old.service_partner_id;
+    new.service_order_id := old.service_order_id; new.created_by := old.created_by; new.created_at := old.created_at;
+    if not private.is_system_context() then new.partner_reply := old.partner_reply; new.replied_at := old.replied_at; end if;
+  end if;
+  return new;
+end; $$;
+drop trigger if exists review_check on public.service_partner_reviews;
+create trigger review_check before insert or update on public.service_partner_reviews
+  for each row execute function private.review_check();
+drop trigger if exists spr_set_updated_at on public.service_partner_reviews;
+create trigger spr_set_updated_at before update on public.service_partner_reviews
+  for each row execute function private.set_updated_at();
+drop trigger if exists service_partner_reviews_audit on public.service_partner_reviews;
+create trigger service_partner_reviews_audit after insert or update or delete on public.service_partner_reviews
+  for each row execute function private.audit_row_change();
+
+-- Durchschnitt je Partnerbetrieb (über alle Kunden)
+create or replace function private.review_aggregate()
+returns trigger language plpgsql security definer set search_path = '' as $$
+declare
+  v_porg uuid;
+  v_avg  numeric;
+  v_n    integer;
+begin
+  select sp.partner_organization_id into v_porg from public.service_partners sp where sp.id = coalesce(new.service_partner_id, old.service_partner_id);
+  if v_porg is null then
+    update public.service_partners sp set rating = (select round(avg(r.rating)::numeric, 2) from public.service_partner_reviews r where r.service_partner_id = sp.id)
+    where sp.id = coalesce(new.service_partner_id, old.service_partner_id);
+    return null;
+  end if;
+  select round(avg(r.rating)::numeric, 2), count(*) into v_avg, v_n
+  from public.service_partner_reviews r join public.service_partners sp on sp.id = r.service_partner_id
+  where sp.partner_organization_id = v_porg;
+  update public.organizations set rating_avg = v_avg, rating_count = v_n where id = v_porg;
+  update public.service_partners set rating = v_avg where partner_organization_id = v_porg;
+  return null;
+end; $$;
+drop trigger if exists review_aggregate on public.service_partner_reviews;
+create trigger review_aggregate after insert or update of rating or delete on public.service_partner_reviews
+  for each row execute function private.review_aggregate();
+
+alter table public.service_partner_reviews enable row level security;
+drop policy if exists spr_select on public.service_partner_reviews;
+create policy spr_select on public.service_partner_reviews for select to authenticated
+  using (private.can_read_org(organization_id) or private.is_partner_member(service_partner_id));
+drop policy if exists spr_insert on public.service_partner_reviews;
+create policy spr_insert on public.service_partner_reviews for insert to authenticated
+  with check (private.is_org_staff(organization_id));
+drop policy if exists spr_update on public.service_partner_reviews;
+create policy spr_update on public.service_partner_reviews for update to authenticated
+  using (private.is_org_staff(organization_id)) with check (private.is_org_staff(organization_id));
+revoke all on public.service_partner_reviews from anon, authenticated;
+grant select, insert on public.service_partner_reviews to authenticated;
+grant update (rating, comment) on public.service_partner_reviews to authenticated;
+
+-- Partner antwortet auf eine Bewertung
+create or replace function public.reply_review(p_review_id uuid, p_reply text)
+returns void language plpgsql security definer set search_path = '' as $$
+declare v_r public.service_partner_reviews;
+begin
+  select * into v_r from public.service_partner_reviews r where r.id = p_review_id;
+  if v_r.id is null or not private.is_partner_member(v_r.service_partner_id) or private.is_org_staff(v_r.organization_id) then
+    raise exception 'Keine Berechtigung' using errcode = '42501';
+  end if;
+  update public.service_partner_reviews set partner_reply = left(nullif(trim(p_reply), ''), 2000), replied_at = case when nullif(trim(p_reply), '') is null then null else now() end
+  where id = v_r.id;
+end; $$;
+revoke all on function public.reply_review(uuid, text) from public, anon;
+grant execute on function public.reply_review(uuid, text) to authenticated;
+
+-- Bewertung → Benachrichtigung an den Partner
+create or replace function private.review_notify()
+returns trigger language plpgsql security definer set search_path = '' as $$
+begin
+  insert into public.notifications (organization_id, user_id, type, category, title, message, entity_type, entity_id)
+  select sp.partner_organization_id, m.user_id, 'service_order', 'order', 'Neue Bewertung: ' || repeat('★', new.rating) || repeat('☆', 5 - new.rating),
+         left(coalesce(new.comment, ''), 200), 'service_order', new.service_order_id
+  from public.service_partners sp join public.organization_members m on m.organization_id = sp.partner_organization_id
+  where sp.id = new.service_partner_id and sp.partner_organization_id is not null and m.status = 'active' and m.role in ('admin', 'service_manager');
+  return null;
+exception when others then return null;
+end; $$;
+drop trigger if exists review_notify on public.service_partner_reviews;
+create trigger review_notify after insert on public.service_partner_reviews
+  for each row execute function private.review_notify();
+
+-- -----------------------------------------------------------------------------
+-- 2) Kostenvergleich: Angebot annehmen/ablehnen
+-- -----------------------------------------------------------------------------
+create or replace function public.respond_quote(p_quote_id uuid, p_approve boolean, p_note text default null)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_q     public.quotes;
+  v_o     public.service_orders;
+  v_other integer := 0;
+  v_note  text := left(nullif(trim(p_note), ''), 500);
+begin
+  select * into v_q from public.quotes q where q.id = p_quote_id for update;
+  if v_q.id is null or not private.is_org_staff(v_q.organization_id) then raise exception 'Keine Berechtigung' using errcode = '42501'; end if;
+  if v_q.status not in ('requested', 'received') then raise exception 'Dieses Angebot ist bereits entschieden' using errcode = '22023'; end if;
+  select * into v_o from public.service_orders o where o.id = v_q.service_order_id;
+  update public.quotes set status = case when p_approve then 'approved' else 'rejected' end, decided_at = now(), decided_by = private.current_user_id() where id = v_q.id;
+  if p_approve and v_o.id is not null then
+    update public.service_orders set estimated_cost = v_q.amount_gross, approval_status = 'approved' where id = v_o.id;
+    -- Vergleich: andere Angebote derselben Aufgabe ablehnen, offene Anfragen dort zurückziehen
+    if v_o.service_task_id is not null then
+      update public.quotes q set status = 'rejected', decided_at = now(), decided_by = private.current_user_id()
+      from public.service_orders o
+      where q.service_order_id = o.id and o.service_task_id = v_o.service_task_id and o.id <> v_o.id and q.status in ('requested', 'received');
+      get diagnostics v_other = row_count;
+      update public.service_orders o set status = 'cancelled', response_note = 'Anderes Angebot gewählt'
+      where o.service_task_id = v_o.service_task_id and o.id <> v_o.id and o.status = 'offered';
+    end if;
+  end if;
+  insert into public.notifications (organization_id, user_id, type, category, title, message, entity_type, entity_id)
+  select sp.partner_organization_id, m.user_id, 'service_order', 'order',
+         case when p_approve then 'Angebot angenommen: ' else 'Angebot abgelehnt: ' end || coalesce(v_q.quote_number, v_o.title, 'Angebot'),
+         left(coalesce(v_note, v_q.amount_gross::text || ' ' || v_q.currency), 200), 'service_order', v_q.service_order_id
+  from public.service_partners sp join public.organization_members m on m.organization_id = sp.partner_organization_id
+  where sp.id = v_q.service_partner_id and sp.partner_organization_id is not null and m.status = 'active' and m.role in ('admin', 'service_manager', 'dispatcher', 'accounting');
+  return jsonb_build_object('status', case when p_approve then 'approved' else 'rejected' end, 'others_rejected', v_other);
+end;
+$$;
+revoke all on function public.respond_quote(uuid, boolean, text) from public, anon;
+grant execute on function public.respond_quote(uuid, boolean, text) to authenticated;
+
+-- -----------------------------------------------------------------------------
+-- 3) Notdienst
+-- -----------------------------------------------------------------------------
+create or replace function public.request_emergency(p_property_id uuid, p_title text, p_description text default null, p_exclude uuid[] default null)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_org   uuid := private.property_org(p_property_id);
+  v_sp    record;
+  v_id    uuid;
+  v_title text := left(nullif(trim(p_title), ''), 160);
+begin
+  if v_org is null or not private.is_org_staff(v_org) then raise exception 'Keine Berechtigung' using errcode = '42501'; end if;
+  if v_title is null then raise exception 'Bitte kurz beschreiben, was passiert ist' using errcode = '22023'; end if;
+  select sp.id, sp.company_name, sp.partner_organization_id into v_sp
+  from public.service_partners sp join public.organizations po on po.id = sp.partner_organization_id
+  where sp.organization_id = v_org and sp.partner_organization_id <> v_org and sp.disconnected_at is null and po.emergency_service
+    and (p_exclude is null or not (sp.id = any (p_exclude)))
+    and not exists (select 1 from public.service_partner_absences a where a.organization_id = po.id and a.user_id is null and now() between a.start_at and a.end_at)
+  order by exists (select 1 from public.property_service_assignments psa where psa.property_id = p_property_id and psa.service_partner_id = sp.id and psa.status = 'active') desc,
+           po.rating_avg desc nulls last, sp.company_name
+  limit 1;
+  if v_sp.id is null then
+    raise exception 'Kein verbundener Servicepartner mit Notdienst verfügbar – bitte direkt anrufen (Notfall-Telefon)' using errcode = 'P0002';
+  end if;
+  insert into public.service_orders (organization_id, property_id, service_partner_id, title, description, status, priority, order_type, scheduled_at, currency, created_by)
+  values (v_org, p_property_id, v_sp.id, 'NOTFALL: ' || v_title, left(nullif(trim(p_description), ''), 2000), 'offered', 'emergency', 'emergency', now(),
+          (select o.currency from public.organizations o where o.id = v_org), private.current_user_id())
+  returning id into v_id;
+  insert into public.notifications (organization_id, user_id, type, category, title, message, entity_type, entity_id)
+  select v_sp.partner_organization_id, m.user_id, 'service_order', 'order', 'NOTFALL: ' || v_title,
+         left(concat_ws(' · ', (select p.name from public.properties p where p.id = p_property_id), 'bitte sofort annehmen oder ablehnen'), 200), 'service_order', v_id
+  from public.organization_members m
+  where m.organization_id = v_sp.partner_organization_id and m.status = 'active' and m.role in ('admin', 'service_manager', 'dispatcher');
+  return jsonb_build_object('service_order_id', v_id, 'service_partner_id', v_sp.id, 'company_name', v_sp.company_name);
+end;
+$$;
+revoke all on function public.request_emergency(uuid, text, text, uuid[]) from public, anon;
+grant execute on function public.request_emergency(uuid, text, text, uuid[]) to authenticated;
+
+-- Notdienst-Kennzeichen der verbundenen Partner für die Auswahl beim Hausbesitzer
+create or replace function public.partner_directory_facts()
+returns table (service_partner_id uuid, emergency_service boolean, rating_avg numeric, rating_count integer)
+language sql stable security definer set search_path = '' as $$
+  select sp.id, coalesce(po.emergency_service, false), po.rating_avg, coalesce(po.rating_count, 0)
+  from public.service_partners sp left join public.organizations po on po.id = sp.partner_organization_id
+  where private.is_org_member(sp.organization_id)
+$$;
+revoke all on function public.partner_directory_facts() from public, anon;
+grant execute on function public.partner_directory_facts() to authenticated;
+
+-- >>> 20261030004100_security_hardening.sql
+-- =============================================================================
+-- HUSORA · Sicherheits-Härtung der Tabellenrechte (Security-Test 02.11.2026)
+-- =============================================================================
+-- Befund: Die Standardrechte von Supabase geben anon und authenticated auf jede neue Tabelle im
+-- Schema public ALLE Rechte – auch TRUNCATE, REFERENCES und TRIGGER. RLS gilt für SELECT/INSERT/
+-- UPDATE/DELETE, aber NICHT für TRUNCATE: Ein beliebiger angemeldeter Nutzer (bei einigen Tabellen
+-- sogar ohne Anmeldung) hätte per „TRUNCATE“ die Daten aller Organisationen löschen können.
+-- (Über die REST-API ist TRUNCATE nicht direkt aufrufbar, über SQL-Zugänge mit diesen Rollen aber schon.)
+-- Behebung:
+--   * TRUNCATE, REFERENCES, TRIGGER für anon/authenticated auf allen Tabellen entziehen
+--   * anon bekommt nur noch, was eine anon-Policy wirklich braucht (Lesen plans/app_config,
+--     anonymes Feedback); alle anderen Schreibrechte für anon entfallen
+--   * Standardrechte für künftige Tabellen entsprechend anpassen
+--   * Funktionen im Schema public: anon darf nur noch die ausdrücklich freigegebenen ausführen
+-- Idempotent.
+
+do $$
+declare r record;
+begin
+  for r in select c.oid::regclass as t from pg_class c join pg_namespace n on n.oid = c.relnamespace
+           where n.nspname = 'public' and c.relkind in ('r', 'p', 'v', 'm', 'f') loop
+    execute format('revoke truncate, references, trigger on %s from anon, authenticated', r.t);
+    execute format('revoke insert, update, delete on %s from anon', r.t);
+  end loop;
+end $$;
+-- benötigte anon-Rechte (siehe Policies plans_select, app_config_select, app_feedback_insert_anon)
+grant select on public.plans, public.app_config to anon;
+grant insert on public.app_feedback to anon;
+
+-- künftige Tabellen/Funktionen: keine gefährlichen Rechte mehr automatisch vergeben
+do $$
+begin
+  alter default privileges for role postgres in schema public revoke truncate, references, trigger on tables from anon, authenticated;
+  alter default privileges for role postgres in schema public revoke insert, update, delete on tables from anon;
+  alter default privileges for role postgres in schema public revoke execute on functions from anon;
+exception when others then raise notice 'Standardrechte (postgres) nicht geändert: %', sqlerrm;
+end $$;
+do $$
+begin
+  alter default privileges for role supabase_admin in schema public revoke truncate, references, trigger on tables from anon, authenticated;
+  alter default privileges for role supabase_admin in schema public revoke insert, update, delete on tables from anon;
+exception when others then raise notice 'Standardrechte (supabase_admin) nicht geändert: %', sqlerrm;
+end $$;
+
+-- Sicherheits-Definer-Funktionen: anon nur, wo ohne Anmeldung nötig (keine)
+do $$
+declare r record;
+begin
+  for r in select p.oid::regprocedure as f from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+           where n.nspname = 'public' and p.prosecdef and has_function_privilege('anon', p.oid, 'EXECUTE') loop
+    execute format('revoke execute on function %s from anon, public', r.f);
+    execute format('grant execute on function %s to authenticated', r.f);
+  end loop;
+end $$;
+
+-- >>> 20261030004200_ai_assist.sql
+-- =============================================================================
+-- HUSORA · Phase 12: KI-Vorschläge (Kontrollbericht, Schadenserkennung aus Fotos, Kostenschätzung)
+-- =============================================================================
+-- Ablauf (Edge Function „ai-assist“):
+--   1. ai_begin() mit dem Token des Nutzers: prüft per RLS, dass der Nutzer das Objekt sehen darf,
+--      prüft Tageskontingent und Schalter, legt einen Eintrag „pending“ an.
+--   2. Die Edge Function liest die Daten mit dem Token des Nutzers (RLS) und fragt das Modell –
+--      der API-Schlüssel liegt nur als Secret der Edge Function.
+--   3. ai_complete() schreibt das Ergebnis – NUR die Edge Function (service_role) darf das, damit
+--      niemand ein „KI-Ergebnis“ fälschen kann.
+-- Ergebnisse sind immer Vorschläge (status 'suggested') und werden nie automatisch übernommen;
+-- der Nutzer entscheidet mit ai_decide().
+-- Idempotent.
+
+insert into public.app_config (key, value) values ('ai', '{"enabled": false, "daily_limit": 50}') on conflict (key) do nothing;
+
+create table if not exists public.ai_suggestions (
+  id                uuid primary key default gen_random_uuid(),
+  requester_org_id  uuid references public.organizations(id) on delete cascade,
+  entity_org_id     uuid references public.organizations(id) on delete cascade,
+  requested_by      uuid references public.users(id) on delete set null,
+  kind              text not null check (kind in ('inspection_report', 'photo_damage', 'cost_estimate')),
+  entity_type       text not null check (entity_type in ('inspection', 'photo', 'inspection_item', 'repair')),
+  entity_id         uuid not null,
+  status            text not null default 'pending' check (status in ('pending', 'suggested', 'accepted', 'dismissed', 'failed')),
+  result            jsonb check (result is null or pg_column_size(result) <= 20000),
+  model             text check (model is null or length(model) <= 60),
+  error_message     text check (error_message is null or length(error_message) <= 300),
+  created_at        timestamptz not null default now(),
+  completed_at      timestamptz,
+  decided_at        timestamptz,
+  decided_by        uuid references public.users(id) on delete set null
+);
+comment on table public.ai_suggestions is 'KI-Vorschläge (nie automatisch übernommen). Ergebnis schreibt nur die Edge Function ai-assist.';
+create index if not exists ai_suggestions_entity_idx on public.ai_suggestions (entity_type, entity_id, created_at desc);
+create index if not exists ai_suggestions_requester_idx on public.ai_suggestions (requester_org_id, created_at desc);
+create index if not exists ai_suggestions_entity_org_idx on public.ai_suggestions (entity_org_id);
+create index if not exists ai_suggestions_requested_by_idx on public.ai_suggestions (requested_by) where requested_by is not null;
+create index if not exists ai_suggestions_decided_by_idx on public.ai_suggestions (decided_by) where decided_by is not null;
+
+alter table public.ai_suggestions enable row level security;
+drop policy if exists ai_suggestions_select on public.ai_suggestions;
+create policy ai_suggestions_select on public.ai_suggestions for select to authenticated
+  using (requested_by = (select private.current_user_id())
+         or (requester_org_id is not null and private.is_org_member(requester_org_id))
+         or (entity_org_id is not null and private.can_read_org(entity_org_id)));
+revoke all on public.ai_suggestions from anon, authenticated;
+grant select on public.ai_suggestions to authenticated;
+
+-- Objekt sichtbar? (läuft mit den Rechten des Aufrufers → RLS entscheidet)
+create or replace function public.ai_entity_visible(p_entity_type text, p_entity_id uuid)
+returns uuid
+language plpgsql
+stable
+security invoker
+set search_path = ''
+as $$
+declare v_org uuid;
+begin
+  if p_entity_type = 'inspection' then select i.organization_id into v_org from public.inspections i where i.id = p_entity_id;
+  elsif p_entity_type = 'photo' then select p.organization_id into v_org from public.photos p where p.id = p_entity_id;
+  elsif p_entity_type = 'inspection_item' then
+    select i.organization_id into v_org from public.inspection_items ii join public.inspections i on i.id = ii.inspection_id where ii.id = p_entity_id;
+  elsif p_entity_type = 'repair' then select r.organization_id into v_org from public.repairs r where r.id = p_entity_id;
+  end if;
+  return v_org;
+end;
+$$;
+revoke all on function public.ai_entity_visible(text, uuid) from public, anon;
+grant execute on function public.ai_entity_visible(text, uuid) to authenticated;
+
+create or replace function private.ai_reserve(p_kind text, p_entity_type text, p_entity_id uuid, p_entity_org uuid, p_requester_org uuid)
+returns uuid
+language plpgsql security definer set search_path = '' as $$
+declare
+  v_cfg   jsonb := (select c.value from public.app_config c where c.key = 'ai');
+  v_user  uuid := private.current_user_id();
+  v_org   uuid := case when p_requester_org is not null and private.is_org_member(p_requester_org) then p_requester_org else p_entity_org end;
+  v_count integer;
+  v_id    uuid;
+begin
+  if v_user is null then raise exception 'Bitte zuerst anmelden' using errcode = '42501'; end if;
+  if not coalesce((v_cfg ->> 'enabled')::boolean, false) then raise exception 'KI-Vorschläge sind gerade nicht freigeschaltet' using errcode = 'P0001'; end if;
+  select count(*) into v_count from public.ai_suggestions s where s.requester_org_id = v_org and s.created_at > now() - interval '1 day';
+  if v_count >= coalesce((v_cfg ->> 'daily_limit')::integer, 50) then raise exception 'Tageskontingent für KI-Vorschläge erreicht – morgen wieder' using errcode = 'P0001'; end if;
+  insert into public.ai_suggestions (requester_org_id, entity_org_id, requested_by, kind, entity_type, entity_id)
+  values (v_org, p_entity_org, v_user, p_kind, p_entity_type, p_entity_id)
+  returning id into v_id;
+  return v_id;
+end; $$;
+
+-- Schritt 1 (Nutzer-Token)
+create or replace function public.ai_begin(p_kind text, p_entity_type text, p_entity_id uuid, p_organization_id uuid default null)
+returns uuid
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare v_org uuid;
+begin
+  if not ((p_kind = 'inspection_report' and p_entity_type = 'inspection')
+          or (p_kind = 'photo_damage' and p_entity_type = 'photo')
+          or (p_kind = 'cost_estimate' and p_entity_type in ('inspection_item', 'repair'))) then
+    raise exception 'Ungültige Anfrage' using errcode = '22023';
+  end if;
+  v_org := public.ai_entity_visible(p_entity_type, p_entity_id);
+  if v_org is null then raise exception 'Keine Berechtigung für dieses Objekt' using errcode = '42501'; end if;
+  return private.ai_reserve(p_kind, p_entity_type, p_entity_id, v_org, p_organization_id);
+end;
+$$;
+revoke all on function public.ai_begin(text, text, uuid, uuid) from public, anon;
+grant execute on function public.ai_begin(text, text, uuid, uuid) to authenticated;
+
+-- Schritt 3 (nur Edge Function / service_role)
+create or replace function public.ai_complete(p_id uuid, p_result jsonb, p_model text, p_error text default null)
+returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  update public.ai_suggestions
+  set status = case when p_error is null then 'suggested' else 'failed' end,
+      result = case when p_error is null then p_result end, model = left(p_model, 60),
+      error_message = left(p_error, 300), completed_at = now()
+  where id = p_id and status = 'pending';
+end; $$;
+revoke all on function public.ai_complete(uuid, jsonb, text, text) from public, anon, authenticated;
+grant execute on function public.ai_complete(uuid, jsonb, text, text) to service_role;
+
+-- Nutzer entscheidet über den Vorschlag
+create or replace function public.ai_decide(p_id uuid, p_accept boolean)
+returns void
+language plpgsql security definer set search_path = '' as $$
+declare v_s public.ai_suggestions;
+begin
+  select * into v_s from public.ai_suggestions s where s.id = p_id;
+  if v_s.id is null or not (v_s.requested_by = private.current_user_id() or (v_s.requester_org_id is not null and private.is_org_member(v_s.requester_org_id))) then
+    raise exception 'Keine Berechtigung' using errcode = '42501';
+  end if;
+  if v_s.status <> 'suggested' then raise exception 'Dieser Vorschlag ist nicht mehr offen' using errcode = '22023'; end if;
+  update public.ai_suggestions set status = case when p_accept then 'accepted' else 'dismissed' end, decided_at = now(), decided_by = private.current_user_id()
+  where id = v_s.id;
+end; $$;
+revoke all on function public.ai_decide(uuid, boolean) from public, anon;
+grant execute on function public.ai_decide(uuid, boolean) to authenticated;
+
+-- >>> 20261030004300_retention_privacy.sql
+-- =============================================================================
+-- HUSORA · Aufbewahrung der neuen Beta-/Benachrichtigungs-/KI-Daten (Compliance-Test 02.11.2026)
+-- =============================================================================
+-- Erweitert die wöchentliche Bereinigung (Migration 2200) um die Fristen aus der Datenschutzerklärung:
+--   analytics_events 13 Monate · beta_ratings 24 Monate · ai_suggestions 24 Monate (offene/fehlgeschlagene 30 Tage)
+--   push_subscriptions ohne Nutzung 6 Monate · service_order_events bleiben (Nachweis der Aufträge)
+--   * track_events(): Metadaten nur noch über eine Allowlist bekannter Schlüssel (statt Sperrliste) –
+--     verhindert, dass ein Freitext wie „title“ mit Inhalt in die Analytics gelangt.
+-- Idempotent.
+create or replace function private.cleanup_retention()
+returns void
+language sql security definer set search_path = ''
+as $$
+  delete from public.app_feedback where created_at < now() - interval '12 months';
+  delete from public.notifications where read_at is not null and read_at < now() - interval '6 months';
+  delete from public.stripe_events where processed_at < now() - interval '3 months';
+  delete from public.analytics_events where occurred_at < now() - interval '13 months';
+  delete from public.beta_ratings where created_at < now() - interval '24 months';
+  delete from public.ai_suggestions where created_at < now() - interval '24 months'
+     or (status in ('pending', 'failed') and created_at < now() - interval '30 days');
+  delete from public.push_subscriptions where coalesce(last_used_at, created_at) < now() - interval '6 months';
+$$;
+revoke all on function private.cleanup_retention() from public, anon, authenticated;
+
+-- Analytics: Metadaten nur aus einer Allowlist
+CREATE OR REPLACE FUNCTION public.track_events(p_events jsonb, p_organization_id uuid DEFAULT NULL::uuid)
+ RETURNS integer
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare
+  v_user   uuid := private.current_user_id();
+  v_org    uuid;
+  v_ev     jsonb;
+  v_name   text;
+  v_meta   jsonb;
+  v_at     timestamptz;
+  v_count  integer := 0;
+  v_today  integer;
+  v_allowed constant text[] := array['session_started', 'onboarding_started', 'onboarding_completed', 'house_created', 'room_created',
+    'document_uploaded', 'task_created', 'task_completed', 'inspection_started', 'inspection_completed', 'service_search',
+    'subscription_interest', 'partner_profile_completed', 'partner_service_created', 'partner_area_created'];
+begin
+  if v_user is null then raise exception 'Nicht angemeldet' using errcode = '28000'; end if;
+  if not private.beta_config('analytics') then return 0; end if;
+  if jsonb_typeof(p_events) <> 'array' or jsonb_array_length(p_events) > 50 then
+    raise exception 'Höchstens 50 Ereignisse je Aufruf' using errcode = '22023';
+  end if;
+  -- Organisation nur, wenn der Nutzer Mitglied ist (nie blind vom Client übernehmen)
+  v_org := case when p_organization_id is not null and private.is_org_member(p_organization_id) then p_organization_id end;
+  select count(*) into v_today from public.analytics_events e where e.user_id = v_user and e.created_at > now() - interval '1 day';
+  if v_today >= 2000 then return 0; end if;
+
+  -- Beta-Nutzer markieren (einmalig, Gruppe aus der Konfiguration)
+  update public.users u set is_beta_user = true, beta_started_at = coalesce(u.beta_started_at, now()),
+         beta_group = coalesce(u.beta_group, (select c.value ->> 'default_group' from public.app_config c where c.key = 'beta'))
+  where u.id = v_user and not u.is_beta_user;
+
+  for v_ev in select * from jsonb_array_elements(p_events) loop
+    v_name := v_ev ->> 'event_name';
+    continue when v_name is null or not (v_name = any (v_allowed));
+    -- nur flache, kurze Metadaten ohne verdächtige Schlüssel
+    select coalesce(jsonb_object_agg(k, val), '{}'::jsonb) into v_meta
+    from jsonb_each(case when jsonb_typeof(v_ev -> 'metadata') = 'object' then v_ev -> 'metadata' else '{}'::jsonb end) as m(k, val)
+    where k = any (array['count', 'houses', 'rooms', 'added', 'auto', 'category', 'query_length', 'usage', 'demo_before', 'onboarding',
+                         'feature', 'type', 'severity', 'context', 'rating', 'order_type', 'priority', 'step', 'source'])  -- Allowlist (Datensparsamkeit)
+      and jsonb_typeof(val) in ('string', 'number', 'boolean')
+      and length(val::text) <= 80;
+    v_at := case when (v_ev ->> 'occurred_at') ~ '^\d{4}-\d{2}-\d{2}T' then (v_ev ->> 'occurred_at')::timestamptz end;
+    if v_at is null or v_at > now() + interval '5 minutes' or v_at < now() - interval '90 days' then v_at := now(); end if;
+    insert into public.analytics_events (organization_id, user_id, event_name, entity_type, entity_ref, app_role, app_version, platform, environment, source, metadata, occurred_at)
+    values (v_org, v_user, v_name,
+            case when (v_ev ->> 'entity_type') ~ '^[a-z][a-z0-9_]{1,40}$' then v_ev ->> 'entity_type' end,
+            left(v_ev ->> 'entity_ref', 80),
+            case when v_ev ->> 'app_role' in ('owner', 'partner', 'guest') then v_ev ->> 'app_role' end,
+            left(v_ev ->> 'app_version', 40), left(v_ev ->> 'platform', 40),
+            case when v_ev ->> 'environment' in ('production', 'staging', 'development') then v_ev ->> 'environment' end,
+            'client', v_meta, v_at)
+    on conflict do nothing;
+    if found then v_count := v_count + 1; end if;
+  end loop;
+  return v_count;
+end;
+$function$;
+revoke all on function public.track_events(jsonb, uuid) from public, anon;
+grant execute on function public.track_events(jsonb, uuid) to authenticated;
+
+-- Fix (Compliance-Test): Beim Löschen eines Kontos setzt die Datenbank app_feedback.user_id bzw.
+-- organization_id auf NULL (ON DELETE SET NULL). Der Status-Schutz-Trigger hatte das zurückgesetzt und
+-- damit „Konto löschen“ für Nutzer mit Feedback verhindert. Entfernen eines Bezugs ist jetzt erlaubt.
+create or replace function private.app_feedback_identity()
+returns trigger
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_new public.app_feedback := new;
+begin
+  if tg_op = 'INSERT' then
+    new.auth_user_id := auth.uid();
+    new.user_id := private.current_user_id();
+    if new.organization_id is not null and (new.user_id is null or not private.is_org_member(new.organization_id)) then
+      new.organization_id := null;
+    end if;
+    new.status := 'open';
+    new.resolved_at := null;
+    if new.kind = 'bug' and new.severity is null then new.severity := 'medium'; end if;
+    return new;
+  end if;
+  -- UPDATE: nur Status ändern (Super-Admin); Bezüge dürfen nur entfernt werden (Löschung von Konto/Organisation)
+  new := old;
+  new.status := v_new.status;
+  new.resolved_at := case when v_new.status in ('resolved', 'wont_fix') then coalesce(old.resolved_at, now()) else null end;
+  if v_new.user_id is null then new.user_id := null; end if;
+  if v_new.organization_id is null then new.organization_id := null; end if;
+  if v_new.auth_user_id is null then new.auth_user_id := null; end if;
+  return new;
+end;
+$$;
+
+-- Fix (frische Installation): seed.sql vergibt public.users.id neu; das automatisch erzeugte Ereignis
+-- „user_registered“ verhinderte das. Bezüge der neuen Tabellen folgen einer geänderten Nutzer-ID.
+do $$
+declare r record;
+begin
+  for r in select * from (values
+      ('analytics_events', 'analytics_events_user_id_fkey', 'user_id', 'cascade'),
+      ('beta_ratings', 'beta_ratings_user_id_fkey', 'user_id', 'cascade'),
+      ('notification_preferences', 'notification_preferences_user_id_fkey', 'user_id', 'cascade'),
+      ('push_subscriptions', 'push_subscriptions_user_id_fkey', 'user_id', 'cascade'),
+      ('app_feedback', 'app_feedback_user_id_fkey', 'user_id', 'set null'),
+      ('ai_suggestions', 'ai_suggestions_requested_by_fkey', 'requested_by', 'set null')) v(tbl, con, col, on_delete)
+  loop
+    execute format('alter table public.%I drop constraint if exists %I', r.tbl, r.con);
+    execute format('alter table public.%I add constraint %I foreign key (%I) references public.users(id) on update cascade on delete %s', r.tbl, r.con, r.col, r.on_delete);
+  end loop;
 end $$;

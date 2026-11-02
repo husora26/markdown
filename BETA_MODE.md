@@ -42,7 +42,7 @@ Umsetzung des Briefs „Husora Beta Mode – Implementierungsbrief für Claude�
 | 15–17 Dashboard | Seite „Husora Beta Dashboard“ (Hilfe → Premium-Vorschau → Button, nur Super-Admins; RPC `beta_dashboard()` prüft selbst): Kennzahlen, Funnels Hausbesitzer/Partner mit Umwandlungsraten, KPI-Ziele mit Zielmarke, Premium-Interesse, 30-Tage-Ergebnisse, Ereignisse 7 Tage, Feedback-/Fehlerliste mit Status, Beta-Schalter |
 | 18 Beta-Nutzer | `users.is_beta_user`, `beta_started_at`, `beta_group` (alpha/closed_beta/open_beta/pre_launch). Wird beim ersten Tracking gesetzt (Gruppe aus der Konfiguration), Nutzer können es nicht selbst ändern |
 | 19 Version | `app_version`, `platform` (z. B. `ios-app`, `android-web`), `environment` (production/staging/development aus dem Hostnamen) an Feedback, Fehlern, Bewertungen und Ereignissen |
-| 20 Datenschutz | Metadaten nur flach, kurz, ohne Schlüssel wie password/token/name/mail/address/message/note; keine Inhalte aus Dokumenten, Fotos, Notizen, Nachrichten. Schalter „Nutzungsstatistik für die Beta“ (Opt-out) unter Hilfe |
+| 20 Datenschutz | Metadaten nur aus einer Allowlist bekannter Schlüssel (count, houses, rooms, category, feature, …; Migration 4300), flach und kurz; keine Inhalte aus Dokumenten, Fotos, Notizen, Nachrichten. Schalter „Nutzungsstatistik für die Beta“ (Opt-out) unter Hilfe |
 
 ## 4. Ereignisse
 

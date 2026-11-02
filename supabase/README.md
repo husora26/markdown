@@ -502,3 +502,15 @@ Code: `supabase/functions/notify-dispatch` (Versand) und `sw.js` (Service Worker
    update public.app_config set value = jsonb_build_object('vapid_public_key', '<VAPID_PUBLIC_KEY>') where key = 'push';
    ```
 Danach können Nutzer unter Einstellungen → Benachrichtigungen „Push auf diesem Gerät“ aktivieren und je Kategorie App/Push/E-Mail wählen.
+
+## KI-Vorschläge (Phase 12)
+
+Code: `supabase/functions/ai-assist`. Ohne Einrichtung sind alle KI-Schaltflächen ausgeblendet.
+
+1. Secret setzen (Supabase → Edge Functions → Secrets): `ANTHROPIC_API_KEY` – **nie im Code oder in der App**.
+2. Deploy (JWT-Prüfung bleibt an): `supabase functions deploy ai-assist`
+3. Einschalten und Tageskontingent je Betrieb festlegen:
+   ```sql
+   update public.app_config set value = '{"enabled": true, "daily_limit": 50}' where key = 'ai';
+   ```
+Die Function prüft den Zugriff immer mit dem Token des Nutzers (RLS) und schreibt nur das Ergebnis mit `service_role`. Ergebnisse sind Vorschläge und werden nie automatisch übernommen.

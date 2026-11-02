@@ -2943,6 +2943,51 @@
     .hub-approvals-card .hub-approval + .hub-approval { margin-top: 8px; }
     .hub-limit-form { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
     .hub-limit-form label { flex: 1 1 200px; }
+    /* Phase 12: KI-Vorschläge */
+    .ai-card { display: grid; gap: 6px; margin: 10px 0; padding: 12px 14px; border: 1px dashed #8b6fd1; border-radius: 12px; background: rgba(139, 111, 209, .07); }
+    .ai-card.accepted { border-style: solid; }
+    .ai-card p { margin: 0; }
+    .ai-card-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ai-card-head small { color: var(--muted); }
+    .ai-chip { padding: 2px 8px; border-radius: 999px; background: #8b6fd1; color: #fff; font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    .ai-list { display: grid; gap: 4px; margin: 0; padding-left: 20px; }
+    .ai-list li small { display: block; color: var(--muted); }
+    .ai-prio { font-style: normal; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: var(--amber-soft); }
+    .ai-prio.urgent, .ai-prio.high { background: var(--red-soft); color: var(--red); }
+    .ai-btn { margin-top: 6px; }
+    .pp-photo-wrap { position: relative; display: inline-block; }
+    .ai-photo-btn { position: absolute; left: 4px; bottom: 4px; padding: 2px 6px; border: 0; border-radius: 8px; background: rgba(0, 0, 0, .6); color: #fff; font: inherit; font-size: 11px; cursor: pointer; }
+    /* Phase 11: Bewertungen, Angebote, Notdienst */
+    .hub-stars { margin-left: 6px; color: #b07d1c; font-weight: 700; font-size: 12px; }
+    .hub-emergency-tag { margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--red-soft); color: var(--red); font-size: 11px; font-weight: 700; }
+    .hub-quote { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
+    .hub-quote.received, .hub-quote.requested { border-color: var(--amber); background: var(--amber-soft); }
+    .hub-quote > span:first-child { display: grid; gap: 2px; flex: 1 1 200px; min-width: 0; }
+    .hub-quote small { color: var(--muted); font-size: 12.5px; }
+    .hub-compare { border: 1px solid var(--amber); }
+    .hub-compare .card-title { display: flex; align-items: center; gap: 8px; }
+    .hub-compare .card-title svg { width: 20px; height: 20px; }
+    .hub-compare-group { display: grid; gap: 8px; margin-top: 12px; }
+    .hub-compare-group h3 { margin: 0; font-size: 15px; }
+    .hub-best { justify-self: start; padding: 2px 8px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: 11.5px; font-weight: 700; }
+    .hub-review { display: grid; gap: 3px; margin-top: 10px; padding: 8px 12px; border-radius: 12px; background: var(--canvas); }
+    .hub-review small { color: var(--muted); }
+    .hub-review-stars { color: #b07d1c; letter-spacing: 1px; font-size: 16px; }
+    .hub-review-reply { color: var(--ink) !important; }
+    .hub-review-btn { margin-top: 10px; }
+    .hub-review-form { display: grid; gap: 8px; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
+    .emergency-request { border: 1px solid var(--red); margin-bottom: 16px; }
+    .emergency-request .card-title { display: flex; align-items: center; gap: 8px; color: var(--red); }
+    .emergency-request .card-title svg { width: 20px; height: 20px; }
+    .emergency-sent { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 12px; border-radius: 10px; background: var(--green-soft); }
+    .emergency-sent svg { width: 18px; height: 18px; flex: none; color: var(--green); }
+    .primary-btn.danger-solid { background: var(--red-solid, #a94e44); border-color: var(--red-solid, #a94e44); }
+    .pp-reviews { display: grid; gap: 10px; }
+    .pp-review { display: grid; gap: 4px; padding: 10px 0; border-top: 1px solid var(--line); }
+    .pp-review > div { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .pp-review small { color: var(--muted); }
+    .pp-review p { margin: 0; }
+    .pp-review-reply { color: var(--muted); }
     /* Phase 9: Benachrichtigungen, Chat-Anhänge */
     .notify-table { display: grid; margin: 6px 0 10px; }
     .notify-row { display: grid; grid-template-columns: 1fr 52px 52px 52px; align-items: center; gap: 6px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
@@ -15456,8 +15501,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <h3>Verbraucherstreitbeilegung</h3><p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>` },
       privacy: { title: 'Datenschutzerklärung', html: () => `<p class="legal-lead">Stand: ${escapeHtml(fmtDateFull(APP_BUILD))}</p>
         <h3>1. Verantwortlicher</h3><p>${legalValue('company', 'Firma oder Name')}, ${legalValue('street', 'Anschrift')}, ${legalValue('zip', 'PLZ')} ${legalValue('city', 'Ort')} · ${legalValue('email', 'E-Mail-Adresse')}</p>
-        <h3>2. Speicherung auf deinem Gerät und in der Husora Cloud</h3><p>Husora funktioniert auch ohne Benutzerkonto. Ohne Anmeldung werden alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – nur im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Analyse-, Werbe- oder Tracking-Dienste ein.</p><p><strong>Optionaler Cloud-Speicher (Husora Cloud):</strong> Meldest du dich unter „Einstellungen → Daten & App“ beim Cloud-Speicher an, werden deine Husora-Daten, Fotos und Dokumente verschlüsselt (HTTPS) übertragen und in der Husora Cloud gespeichert, damit sie auf mehreren Geräten verfügbar sind. Technischer Dienstleister (Auftragsverarbeiter) ist die Supabase Inc. (supabase.com); die Datenbank liegt im Rechenzentrum London (Vereinigtes Königreich, Angemessenheitsbeschluss der EU-Kommission). Für die Anmeldung werden deine E-Mail-Adresse und ein Passwort (nur verschlüsselt) bei Supabase Auth hinterlegt. Fotos und Dokumente liegen in privaten Speicherbereichen, die nur mit Anmeldung abrufbar sind. Alternativ kannst du ein eigenes Supabase-Projekt verbinden – dann bist du für dieses selbst verantwortlich. Die Verbindung lässt sich jederzeit trennen.</p>
+        <h3>2. Speicherung auf deinem Gerät und in der Husora Cloud</h3><p>Husora funktioniert auch ohne Benutzerkonto. Ohne Anmeldung werden alle Angaben – Profil, Ferienhäuser, Buchungen, Aufgaben, Kontrollen, Kosten, Fotos und Dokumente – nur im lokalen Speicher deines Geräts bzw. Browsers abgelegt und nicht an uns übertragen. Wir setzen keine Werbe-Tracker und keine Analysedienste Dritter ein.</p><p><strong>Optionaler Cloud-Speicher (Husora Cloud):</strong> Meldest du dich unter „Einstellungen → Daten & App“ beim Cloud-Speicher an, werden deine Husora-Daten, Fotos und Dokumente verschlüsselt (HTTPS) übertragen und in der Husora Cloud gespeichert, damit sie auf mehreren Geräten verfügbar sind. Technischer Dienstleister (Auftragsverarbeiter) ist die Supabase Inc. (supabase.com); die Datenbank liegt im Rechenzentrum London (Vereinigtes Königreich, Angemessenheitsbeschluss der EU-Kommission). Für die Anmeldung werden deine E-Mail-Adresse und ein Passwort (nur verschlüsselt) bei Supabase Auth hinterlegt. Fotos und Dokumente liegen in privaten Speicherbereichen, die nur mit Anmeldung abrufbar sind. Alternativ kannst du ein eigenes Supabase-Projekt verbinden – dann bist du für dieses selbst verantwortlich. Die Verbindung lässt sich jederzeit trennen.</p>
 <p><strong>Feedback und Fehlerberichte:</strong> Nachrichten, die du unter „Hilfe & Support“ sendest, speichern wir mit App-Version, Gerätetyp (Browser-Kennung) und – falls angegeben – deiner E-Mail-Adresse, um zu antworten und Fehler zu beheben. Tritt ein technischer Fehler auf, wird automatisch nur die Fehlermeldung mit diesen technischen Angaben übermittelt, keine Haus-, Buchungs- oder Kostendaten; das kannst du dort jederzeit abschalten. Rechtsgrundlage ist unser berechtigtes Interesse an einer funktionierenden App (Art. 6 Abs. 1 lit. f DSGVO); gelöscht wird nach spätestens 12 Monaten.</p>
+<p><strong>Beta-Nutzungsstatistik (eigene, ohne Dritte):</strong> Während der Beta zählen wir mit deinem Husora-Konto, welche Funktionen genutzt werden – zum Beispiel „Haus angelegt“, „Aufgabe erledigt“, „Serviceanfrage angenommen“ – jeweils mit Zeitpunkt, App-Version, Gerätetyp (z. B. „ios-app“) und Rolle. Inhalte wie Texte, Notizen, Nachrichten, Adressen, Fotos, Dokumente, Passwörter oder Zugangsdaten werden dabei nicht erfasst. Ohne Konto bleibt die Statistik auf deinem Gerät. Die Auswertung sieht nur das Husora-Team. Du kannst sie unter „Hilfe & Support → Premium-Vorschau → Nutzungsstatistik“ jederzeit abschalten. Bewertungen, Umfragen (nach 7 und 30 Tagen) und „Premium vormerken“ sind freiwillig. Rechtsgrundlage ist unser berechtigtes Interesse an der Verbesserung der App (Art. 6 Abs. 1 lit. f DSGVO); Ereignisse löschen wir nach 13 Monaten, Bewertungen und Umfragen nach 24 Monaten.</p>
+<p><strong>Benachrichtigungen:</strong> Was dir Husora in der App, per Push oder per E-Mail meldet, legst du unter „Einstellungen → Benachrichtigungen“ je Kategorie fest. Für Push speichern wir die Push-Adresse deines Browsers bzw. Geräts; zugestellt wird über den Push-Dienst deines Browsers (z. B. Google, Apple, Mozilla). E-Mails versenden wir nur, wenn du sie einschaltest, über unseren Versanddienstleister Resend. Push und E-Mail enthalten nur Titel und Kurztext. Rechtsgrundlage ist die Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO); nicht mehr genutzte Push-Adressen löschen wir nach 6 Monaten.</p>
+<p><strong>KI-Vorschläge:</strong> Servicepartner können eine abgeschlossene Kontrolle, ein Foto oder einen Mangel per Klick von einer KI auswerten lassen (Zusammenfassung, Schadenserkennung, Kostenschätzung). Dafür übermitteln wir nur die fachlichen Angaben (Prüfpunkte, Notizen zum Mangel, Foto, Haustyp, Baujahr, Region) an Anthropic PBC (USA) als Auftragsverarbeiter – keine Namen, Kontaktdaten oder Adressen. Die Übermittlung in die USA stützt sich auf das EU-US Data Privacy Framework bzw. Standardvertragsklauseln. Das Ergebnis ist immer nur ein Vorschlag und wird nie automatisch übernommen. Vorschläge löschen wir nach 24 Monaten.</p>
 <p><strong>Partner-Portal:</strong> Lädst du einen Servicepartner in das Partner-Portal ein, sieht dieser Betrieb nur, was zu seinen Aufträgen gehört: Name, Adresse, Eckdaten und Hausfotos des betroffenen Ferienhauses, die Aufgaben, die du ihm sendest, eure Nachrichten sowie Kontrollergebnisse, Fotos und Rechnungen zu diesen Aufträgen. Andere Häuser, Buchungen und Kosten sieht er nicht. Die Verbindung beendest du, indem du den Partner entfernst; gesendete Aufträge bleiben zur Nachweisführung erhalten.</p>
         <h3>3. Externe Dienste</h3><p>Für einzelne Funktionen ruft die App Inhalte von Drittanbietern ab. Dabei wird technisch bedingt deine IP-Adresse an den jeweiligen Anbieter übertragen; bei Suchanfragen zusätzlich der eingegebene Suchbegriff bzw. Link.</p>
         <ul>
@@ -15468,7 +15516,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <li><strong>Import von Inseraten:</strong> Abruf der angegebenen Inseratsseite, ggf. über die Weiterleitungsdienste allorigins.win und cors.lol sowie die Schnittstellen der jeweiligen Maklerportale; Übersetzung schwedischer Texte über Google Übersetzer bzw. MyMemory.</li>
           <li><strong>Kalender-Abgleich:</strong> Abruf deiner iCal-Links, auf Wunsch über eine Weiterleitung; bei verbundenem Buchungsportal Datenaustausch mit Repull.</li>
           <li><strong>Zahlung der Tarife PLUS, PRO und ULTIMATE:</strong> Stripe Payments Europe, Ltd. (Dublin, Irland) – Name, E-Mail-Adresse und Zahlungsdaten gibst du direkt bei Stripe ein; wir erhalten nur Tarif, Abo-Status und eine Kundennummer, keine Karten- oder Kontodaten. Rechtsgrundlage ist die Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO); Rechnungsdaten bewahren wir nach den steuerrechtlichen Fristen (bis zu 10 Jahre) auf.</li>
-          <li><strong>E-Mails an Servicepartner:</strong> werden über dein eigenes Mailprogramm versendet; Husora selbst versendet keine E-Mails.</li>
+          <li><strong>E-Mails an Servicepartner:</strong> werden über dein eigenes Mailprogramm versendet. Husora selbst versendet E-Mails nur als Benachrichtigung, wenn du das eingeschaltet hast (siehe Abschnitt 2).</li>
         </ul>
         <h3>4. Rechtsgrundlagen</h3><p>Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der von dir genutzten Funktionen und Abwicklung des Kaufs) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer funktionsfähigen App).</p>
         <h3>5. Speicherdauer und Löschung</h3><p>Die Daten bleiben auf deinem Gerät, bis du sie löschst. Unter „Einstellungen → Datensicherung → Alle Daten löschen“ entfernst du sämtliche Daten. Das Löschen des Browserspeichers oder der App löscht die Daten ebenfalls. Dein Konto und alle Daten im Cloud-Speicher löschst du selbst unter „Einstellungen → Daten & App → Konto und Cloud-Daten löschen“ oder auf Anfrage per E-Mail an ${escapeHtml(LEGAL_INFO.supportEmail)}; bei einem eigenen Supabase-Projekt in diesem Projekt. Aufträge und Rechnungen, die du mit anderen Betrieben ausgetauscht hast, bleiben bei diesen zur Erfüllung gesetzlicher Aufbewahrungspflichten erhalten.</p>
@@ -15855,6 +15903,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const filled = EMERGENCY_FIELDS.flatMap(([, fields]) => fields).filter(([key]) => data[key]).length;
       return `<div class="welcome"><div><p class="eyebrow">Mein Ferienhaus · ${escapeHtml(property.name)}</p><h1>Notfall & Zugang</h1><p class="subtitle">Alles, was du, Gäste oder Servicepartner im Ernstfall schnell finden müssen.</p></div></div>
         ${sectionPropertySelect()}
+        ${emergencyRequestHtml(property)}
         <div class="emergency-numbers">${SWEDISH_EMERGENCY_NUMBERS.map(([number, label]) => `<a href="tel:${number.replace(/[^0-9+]/g, '')}" class="emergency-number ${number === '112' ? 'main' : ''}"><strong>${number}</strong><span>${label}</span></a>`).join('')}</div>
         <form class="card settings-card emergency-form" id="emergency-form" autocomplete="off">
           <div class="settings-card-head"><span class="settings-icon">${icon('key')}</span><div><h2 class="card-title">Angaben zum Haus</h2><p class="card-caption">${filled} von ${EMERGENCY_FIELDS.flatMap(([, fields]) => fields).length} Angaben eingetragen · Codes und Passwörter werden unverschlüsselt auf diesem Gerät gespeichert.</p></div><button type="button" class="small-action" data-emergency-reveal>${emergencyReveal ? 'Codes verbergen' : 'Codes zeigen'}</button></div>
@@ -16636,6 +16685,238 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         : on ? cloudFetch('/rest/v1/automation_rules', { method: 'POST', body: { organization_id: cloud.org.id, name: 'Mangel aus Partner-Kontrolle sofort beauftragen', trigger_type: 'inspection_item_defect', action_config: { type: 'create_repair_order' }, active: true }, headers: { Prefer: 'return=minimal' } }) : Promise.resolve();
       req.then(() => { s.rules = null; showToast(on ? 'Mängel aus Partner-Kontrollen werden jetzt direkt beauftragt.' : 'Mängel werden wieder zuerst angefragt.'); cloudRulesLoad(); })
         .catch((error) => { input.checked = !on; showToast(error.message); });
+    });
+
+    // ===== Phase 11: Bewertungen, Kostenvergleich (Angebote), Notdienst, Partnerangaben =====
+    function starsText(n) { const r = Math.round(Number(n) || 0); return '★'.repeat(r) + '☆'.repeat(Math.max(0, 5 - r)); }
+    function p11S() { return window.__husoraP11 || (window.__husoraP11 = { reviewForm: null, emergency: null }); }
+    async function ownerLoadPhase11(org) {
+      const [quotes, reviews, facts] = await Promise.all([
+        cloudFetch(`/rest/v1/quotes?organization_id=eq.${org}&service_partner_id=not.is.null&select=id,service_order_id,service_partner_id,quote_number,description,amount_gross,currency,status,valid_until,created_at&order=created_at.desc&limit=300`).catch(() => []),
+        cloudFetch(`/rest/v1/service_partner_reviews?organization_id=eq.${org}&select=id,service_order_id,service_partner_id,rating,comment,partner_reply,created_at`).catch(() => []),
+        cloudFetch('/rest/v1/rpc/partner_directory_facts', { method: 'POST', body: {} }).catch(() => [])
+      ]);
+      Object.assign(ownerSide, { quotes, reviews, partnerFacts: Object.fromEntries((facts || []).map((f) => [f.service_partner_id, f])) });
+    }
+    function hubPartnerFactsHtml(partnerId) {
+      const f = ownerSide.partnerFacts?.[partnerId];
+      if (!f) return '';
+      return `${f.rating_count ? `<small class="hub-stars" title="${String(f.rating_avg).replace('.', ',')} von 5 (${f.rating_count} Bewertungen)">★ ${String(Number(f.rating_avg).toFixed(1)).replace('.', ',')}</small>` : ''}${f.emergency_service ? '<small class="hub-emergency-tag" title="Bietet Notdienst an">Notdienst</small>' : ''}`;
+    }
+    const QUOTE_STATUS = { requested: ['Angefragt', 'amber'], received: ['Neu', 'amber'], approved: ['Angenommen', 'green'], rejected: ['Abgelehnt', 'red'], expired: ['Abgelaufen', 'muted'] };
+    function hubQuoteRow(q, { compare = false } = {}) {
+      const order = (ownerSide.orders || []).find((o) => o.id === q.service_order_id);
+      const open = ['requested', 'received'].includes(q.status) && cloudCanWrite();
+      return `<div class="hub-quote ${q.status}"><span><strong>${compare ? escapeHtml(order?.partner?.company_name || 'Servicepartner') : `Angebot ${escapeHtml(q.quote_number || '')}`}</strong><small>${compare ? `${hubPartnerFactsHtml(q.service_partner_id)} ` : ''}${q.description ? escapeHtml(q.description) + ' · ' : ''}${q.valid_until ? `gültig bis ${escapeHtml(fmtDate(q.valid_until))}` : escapeHtml(fmtDate(q.created_at))}</small></span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${open ? `<span class="hub-approval-actions"><button type="button" class="secondary-btn" data-hub-quote="${q.id}" data-approve="0" ${ownerSide.busy ? 'disabled' : ''}>Ablehnen</button><button type="button" class="primary-btn" data-hub-quote="${q.id}" data-approve="1" ${ownerSide.busy ? 'disabled' : ''}>${icon('check')} Annehmen</button></span>` : `<span class="pp-badge ${QUOTE_STATUS[q.status]?.[1] || 'muted'}">${escapeHtml(QUOTE_STATUS[q.status]?.[0] || q.status)}</span>`}</div>`;
+    }
+    function hubOrderQuotesHtml(o) {
+      const list = (ownerSide.quotes || []).filter((q) => q.service_order_id === o.id);
+      return list.length ? `<div class="hub-approvals"><span class="pp-eyebrow">Angebote</span>${list.map((q) => hubQuoteRow(q)).join('')}</div>` : '';
+    }
+    // Kostenvergleich: dieselbe Aufgabe bei mehreren Partnern angefragt, mindestens ein offenes Angebot
+    function hubQuoteCompareHtml() {
+      const orders = ownerSide.orders || [];
+      const byTask = new Map();
+      (ownerSide.quotes || []).forEach((q) => { const o = orders.find((x) => x.id === q.service_order_id); if (o?.service_task_id) byTask.set(o.service_task_id, [...(byTask.get(o.service_task_id) || []), q]); });
+      const groups = [...byTask.entries()].filter(([, qs]) => new Set(qs.map((q) => q.service_partner_id)).size > 1 && qs.some((q) => ['requested', 'received'].includes(q.status)));
+      if (!groups.length) return '';
+      return `<section class="card hub-card hub-compare"><h2 class="card-title">${icon('cost')} Angebote vergleichen</h2><p class="card-caption">Mehrere Servicepartner haben ein Angebot für dieselbe Aufgabe geschickt. Nimmst du eins an, werden die anderen abgelehnt und offene Anfragen dort zurückgezogen.</p>
+        ${groups.map(([taskId, qs]) => { const title = orders.find((o) => o.service_task_id === taskId)?.title || 'Aufgabe'; const sorted = qs.slice().sort((a, b) => Number(a.amount_gross) - Number(b.amount_gross)); return `<div class="hub-compare-group"><h3>${escapeHtml(title)}</h3>${sorted.map((q, i) => `${i === 0 && sorted.length > 1 ? '<span class="hub-best">Günstigstes Angebot</span>' : ''}${hubQuoteRow(q, { compare: true })}`).join('')}</div>`; }).join('')}</section>`;
+    }
+    // Bewertung abgeschlossener Aufträge
+    function hubReviewHtml(o) {
+      if (o.status !== 'completed' || !o.service_partner_id) return '';
+      const r = (ownerSide.reviews || []).find((x) => x.service_order_id === o.id);
+      if (r) return `<div class="hub-review"><span class="hub-review-stars" aria-label="${r.rating} von 5 Sternen">${starsText(r.rating)}</span>${r.comment ? `<small>„${escapeHtml(r.comment)}“</small>` : ''}${r.partner_reply ? `<small class="hub-review-reply"><b>${escapeHtml(o.partner?.company_name || 'Partner')}:</b> ${escapeHtml(r.partner_reply)}</small>` : ''}</div>`;
+      if (!cloudCanWrite()) return '';
+      if (p11S().reviewForm !== o.id) return `<button type="button" class="secondary-btn hub-review-btn" data-hub-review-open="${o.id}">★ ${escapeHtml(o.partner?.company_name || 'Servicepartner')} bewerten</button>`;
+      return `<form class="hub-review-form" data-hub-review="${o.id}"><div class="beta-stars" role="radiogroup" aria-label="Bewertung">${[1, 2, 3, 4, 5].map((n) => `<label title="${n} von 5"><input type="radio" name="rating" value="${n}" required><span>★</span></label>`).join('')}</div>
+        <textarea class="form-control textarea" name="comment" rows="2" maxlength="2000" placeholder="Wie lief der Auftrag? (optional, sieht der Partner)"></textarea>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-hub-review-cancel>Abbrechen</button><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Bewertung senden</button></div></form>`;
+    }
+    document.addEventListener('click', (event) => {
+      const q = event.target.closest('[data-hub-quote]');
+      if (q) {
+        const quote = (ownerSide.quotes || []).find((x) => x.id === q.dataset.hubQuote);
+        if (!quote) return;
+        const approve = q.dataset.approve === '1';
+        let note = '';
+        if (!approve) { note = window.prompt(`Angebot ${quote.quote_number || ''} (${ppMoney(quote.amount_gross, quote.currency)}) ablehnen?\n\nGrund (optional, sieht der Partner):`, ''); if (note === null) return; }
+        ownerRun('quote', async () => {
+          const r = await cloudFetch('/rest/v1/rpc/respond_quote', { method: 'POST', body: { p_quote_id: quote.id, p_approve: approve, p_note: note.trim() || null } });
+          showToast(approve ? `Angebot angenommen${r?.others_rejected ? ` – ${r.others_rejected} weitere${r.others_rejected === 1 ? 's' : ''} abgelehnt` : ''}.` : 'Angebot abgelehnt – der Partner wird informiert.');
+        });
+        return;
+      }
+      const open = event.target.closest('[data-hub-review-open]');
+      if (open) { p11S().reviewForm = open.dataset.hubReviewOpen; render(); return; }
+      if (event.target.closest('[data-hub-review-cancel]')) { p11S().reviewForm = null; render(); }
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-hub-review]');
+      if (!form) return;
+      event.preventDefault();
+      const o = (ownerSide.orders || []).find((x) => x.id === form.dataset.hubReview);
+      const v = Object.fromEntries(new FormData(form));
+      if (!o || !v.rating) return;
+      ownerRun('review', async () => {
+        await cloudFetch('/rest/v1/service_partner_reviews', { method: 'POST', body: { service_order_id: o.id, organization_id: o.organization_id || cloud.org.id, service_partner_id: o.service_partner_id, rating: Number(v.rating), comment: String(v.comment || '').trim() || null }, headers: { Prefer: 'return=minimal' } });
+        p11S().reviewForm = null;
+        showToast('Danke für deine Bewertung – sie hilft anderen Hausbesitzern.');
+      });
+    });
+    // Notdienst anfordern (Notfall-Seite)
+    function emergencyRequestHtml(property) {
+      if (!cloudReady()) return '';
+      const cloudProp = (ownerSide.cloudProperties || []).find((p) => p.app_ref === String(property.id)) || (ownerSide.cloudProperties || []).find((p) => p.name === property.name);
+      const s = p11S().emergency;
+      if (!ownerSide.partnerFacts && !p11S().loadingFacts) { p11S().loadingFacts = true; ownerLoadPartners().then(() => { if (currentPage === 'emergency') render(); }).catch(() => {}); }
+      const has = Object.values(ownerSide.partnerFacts || {}).some((f) => f.emergency_service);
+      return `<section class="card emergency-request"><h2 class="card-title">${icon('alert')} Notdienst anfordern</h2><p class="card-caption">Husora schickt den Notfall sofort an deinen verbundenen Servicepartner mit Notdienst${has ? '' : ' – du hast noch keinen Partner mit Notdienst verbunden'}. Bei Gefahr für Leib und Leben immer zuerst 112 anrufen.</p>
+        ${s?.result ? `<p class="emergency-sent">${icon('check')} Notfall an <strong>${escapeHtml(s.result.company_name)}</strong> gesendet. Du wirst benachrichtigt, sobald er annimmt. <button type="button" class="text-btn" data-emergency-next>Anderen Partner anfragen</button></p>` : ''}
+        <form class="hub-form" data-emergency-form data-property="${cloudProp?.id || ''}"><div class="hub-grid"><label><span class="form-label">Was ist passiert? *</span><input class="form-control" name="title" required maxlength="160" placeholder="z. B. Wasserrohrbruch in der Küche"></label></div>
+          <label><span class="form-label">Details (optional)</span><textarea class="form-control textarea" name="description" rows="2" maxlength="2000"></textarea></label>
+          <div class="pp-actions"><button type="submit" class="primary-btn danger-solid" ${!cloudProp || ownerSide.busy || !has ? 'disabled' : ''}>${icon('alert')} Notfall senden</button></div>${cloudProp ? '' : '<p class="settings-hint">Dieses Haus ist noch nicht in der Cloud – bitte zuerst den Cloud-Abgleich abwarten.</p>'}</form></section>`;
+    }
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-emergency-form]');
+      if (!form) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      const s = p11S();
+      const exclude = s.emergency?.tried || [];
+      ownerRun('emergency', async () => {
+        const r = await cloudFetch('/rest/v1/rpc/request_emergency', { method: 'POST', body: { p_property_id: form.dataset.property, p_title: v.title, p_description: String(v.description || '').trim() || null, p_exclude: exclude.length ? exclude : null } });
+        s.emergency = { result: r, tried: [...exclude, r.service_partner_id], title: v.title };
+        showToast(`Notfall an ${r.company_name} gesendet.`);
+      }).then(() => { if (currentPage === 'emergency') render(); });
+    });
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-emergency-next]')) return;
+      const s = p11S();
+      if (s.emergency) s.emergency.result = null;
+      render();
+      setTimeout(() => { const input = document.querySelector('[data-emergency-form] [name=title]'); if (input && s.emergency?.title) input.value = s.emergency.title; }, 0);
+    });
+    // Partner: eigene Bewertungen und Antwort
+    function ppReviewsHtml() {
+      const list = ppD('reviews');
+      const o = ppOrg();
+      if (!list.length) return `<section class="pp-card"><h2 class="pp-section-title">Bewertungen</h2><p class="pp-muted">Noch keine Bewertungen. Hausbesitzer können dich nach jedem abgeschlossenen Auftrag bewerten.</p></section>`;
+      return `<section class="pp-card pp-reviews"><h2 class="pp-section-title">Bewertungen <small>${o?.rating_avg != null ? `${starsText(o.rating_avg)} ${String(Number(o.rating_avg).toFixed(1)).replace('.', ',')} · ` : ''}${list.length} Bewertung${list.length === 1 ? '' : 'en'}</small></h2>
+        ${list.map((r) => `<div class="pp-review"><div><span class="hub-review-stars">${starsText(r.rating)}</span><small>${escapeHtml(ppCustomerName(r.organization_id))} · ${escapeHtml(ppDate(r.created_at))}</small></div>${r.comment ? `<p>„${escapeHtml(r.comment)}“</p>` : ''}
+          ${r.partner_reply ? `<p class="pp-review-reply"><b>Deine Antwort:</b> ${escapeHtml(r.partner_reply)}</p>` : ppIsLead() ? `<form class="pp-send" data-pp-form="review-reply" data-id="${r.id}"><input class="form-control" name="reply" maxlength="2000" placeholder="Antworten (sieht der Kunde) …" required><button class="secondary-btn" type="submit" ${ppDisabled()}>Antworten</button></form>` : ''}</div>`).join('')}</section>`;
+    }
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('#partner-portal [data-pp-form="review-reply"]');
+      if (!form) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const reply = String(new FormData(form).get('reply') || '').trim();
+      if (!reply) return;
+      pp.keepScroll = true;
+      ppRun('review', () => ppRpc('reply_review', { p_review_id: form.dataset.id, p_reply: reply }), { notice: 'Antwort gespeichert – der Kunde sieht sie bei seiner Bewertung.' });
+    }, true);
+
+    // ===== Phase 12: KI-Vorschläge (Kontrollbericht, Schaden auf Foto, Kostenschätzung) – immer nur Vorschlag =====
+    function aiS() { return window.__husoraAi || (window.__husoraAi = { enabled: null, items: {}, loadingCfg: false }); }
+    function aiEnabled() {
+      const s = aiS();
+      if (s.enabled === null && !s.loadingCfg && cloudSignedIn()) {
+        s.loadingCfg = true;
+        cloudFetch('/rest/v1/app_config?key=eq.ai&select=value').then((rows) => { s.enabled = Boolean(rows?.[0]?.value?.enabled); }).catch(() => { s.enabled = false; })
+          .finally(() => { s.loadingCfg = false; if (s.enabled) { try { if (pp.open) { pp.keepScroll = true; ppRender(); } } catch (e) { /* optional */ } } });
+      }
+      return s.enabled === true;
+    }
+    function aiItem(entityId) {
+      const s = aiS();
+      if (!s.items[entityId]) {
+        s.items[entityId] = { loading: true };
+        cloudFetch(`/rest/v1/ai_suggestions?entity_id=eq.${entityId}&status=in.(suggested,accepted)&select=id,kind,status,result,created_at&order=created_at.desc&limit=1`)
+          .then(([row]) => { s.items[entityId] = row ? { id: row.id, status: row.status, data: row.result } : {}; })
+          .catch(() => { s.items[entityId] = {}; })
+          .finally(() => { try { pp.keepScroll = true; ppRender(); } catch (e) { /* optional */ } });
+      }
+      return s.items[entityId];
+    }
+    async function aiRun(kind, entityType, entityId) {
+      const s = aiS();
+      s.items[entityId] = { busy: true };
+      pp.keepScroll = true; ppRender();
+      try {
+        const r = await cloudFetch('/functions/v1/ai-assist', { method: 'POST', body: { kind, entity_type: entityType, entity_id: entityId, organization_id: ppOrg()?.id || null } });
+        s.items[entityId] = { id: r.id, status: 'suggested', data: r.result };
+      } catch (error) {
+        s.items[entityId] = { error: /404|Failed to fetch|NetworkError/.test(error.message) ? 'Die KI-Funktion ist auf dem Server noch nicht eingerichtet.' : error.message };
+      }
+      pp.keepScroll = true; ppRender();
+    }
+    const AI_PRIO = { low: 'niedrig', normal: 'normal', high: 'wichtig', urgent: 'dringend' };
+    const AI_SEV = { minor: 'gering', moderate: 'mittel', severe: 'schwer' };
+    function aiCardHtml(entityId, kind, inner) {
+      const it = aiS().items[entityId] || {};
+      return `<div class="ai-card ${it.status || ''}"><div class="ai-card-head"><span class="ai-chip">KI-Vorschlag</span><small>${it.status === 'accepted' ? 'von dir übernommen' : 'bitte prüfen – nichts wird automatisch übernommen'}</small></div>${inner}
+        ${it.status === 'suggested' && it.id ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-ai-decide="${it.id}" data-entity="${entityId}" data-accept="0">Verwerfen</button><button type="button" class="primary-btn" data-ai-decide="${it.id}" data-entity="${entityId}" data-accept="1" data-kind="${kind}">${icon('check')} ${kind === 'cost_estimate' ? 'Mittelwert übernehmen' : 'Übernehmen'}</button></div>` : ''}</div>`;
+    }
+    function aiInspectionHtml(i) {
+      if (!aiEnabled() || i.status !== 'completed') return '';
+      const it = aiItem(i.id);
+      if (it.loading) return '';
+      if (it.busy) return '<div class="ai-card"><p class="pp-muted">KI wertet den Kontrollbericht aus …</p></div>';
+      if (it.error) return `<div class="ai-card"><p class="pp-muted">${escapeHtml(it.error)}</p><button type="button" class="secondary-btn" data-ai-run="inspection_report|inspection|${i.id}">Erneut versuchen</button></div>`;
+      if (!it.data) return `<div class="pp-actions"><button type="button" class="secondary-btn ai-btn" data-ai-run="inspection_report|inspection|${i.id}">✨ Bericht mit KI auswerten (Vorschlag)</button></div>`;
+      const d = it.data;
+      return aiCardHtml(i.id, 'inspection_report', `<p><b>${escapeHtml({ good: 'Insgesamt gut', attention: 'Handlungsbedarf', critical: 'Kritisch' }[d.overall] || '')}</b> – ${escapeHtml(d.summary || '')}</p>
+        ${(d.priorities || []).length ? `<ol class="ai-list">${d.priorities.map((p) => `<li><strong>${escapeHtml(p.title)}</strong> <em class="ai-prio ${p.priority}">${escapeHtml(AI_PRIO[p.priority] || p.priority)}</em><small>${escapeHtml(p.reason || '')}</small></li>`).join('')}</ol>` : ''}
+        ${(d.next_steps || []).length ? `<p class="pp-muted">Nächste Schritte: ${d.next_steps.map(escapeHtml).join(' · ')}</p>` : ''}`);
+    }
+    function aiPhotoBtnHtml(ph) {
+      if (!aiEnabled()) return '';
+      const it = aiS().items[ph.id];
+      return `<button type="button" class="ai-photo-btn" data-ai-run="photo_damage|photo|${ph.id}" ${it?.busy ? 'disabled' : ''} title="Schaden mit KI prüfen">${it?.busy ? '…' : '✨ Schaden?'}</button>`;
+    }
+    function aiPhotosResultHtml(photos) {
+      if (!aiEnabled()) return '';
+      return photos.map((ph) => {
+        const it = aiS().items[ph.id];
+        if (!it || it.loading || it.busy) return '';
+        if (it.error) return `<div class="ai-card"><p class="pp-muted">${escapeHtml(ph.caption || 'Foto')}: ${escapeHtml(it.error)}</p></div>`;
+        if (!it.data) return '';
+        const d = it.data;
+        return aiCardHtml(ph.id, 'photo_damage', `<p><b>${escapeHtml(ph.caption || 'Foto')}:</b> ${d.damage_detected ? 'Schaden erkannt' : 'Kein Schaden erkennbar'} <small class="pp-muted">(Sicherheit: ${escapeHtml({ low: 'gering', medium: 'mittel', high: 'hoch' }[d.confidence] || d.confidence || '–')})</small></p>
+          ${(d.findings || []).length ? `<ul class="ai-list">${d.findings.map((f) => `<li><strong>${escapeHtml(f.label)}</strong> <em class="ai-prio ${f.severity === 'severe' ? 'urgent' : f.severity === 'moderate' ? 'high' : 'low'}">${escapeHtml(AI_SEV[f.severity] || f.severity)}</em><small>${escapeHtml(f.location || '')}</small></li>`).join('')}</ul>` : ''}
+          ${d.recommendation ? `<p class="pp-muted">${escapeHtml(d.recommendation)}</p>` : ''}`);
+      }).join('');
+    }
+    function aiCostHtml(itemId) {
+      if (!aiEnabled() || !itemId) return '';
+      const it = aiS().items[itemId];
+      if (!it || (!it.data && !it.busy && !it.error)) return `<button type="button" class="secondary-btn ai-btn" data-ai-run="cost_estimate|inspection_item|${itemId}">✨ Kosten mit KI schätzen</button>`;
+      if (it.busy) return '<p class="pp-muted">KI schätzt die Kosten …</p>';
+      if (it.error) return `<p class="pp-muted">${escapeHtml(it.error)}</p>`;
+      const d = it.data;
+      return aiCardHtml(itemId, 'cost_estimate', `<p><b>${escapeHtml(ppMoney(d.low, d.currency))} – ${escapeHtml(ppMoney(d.high, d.currency))}</b>${d.trade ? ` · ${escapeHtml(d.trade)}` : ''}</p>${(d.assumptions || []).length ? `<small class="pp-muted">Annahmen: ${d.assumptions.map(escapeHtml).join(' · ')}</small>` : ''}`);
+    }
+    document.addEventListener('click', (event) => {
+      const run = event.target.closest('#partner-portal [data-ai-run]');
+      if (run) { event.preventDefault(); event.stopPropagation(); const [kind, type, id] = run.dataset.aiRun.split('|'); aiRun(kind, type, id); return; }
+      const dec = event.target.closest('#partner-portal [data-ai-decide]');
+      if (!dec) return;
+      const accept = dec.dataset.accept === '1';
+      const entity = dec.dataset.entity;
+      const it = aiS().items[entity];
+      cloudFetch('/rest/v1/rpc/ai_decide', { method: 'POST', body: { p_id: dec.dataset.aiDecide, p_accept: accept } })
+        .then(() => {
+          if (accept && dec.dataset.kind === 'cost_estimate' && it?.data) {
+            const input = dec.closest('form')?.querySelector('[name=cost]');
+            if (input) input.value = String(Math.round((Number(it.data.low) + Number(it.data.high)) / 2));
+          }
+          aiS().items[entity] = accept ? { ...it, status: 'accepted' } : {};
+          if (dec.dataset.kind !== 'cost_estimate') { pp.keepScroll = true; ppRender(); } else { const card = dec.closest('.ai-card'); if (card) card.outerHTML = accept ? '<p class="pp-hint">KI-Schätzung als Kosten übernommen – bitte prüfen.</p>' : ''; }
+          showToast(accept ? 'Vorschlag übernommen.' : 'Vorschlag verworfen.');
+        })
+        .catch((error) => showToast(error.message));
     });
 
     // --- Ersteinrichtung ---
@@ -19284,7 +19565,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -19308,9 +19589,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             ppQ(`service_partner_absences?organization_id=eq.${org.id}&end_at=gte.${encodeURIComponent(new Date(Date.now() - 31 * 86400000).toISOString())}&select=*&order=start_at.asc&limit=300`).catch(() => []),
             ppQ('repairs?service_partner_id=not.is.null&select=id,organization_id,property_id,inspection_id,inspection_item_id,service_order_id,title,description,priority,status,estimated_cost,actual_cost,offered_at,response_note,created_at&order=created_at.desc&limit=300').catch(() => []),
             ppQ(`service_order_cost_items?organization_id=eq.${org.id}&select=*&order=created_at.asc&limit=3000`).catch(() => []),
-            ppQ('approval_requests?select=id,organization_id,service_order_id,service_partner_id,title,description,amount,currency,status,auto_approved,response_note,created_at,decided_at&order=created_at.desc&limit=500').catch(() => [])
+            ppQ('approval_requests?select=id,organization_id,service_order_id,service_partner_id,title,description,amount,currency,status,auto_approved,response_note,created_at,decided_at&order=created_at.desc&limit=500').catch(() => []),
+            ppQ('service_partner_reviews?select=id,organization_id,service_order_id,rating,comment,partner_reply,replied_at,created_at&order=created_at.desc&limit=200').catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals };
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews };
           pp.access = {};
         } else {
           pp.data = null;
@@ -19704,7 +19986,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ${actions}
         ${ppApprovalsHtml(o)}
         ${ppCostsHtml(o)}
-        ${ppSection('Fotos & Dokumente', `<div class="pp-gallery">${photos.map((ph) => `<button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(ph.caption || 'Foto')}"><img data-pp-thumb="${ph.id}" alt="${escapeHtml(ph.caption || 'Foto')}"></button>`).join('')}</div>
+        ${ppSection('Fotos & Dokumente', `<div class="pp-gallery">${photos.map((ph) => `<span class="pp-photo-wrap"><button type="button" class="pp-photo" data-pp-file="${ph.storage_bucket}|${ph.storage_path}|${escapeHtml(ph.caption || 'Foto')}"><img data-pp-thumb="${ph.id}" alt="${escapeHtml(ph.caption || 'Foto')}"></button>${aiPhotoBtnHtml(ph)}</span>`).join('')}</div>${aiPhotosResultHtml(photos)}
           ${docs.map((d) => `<button type="button" class="pp-doc" data-pp-doc="view" data-id="${d.id}" title="In der App öffnen">${icon('document')}<span>${escapeHtml(d.file_name)}${/^Kontrollplan/.test(d.file_name || '') ? '<small>Kontrollplan vom Hausbesitzer</small>' : ''}</span><small>${escapeHtml(formatBytes(d.file_size || 0))}</small></button>`).join('')}
           <div class="pp-actions"><label class="primary-btn pp-file">${icon('plus')} Foto aufnehmen<input type="file" accept="image/*" capture="environment" multiple hidden data-pp-upload="order:${o.id}"></label><label class="secondary-btn pp-file">Dokument<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" multiple hidden data-pp-upload="order:${o.id}"></label></div>`)}
         ${ppSection('Kontrolle', `${ppD('inspections').filter((i) => i.property_id === o.property_id && i.status !== 'cancelled').slice(0, 3).map(ppInspectionCard).join('')}
@@ -19958,6 +20240,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return `${ppBack()}
         <div class="pp-detail-head"><div><span class="pp-eyebrow">${escapeHtml(ppCustomerName(i.organization_id))} · ${escapeHtml(ppDateTime(i.scheduled_at))}</span><h1>${escapeHtml(i.property?.name || 'Kontrolle')}</h1><small class="pp-muted">${escapeHtml((i.notes || '').replace(/^Vorlage: /, 'Vorlage: '))}</small></div>${ppBadge(PP_INSPECTION_STATUS, i.status)}</div>
         <div class="pp-progress"><span style="width:${items.length ? Math.round(checked / items.length * 100) : 0}%"></span></div><p class="pp-muted">${checked} von ${items.length} Punkten geprüft${defects.length ? ` · ${defects.length} Mängel` : ''}${warnings.length ? ` · ${warnings.length} Hinweise` : ''}</p>
+        ${aiInspectionHtml(i)}
         ${i.status === 'scheduled' ? `<div class="pp-actions"><button type="button" class="primary-btn big" data-pp-action="inspection-status" data-id="${i.id}" data-status="in_progress" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}
         ${Object.entries(groups).map(([category, list]) => `<section class="pp-section"><div class="pp-section-head"><h2>${escapeHtml(category)}</h2></div>${list.map((item) => `<div class="pp-check-item ${item.status}"><div class="pp-check-title"><strong>${escapeHtml(item.name)}</strong>${item.checked_at ? `<small>${escapeHtml(ppTime(item.checked_at))}</small>` : ''}</div>
           <div class="pp-check-btns">${btn(item, 'ok', 'OK')}${btn(item, 'warning', 'Hinweis')}${btn(item, 'defect', 'Mangel')}${btn(item, 'not_applicable', 'n. v.')}</div>
@@ -20530,7 +20813,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <div class="pp-grid">${choose ? `<label class="full"><span class="form-label">Ferienhaus *</span><select class="form-control" name="property_id" required>${houses.map((p) => `<option value="${p.id}" ${p.id === propertyId ? 'selected' : ''}>${escapeHtml(p.name)} – ${escapeHtml(ppCustomerName(p.organization_id))}</option>`).join('')}</select></label>` : `<input type="hidden" name="property_id" value="${propertyId}">`}
         <label class="full"><span class="form-label">Mangel *</span><input class="form-control" name="title" required maxlength="160" value="${escapeHtml(title)}" placeholder="z. B. Dachrinne undicht"></label>
         <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="2000" placeholder="Was ist zu tun?">${escapeHtml(description)}</textarea></label>
-        <label><span class="form-label">Kosten ca. (${escapeHtml(ppOrg()?.currency || 'EUR')})</span><input class="form-control" type="number" min="0" step="0.01" name="cost" value="${cost ?? ''}"></label>
+        <label><span class="form-label">Kosten ca. (${escapeHtml(ppOrg()?.currency || 'EUR')})</span><input class="form-control" type="number" min="0" step="0.01" name="cost" value="${cost ?? ''}">${aiCostHtml(itemId)}</label>
         <label><span class="form-label">Dringlichkeit</span><select class="form-control" name="priority"><option value="normal">Normal</option><option value="high">Wichtig</option><option value="urgent">Dringend</option></select></label></div>
         <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>${icon('check')} Beim Kunden anfragen</button></div></form>`;
     }
@@ -20868,7 +21151,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <label class="pp-check pp-home-toggle full"><input type="checkbox" name="auto_accept_orders" ${o.auto_accept_orders ? 'checked' : ''} ${ppIsAdmin() ? '' : 'disabled'}><span><strong>Neue Anfragen automatisch annehmen</strong><small>Nicht bei Aufträgen unter dem Mindestauftragswert oder wenn der Betrieb am Termin abwesend ist.</small></span></label>
         ${f('minimum_order_value', `Mindestauftragswert (${escapeHtml(o.currency || 'EUR')})`, 'number')}${f('travel_fee', `Anfahrtspauschale (${escapeHtml(o.currency || 'EUR')})`, 'number')}${f('hourly_rate', `Stundensatz (${escapeHtml(o.currency || 'EUR')})`, 'number')}
         </div>${ppIsAdmin() ? `<div class="pp-actions sticky"><button class="primary-btn" type="submit" ${ppDisabled()}>${icon('check')} Firmendaten speichern</button></div>` : '<p class="pp-hint">Nur Admins können die Firmendaten ändern.</p>'}</form>
-        ${ppAreasHtml()}`;
+        ${ppAreasHtml()}
+        ${ppReviewsHtml()}`;
     }
 
     // Rechnung: eigenes PDF hochladen oder aus den Angaben erzeugen, beim Kunden ablegen und per Nachricht melden
@@ -21435,6 +21719,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         cloudFetch(`/rest/v1/organizations?id=eq.${org}&select=auto_approval_limit,currency`).catch(() => [null])
       ]);
       ownerSide.approvalLimit = ownerSide.approvalOrg?.auto_approval_limit ?? null;
+      await ownerLoadPhase11(org).catch(() => {});
       ownerSide.orgCurrency = ownerSide.approvalOrg?.currency || 'EUR';
       ownerSide.assignments = await cloudFetch(`/rest/v1/property_service_assignments?organization_id=eq.${org}&status=neq.ended&select=id,property_id,service_partner_id,access_level,start_date,end_date,status`).catch(() => null);
       [ownerSide.agreements, ownerSide.cloudProperties] = await Promise.all([
@@ -22051,7 +22336,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const count = partner ? [...picked].filter((id) => !sentTo(id).some((o) => o.service_partner_id === partner.id)).length : 0;
       const send = connected.length ? `<section class="card hub-card hub-dispatch">
           <div class="hub-send-head"><h2 class="card-title">Aufgaben an Partner senden</h2><p class="card-caption">Partner wählen, Aufgaben ankreuzen – sie erscheinen sofort in dessen Partner-Portal.</p></div>
-          <div class="hub-partner-chips" role="radiogroup" aria-label="Servicepartner">${connected.map((p) => `<button type="button" role="radio" aria-checked="${p.id === partner.id}" class="${p.id === partner.id ? 'on' : ''}" data-hub-send-partner="${p.id}"><span class="hub-avatar">${escapeHtml(p.company_name.slice(0, 1).toUpperCase())}</span>${escapeHtml(p.company_name)}</button>`).join('')}</div>
+          <div class="hub-partner-chips" role="radiogroup" aria-label="Servicepartner">${connected.map((p) => `<button type="button" role="radio" aria-checked="${p.id === partner.id}" class="${p.id === partner.id ? 'on' : ''}" data-hub-send-partner="${p.id}"><span class="hub-avatar">${escapeHtml(p.company_name.slice(0, 1).toUpperCase())}</span>${escapeHtml(p.company_name)}${hubPartnerFactsHtml(p.id)}</button>`).join('')}</div>
           ${tasksOpen.length ? [...byHouse.entries()].map(([house, list]) => { const free = list.filter((t) => !sentTo(t.id).some((o) => o.service_partner_id === partner.id)); const all = free.length && free.every((t) => picked.has(t.id)); return `<div class="hub-house"><div class="hub-house-head">${icon('property')}<strong>${escapeHtml(house)}</strong><small>${list.length} offen</small>${free.length ? `<button type="button" class="text-btn" data-hub-pick-house="${escapeHtml(house)}">${all ? 'Keine' : 'Alle'} wählen</button>` : ''}</div><div class="hub-picks">${list.map(taskRow).join('')}</div></div>`; }).join('')
             : '<p class="settings-hint">Offene Aufgaben erscheinen hier, sobald sie per Cloud-Speicher abgeglichen sind (Einstellungen → Daten & App).</p>'}
           ${tasksOpen.length ? `<div class="hub-send-bar"><span>${count ? `<b>${count}</b> Aufgabe${count === 1 ? '' : 'n'} ausgewählt` : 'Noch keine Aufgabe ausgewählt'}</span><button type="button" class="primary-btn" data-hub-send-picked ${count && !ownerSide.busy ? '' : 'disabled'}>${ownerSide.busy === 'send' ? 'Sende …' : `${icon('check')} An ${escapeHtml(partner.company_name)} senden`}</button></div>` : ''}
@@ -22065,7 +22350,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const chips = `<div class="pp-filters hub-order-filters">${filters.map(([id, label, f]) => `<button type="button" class="${(hub.orderFilter || 'all') === id ? 'active' : ''}" data-hub-order-filter="${id}">${label} <b>${mine.filter(f).length}</b></button>`).join('')}</div>`;
       const groups = new Map();
       shown.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
-      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${['urgent', 'emergency', 'high'].includes(o.priority) ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : ''}${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubOrderApprovalsHtml(o)}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${o.status === 'offered' && cloudCanWrite() ? `<button type="button" class="secondary-btn danger" data-hub-withdraw="${o.id}">Anfrage zurückziehen</button>` : ''}${['completed', 'cancelled', 'rejected'].includes(o.status) ? `<button type="button" class="secondary-btn" data-hub-archive="${o.id}">${hubArchived().has(o.id) ? 'Aus dem Archiv holen' : 'Ins Archiv'}</button>` : ''}${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
+      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${['urgent', 'emergency', 'high'].includes(o.priority) ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : ''}${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubOrderApprovalsHtml(o)}${hubOrderQuotesHtml(o)}${hubReviewHtml(o)}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${o.status === 'offered' && cloudCanWrite() ? `<button type="button" class="secondary-btn danger" data-hub-withdraw="${o.id}">Anfrage zurückziehen</button>` : ''}${['completed', 'cancelled', 'rejected'].includes(o.status) ? `<button type="button" class="secondary-btn" data-hub-archive="${o.id}">${hubArchived().has(o.id) ? 'Aus dem Archiv holen' : 'Ins Archiv'}</button>` : ''}${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
       const rank = (o) => ({ in_progress: 0, scheduled: 1, accepted: 2, offered: 3, completed: 4 }[o.status] ?? 5);
       const list = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0], 'de')).map(([name, list]) => {
         const houses = new Map();
@@ -22073,7 +22358,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const openCount = list.filter((o) => !['completed', 'rejected', 'cancelled'].includes(o.status)).length;
         return `<section class="hub-section hub-group"><h3 class="hub-section-title">${icon('users')} ${escapeHtml(name)} <small>${openCount} offen · ${list.length} gesamt</small></h3>${[...houses.entries()].map(([h, os]) => `<div class="hub-house-label">${icon('property')} ${escapeHtml(h)}</div>${os.map(orderCard).join('')}`).join('')}</section>`;
       }).join('');
-      return `${hubPendingApprovalsHtml()}${send}${orders.length ? `<h2 class="hub-list-title">Aufträge an Partner</h2>${chips}${list || `<p class="settings-hint">${hub.orderFilter === 'archive' ? 'Das Archiv ist leer. Erledigte Aufträge verschiebst du mit „Ins Archiv“ hierher.' : 'In dieser Ansicht gibt es keine Aufträge.'}</p>`}` : ''}`;
+      return `${hubPendingApprovalsHtml()}${hubQuoteCompareHtml()}${send}${orders.length ? `<h2 class="hub-list-title">Aufträge an Partner</h2>${chips}${list || `<p class="settings-hint">${hub.orderFilter === 'archive' ? 'Das Archiv ist leer. Erledigte Aufträge verschiebst du mit „Ins Archiv“ hierher.' : 'In dieser Ansicht gibt es keine Aufträge.'}</p>`}` : ''}`;
     }
     // ----- Phase 8: Mehrkosten des Servicepartners freigeben, automatisches Freigabelimit -----
     function hubApprovalRow(a, { actions = false } = {}) {

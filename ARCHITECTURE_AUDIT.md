@@ -407,14 +407,29 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
 - **Wartung:** lokale Intervalle → `maintenance` projizieren.
 - **Tests:** SQL plus E2E `recurring`.
 
-### Phase 11 – Matching, Bewertungen, Notdienst (Migration 3900)
+### Phase 11 – Matching, Bewertungen, Notdienst (Migration 4000)  ✅ umgesetzt (02.11.2026)
+> Umgesetzt (Migration 4000, SQL `reviews_quotes_test.sql` mit 22 Prüfungen, E2E `reviews`):
+> - `service_partner_reviews`: eine Bewertung je abgeschlossenem Auftrag, nur durch den Auftraggeber; Inhalt danach fest, Antwort nur durch den Partner (`reply_review`). Durchschnitt je Partnerbetrieb über alle Kunden (`organizations.rating_avg/rating_count`, `service_partners.rating`).
+> - Kostenvergleich: Angebote erscheinen jetzt beim Hausbesitzer (je Auftrag und als Vergleich, wenn dieselbe Aufgabe bei mehreren Partnern liegt; günstigstes markiert). `respond_quote` übernimmt den Betrag, lehnt die übrigen Angebote ab und zieht offene Anfragen zurück.
+> - Notdienst: „Notdienst anfordern“ auf der Notfall-Seite → `request_emergency` wählt den verbundenen Partner mit Notdienst (freigegebenes Objekt vor Bewertung, nicht abwesend), Priorität „Notfall“, sofortige Benachrichtigung; „Anderen Partner anfragen“ schließt bereits angefragte aus.
+> - Matching-Anzeige: Partnerauswahl zeigt Bewertung und Notdienst (`partner_directory_facts`).
+> - Offen: Bewertungen im öffentlichen Partnerverzeichnis (Verzeichnis ist lokal); Anfrage an mehrere Partner in einem Schritt.
+
+> **Security-Härtung (Migration 4100, 02.11.2026):** Die Supabase-Standardrechte gaben `anon`/`authenticated` TRUNCATE/TRIGGER/REFERENCES auf alle Tabellen (TRUNCATE umgeht RLS). Entzogen, `anon` darf nur noch anonymes Feedback schreiben und Tarife/Konfiguration lesen, Sicherheits-Definer-Funktionen sind ohne Anmeldung nicht mehr ausführbar, Standardrechte für künftige Tabellen angepasst. Dauerhafter Test `supabase/tests/security_test.sql`.
 - **DB:** `service_partner_reviews` mit Trigger für den Durchschnitt.
 - **Matching:** UI für `match_service_partners`.
 - **Notdienst:** Ablauf `priority='emergency'` (Partner mit `emergency_service` im Gebiet, Sofort-Push).
 - **Kostenvergleich:** mehrere Angebote nebeneinander.
 - **Tests:** E2E `match`.
 
-### Phase 12 – KI
+### Phase 12 – KI (Migration 4200)  ✅ umgesetzt (02.11.2026, Edge Function noch nicht deployt)
+> Umgesetzt (Migration 4200, SQL `ai_assist_test.sql`, E2E `ai` mit simulierter Edge Function):
+> - `ai_suggestions` + RPCs `ai_begin` (Zugriff per RLS mit dem Nutzer-Token, Tageskontingent, Schalter `app_config.ai`), `ai_complete` (nur `service_role` → kein gefälschtes KI-Ergebnis), `ai_decide` (Übernehmen/Verwerfen nur durch den Nutzer).
+> - Edge Function `ai-assist` (Anthropic SDK, Modell `claude-opus-5-5`, strukturierte JSON-Ausgabe, serverseitiger Fallback bei Ablehnung): Kontrollbericht auswerten, Schaden auf Foto erkennen, Kosten für einen Mangel schätzen. Datensparsam: nur fachliche Angaben, keine Namen/Kontakte/Adressen.
+> - UI Partner: „Bericht mit KI auswerten“ (abgeschlossene Kontrolle), „✨ Schaden?“ je Foto im Auftrag, „Kosten mit KI schätzen“ im Mangel-Formular (Mittelwert übernehmen). Alles als „KI-Vorschlag – bitte prüfen“ gekennzeichnet, nichts wird automatisch übernommen. Ausgeschaltet bis `app_config.ai.enabled = true`.
+> - Offen: Deploy + Secret `ANTHROPIC_API_KEY` **[ext]**; Vorschläge auch beim Hausbesitzer anzeigen.
+
+> **Compliance-Nachträge (Migration 4300):** Aufbewahrungsfristen für Analytics (13 Monate), Bewertungen/KI (24 Monate), Push-Adressen (6 Monate) in der wöchentlichen Bereinigung; Analytics-Metadaten nur noch über eine Allowlist; Fehler behoben, durch den „Konto löschen“ bei Nutzern mit Feedback scheiterte. Datenschutzerklärung um Beta-Statistik, Benachrichtigungen und KI ergänzt (Entwurf – rechtliche Prüfung offen). Dauerhafter Test `supabase/tests/compliance_test.sql`.
 Edge Functions mit serverseitigem Schlüssel:
 - Auswertung von Kontrollberichten
 - Schadenserkennung aus Fotos
