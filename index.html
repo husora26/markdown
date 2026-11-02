@@ -17055,14 +17055,35 @@ Morgen|Tomorrow|Imorgon
       if (!response.ok) throw new Error(cloudErrorText(response.status, data));
       return data;
     }
+    const tokenSub = (token) => { try { return JSON.parse(atob(String(token).split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).sub || ''; } catch (error) { return ''; } };
     function cloudSetSession(data) {
+      // Anderes Konto angemeldet (z. B. im Partner-Portal): Organisation und Zwischenstände des vorherigen Kontos verwerfen,
+      // sonst arbeitet die Hausbesitzer-Ansicht mit einer fremden Organisation („Keine Berechtigung“).
+      const previous = cloud.session?.access_token ? tokenSub(cloud.session.access_token) : '';
+      const next = tokenSub(data.access_token);
+      // Zu welchem Konto gehört die gespeicherte Organisation? (cloud.org.sub, sonst das bisher angemeldete Konto)
+      const orgOwner = cloud.org?.sub || previous;
+      if (next && ((cloud.org && orgOwner !== next) || (previous && previous !== next))) {
+        cloud.org = null; cloud.orgs = []; cloud.preferredOrgId = null; cloud.lastSyncAt = '';
+        try { localStorage.removeItem(ORG_PLAN_KEY); } catch (error) { /* optional */ }
+        orgPlan = null;
+        try { Object.assign(ownerSide, { partners: null, tasks: [], orders: [], messages: [], invites: [], invoices: [], agreements: [], me: '', code: null, error: '' }); } catch (error) { /* noch nicht initialisiert */ }
+        try { Object.assign(team, { orgId: '', members: null, invites: [], code: null, error: '' }); } catch (error) { /* noch nicht initialisiert */ }
+      }
       cloud.session = {
         access_token: data.access_token,
         refresh_token: data.refresh_token,
         expires_at: data.expires_at || Math.floor(Date.now() / 1000) + (data.expires_in || 3600),
-        email: data.user?.email || cloud.session?.email || ''
+        email: data.user?.email || (previous && previous !== next ? '' : cloud.session?.email) || ''
       };
       persistCloud();
+    }
+    // Hausbesitzer-Ansicht ohne Organisation (z. B. nach Anmeldung im Partner-Portal): eigene Organisation laden bzw. anlegen
+    let ownerOrgLoading = null;
+    function ensureOwnerOrg() {
+      if (!cloudSignedIn() || cloud.org?.id || ownerOrgLoading) return ownerOrgLoading;
+      ownerOrgLoading = cloudActivateOwner().catch((error) => console.warn('Organisation nicht geladen:', error)).finally(() => { ownerOrgLoading = null; if (!pp.open) render(); });
+      return ownerOrgLoading;
     }
     async function cloudRefresh() {
       let data;
@@ -17110,7 +17131,7 @@ Morgen|Tomorrow|Imorgon
         row = Array.isArray(rows) ? rows[0] : rows;
       }
       if (!row?.organization_id) throw new Error('Die Organisation konnte nicht angelegt werden.');
-      cloud.org = { id: row.organization_id, name: row.name, role: row.role };
+      cloud.org = { id: row.organization_id, name: row.name, role: row.role, sub: tokenSub(cloud.session?.access_token) };
       persistCloud();
       loadOrgPlan();
     }
@@ -17907,6 +17928,7 @@ Morgen|Tomorrow|Imorgon
       document.body.classList.remove('pp-active');
       if (ppMode() === 'partner') ppSetMode('both');
       render();
+      ensureOwnerOrg();
     }
     function ppSaveCache() {
       try { localStorage.setItem(PP_CACHE_KEY, JSON.stringify({ ctx: pp.ctx, data: pp.data, loadedAt: pp.loadedAt })); } catch (error) { /* Speicher voll: nur ohne Offline-Kopie */ }
@@ -20326,6 +20348,20 @@ Morgen|Tomorrow|Imorgon
     setInterval(() => { if (document.visibilityState === 'visible') msgPoll(); }, 30000);
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') msgPoll(); });
     setTimeout(msgPoll, 1500);
+    // Gespeicherte Organisation gehört nicht (mehr) zum angemeldeten Konto → verwerfen und eigene laden
+    (async () => {
+      if (!cloudSignedIn() || !cloud.org?.id) return;
+      try {
+        const orgs = await cloudFetch('/rest/v1/rpc/my_organizations', { method: 'POST', body: {} });
+        if (Array.isArray(orgs) && !orgs.some((o) => o.organization_id === cloud.org.id)) {
+          cloud.org = null; cloud.preferredOrgId = null; orgPlan = null;
+          try { localStorage.removeItem(ORG_PLAN_KEY); } catch (error) { /* optional */ }
+          Object.assign(ownerSide, { partners: null, orders: [], messages: [], invites: [], invoices: [], agreements: [], me: '' });
+          persistCloud();
+          if (!pp.open) ensureOwnerOrg();
+        }
+      } catch (error) { /* offline: später erneut */ }
+    })();
     // Link für Servicepartner (…/?partner): startet direkt im Partner-Portal
     const startAsPartner = (() => { try { return new URLSearchParams(location.search).has('partner'); } catch (error) { return false; } })();
     if (startAsPartner && !onboardingState) { onboardingState = { status: 'done', at: new Date().toISOString(), partnerLink: true }; saveStore('stugliv-onboarding', onboardingState); }
