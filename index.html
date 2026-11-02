@@ -19859,8 +19859,16 @@ Morgen|Tomorrow|Imorgon
       if (ownerSide.busy) return;
       ownerSide.busy = label; ownerSide.error = '';
       rerenderCloud();
-      try { await task(); await ownerLoadPartners(); } catch (error) { ownerSide.error = error instanceof TypeError ? 'Keine Verbindung.' : error.message; }
+      try { await task(); await ownerLoadPartners(); } catch (error) { ownerSide.error = error instanceof TypeError ? 'Keine Verbindung.' : planServerHint(error.message); }
       finally { ownerSide.busy = ''; rerenderCloud(); }
+    }
+    // Server lehnt wegen des echten Tarifs ab: erklären, warum der Test-Schalter hier nicht hilft und welches Konto den Tarif hat
+    function planServerHint(message) {
+      const m = /ab (?:dem )?Tarif (FREE|PLUS|PRO|ULTIMATE)/i.exec(String(message || ''));
+      if (!m) return message;
+      const real = orgPlan?.plan_id || orgPlan?.id || 'free';
+      const account = cloud.session?.email ? ` (Konto ${cloud.session.email}, Organisation „${cloud.org?.name || ''}“)` : '';
+      return `${message} Der echte Tarif dieser Organisation ist ${String(real).toUpperCase()}${account}.${planOverride ? ' Der Test-Schalter für Versionen gilt nur in der App – der Server prüft immer den echten Tarif.' : ''} Melde dich mit dem Konto an, das den Tarif ${m[1].toUpperCase()} oder höher hat (Einstellungen → Daten & App → Cloud-Speicher).`;
     }
     // ===== Mitglieder der Hausbesitzer-Organisation (Familie, Miteigentümer, Verwaltung) =====
     const OWNER_ROLES = [['admin', 'Admin', 'alles, inkl. Tarif und Mitglieder'], ['property_manager', 'Hausverwaltung', 'darf alles bearbeiten'], ['accounting', 'Buchhaltung', 'sieht alles, Kosten im Blick'], ['viewer', 'Nur lesen', 'sieht alles, ändert nichts']];
