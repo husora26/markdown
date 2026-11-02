@@ -378,19 +378,21 @@ Bestehende Funktionen, Tabellen und Statuswerte werden **nicht entfernt**.
   - Hausbesitzer: Freigaben-Liste mit Genehmigen/Ablehnen und Limit-Einstellung.
 - **Tests:** SQL (Summen, Freigabe nur durch den Hausbesitzer, Partner kann sich nicht selbst freigeben); E2E `costs`, `approval`.
 
+> **Zwischenschritt Beta Mode (Migration 3700, 02.11.2026):** siehe `BETA_MODE.md`.
+
 ### Phase 9 – Benachrichtigungen + Chat
 - **Push:** Web-Push über den Service Worker. Für VAPID-Schlüssel und E-Mail-Versand braucht es eine Edge Function mit Secrets **im Supabase-Secret-Store**, nicht im Code.
 - **Einstellungen:** pro Benutzer und Ereignistyp.
 - **Chat:** auf `messages` erweitern (Anhänge über `documents`); keine neuen Tabellen.
 - **Tests:** E2E `notify`.
 
-### Phase 10 – Automatisierung & Wiederkehr (Migration 3700)
+### Phase 10 – Automatisierung & Wiederkehr (Migration 3800)
 - **Serverseitige Regeln** über `automation_rules`: Kontrolle fällig → Auftrag, Mangel → Reparaturauftrag.
 - **Wiederkehrende Aufträge:** aus `service_agreements` und `maintenance` per pg_cron oder Edge Function erzeugen. Die lokalen Wiederholaufgaben bleiben für Hausbesitzer ohne Partner.
 - **Wartung:** lokale Intervalle → `maintenance` projizieren.
 - **Tests:** SQL plus E2E `recurring`.
 
-### Phase 11 – Matching, Bewertungen, Notdienst (Migration 3800)
+### Phase 11 – Matching, Bewertungen, Notdienst (Migration 3900)
 - **DB:** `service_partner_reviews` mit Trigger für den Durchschnitt.
 - **Matching:** UI für `match_service_partners`.
 - **Notdienst:** Ablauf `priority='emergency'` (Partner mit `emergency_service` im Gebiet, Sofort-Push).

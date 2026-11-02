@@ -2943,6 +2943,100 @@
     .hub-approvals-card .hub-approval + .hub-approval { margin-top: 8px; }
     .hub-limit-form { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
     .hub-limit-form label { flex: 1 1 200px; }
+    /* Husora Beta Mode */
+    .settings-switch { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; }
+    .settings-switch > span:first-child { display: grid; gap: 2px; min-width: 0; }
+    .settings-switch small { color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+    .switch > input + span:empty { width: 38px; height: 22px; border-radius: 22px; background: #c9d3cc; position: relative; flex: none; transition: background .2s; }
+    .switch > input + span:empty::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .25); transition: transform .2s; }
+    .switch > input:checked + span:empty { background: #285c45; }
+    .switch > input:checked + span:empty::after { transform: translateX(16px); }
+    .switch > input:disabled + span:empty { opacity: .45; }
+    .switch > input:focus-visible + span:empty { box-shadow: 0 0 0 3px rgba(40, 92, 69, .25); }
+    .beta-dash { display: grid; gap: 16px; }
+    .beta-dash .card + .card, .beta-dash .beta-two .card + .card { margin-top: 0; }
+    .beta-dash .beta-kpis { margin-bottom: 0; }
+    .beta-dash > .card, .beta-two > .card { padding: 16px; }
+    .beta-chip { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; background: var(--amber-soft); color: #87622b; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .beta-banner { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 8px 10px 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); font-size: 13px; line-height: 1.35; }
+    .beta-banner.partner { margin: 12px 16px 0; }
+    .beta-banner-text { flex: 1; min-width: 0; color: var(--muted); }
+    .beta-banner-text strong { color: var(--ink); }
+    .beta-banner-btn { flex: none; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--green-soft); color: var(--green); font: inherit; font-weight: 700; cursor: pointer; }
+    .beta-banner-close { flex: none; width: 26px; height: 26px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 18px; line-height: 1; cursor: pointer; }
+    #beta-fab { position: fixed; right: 14px; bottom: 20px; z-index: 920; display: flex; align-items: center; gap: 6px; }
+    #beta-fab button { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--ink); font: inherit; font-size: 13px; font-weight: 700; box-shadow: var(--shadow); cursor: pointer; opacity: .92; }
+    #beta-fab button:hover { opacity: 1; }
+    #beta-fab .beta-fab-bug { width: 38px; padding: 0; justify-content: center; font-size: 17px; }
+    #beta-fab svg { width: 16px; height: 16px; }
+    @media (max-width: 760px) { #beta-fab { bottom: calc(84px + env(safe-area-inset-bottom)); right: 10px; } #beta-fab button { height: 34px; padding: 0 11px; font-size: 12.5px; } #beta-fab .beta-fab-bug { width: 34px; } }
+    .beta-modal-backdrop { position: fixed; inset: 0; z-index: 980; display: flex; align-items: flex-end; justify-content: center; padding: 12px; background: rgba(17, 21, 19, .45); }
+    @media (min-width: 640px) { .beta-modal-backdrop { align-items: center; } }
+    .beta-modal { width: min(540px, 100%); max-height: calc(100dvh - 24px); overflow: auto; padding: 18px; border-radius: 18px; background: var(--paper); color: var(--ink); box-shadow: var(--shadow); }
+    .beta-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .beta-modal-head h2 { margin: 6px 0 2px; font-size: 20px; }
+    .beta-modal-head p { margin: 0; color: var(--muted); font-size: 13.5px; }
+    .beta-modal-x { width: 32px; height: 32px; border: 0; border-radius: 50%; background: var(--canvas); color: var(--ink); font-size: 20px; cursor: pointer; flex: none; }
+    .beta-tabs { display: flex; gap: 6px; margin: 4px 0 12px; }
+    .beta-tabs button { flex: 1; padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--ink); font: inherit; font-weight: 700; cursor: pointer; }
+    .beta-tabs button.on { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+    .beta-form { display: grid; gap: 10px; }
+    .beta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .beta-types { display: flex; flex-wrap: wrap; gap: 6px; }
+    .beta-types label { cursor: pointer; }
+    .beta-types input { position: absolute; opacity: 0; pointer-events: none; }
+    .beta-types span { display: inline-block; padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; }
+    .beta-types input:checked + span { background: var(--green-soft); border-color: var(--green); color: var(--green); font-weight: 700; }
+    .beta-types input:focus-visible + span { outline: 2px solid var(--green); outline-offset: 2px; }
+    .beta-stars { display: flex; gap: 4px; flex-direction: row-reverse; justify-content: flex-end; }
+    .beta-stars input { position: absolute; opacity: 0; }
+    .beta-stars span { font-size: 34px; line-height: 1; color: var(--line); cursor: pointer; transition: color .1s; }
+    .beta-stars label:hover span, .beta-stars label:hover ~ label span, .beta-stars input:checked ~ span, .beta-stars label:has(input:checked) ~ label span { color: var(--amber); }
+    .beta-auto { margin: 0; color: var(--muted); font-size: 12px; }
+    .beta-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+    .beta-premium-list { display: grid; gap: 8px; margin: 8px 0 12px; }
+    .beta-premium-item { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
+    .beta-premium-item > span { display: grid; gap: 2px; flex: 1 1 220px; }
+    .beta-premium-item small { color: var(--muted); }
+    .beta-dash-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .beta-dash-head .card-title { display: flex; align-items: center; gap: 8px; }
+    .beta-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .beta-kpi { display: grid; gap: 2px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+    .beta-kpi span, .beta-kpi small { color: var(--muted); font-size: 12.5px; }
+    .beta-kpi strong { font-size: 24px; }
+    .beta-targets { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+    .beta-target { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
+    .beta-target > span:first-child { font-size: 13px; }
+    .beta-target b { font-size: 18px; }
+    .beta-target small { grid-column: 1 / -1; color: var(--muted); font-size: 12px; }
+    .beta-target-bar { position: relative; grid-column: 1 / -1; height: 6px; border-radius: 999px; background: var(--canvas); overflow: visible; }
+    .beta-target-bar i { display: block; height: 100%; border-radius: 999px; background: var(--amber); }
+    .beta-target.ok .beta-target-bar i { background: var(--green); }
+    .beta-target.ok b { color: var(--green); }
+    .beta-target-bar em { position: absolute; top: -3px; width: 2px; height: 12px; background: var(--ink); opacity: .5; }
+    .beta-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .beta-funnel { display: grid; gap: 8px; margin: 8px 0 0; padding: 0; list-style: none; }
+    .beta-funnel li { display: grid; grid-template-columns: minmax(110px, 38%) 1fr 44px 40px; align-items: center; gap: 8px; font-size: 13px; }
+    .beta-funnel-bar { height: 14px; border-radius: 6px; background: var(--canvas); overflow: hidden; }
+    .beta-funnel-bar i { display: block; height: 100%; background: var(--green); opacity: .85; }
+    .beta-funnel li b { text-align: right; }
+    .beta-funnel li small { color: var(--muted); text-align: right; }
+    .beta-list { display: grid; gap: 4px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 13.5px; }
+    .beta-list li { display: flex; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+    .beta-sub { margin: 14px 0 0; font-size: 14px; }
+    .beta-reports { display: grid; gap: 8px; margin-top: 10px; }
+    .beta-report { padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
+    .beta-report.bug { border-left: 4px solid var(--red); }
+    .beta-report.error { border-left: 4px solid var(--amber); }
+    .beta-report.feedback { border-left: 4px solid var(--green); }
+    .beta-report-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .beta-report-head strong { flex: 1 1 160px; }
+    .beta-report-head select { width: auto; min-width: 150px; padding-top: 4px; padding-bottom: 4px; }
+    .beta-report p { margin: 6px 0; font-size: 13.5px; white-space: pre-wrap; }
+    .beta-report-ea { display: grid; gap: 2px; color: var(--muted); }
+    .beta-report small { color: var(--muted); font-size: 12px; }
+    .beta-sev { font-style: normal; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: var(--amber-soft); }
+    .beta-sev.high, .beta-sev.critical { background: var(--red-soft); color: var(--red); }
     .pp-prop-notes dt { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
     .pp-prop-notes dd { margin: 1px 0 0; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
     .pp-prop-orders > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
@@ -5942,6 +6036,44 @@ Behoben|Fixed|Åtgärdat
 Erledigt & abgelehnt|Done & declined|Klart & avböjt
 Mangel festgestellt – Beseitigung anfragen|Defect found – ask for repair approval|Brist hittad – be om godkännande
 Zeit, Material & Anfahrt|Time, material & travel|Tid, material & resa
+Husora Beta|Husora Beta|Husora Beta
+– Hilf uns, Husora gemeinsam weiterzuentwickeln.|– Help us shape Husora together.|– Hjälp oss att utveckla Husora tillsammans.
+Feedback|Feedback|Feedback
+🐞 Fehler melden|🐞 Report a bug|🐞 Rapportera fel
+Direkt an das Husora-Team. Danke, dass du mitmachst!|Straight to the Husora team. Thanks for taking part!|Direkt till Husora-teamet. Tack för att du är med!
+Idee|Idea|Idé
+Problem|Problem|Problem
+Funktion fehlt|Missing feature|Funktion saknas
+Bedienung unklar|Unclear to use|Otydlig hantering
+Lob|Praise|Beröm
+Deine Nachricht *|Your message *|Ditt meddelande *
+Was ist schiefgelaufen? Je genauer, desto schneller können wir es beheben.|What went wrong? The more precise, the faster we can fix it.|Vad gick fel? Ju mer exakt, desto snabbare kan vi åtgärda det.
+Fehlertyp|Bug type|Feltyp
+Wie schlimm?|How bad?|Hur allvarligt?
+Beschreibung *|Description *|Beskrivning *
+Was wurde erwartet?|What did you expect?|Vad förväntade du dig?
+Was ist passiert?|What happened?|Vad hände?
+Fehler senden|Send bug report|Skicka felrapport
+Wie hilfreich war Husora?|How helpful was Husora?|Hur hjälpsamt var Husora?
+Was können wir verbessern? (optional)|What can we improve? (optional)|Vad kan vi förbättra? (valfritt)
+Bewerten|Rate|Betygsätt
+Später|Later|Senare
+Wie gefällt dir Husora bisher?|How do you like Husora so far?|Vad tycker du om Husora hittills?
+Welche Funktion nutzt du am meisten?|Which feature do you use most?|Vilken funktion använder du mest?
+Was fehlt dir?|What are you missing?|Vad saknar du?
+Würdest du Husora weiter nutzen?|Would you keep using Husora?|Skulle du fortsätta använda Husora?
+Welche Funktionen sind für dich am wertvollsten?|Which features are most valuable to you?|Vilka funktioner är mest värdefulla för dig?
+Was wäre Husora dir monatlich wert? (optional)|What would Husora be worth to you per month? (optional)|Vad skulle Husora vara värt för dig per månad? (valfritt)
+Wahrscheinlich|Probably|Troligen
+Vielleicht|Maybe|Kanske
+Premium-Vorschau|Premium preview|Premium-förhandsvisning
+Premium vormerken|Register interest|Anmäl intresse
+Vorgemerkt ✓|Registered ✓|Anmäld ✓
+Nutzungsstatistik für die Beta|Beta usage statistics|Användningsstatistik för betan
+Husora Beta Dashboard|Husora Beta Dashboard|Husora Beta Dashboard
+Danke für dein Feedback!|Thanks for your feedback!|Tack för din feedback!
+Danke für deine Bewertung!|Thanks for your rating!|Tack för ditt betyg!
+Danke! Der Fehler ist beim Husora-Team angekommen.|Thanks! The bug report has reached the Husora team.|Tack! Felrapporten har nått Husora-teamet.
 Arbeitszeit erfassen|Track working time|Registrera arbetstid
 Start beim Beginn, Stopp am Ende – die Minuten werden automatisch berechnet.|Start when you begin, stop at the end – minutes are calculated automatically.|Starta när du börjar, stoppa i slutet – minuterna räknas ut automatiskt.
 Zeiterfassung läuft|Time tracking running|Tidregistrering pågår
@@ -7846,6 +7978,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function saveProperties() {
       try {
         localStorage.setItem('stugliv-properties', JSON.stringify(properties));
+        betaObserve('props');
         return true;
       } catch (error) {
         console.error('Ferienhäuser konnten nicht gespeichert werden:', error);
@@ -8147,6 +8280,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       stampTaskArchive();
       try {
         localStorage.setItem('stugliv-tasks', JSON.stringify(tasks));
+        betaObserve('tasks');
         return true;
       } catch (error) {
         console.error('Aufgaben konnten nicht gespeichert werden:', error);
@@ -10281,7 +10415,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       catch (error) { showToast('Kostenposition konnte nicht gespeichert werden. Browser-Speicher prüfen.'); return false; }
     }
     function persistDocuments(nextDocuments) {
-      try { localStorage.setItem('stugliv-documents', JSON.stringify(nextDocuments)); documents = nextDocuments; return true; }
+      try { localStorage.setItem('stugliv-documents', JSON.stringify(nextDocuments)); documents = nextDocuments; betaObserve('docs'); return true; }
       catch (error) { console.error('Dokumente konnten nicht gespeichert werden:', error); showToast('Speicher voll – Dokument konnte nicht gespeichert werden. Bitte kleinere Dateien verwenden oder alte Dokumente löschen.'); return false; }
     }
     const docDate = (document) => document.createdIso || (/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.test(document.createdAt || '') ? document.createdAt.replace(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/, (m, d, mo, y) => `${y}-${mo.padStart(2, '0')}-${d.padStart(2, '0')}`) : '');
@@ -10772,6 +10906,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         localStorage.setItem('stugliv-inspection-log', JSON.stringify(inspectionLog));
         localStorage.setItem('stugliv-inspection-selections', JSON.stringify(inspectionSelections));
         localStorage.setItem('stugliv-inspection-cadence', JSON.stringify(inspectionCadence));
+        betaObserve('insp');
       } catch (error) {
         console.error('Hauskontroll-Daten konnten nicht gespeichert werden:', error);
         showToast('Kontrolle konnte nicht gespeichert werden. Browser-Speicher prüfen.');
@@ -12437,8 +12572,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const prefix = toast.classList.contains('show') ? `${toast.textContent} ` : '';
         showToast(`${prefix}${plannedCount} ${plannedCount === 1 ? 'Aufgabe' : 'Aufgaben'} automatisch geplant.`);
       }, 0);
-      const pages = { dashboard, portfolio: portfolioPage, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage };
-      const labels = { dashboard: 'Übersicht', portfolio: 'Portfolio', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' };
+      const pages = { dashboard, portfolio: portfolioPage, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage, betaAdmin: betaAdminPage };
+      const labels = { dashboard: 'Übersicht', portfolio: 'Portfolio', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' , betaAdmin: 'Husora Beta Dashboard' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -12458,7 +12593,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       updateProfileSummary();
       updateNotifyBadge();
       renderTabbar();
-      pageContent.innerHTML = (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()) + appFooterHtml();
+      pageContent.innerHTML = betaBannerHtml('owner') + (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()) + appFooterHtml();
+      if (currentPage === 'providers') trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `page:${localDateKey(new Date())}` });
       ensureBackButton();
       if (currentPage === 'dashboard') { enhanceDashboardSections(); applySimpleHome(); }
       enhanceWorkPages();
@@ -13192,6 +13328,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }
       if (event.target.id === 'provider-search') {
         providerSearch = event.target.value;
+        if (providerSearch.trim().length >= 3) trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `query:${localDateKey(new Date())}`, metadata: { query_length: providerSearch.trim().length } });
         render();
         const input = document.getElementById('provider-search');
         input.focus();
@@ -15865,15 +16002,16 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <button type="button" class="help-action" data-support-mail="feedback">${icon('note')}<span><strong>Idee oder Feedback</strong><small>Was sollen wir verbessern?</small></span></button>
         </div>
         ${feedbackCardHtml()}
+        ${betaPremiumHtml()}
         <section class="card faq-card"><h2 class="card-title">Häufige Fragen</h2>${FAQ.map(([question, answer]) => `<details class="faq-item"><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p></details>`).join('')}</section>`;
     }
     // ===== Feedback und Fehlerberichte → public.app_feedback (nur schreibbar, Auswertung im Supabase-Dashboard) =====
     const ERROR_REPORTS_KEY = 'husora-error-reports';
     const errorReportsOn = () => { try { return localStorage.getItem(ERROR_REPORTS_KEY) !== '0'; } catch (error) { return true; } };
-    async function sendAppFeedback({ kind = 'feedback', message, context = {}, contactEmail = '' }) {
+    async function sendAppFeedback({ kind = 'feedback', message, context = {}, contactEmail = '', extra = {} }) {
       const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
       const key = cloud.key || CLOUD_DEFAULT.key;
-      const body = { kind, message: String(message || '').slice(0, 4000), context, page: String(currentPage || '').slice(0, 80), app_version: `${APP_VERSION} (${APP_BUILD})`.slice(0, 40), user_agent: navigator.userAgent.slice(0, 300), contact_email: contactEmail || null };
+      const body = { kind, message: String(message || '').slice(0, 4000), context, page: String(currentPage || '').slice(0, 80), app_version: `${APP_VERSION} (${APP_BUILD})`.slice(0, 40), user_agent: navigator.userAgent.slice(0, 300), contact_email: contactEmail || null, ...extra };
       const post = (token, extra = {}) => fetch(`${base}/rest/v1/app_feedback`, { method: 'POST', headers: { apikey: key, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify({ ...body, ...extra }) });
       let response = cloudSignedIn() ? await post(cloud.session.access_token, { organization_id: cloudReady() ? cloud.org.id : null }) : null;
       if (!response || !response.ok) response = await post(key); // ohne Konto oder bei abgelaufener Sitzung
@@ -15882,10 +16020,13 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const errorReport = { sent: new Set(), count: 0 };
     function reportClientError(error, where = '') {
       if (!errorReportsOn() || errorReport.count >= 5) return;
+      try { if (betaS().config.error_reporting === false) return; } catch (error) { /* Beta noch nicht geladen */ }
       const message = String(error?.message || error || '').slice(0, 500);
       if (!message || /ResizeObserver|^Script error|NetworkError|Failed to fetch|Load failed|ERR_/.test(message) || errorReport.sent.has(message)) return;
       errorReport.sent.add(message); errorReport.count += 1;
-      sendAppFeedback({ kind: 'error', message, context: { where: String(where).slice(0, 200), stack: String(error?.stack || '').split('\n').slice(0, 8).join('\n').slice(0, 1500), online: navigator.onLine } }).catch(() => {});
+      let extra = {};
+      try { extra = { app_role: betaRole(), platform: betaPlatform(), environment: betaEnvironment(), page: betaScreen().slice(0, 80) }; } catch (e) { extra = {}; }
+      sendAppFeedback({ kind: 'error', message, context: { where: String(where).slice(0, 200), stack: String(error?.stack || '').split('\n').slice(0, 8).join('\n').slice(0, 1500), online: navigator.onLine }, extra }).catch(() => {});
     }
     window.addEventListener('error', (event) => reportClientError(event.error || event.message, `${event.filename || ''}:${event.lineno || ''}`));
     window.addEventListener('unhandledrejection', (event) => reportClientError(event.reason, 'promise'));
@@ -15923,6 +16064,400 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
+    // ===== Husora Beta Mode: Konfiguration, Analytics, Feedback/Fehler, Bewertungen, Umfragen, Premium-Interesse =====
+    // Schalter kommen vom Server (public.app_config, Schlüssel „beta“) – abschaltbar ohne Codeänderung.
+    // Die Werte hier sind nur die Voreinstellung, bis die Konfiguration geladen ist.
+    // Analytics speichert nur Ereignisnamen und technische Metadaten (keine Inhalte, keine Tokens).
+    // Funktionsdeklarationen + window.__husoraBeta: dürfen schon beim ersten Zeichnen aufgerufen werden.
+    function betaS() {
+      if (!window.__husoraBeta) {
+        let cfg = null;
+        try { cfg = JSON.parse(localStorage.getItem('husora-beta-config') || 'null'); } catch (error) { cfg = null; }
+        window.__husoraBeta = { config: { enabled: true, feedback: true, analytics: true, error_reporting: true, default_group: 'closed_beta', ...(cfg || {}) }, flushing: false, admin: null, modal: null, dash: null };
+      }
+      return window.__husoraBeta;
+    }
+    function betaStore(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return v ?? fallback; } catch (error) { return fallback; } }
+    function betaSave(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (error) { /* optional */ } }
+    function betaOn(flag = 'enabled') { const c = betaS().config; return Boolean(c.enabled) && (flag === 'enabled' || c[flag] !== false); }
+    // Sichtbare Beta-Elemente; in automatisierten Browser-Tests aus, außer der Test schaltet sie ein
+    function betaUiOn() {
+      if (!betaOn()) return false;
+      try { if (navigator.webdriver && localStorage.getItem('husora-beta-ui') !== '1') return false; } catch (error) { /* egal */ }
+      return true;
+    }
+    function betaAnalyticsAllowed() { try { return betaOn('analytics') && localStorage.getItem('husora-analytics') !== '0'; } catch (error) { return false; } }
+    function betaRole() { try { return pp.open ? 'partner' : 'owner'; } catch (error) { return 'owner'; } }
+    function betaScreen() { try { return pp.open ? `partner:${pp.detail?.type || pp.view || 'start'}` : String(currentPage || ''); } catch (error) { return ''; } }
+    function betaPlatform() {
+      const ua = navigator.userAgent || '';
+      const os = /iPhone|iPad|iPod/.test(ua) ? 'ios' : /Android/.test(ua) ? 'android' : /Mac/.test(ua) ? 'mac' : /Win/.test(ua) ? 'windows' : 'desktop';
+      const standalone = window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone;
+      return `${os}-${standalone ? 'app' : 'web'}`;
+    }
+    function betaEnvironment() {
+      const host = location.hostname || '';
+      if (!host || host === 'localhost' || /^127\.|^192\.168\.|^10\./.test(host)) return 'development';
+      return /github\.io$|husora\./.test(host) ? 'production' : 'staging';
+    }
+    function betaVersion() { try { return `${APP_VERSION} (${APP_BUILD})`.slice(0, 40); } catch (error) { return ''; } }
+    async function betaLoadConfig() {
+      try {
+        const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
+        const key = cloud.key || CLOUD_DEFAULT.key;
+        const res = await fetch(`${base}/rest/v1/app_config?key=eq.beta&select=value`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
+        if (!res.ok) return;
+        const [row] = await res.json();
+        if (!row?.value) return;
+        const before = JSON.stringify(betaS().config);
+        betaS().config = { ...betaS().config, ...row.value };
+        betaSave('husora-beta-config', betaS().config);
+        if (JSON.stringify(betaS().config) !== before) betaRefreshUi();
+      } catch (error) { /* offline: letzte bekannte Einstellung */ }
+    }
+    // ----- Ereignisse: lokal puffern, nach erfolgreicher Aktion senden, Doppelte vermeiden -----
+    function trackEvent(eventName, payload = {}) {
+      try {
+        if (!betaAnalyticsAllowed() || !/^[a-z][a-z0-9_]{2,40}$/.test(eventName)) return;
+        const ref = payload.entity_ref != null ? String(payload.entity_ref).slice(0, 80) : '';
+        const seen = betaStore('husora-beta-seen', []);
+        const sig = `${eventName}|${ref}`;
+        if (ref && seen.includes(sig)) return;
+        const meta = {};
+        Object.entries(payload.metadata || {}).forEach(([k, v]) => { if (/^[a-z][a-z0-9_]{0,30}$/.test(k) && ['string', 'number', 'boolean'].includes(typeof v)) meta[k] = typeof v === 'string' ? v.slice(0, 60) : v; });
+        const queue = betaStore('husora-beta-events', []);
+        queue.push({ event_name: eventName, entity_type: payload.entity_type || null, entity_ref: ref || null, metadata: meta, occurred_at: new Date().toISOString(), app_role: payload.app_role || betaRole(), app_version: betaVersion(), platform: betaPlatform(), environment: betaEnvironment() });
+        betaSave('husora-beta-events', queue.slice(-300));
+        if (ref) betaSave('husora-beta-seen', [...seen, sig].slice(-3000));
+        clearTimeout(betaS().flushTimer);
+        betaS().flushTimer = setTimeout(betaFlush, 2500);
+      } catch (error) { /* Analytics darf die App nie stören */ }
+    }
+    async function betaFlush() {
+      const s = betaS();
+      if (s.flushing || !betaAnalyticsAllowed()) return;
+      try { if (!cloudSignedIn()) return; } catch (error) { return; }
+      const queue = betaStore('husora-beta-events', []);
+      if (!queue.length) return;
+      s.flushing = true;
+      try {
+        const batch = queue.slice(0, 50);
+        let org = null;
+        try { org = (pp.open ? ppOrg()?.id : null) || (cloudReady() ? cloud.org.id : null); } catch (error) { org = null; }
+        await cloudFetch('/rest/v1/rpc/track_events', { method: 'POST', body: { p_events: batch, p_organization_id: org } });
+        betaSave('husora-beta-events', betaStore('husora-beta-events', []).slice(batch.length));
+        if (queue.length > 50) setTimeout(betaFlush, 500);
+      } catch (error) {
+        // Server kennt die Funktion noch nicht oder offline: später erneut; sehr alte Einträge verwerfen
+        const cutoff = Date.now() - 60 * 86400000;
+        betaSave('husora-beta-events', betaStore('husora-beta-events', []).filter((e) => new Date(e.occurred_at).getTime() > cutoff));
+      } finally { s.flushing = false; }
+    }
+    // Aktive Tage merken (für 7-/30-Tage-Umfrage) und session_started einmal täglich
+    function betaSessionStart() {
+      const today = localDateKey(new Date());
+      const act = betaStore('husora-beta-activity', { first: today, days: [] });
+      if (!act.days.includes(today)) { act.days = [...act.days, today].slice(-60); betaSave('husora-beta-activity', act); }
+      trackEvent('session_started', { entity_ref: today });
+    }
+    // ----- Ereignisse aus gespeicherten Daten ableiten (zählt nur, was wirklich gespeichert wurde) -----
+    function betaObserve(kind) {
+      try {
+        if (!betaAnalyticsAllowed()) return;
+        const known = betaStore('husora-beta-known', null) || {};
+        const first = !known[kind];
+        const next = { ...known };
+        if (kind === 'props') {
+          const now = Object.fromEntries((properties || []).map((p) => [String(p.id), Number.parseInt(p.rooms, 10) || 0]));
+          if (!first) Object.entries(now).forEach(([id, rooms]) => {
+            if (!(id in known.props)) trackEvent('house_created', { entity_type: 'house', entity_ref: id, metadata: { houses: Object.keys(now).length } });
+            const before = known.props[id] ?? 0;
+            if (rooms > before) trackEvent('room_created', { entity_type: 'house', entity_ref: `${id}:${rooms}`, metadata: { rooms, added: rooms - before } });
+          });
+          next.props = now;
+        }
+        if (kind === 'tasks') {
+          const ids = (tasks || []).map((t) => String(t.id));
+          const done = (tasks || []).filter((t) => t.done || taskStatus(t) === 'Erledigt').map((t) => String(t.id));
+          if (!first) {
+            const had = new Set(known.tasks.ids); const wasDone = new Set(known.tasks.done);
+            (tasks || []).forEach((t) => { const id = String(t.id); if (!had.has(id)) trackEvent('task_created', { entity_type: 'task', entity_ref: id, metadata: { auto: Boolean(t.auto || t.autoKey) } }); });
+            done.forEach((id) => { if (!wasDone.has(id)) trackEvent('task_completed', { entity_type: 'task', entity_ref: id }); });
+          }
+          next.tasks = { ids: ids.slice(-3000), done: done.slice(-3000) };
+        }
+        if (kind === 'docs') {
+          const ids = (documents || []).map((d) => String(d.id ?? d.name));
+          if (!first) { const had = new Set(known.docs); (documents || []).forEach((d) => { const id = String(d.id ?? d.name); if (!had.has(id)) trackEvent('document_uploaded', { entity_type: 'document', entity_ref: id, metadata: { category: String(d.category || '').slice(0, 30) } }); }); }
+          next.docs = ids.slice(-3000);
+        }
+        if (kind === 'insp') {
+          const now = {};
+          Object.keys({ ...(inspectionChecks || {}), ...(inspectionLog || {}) }).forEach((pid) => { now[pid] = { checks: Object.keys(inspectionChecks?.[pid] || {}).length, log: (inspectionLog?.[pid] || []).length }; });
+          if (!first) Object.entries(now).forEach(([pid, v]) => {
+            const b = known.insp[pid] || { checks: 0, log: 0 };
+            if (v.checks > 0 && b.checks === 0) trackEvent('inspection_started', { entity_type: 'inspection', entity_ref: `${pid}:${v.log}` });
+            if (v.log > b.log) { trackEvent('inspection_completed', { entity_type: 'inspection', entity_ref: `${pid}:${v.log}` }); setTimeout(() => betaAskRating('inspection', `${pid}:${v.log}`), 900); }
+          });
+          next.insp = now;
+        }
+        betaSave('husora-beta-known', next);
+      } catch (error) { /* Analytics darf die App nie stören */ }
+    }
+    // ----- Sichtbare Beta-Elemente -----
+    function betaBannerHtml(role = 'owner') {
+      if (!betaUiOn()) return '';
+      if (betaStore('husora-beta-banner', 0) > Date.now()) return '';
+      return `<div class="beta-banner ${role}" role="note"><span class="beta-chip">Beta</span><span class="beta-banner-text"><strong>Husora Beta</strong> – Hilf uns, Husora gemeinsam weiterzuentwickeln.</span>${betaOn('feedback') ? '<button type="button" class="beta-banner-btn" data-beta-open="feedback">Feedback</button>' : ''}<button type="button" class="beta-banner-close" data-beta-hide-banner aria-label="Hinweis ausblenden" title="Für 7 Tage ausblenden">×</button></div>`;
+    }
+    function betaRefreshUi() {
+      let fab = document.getElementById('beta-fab');
+      if (betaUiOn() && betaOn('feedback')) {
+        if (!fab) {
+          fab = document.createElement('div'); fab.id = 'beta-fab';
+          fab.innerHTML = `<button type="button" class="beta-fab-main" data-beta-open="feedback" aria-label="Feedback geben">${icon('note')}<span>Feedback</span></button><button type="button" class="beta-fab-bug" data-beta-open="bug" aria-label="Fehler melden" title="Fehler melden">🐞</button>`;
+          document.body.appendChild(fab);
+        }
+      } else if (fab) fab.remove();
+      if (!betaUiOn()) document.querySelectorAll('.beta-banner').forEach((el) => el.remove());
+    }
+    const BETA_FEEDBACK_TYPES = [['idea', 'Idee'], ['problem', 'Problem'], ['missing', 'Funktion fehlt'], ['unclear', 'Bedienung unklar'], ['praise', 'Lob'], ['other', 'Sonstiges']];
+    const BETA_BUG_TYPES = ['Fehlermeldung oder Absturz', 'Speichern klappt nicht', 'Falsche oder fehlende Daten', 'Darstellung / Layout', 'Langsam', 'Sonstiges'];
+    function betaModalHtml() {
+      const m = betaS().modal;
+      if (!m) return '';
+      const mail = (() => { try { return cloudSignedIn() ? '' : `<label><span class="form-label">E-Mail für Rückfragen (optional)</span><input class="form-control" type="email" name="email" maxlength="120" value="${escapeHtml(profileData?.email || '')}"></label>`; } catch (error) { return ''; } })();
+      const head = (title, sub) => `<div class="beta-modal-head"><div><span class="beta-chip">Husora Beta</span><h2>${title}</h2>${sub ? `<p>${sub}</p>` : ''}</div><button type="button" class="beta-modal-x" data-beta-close aria-label="Schließen">×</button></div>`;
+      const stars = (name, value = 0) => `<div class="beta-stars" role="radiogroup" aria-label="Bewertung">${[1, 2, 3, 4, 5].map((n) => `<label title="${n} von 5"><input type="radio" name="${name}" value="${n}" ${n === value ? 'checked' : ''} required><span>★</span></label>`).join('')}</div>`;
+      let body = '';
+      if (m.kind === 'feedback' || m.kind === 'bug') {
+        const tabs = `<div class="beta-tabs" role="tablist"><button type="button" role="tab" class="${m.kind === 'feedback' ? 'on' : ''}" data-beta-open="feedback">Feedback</button><button type="button" role="tab" class="${m.kind === 'bug' ? 'on' : ''}" data-beta-open="bug">🐞 Fehler melden</button></div>`;
+        body = m.kind === 'feedback'
+          ? `${head('Feedback', 'Direkt an das Husora-Team. Danke, dass du mitmachst!')}${tabs}<form class="beta-form" data-beta-form="feedback">
+              <div class="beta-types">${BETA_FEEDBACK_TYPES.map(([v, l], i) => `<label><input type="radio" name="type" value="${v}" ${i === 0 ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div>
+              <label><span class="form-label">Deine Nachricht *</span><textarea class="form-control textarea" name="message" rows="4" maxlength="4000" required placeholder="Was sollen wir verbessern, was gefällt dir?"></textarea></label>${mail}
+              <p class="beta-auto">Wird automatisch angehängt: Bereich „${escapeHtml(betaScreen() || '–')}“, Rolle, App-Version ${escapeHtml(betaVersion())}, Gerät ${escapeHtml(betaPlatform())}. Keine Passwörter oder Hausdaten.</p>
+              <div class="beta-actions"><button type="button" class="secondary-btn" data-beta-close>Abbrechen</button><button type="submit" class="primary-btn">${icon('check')} Senden</button></div></form>`
+          : `${head('🐞 Fehler melden', 'Was ist schiefgelaufen? Je genauer, desto schneller können wir es beheben.')}${tabs}<form class="beta-form" data-beta-form="bug">
+              <div class="beta-grid"><label><span class="form-label">Fehlertyp</span><select class="form-control" name="title">${BETA_BUG_TYPES.map((t) => `<option>${t}</option>`).join('')}</select></label>
+              <label><span class="form-label">Wie schlimm?</span><select class="form-control" name="severity"><option value="low">Gering – stört kaum</option><option value="medium" selected>Mittel – umständlich</option><option value="high">Hoch – ich komme nicht weiter</option><option value="critical">Kritisch – Daten falsch/verloren</option></select></label></div>
+              <label><span class="form-label">Beschreibung *</span><textarea class="form-control textarea" name="message" rows="3" maxlength="4000" required placeholder="Was hast du gemacht?"></textarea></label>
+              <div class="beta-grid"><label><span class="form-label">Was wurde erwartet?</span><textarea class="form-control textarea" name="expected" rows="2" maxlength="2000"></textarea></label><label><span class="form-label">Was ist passiert?</span><textarea class="form-control textarea" name="actual" rows="2" maxlength="2000"></textarea></label></div>${mail}
+              <p class="beta-auto">Wird automatisch angehängt: Bereich „${escapeHtml(betaScreen() || '–')}“, Rolle, App-Version ${escapeHtml(betaVersion())}, Gerät ${escapeHtml(betaPlatform())}, Umgebung ${escapeHtml(betaEnvironment())}. Niemals Passwörter oder Zugangsdaten.</p>
+              <div class="beta-actions"><button type="button" class="secondary-btn" data-beta-close>Abbrechen</button><button type="submit" class="primary-btn">Fehler senden</button></div></form>`;
+      } else if (m.kind === 'rating') {
+        body = `${head('Wie hilfreich war Husora?', m.context === 'inspection' ? 'Du hast gerade eine Hauskontrolle abgeschlossen.' : 'Ein Service wurde gerade abgeschlossen.')}<form class="beta-form" data-beta-form="rating">${stars('rating')}
+          <label><span class="form-label">Was können wir verbessern? (optional)</span><textarea class="form-control textarea" name="comment" rows="2" maxlength="2000"></textarea></label>
+          <div class="beta-actions"><button type="button" class="secondary-btn" data-beta-close>Später</button><button type="submit" class="primary-btn">Bewerten</button></div></form>`;
+      } else if (m.kind === 'day7') {
+        body = `${head('Wie gefällt dir Husora bisher?', 'Du nutzt Husora seit einer Woche – drei kurze Fragen.')}<form class="beta-form" data-beta-form="day7">${stars('rating')}
+          <label><span class="form-label">Welche Funktion nutzt du am meisten?</span><select class="form-control" name="most_used"><option value="">– bitte wählen –</option>${['Aufgaben', 'Hauskontrolle', 'Kalender & Buchungen', 'Dokumente', 'Kosten', 'Servicepartner', 'Partner-Portal'].map((f) => `<option>${f}</option>`).join('')}</select></label>
+          <label><span class="form-label">Was fehlt dir?</span><textarea class="form-control textarea" name="missing" rows="2" maxlength="1000"></textarea></label>
+          <div class="beta-actions"><button type="button" class="secondary-btn" data-beta-later="day7">Später</button><button type="submit" class="primary-btn">Senden</button></div></form>`;
+      } else if (m.kind === 'day30') {
+        const radio = (name, opts) => `<div class="beta-types">${opts.map(([v, l]) => `<label><input type="radio" name="${name}" value="${v}"><span>${l}</span></label>`).join('')}</div>`;
+        body = `${head('Würdest du Husora weiter nutzen?', 'Ein Monat Husora – deine Meinung entscheidet, wie es weitergeht. Es ist keine Zahlung nötig.')}<form class="beta-form" data-beta-form="day30">
+          ${radio('continue', [['yes', 'Ja'], ['probably', 'Wahrscheinlich'], ['maybe', 'Vielleicht'], ['no', 'Nein']])}
+          <label><span class="form-label">Welche Funktionen sind für dich am wertvollsten?</span><textarea class="form-control textarea" name="valuable" rows="2" maxlength="1000"></textarea></label>
+          <span class="form-label">Was wäre Husora dir monatlich wert? (optional)</span>${radio('value', [['0', '0 €'], ['2.99', '2,99 €'], ['4.99', '4,99 €'], ['9.99', '9,99 €'], ['19.99', '19,99 €'], ['more', 'mehr']])}
+          <div class="beta-actions"><button type="button" class="secondary-btn" data-beta-later="day30">Später</button><button type="submit" class="primary-btn">Senden</button></div></form>`;
+      }
+      return `<div class="beta-modal-backdrop" data-beta-backdrop><div class="beta-modal" role="dialog" aria-modal="true">${body}</div></div>`;
+    }
+    function betaOpenModal(kind, extra = {}) {
+      betaS().modal = { kind, ...extra };
+      let host = document.getElementById('beta-modal');
+      if (!host) { host = document.createElement('div'); host.id = 'beta-modal'; document.body.appendChild(host); }
+      host.innerHTML = betaModalHtml();
+      host.querySelector('textarea, input:not([type=radio]), select')?.focus({ preventScroll: true });
+    }
+    function betaCloseModal() { betaS().modal = null; const host = document.getElementById('beta-modal'); if (host) host.innerHTML = ''; }
+    // Bewertung nach Kontrolle/Service – höchstens alle 14 Tage, nur mit Konto
+    function betaAskRating(context, ref = '') {
+      try {
+        if (!betaUiOn() || !betaOn('feedback') || !cloudSignedIn() || betaS().modal) return;
+        const st = betaStore('husora-beta-rating', { last: 0, refs: [] });
+        if (Date.now() - st.last < 14 * 86400000 || st.refs.includes(`${context}:${ref}`)) return;
+        betaSave('husora-beta-rating', { last: Date.now(), refs: [...st.refs, `${context}:${ref}`].slice(-50) });
+        betaOpenModal('rating', { context, ref });
+      } catch (error) { /* optional */ }
+    }
+    // 7-/30-Tage-Umfrage: nur einmal (abgelehnt höchstens zweimal, dann Ruhe)
+    function betaMaybeSurvey() {
+      try {
+        if (!betaUiOn() || !betaOn('feedback') || !cloudSignedIn() || betaS().modal) return;
+        const act = betaStore('husora-beta-activity', null);
+        if (!act) return;
+        const st = betaStore('husora-beta-survey', {});
+        const age = (Date.now() - new Date(`${act.first}T12:00:00`).getTime()) / 86400000;
+        const due = (k, days, minDays) => !st[k]?.done && (st[k]?.later || 0) < Date.now() && age >= days && act.days.length >= minDays;
+        if (due('day30', 30, 5)) betaOpenModal('day30');
+        else if (due('day7', 7, 3)) betaOpenModal('day7');
+      } catch (error) { /* optional */ }
+    }
+    async function betaSendRating(body) {
+      let org = null;
+      try { org = (pp.open ? ppOrg()?.id : null) || (cloudReady() ? cloud.org.id : null); } catch (error) { org = null; }
+      await cloudFetch('/rest/v1/beta_ratings', { method: 'POST', body: { ...body, organization_id: org, app_role: betaRole(), app_version: betaVersion() }, headers: { Prefer: 'return=minimal' } });
+    }
+    document.addEventListener('click', (event) => {
+      const open = event.target.closest('[data-beta-open]');
+      if (open) { event.preventDefault(); betaOpenModal(open.dataset.betaOpen); return; }
+      if (event.target.closest('[data-beta-close]') || event.target.matches?.('[data-beta-backdrop]')) { betaCloseModal(); return; }
+      const later = event.target.closest('[data-beta-later]');
+      if (later) {
+        const st = betaStore('husora-beta-survey', {}); const k = later.dataset.betaLater; const n = (st[k]?.n || 0) + 1;
+        st[k] = n >= 2 ? { done: true, n } : { later: Date.now() + 3 * 86400000, n };
+        betaSave('husora-beta-survey', st); betaCloseModal(); return;
+      }
+      if (event.target.closest('[data-beta-hide-banner]')) { betaSave('husora-beta-banner', Date.now() + 7 * 86400000); document.querySelectorAll('.beta-banner').forEach((el) => el.remove()); return; }
+      const premium = event.target.closest('[data-beta-premium]');
+      if (premium) {
+        const feature = premium.dataset.betaPremium;
+        trackEvent('subscription_interest', { entity_type: 'feature', entity_ref: feature, metadata: { feature } });
+        const list = betaStore('husora-beta-premium', []); if (!list.includes(feature)) betaSave('husora-beta-premium', [...list, feature]);
+        premium.disabled = true; premium.textContent = 'Vorgemerkt ✓';
+        showToast('Vorgemerkt – wir melden uns, sobald diese Premium-Funktion verfügbar ist. Es entstehen keine Kosten.');
+      }
+    });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && betaS().modal) betaCloseModal(); });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-beta-form]');
+      if (!form) return;
+      event.preventDefault();
+      const kind = form.dataset.betaForm;
+      const v = Object.fromEntries(new FormData(form));
+      const button = form.querySelector('button[type=submit]'); if (button) button.disabled = true;
+      const base = { page: betaScreen().slice(0, 80), app_role: betaRole(), platform: betaPlatform(), environment: betaEnvironment(), contactEmail: String(v.email || '').trim() };
+      let task;
+      if (kind === 'feedback') task = sendAppFeedback({ kind: 'feedback', message: v.message, contactEmail: base.contactEmail, extra: { feedback_type: v.type, app_role: base.app_role, platform: base.platform, environment: base.environment, page: base.page } });
+      else if (kind === 'bug') task = sendAppFeedback({ kind: 'bug', message: v.message, contactEmail: base.contactEmail, context: { online: navigator.onLine, screen: `${window.innerWidth}x${window.innerHeight}` }, extra: { title: v.title, severity: v.severity, expected_behavior: String(v.expected || '').trim() || null, actual_behavior: String(v.actual || '').trim() || null, app_role: base.app_role, platform: base.platform, environment: base.environment, page: base.page } });
+      else if (kind === 'rating') task = betaSendRating({ rating: Number(v.rating), context: betaS().modal?.context || 'general', comment: String(v.comment || '').trim() || null });
+      else if (kind === 'day7') task = betaSendRating({ rating: Number(v.rating), context: 'day7', answers: { most_used: v.most_used || null, missing: String(v.missing || '').trim().slice(0, 500) || null } });
+      else if (kind === 'day30') task = betaSendRating({ context: 'day30', answers: { continue: v.continue || null, valuable: String(v.valuable || '').trim().slice(0, 500) || null, value: v.value || null } });
+      if (!task) return;
+      task.then(() => {
+        if (kind === 'day7' || kind === 'day30') { const st = betaStore('husora-beta-survey', {}); st[kind] = { done: true }; betaSave('husora-beta-survey', st); }
+        betaCloseModal();
+        showToast(kind === 'bug' ? 'Danke! Der Fehler ist beim Husora-Team angekommen.' : kind === 'feedback' ? 'Danke für dein Feedback!' : 'Danke für deine Bewertung!');
+      }).catch((error) => {
+        if (/bereits beantwortet/.test(error.message || '')) { const st = betaStore('husora-beta-survey', {}); st[kind] = { done: true }; betaSave('husora-beta-survey', st); betaCloseModal(); return; }
+        showToast(`Senden hat nicht geklappt: ${error.message || 'bitte später erneut versuchen'}`);
+        if (button) button.disabled = false;
+      });
+    });
+    // Premium-Vorschau: Interesse vormerken (keine Zahlung)
+    const BETA_PREMIUM = [['automation', 'Automatisierungen', 'Wiederkehrende Aufgaben und Kontrollen planen sich selbst.'], ['multi_house', 'Mehrere Häuser', 'Alle Ferienhäuser in einer Übersicht verwalten.'], ['inspections_plus', 'Erweiterte Hauskontrollen', 'Eigene Prüfpunkte, Fotos und Nachkontrollen.'], ['archive', 'Dokumentenarchiv', 'Rechnungen, Verträge und Belege dauerhaft ablegen.'], ['analytics', 'Erweiterte Auswertungen', 'Kosten, Zustand und Prognosen je Haus.']];
+    function betaPremiumHtml() {
+      if (!betaOn()) return '';
+      const marked = betaStore('husora-beta-premium', []);
+      return `<section class="card beta-premium"><h2 class="card-title"><span class="beta-chip">Beta</span> Premium-Vorschau</h2><p class="card-caption">Welche Funktionen wären dir ein Premium-Abo wert? Vormerken ist kostenlos und unverbindlich.</p>
+        <div class="beta-premium-list">${BETA_PREMIUM.map(([id, title, text]) => `<div class="beta-premium-item"><span><strong>${title}</strong><small>${text}</small></span><button type="button" class="secondary-btn" data-beta-premium="${id}" ${marked.includes(id) ? 'disabled' : ''}>${marked.includes(id) ? 'Vorgemerkt ✓' : 'Premium vormerken'}</button></div>`).join('')}</div>
+        <label class="settings-switch"><span><strong>Nutzungsstatistik für die Beta</strong><small>Husora zählt anonymisiert, welche Funktionen genutzt werden (z. B. „Aufgabe erstellt“) – ohne Inhalte, Texte, Fotos oder Zugangsdaten. Gesendet wird nur mit Husora-Konto.</small></span><span class="switch"><input type="checkbox" data-beta-analytics ${betaAnalyticsAllowed() ? 'checked' : ''} ${betaOn('analytics') ? '' : 'disabled'}><span></span></span></label>
+        ${betaS().admin?.is_super_admin ? `<div class="settings-actions"><button type="button" class="primary-btn" data-page="betaAdmin">${icon('meter')} Husora Beta Dashboard öffnen</button></div>` : ''}</section>`;
+    }
+    document.addEventListener('change', (event) => {
+      if (!event.target.matches?.('[data-beta-analytics]')) return;
+      try { localStorage.setItem('husora-analytics', event.target.checked ? '1' : '0'); } catch (error) { /* optional */ }
+      if (!event.target.checked) betaSave('husora-beta-events', []);
+      showToast(event.target.checked ? 'Danke! Nutzungsstatistik ist an.' : 'Nutzungsstatistik ist aus – es werden keine Ereignisse mehr gesendet.');
+    });
+    // Ist das angemeldete Konto im Husora-Team (Super-Admin)?
+    async function betaLoadAdmin() {
+      try {
+        if (!cloudSignedIn()) { betaS().admin = null; return; }
+        const sub = tokenSub(cloud.session.access_token);
+        if (betaS().admin?.sub === sub) return;
+        const [row] = await cloudFetch(`/rest/v1/users?auth_user_id=eq.${sub}&select=is_super_admin,is_beta_user,beta_group`);
+        betaS().admin = { sub, ...(row || {}) };
+        if (row?.is_super_admin && currentPage === 'help') render();
+      } catch (error) { /* optional */ }
+    }
+    // ----- Husora Beta Dashboard (nur Super-Admins; der Server prüft das selbst) -----
+    function betaAdminPage() {
+      const s = betaS();
+      if (!cloudSignedIn()) return `<section class="card"><h2 class="card-title">Husora Beta Dashboard</h2><p class="card-caption">Bitte mit dem Husora-Team-Konto anmelden (Einstellungen → Daten & App → Cloud-Speicher).</p></section>`;
+      if (!s.dash) { betaLoadDashboard(); return '<section class="card"><p class="settings-hint">Kennzahlen werden geladen …</p></section>'; }
+      if (s.dash.error) return `<section class="card"><h2 class="card-title">Husora Beta Dashboard</h2><p class="card-caption">${escapeHtml(s.dash.error)}</p><div class="settings-actions"><button type="button" class="secondary-btn" data-beta-dash-reload>Erneut laden</button></div></section>`;
+      const d = s.dash.data; const cfg = d.config || {};
+      const n = (v) => (v == null ? '–' : Number(v).toLocaleString('de-DE'));
+      const tile = (label, value, sub = '') => `<div class="beta-kpi"><span>${label}</span><strong>${value}</strong>${sub ? `<small>${sub}</small>` : ''}</div>`;
+      const funnel = (steps) => { const top = Math.max(1, steps[0]?.n || 0); return `<ol class="beta-funnel">${steps.map((st, i) => { const prev = i ? steps[i - 1].n : st.n; const conv = i && prev ? Math.round(100 * st.n / prev) : null; return `<li><span class="beta-funnel-label">${escapeHtml(st.step)}</span><span class="beta-funnel-bar"><i style="width:${Math.max(2, Math.round(100 * st.n / top))}%"></i></span><b>${n(st.n)}</b><small>${conv == null ? '' : `${conv} %`}</small></li>`; }).join('')}</ol>`; };
+      const kpis = (d.kpis || []).map((k) => { const ok = k.value != null && Number(k.value) >= k.target; const unit = k.unit === 'stars' ? '/5' : ' %'; return `<div class="beta-target ${k.value == null ? 'none' : ok ? 'ok' : 'low'}"><span>${escapeHtml(k.label)}</span><b>${k.value == null ? '–' : `${String(k.value).replace('.', ',')}${unit}`}</b><small>Ziel ≥ ${k.target}${unit}</small><span class="beta-target-bar"><i style="width:${k.value == null ? 0 : Math.min(100, Math.round(100 * Number(k.value) / (k.unit === 'stars' ? 5 : 100)))}%"></i><em style="left:${k.unit === 'stars' ? k.target * 20 : k.target}%"></em></span></div>`; }).join('');
+      const reports = s.dash.reports || [];
+      const statusSel = (r) => `<select class="form-control" data-beta-report="${r.id}">${[['open', 'Offen'], ['in_progress', 'In Arbeit'], ['resolved', 'Erledigt'], ['wont_fix', 'Wird nicht umgesetzt']].map(([v, l]) => `<option value="${v}" ${r.status === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+      const typeLabel = (r) => r.kind === 'feedback' ? (BETA_FEEDBACK_TYPES.find(([v]) => v === r.feedback_type)?.[1] || 'Feedback') : r.kind === 'bug' ? `🐞 ${r.title || 'Fehler'}` : 'Automatischer Fehler';
+      const filter = s.dash.filter || 'open';
+      const shown = reports.filter((r) => (filter === 'all' || (filter === 'open' ? ['open', 'in_progress'].includes(r.status) : r.status === filter)) && (!s.dash.kind || s.dash.kind === r.kind || (s.dash.kind === 'bug' && r.kind === 'error')));
+      const flags = [['enabled', 'Beta Mode'], ['feedback', 'Feedback & Bewertungen'], ['analytics', 'Analytics'], ['error_reporting', 'Automatische Fehlerberichte']];
+      return `<div class="beta-dash"><section class="card beta-dash-head"><div><h2 class="card-title"><span class="beta-chip">Beta</span> Husora Beta Dashboard</h2><p class="card-caption">Stand ${escapeHtml(fmtDateTime(d.generated_at))} · nur für das Husora-Team sichtbar</p></div><button type="button" class="secondary-btn" data-beta-dash-reload>${icon('undo')} Aktualisieren</button></section>
+        <div class="beta-kpis">${tile('Registrierte Nutzer', n(d.users.registered), `${n(d.users.beta_users)} Beta-Nutzer`)}${tile('Hausbesitzer', n(d.users.owners))}${tile('Servicepartner', n(d.users.partners))}${tile('Aktiv heute', n(d.users.active_today))}${tile('Aktiv 7 Tage', n(d.users.active_7d))}${tile('Aktiv 30 Tage', n(d.users.active_30d))}${tile('Häuser', n(d.content.houses), `${n(d.content.houses_events)} angelegt (App)`)}${tile('Aufgaben', n(d.content.tasks))}${tile('Hauskontrollen', n(d.content.inspections))}${tile('Serviceanfragen', n(d.services.requests))}${tile('Angenommen', n(d.services.accepted))}${tile('Abgeschlossen', n(d.services.completed))}${tile('Ø Bewertung', d.quality.avg_rating == null ? '–' : `${String(d.quality.avg_rating).replace('.', ',')} ★`, `${n(d.quality.ratings)} Bewertungen`)}${tile('Offene Fehler', n(d.quality.open_bugs))}${tile('Offenes Feedback', n(d.quality.open_feedback))}</div>
+        <section class="card"><h2 class="card-title">KPI-Ziele</h2><p class="card-caption">Orientierungswerte für die Beta – keine harte Prüfung.</p><div class="beta-targets">${kpis}</div></section>
+        <div class="beta-two"><section class="card"><h2 class="card-title">Funnel Hausbesitzer</h2>${funnel(d.funnel_owner || [])}</section><section class="card"><h2 class="card-title">Funnel Servicepartner</h2>${funnel(d.funnel_partner || [])}</section></div>
+        <div class="beta-two"><section class="card"><h2 class="card-title">Premium-Interesse</h2>${Object.keys(d.quality.subscription_interest || {}).length ? `<ul class="beta-list">${Object.entries(d.quality.subscription_interest).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<li><span>${escapeHtml(BETA_PREMIUM.find(([id]) => id === k)?.[1] || k)}</span><b>${n(v)}</b></li>`).join('')}</ul>` : '<p class="settings-hint">Noch keine Vormerkungen.</p>'}
+          <h3 class="beta-sub">30-Tage-Umfrage</h3><ul class="beta-list">${[['yes', 'Weiter nutzen: Ja'], ['probably', 'Wahrscheinlich'], ['maybe', 'Vielleicht'], ['no', 'Nein']].map(([k, l]) => `<li><span>${l}</span><b>${n((d.quality.continue || {})[k] || 0)}</b></li>`).join('')}</ul>
+          <ul class="beta-list">${Object.entries(d.quality.value_per_month || {}).map(([k, v]) => `<li><span>Monatlich wert: ${k === 'more' ? 'mehr' : `${k.replace('.', ',')} €`}</span><b>${n(v)}</b></li>`).join('') || '<li><span>Noch keine Angaben zum Preis</span><b></b></li>'}</ul></section>
+          <section class="card"><h2 class="card-title">Ereignisse (7 Tage)</h2>${Object.keys(d.events_7d || {}).length ? `<ul class="beta-list">${Object.entries(d.events_7d).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<li><span><code>${escapeHtml(k)}</code></span><b>${n(v)}</b></li>`).join('')}</ul>` : '<p class="settings-hint">Noch keine Ereignisse.</p>'}
+          <h3 class="beta-sub">Beta-Gruppen</h3><ul class="beta-list">${Object.entries(d.users.beta_groups || {}).map(([k, v]) => `<li><span>${escapeHtml(k)}</span><b>${n(v)}</b></li>`).join('') || '<li><span>Noch keine Beta-Nutzer</span><b></b></li>'}</ul></section></div>
+        <section class="card"><h2 class="card-title">Feedback & Fehler</h2>
+          <div class="pp-filters">${[['open', 'Offen'], ['resolved', 'Erledigt'], ['all', 'Alle']].map(([v, l]) => `<button type="button" class="${filter === v ? 'active' : ''}" data-beta-dash-filter="${v}">${l}</button>`).join('')}${[['', 'Alles'], ['feedback', 'Feedback'], ['bug', 'Fehler']].map(([v, l]) => `<button type="button" class="${(s.dash.kind || '') === v ? 'active' : ''}" data-beta-dash-kind="${v}">${l}</button>`).join('')}</div>
+          ${shown.length ? `<div class="beta-reports">${shown.map((r) => `<div class="beta-report ${r.kind}"><div class="beta-report-head"><strong>${escapeHtml(typeLabel(r))}</strong>${r.severity && r.kind !== 'feedback' ? `<em class="beta-sev ${r.severity}">${escapeHtml({ low: 'gering', medium: 'mittel', high: 'hoch', critical: 'kritisch' }[r.severity] || r.severity)}</em>` : ''}${statusSel(r)}</div>
+            <p>${escapeHtml(String(r.message || '').slice(0, 600))}</p>${r.expected_behavior || r.actual_behavior ? `<p class="beta-report-ea">${r.expected_behavior ? `<span><b>Erwartet:</b> ${escapeHtml(r.expected_behavior)}</span>` : ''}${r.actual_behavior ? `<span><b>Passiert:</b> ${escapeHtml(r.actual_behavior)}</span>` : ''}</p>` : ''}
+            <small>${escapeHtml(fmtDateTime(r.created_at))} · ${escapeHtml(r.app_role || 'Gast')} · ${escapeHtml(r.page || '–')} · ${escapeHtml(r.app_version || '')} · ${escapeHtml(r.platform || '')}${r.environment && r.environment !== 'production' ? ` · ${escapeHtml(r.environment)}` : ''}${r.contact_email ? ` · ${escapeHtml(r.contact_email)}` : ''}</small></div>`).join('')}</div>` : '<p class="settings-hint">Keine Einträge in dieser Ansicht.</p>'}</section>
+        <section class="card"><h2 class="card-title">Beta-Schalter</h2><p class="card-caption">Gilt sofort für alle Nutzer – ohne neue App-Version.</p>
+          ${flags.map(([k, l]) => `<label class="settings-switch"><span><strong>${l}</strong></span><span class="switch"><input type="checkbox" data-beta-flag="${k}" ${cfg[k] !== false ? 'checked' : ''}><span></span></span></label>`).join('')}
+          <label><span class="form-label">Beta-Gruppe für neue Beta-Nutzer</span><select class="form-control" data-beta-group>${[['alpha', 'Alpha'], ['closed_beta', 'Closed Beta'], ['open_beta', 'Open Beta'], ['pre_launch', 'Pre-Launch']].map(([v, l]) => `<option value="${v}" ${cfg.default_group === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label></section></div>`;
+    }
+    async function betaLoadDashboard() {
+      const s = betaS();
+      if (s.dashLoading) return;
+      s.dashLoading = true;
+      try {
+        const [data, reports] = await Promise.all([
+          cloudFetch('/rest/v1/rpc/beta_dashboard', { method: 'POST', body: {} }),
+          cloudFetch('/rest/v1/app_feedback?select=id,kind,feedback_type,title,message,expected_behavior,actual_behavior,page,app_role,app_version,platform,environment,severity,status,contact_email,created_at&order=created_at.desc&limit=200')
+        ]);
+        s.dash = { ...(s.dash || {}), data, reports, error: '' };
+      } catch (error) {
+        s.dash = { error: /Husora-Team|42501|Berechtigung/.test(error.message) ? 'Dieser Bereich ist nur für das Husora-Team freigegeben.' : `Kennzahlen nicht verfügbar: ${error.message}` };
+      } finally {
+        s.dashLoading = false;
+        if (currentPage === 'betaAdmin') render();
+      }
+    }
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('[data-beta-dash-reload]')) { betaS().dash = null; render(); return; }
+      const f = event.target.closest('[data-beta-dash-filter]'); if (f) { betaS().dash.filter = f.dataset.betaDashFilter; render(); return; }
+      const k = event.target.closest('[data-beta-dash-kind]'); if (k) { betaS().dash.kind = k.dataset.betaDashKind; render(); }
+    });
+    document.addEventListener('change', (event) => {
+      const rep = event.target.closest?.('[data-beta-report]');
+      const flag = event.target.closest?.('[data-beta-flag]');
+      const group = event.target.closest?.('[data-beta-group]');
+      if (rep) {
+        cloudFetch(`/rest/v1/app_feedback?id=eq.${rep.dataset.betaReport}`, { method: 'PATCH', body: { status: rep.value }, headers: { Prefer: 'return=minimal' } })
+          .then(() => { const r = (betaS().dash?.reports || []).find((x) => x.id === rep.dataset.betaReport); if (r) r.status = rep.value; showToast('Status gespeichert.'); })
+          .catch((error) => showToast(error.message));
+        return;
+      }
+      if (flag || group) {
+        const value = { ...(betaS().dash?.data?.config || betaS().config) };
+        if (flag) value[flag.dataset.betaFlag] = flag.checked; else value.default_group = group.value;
+        cloudFetch('/rest/v1/app_config?key=eq.beta', { method: 'PATCH', body: { value }, headers: { Prefer: 'return=minimal' } })
+          .then(() => { if (betaS().dash?.data) betaS().dash.data.config = value; betaS().config = { ...betaS().config, ...value }; betaSave('husora-beta-config', betaS().config); betaRefreshUi(); render(); showToast('Beta-Einstellung gespeichert – gilt für alle Nutzer.'); })
+          .catch((error) => showToast(error.message));
+      }
+    });
+    // Start: Konfiguration laden, Sitzung zählen, Puffer senden, Umfrage prüfen
+    setTimeout(() => {
+      ['props', 'tasks', 'docs', 'insp'].forEach((k) => { if (!(betaStore('husora-beta-known', {}) || {})[k]) betaObserve(k); });
+      betaRefreshUi();
+      betaLoadConfig().then(() => { betaRefreshUi(); betaSessionStart(); betaLoadAdmin(); betaFlush(); });
+      setTimeout(betaMaybeSurvey, 6000);
+    }, 0);
+    setInterval(() => { betaFlush(); betaLoadAdmin(); }, 45000);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') betaSessionStart(); else betaFlush(); });
+
     // --- Ersteinrichtung ---
     let onboardingState = loadStore('stugliv-onboarding', null);
     let onboardingStep = 0;
@@ -15942,6 +16477,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       onboardingStep = step;
       renderOnboarding();
       document.getElementById('onboarding-modal').classList.add('open');
+      if (step === 0) trackEvent('onboarding_started', { entity_ref: 'once' });
     }
     function readOnboardingInputs() {
       document.querySelectorAll('#onboarding-body [data-ob]').forEach((input) => { onboardingDraft[input.dataset.ob] = input.type === 'radio' ? (input.checked ? input.value : onboardingDraft[input.dataset.ob]) : input.value.trim(); });
@@ -15998,6 +16534,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       persistTasks();
       onboardingState = { status: 'done', at: new Date().toISOString() };
       saveStore('stugliv-onboarding', onboardingState);
+      trackEvent('onboarding_completed', { entity_ref: 'once', metadata: { usage: profileData.usage, demo_before: wasDemo } });
+      if (first) trackEvent('house_created', { entity_type: 'house', entity_ref: String(first.id), metadata: { houses: properties.length, onboarding: true } });
       onboardingStep = 3;
       renderOnboarding();
       render();
@@ -18702,7 +19240,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const navActive = (id) => pp.view === id || (id === 'more' && !PP_NAV.some(([v]) => v === pp.view));
       const navBadge = (id) => { const n = id === 'orders' ? ppD('orders').filter((o) => o.status === 'offered').length : id === 'messages' ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : id === 'more' ? ppD('inspections').filter((i) => i.status === 'in_progress').length : 0; return n ? `<b class="pp-dot">${n > 9 ? '9+' : n}</b>` : ''; };
       const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${PP_NAV.map(([id, label, ic, short]) => `<button type="button" class="${navActive(id) ? 'active' : ''}" data-pp-view="${id}" aria-label="${label}" aria-current="${navActive(id) ? 'page' : 'false'}">${icon(ic)}<span class="${short ? 'pp-nav-long' : ''}">${label}</span>${short ? `<span class="pp-nav-short">${short}</span>` : ''}${navBadge(id)}</button>`).join('')}</nav>` : '';
-      root.innerHTML = `${head}<main class="pp-main" id="pp-main">${messages}${body}</main>${nav}`;
+      root.innerHTML = `${head}<main class="pp-main" id="pp-main">${betaBannerHtml('partner')}${messages}${body}</main>${nav}`;
       const main = root.querySelector('.pp-main');
       if (main && pp.keepScroll) main.scrollTop = scroll;
       pp.keepScroll = false;
@@ -20444,7 +20982,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ppRun('complete', async () => {
           await ppPatch('service_orders', id, { status: 'completed', actual_cost: actual === '' ? null : Number(actual), response_note: note || o?.response_note || null });
           if (note) await ppInsert('messages', { organization_id: o.organization_id, service_order_id: id, message: `Erledigt: ${note}` });
-        }, { notice: 'Auftrag erledigt – der Kunde wird informiert.' });
+        }, { notice: 'Auftrag erledigt – der Kunde wird informiert.' }).then(() => { if (!pp.error) betaAskRating('service', id); });
       }
       if (a === 'start-inspection') {
         const tpl = ppField('tpl');
@@ -20586,7 +21124,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           await ppSendInvoice(o, { organization_id: o.organization_id, property_id: o.property_id, service_order_id: o.id, service_partner_id: o.service_partner_id, invoice_number: (v.number || '').trim() || `R-${Date.now()}`, invoice_date: ppToday(), due_date: v.due || null, amount_net: net, tax_amount: Math.round((gross - net) * 100) / 100, amount_gross: gross, currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : o.currency, status: 'received' }, fd.get('pdf'), false);
           await ppPatch('service_orders', o.id, { status: 'completed', actual_cost: gross, response_note: note || o.response_note || null });
           if (note) await ppInsert('messages', { organization_id: o.organization_id, service_order_id: o.id, message: `Erledigt: ${note}` });
-        }, { notice: `Auftrag erledigt – Rechnung als PDF an ${ppCustomerName(o.organization_id)} gesendet.` });
+        }, { notice: `Auftrag erledigt – Rechnung als PDF an ${ppCustomerName(o.organization_id)} gesendet.` }).then(() => { if (!pp.error) betaAskRating('service', o.id); });
         return;
       }
       if (kind === 'inspection-start') ppRun('inspection', async () => { const newId = await ppRpc('partner_start_inspection', { p_property_id: v.property_id, p_template_id: v.template_id }); pp.prev = { view: pp.view, detail: null }; pp.detail = { type: 'inspection', id: newId }; }, { notice: 'Kontrolle angelegt.' });
@@ -20737,6 +21275,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (changed) {
         persistTasks();
         const doneNow = orders.filter((order) => order.status === 'completed' && completedNow.has(order.task?.app_ref));
+        if (doneNow.length) setTimeout(() => betaAskRating('service', doneNow[0].id), 1500);
         showToast(doneNow.length ? `${doneNow.length} Aufgabe${doneNow.length === 1 ? '' : 'n'} vom Servicepartner als erledigt gemeldet – automatisch abgehakt.` : `${changed} Aufgabe${changed === 1 ? '' : 'n'} mit dem Stand deiner Servicepartner aktualisiert.`);
         if (currentPage === 'partnerHub') hubRerender(); else if (['tasks', 'dashboard', 'calendar'].includes(currentPage)) render();
       }
