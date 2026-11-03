@@ -1,0 +1,69 @@
+name: Android Test-APK
+
+# Baut eine installierbare Test-APK (Beta-Umgebung, Debug-Signatur) und stellt sie unter einer festen
+# Adresse bereit: https://github.com/<owner>/<repo>/releases/download/android-test/husora-beta-test.apk
+# Nur für interne Tests per manueller Installation – nicht für Google Play.
+on:
+  push:
+    branches: [main]
+    paths: ['index.html', 'assets/**', 'android/**', 'capacitor.config.json', 'package.json', 'package-lock.json', 'version.json', 'config/**', 'tools/build-app.mjs', '.github/workflows/android-test-apk.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-test-apk
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Abhängigkeiten
+        run: npm ci
+
+      - name: Release-Checks (Version, Secrets)
+        run: node tools/version.mjs check && node tools/check-secrets.mjs
+
+      - name: App-Inhalt bauen (Beta)
+        run: |
+          cp .env.beta.example .env.beta
+          node tools/build-app.mjs --env beta --target native
+          npx cap sync android
+
+      - name: Test-APK bauen
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Als Download veröffentlichen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./version.json').version")
+          BUILD=$(node -p "require('./version.json').build")
+          cp android/app/build/outputs/apk/debug/app-debug.apk husora-beta-test.apk
+          NOTES="Husora ${VERSION} (Build ${BUILD}) – Test-APK für Android, Beta-Umgebung. Stand: $(date -u +'%d.%m.%Y %H:%M') UTC, Commit ${GITHUB_SHA::7}.
+
+          Installation: APK auf dem Android-Handy öffnen und „Installation aus unbekannten Quellen“ für den Browser erlauben.
+          Hinweis: Testversion mit Debug-Signatur – bei einem Update ggf. die alte Version zuerst deinstallieren. Nicht für Google Play."
+          if gh release view android-test >/dev/null 2>&1; then
+            gh release edit android-test --title "Husora Android Test-APK ${VERSION} (Build ${BUILD})" --notes "$NOTES" --prerelease
+          else
+            gh release create android-test --title "Husora Android Test-APK ${VERSION} (Build ${BUILD})" --notes "$NOTES" --prerelease --target "$GITHUB_SHA"
+          fi
+          gh release upload android-test husora-beta-test.apk --clobber
+          echo "Download: https://github.com/${GITHUB_REPOSITORY}/releases/download/android-test/husora-beta-test.apk" >> "$GITHUB_STEP_SUMMARY"
