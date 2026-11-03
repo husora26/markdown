@@ -206,7 +206,12 @@ npm run cap:sync:beta && npx cap open ios   # Product → Archive
 #   iOS:     Actions → „iOS Build“     → Run workflow → environment=beta, upload=true
 ```
 
-## Android-Test-APK (ohne Store)
+## Beta-Dashboard und Tester-Steckbrief
+- **Dashboard:** Hausbesitzer-App → Hilfe & Support → Premium-Vorschau → „Husora Beta Dashboard“ (nur Husora-Admins, Zwei-Faktor-Pflicht). Oben Kennzahlen/Funnels/Feedback, darunter „Beta-Tester & Release“ (Tester pseudonymisiert, Steckbrief zusammengefasst, Einladungscodes, Store-Links, Wartung).
+- **Admin live:** servicepartner@husora.de (Super-Admin seit 03.11.2026). Beim ersten Öffnen Zwei-Faktor-Anmeldung einrichten.
+- **Tester zählen:** `users.is_beta_user` – gesetzt durch Einladungscode, Admin-Markierung oder erstes Nutzungsereignis (mit Statistik-Einwilligung).
+- **Tester-Steckbrief (Migration 4600):** einmalig nach dem Login eines Beta-Testers, freiwillig („Später“ = in 3 Tagen erneut, „Überspringen“ = endgültig). Nur Auswahlfelder: Rolle, Häuser bzw. Betriebsgröße, Region (grob), heutige Organisation, Quelle, Interview-Bereitschaft. Kein Alter/Telefon/Adresse. Auswertung nur zusammengefasst (Regionen erst ab 3 Nennungen), im Datenexport enthalten, Löschung mit dem Konto. Hinweis in der Datenschutzerklärung ergänzen – juristische Prüfung offen.
+
 Der Workflow `.github/workflows/android-test-apk.yml` baut bei jeder App-Änderung automatisch eine Test-APK (Beta-Umgebung) und stellt sie unter einer festen Adresse bereit:
 **https://github.com/husora26/markdown/releases/download/android-test/husora-beta-test.apk**
 Installation: Link auf dem Android-Handy öffnen → APK öffnen → „Installation aus unbekannten Quellen“ erlauben. Debug-Signatur: bei einem Update ggf. alte Version zuerst deinstallieren. Nur für interne Tests, nicht für Google Play.

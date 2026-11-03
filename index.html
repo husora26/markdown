@@ -5013,6 +5013,13 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
     #role-switch.partner { background: #fff; color: #203a33; }
     #role-switch svg { width: 16px; height: 16px; }
     @media (max-width: 760px) { #role-switch { bottom: calc(84px + env(safe-area-inset-bottom)); left: 10px; height: 34px; padding: 0 11px; font-size: 12.5px; } }
+    .tp-modal { width: min(520px, 100%); max-height: calc(100vh - 40px); overflow-y: auto; }
+    .tp-modal fieldset { margin: 12px 0 0; padding: 0; border: 0; }
+    .tp-options { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .tp-option { display: inline-flex; align-items: center; gap: 6px; padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; font-size: 13.5px; cursor: pointer; }
+    .tp-option:has(input:checked) { border-color: var(--green); background: rgba(47, 107, 85, .1); font-weight: 650; }
+    .tp-option input { margin: 0; }
+    .tp-region { display: block; margin-top: 12px; }
     /* Beta Release: Sperrbildschirm (Umgebung/Update/Wartung), Wartungshinweis, Version, Admin */
     #rel-block { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; background: #203a33; }
     .rel-block-card { width: min(420px, 100%); padding: 28px 24px; border-radius: 16px; background: #fff; color: var(--ink); text-align: center; box-shadow: 0 24px 80px rgba(0, 0, 0, .3); }
@@ -17582,6 +17589,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         s.reportedAt = Date.now();
         if (reason === 'login') relRouteByRole(s.status);
         relCheckInvite();
+        setTimeout(() => { try { if (!document.getElementById('rel-invite-modal')?.classList.contains('open')) tpCheck(); } catch (error) { /* optional */ } }, 1200);
       } catch (error) { /* ältere Datenbank ohne Migration 4500 oder offline – später erneut */ }
       finally { s.reporting = false; }
     }
@@ -17745,7 +17753,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       s.adminLoading = true;
       try {
         const data = await cloudFetch('/rest/v1/rpc/beta_testers_overview', { method: 'POST', body: { p_limit: 300 } });
-        s.admin = { data };
+        let profiles = null;
+        try { profiles = await cloudFetch('/rest/v1/rpc/beta_tester_profiles_summary', { method: 'POST', body: {} }); } catch (error) { /* ältere Datenbank */ }
+        s.admin = { data, profiles };
         await relLoadConfig();
       } catch (error) { s.admin = { error: error.message }; }
       finally { s.adminLoading = false; if (currentPage === 'betaAdmin' && !pp.open) render(); }
@@ -17769,6 +17779,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return `<section class="card" id="rel-admin"><div class="settings-card-head"><div><h2 class="card-title"><span class="beta-chip">Beta</span> Beta-Tester & Release</h2><p class="card-caption">Pseudonymisiert – keine E-Mail-Adressen oder Namen. Umgebung des Servers: <strong>${escapeHtml(s.config?.environment?.name || 'unbekannt')}</strong> · diese App: ${escapeHtml(relVersionLabel())}</p></div><button type="button" class="secondary-btn" data-rel-admin-reload>${icon('undo')} Aktualisieren</button></div>
         <div class="beta-kpis"><div class="beta-kpi"><span>Beta-Tester</span><strong>${n(t.testers)}</strong></div><div class="beta-kpi"><span>Aktiv 7 Tage</span><strong>${n(t.active_7d)}</strong></div><div class="beta-kpi"><span>Aktiv 30 Tage</span><strong>${n(t.active_30d)}</strong></div></div>
         <div class="beta-two"><div><h3 class="beta-sub">Testgruppen</h3><ul class="beta-list">${list(Object.fromEntries(Object.entries(t.by_group || {}).map(([k, v]) => [groupLabel[k] || k, v])))}</ul></div><div><h3 class="beta-sub">Plattformen</h3><ul class="beta-list">${list(t.by_platform)}</ul><h3 class="beta-sub">App-Versionen</h3><ul class="beta-list">${list(t.by_version)}</ul></div></div>
+        ${tpSummaryHtml(s.admin.profiles)}
         <h3 class="beta-sub">Tester</h3><div class="rel-table-wrap"><table class="rel-table"><thead><tr><th>Kennung</th><th>Rolle</th><th>Gruppe</th><th>Plattform</th><th>Version</th><th>Zuletzt aktiv</th><th>Letzter Fehler</th></tr></thead><tbody>${rows || '<tr><td colspan="7">Noch keine Beta-Tester.</td></tr>'}</tbody></table></div>
         <h3 class="beta-sub">Einladungscodes</h3>
         ${s.newCode ? `<p class="rel-newcode" role="status">Neuer Code (wird nur jetzt angezeigt): <code>${escapeHtml(s.newCode)}</code> <button type="button" class="secondary-btn" data-rel-copy="${escapeHtml(s.newCode)}">Kopieren</button></p>` : ''}
@@ -17925,6 +17936,74 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const form = event.target;
       if (form instanceof HTMLElement) form.querySelectorAll('[data-ui-dirty]').forEach((el) => { delete el.dataset.uiDirty; });
     }, true);
+    // ----- Beta-Tester-Steckbrief (einmalig, freiwillig, nur Auswahlfelder) -----
+    const TP_LABELS = {
+      role: [['owner', 'Hausbesitzer'], ['partner', 'Servicepartner'], ['both', 'Beides']],
+      house_count: [['1', '1 Haus'], ['2-3', '2–3 Häuser'], ['4-10', '4–10 Häuser'], ['10+', 'mehr als 10']],
+      team_size: [['1', 'nur ich'], ['2-5', '2–5 Personen'], ['6-20', '6–20 Personen'], ['20+', 'mehr als 20']],
+      current_tool: [['paper', 'Papier / Notizen'], ['excel', 'Excel / Tabellen'], ['other_app', 'andere App'], ['none', 'gar nicht'], ['other', 'anders']],
+      source: [['friend', 'Empfehlung'], ['search', 'Internetsuche'], ['social', 'Social Media'], ['partner', 'über einen Servicepartner'], ['event', 'Messe / Veranstaltung'], ['other', 'anders']]
+    };
+    function tpLabel(group, key) { return (TP_LABELS[group] || []).find(([k]) => k === key)?.[1] || key; }
+    function tpVisible() { try { if (navigator.webdriver && localStorage.getItem('husora-profile-ui') !== '1') return false; } catch (error) { /* egal */ } return true; }
+    function tpCheck() {
+      const st = relS().status;
+      if (!st || !st.is_beta_tester || st.profile_done !== false || !st.invite_ok || !tpVisible()) return;
+      let later = 0; try { later = Number(localStorage.getItem('husora-profile-later') || 0); } catch (error) { /* egal */ }
+      if (later > Date.now() || document.getElementById('tp-modal')?.classList.contains('open')) return;
+      tpOpen();
+    }
+    function tpOpen() {
+      const st = relS().status || {};
+      const guess = st.roles?.owner && st.roles?.partner ? 'both' : st.roles?.partner ? 'partner' : st.roles?.owner ? 'owner' : '';
+      let m = document.getElementById('tp-modal');
+      if (!m) { m = document.createElement('div'); m.className = 'modal-backdrop'; m.id = 'tp-modal'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'tp-title'); document.body.appendChild(m); }
+      const radios = (group, name, selected = '') => `<div class="tp-options" role="radiogroup">${TP_LABELS[group].map(([k, l]) => `<label class="tp-option"><input type="radio" name="${name}" value="${k}" ${selected === k ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div>`;
+      m.innerHTML = `<section class="modal tp-modal"><div class="modal-head"><div><p class="eyebrow">Husora Beta</p><h2 id="tp-title">Kurz zu dir (1 Minute)</h2></div><button class="close-btn" type="button" data-tp-later aria-label="Später">✕</button></div>
+        <p class="settings-hint">Damit wir Husora für dich verbessern können. Alles ist freiwillig – wir fragen nicht nach Alter, Adresse oder Telefon. Auswertung nur zusammengefasst, Löschung mit deinem Konto.</p>
+        <form id="tp-form">
+          <fieldset><legend class="form-label">Wie nutzt du Husora?</legend>${radios('role', 'role', guess)}</fieldset>
+          <fieldset data-tp-for="owner"><legend class="form-label">Wie viele Häuser betreust du?</legend>${radios('house_count', 'house_count')}</fieldset>
+          <fieldset data-tp-for="partner"><legend class="form-label">Wie groß ist dein Betrieb?</legend>${radios('team_size', 'team_size')}</fieldset>
+          <label class="tp-region"><span class="form-label">Region (z. B. Värmland)</span><input class="form-control" name="region" maxlength="60" autocomplete="off"></label>
+          <fieldset><legend class="form-label">Wie organisierst du das heute?</legend>${radios('current_tool', 'current_tool')}</fieldset>
+          <fieldset><legend class="form-label">Wie hast du von Husora erfahren?</legend>${radios('source', 'source')}</fieldset>
+          <label class="rel-check"><input type="checkbox" name="interview_ok"> Das Husora-Team darf mich für ein kurzes Interview kontaktieren (per E-Mail, jederzeit widerrufbar).</label>
+          <div class="form-actions"><button type="button" class="secondary-btn" data-tp-skip>Überspringen</button><button type="submit" class="primary-btn">Absenden</button></div>
+        </form></section>`;
+      m.classList.add('open');
+      tpToggleFields();
+    }
+    function tpToggleFields() {
+      const role = document.querySelector('#tp-form input[name=role]:checked')?.value || '';
+      document.querySelectorAll('#tp-form [data-tp-for]').forEach((f) => { f.hidden = !(role === f.dataset.tpFor || role === 'both' || !role); });
+    }
+    async function tpSave(skip) {
+      const form = document.getElementById('tp-form');
+      const f = form ? Object.fromEntries(new FormData(form).entries()) : {};
+      const profile = skip ? null : { role: f.role || null, house_count: f.house_count || null, team_size: f.team_size || null, region: f.region || null, current_tool: f.current_tool || null, source: f.source || null, interview_ok: Boolean(f.interview_ok) };
+      try {
+        await cloudFetch('/rest/v1/rpc/save_tester_profile', { method: 'POST', body: { p_profile: profile, p_skip: Boolean(skip) } });
+        if (relS().status) relS().status.profile_done = true;
+        document.getElementById('tp-modal')?.classList.remove('open');
+        showToast(skip ? 'Alles klar – kein Steckbrief.' : 'Danke! Deine Angaben helfen uns sehr.');
+      } catch (error) { showToast(error.message); }
+    }
+    document.addEventListener('change', (event) => { if (event.target instanceof Element && event.target.closest('#tp-form input[name=role]')) tpToggleFields(); });
+    document.addEventListener('submit', (event) => { if (event.target?.id === 'tp-form') { event.preventDefault(); tpSave(false); } });
+    document.addEventListener('click', (event) => {
+      const t = event.target; if (!(t instanceof Element)) return;
+      if (t.closest('[data-tp-skip]')) { tpSave(true); return; }
+      if (t.closest('[data-tp-later]')) { try { localStorage.setItem('husora-profile-later', String(Date.now() + 3 * 86400000)); } catch (error) { /* egal */ } document.getElementById('tp-modal')?.classList.remove('open'); }
+    });
+    function tpSummaryHtml(sum) {
+      if (!sum) return '';
+      const list = (group, obj) => Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<li><span>${escapeHtml(group ? tpLabel(group, k) : k)}</span><b>${Number(v).toLocaleString('de-DE')}</b></li>`).join('') || '<li><span>–</span><b></b></li>';
+      return `<h3 class="beta-sub">Tester-Steckbrief (zusammengefasst)</h3>
+        <p class="settings-hint">${sum.answered} beantwortet · ${sum.skipped} übersprungen · ${sum.interview_ok} für Interviews offen · Regionen erst ab 3 Nennungen</p>
+        <div class="beta-two"><div><h3 class="beta-sub">Rolle</h3><ul class="beta-list">${list('role', sum.role)}</ul><h3 class="beta-sub">Heutige Organisation</h3><ul class="beta-list">${list('current_tool', sum.current_tool)}</ul><h3 class="beta-sub">Häuser</h3><ul class="beta-list">${list('house_count', sum.house_count)}</ul></div>
+        <div><h3 class="beta-sub">Aufmerksam geworden durch</h3><ul class="beta-list">${list('source', sum.source)}</ul><h3 class="beta-sub">Betriebsgröße</h3><ul class="beta-list">${list('team_size', sum.team_size)}</ul><h3 class="beta-sub">Regionen</h3><ul class="beta-list">${list('', sum.region)}</ul></div></div>`;
+    }
     // --- Ersteinrichtung ---
     let onboardingState = loadStore('stugliv-onboarding', null);
     let onboardingStep = 0;
