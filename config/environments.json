@@ -1,0 +1,10 @@
+{
+  "$comment": "Öffentliche, nicht geheime Festlegungen je Umgebung. Schlüssel und URLs kommen aus .env.<umgebung> bzw. CI-Variablen. projectRefs: Supabase-Projekte, die NUR in dieser Umgebung benutzt werden dürfen – der Build bricht ab, wenn ein Projekt einer anderen Umgebung verwendet wird.",
+  "appId": "com.husora.app",
+  "urlScheme": "com.husora.app",
+  "environments": {
+    "development": { "appName": "Husora Dev", "serverEnvironment": ["beta", "development"], "allowHttp": true, "projectRefs": [] },
+    "beta": { "appName": "Husora Beta", "serverEnvironment": ["beta"], "allowHttp": false, "projectRefs": ["ggsoygxmcsmrsrbmplrz"] },
+    "production": { "appName": "Husora", "serverEnvironment": ["production"], "allowHttp": false, "projectRefs": [] }
+  }
+}

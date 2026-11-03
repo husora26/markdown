@@ -1,13 +1,38 @@
 {
   "name": "husora",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "private": true,
-  "description": "Husora – Smart House Care (Web-App in index.html, Daten in Supabase)",
+  "description": "Husora – Smart House Care (Web-App in index.html, native Hülle für Android/iOS mit Capacitor, Daten in Supabase)",
   "scripts": {
     "dev": "npx --yes http-server@14 . -p 8080 -c-1 -o /",
     "dev:partner": "npx --yes http-server@14 . -p 8080 -c-1 -o /?partner",
     "db:start": "npx --yes supabase@2 start",
     "db:reset": "npx --yes supabase@2 db reset",
-    "test:e2e": "bash tests/e2e/run.sh"
+    "test:e2e": "bash tests/e2e/run.sh",
+    "version:check": "node tools/version.mjs check",
+    "version:bump": "node tools/version.mjs bump",
+    "secrets:check": "node tools/check-secrets.mjs",
+    "release:check": "node tools/version.mjs check && node tools/check-secrets.mjs",
+    "build:web:beta": "node tools/build-app.mjs --env beta",
+    "build:web:production": "node tools/build-app.mjs --env production",
+    "cap:sync:beta": "node tools/build-app.mjs --env beta && npx cap sync",
+    "cap:sync:production": "node tools/build-app.mjs --env production && npx cap sync",
+    "android:open": "npx cap open android",
+    "ios:open": "npx cap open ios"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.3"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/browser": "8.0.5",
+    "@capacitor/core": "8.5.3",
+    "@capacitor/filesystem": "8.1.4",
+    "@capacitor/ios": "8.5.3",
+    "@capacitor/share": "8.0.3"
   }
 }
