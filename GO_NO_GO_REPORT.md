@@ -43,7 +43,7 @@ Technisch umgesetzt / juristische Prüfung offen. Rechtstexte: Entwurf – final
 7. KI-Verordnung Art. 50 – Umfang der Kennzeichnungspflicht
 
 ## SECURITY RISIKEN
-1. **Live-Datenbank:** TRUNCATE-Lücke (alle Mandantendaten löschbar) besteht bis zum Einspielen der Migrationen 4100/4400 – höchste Priorität
+1. ~~Live-Datenbank: TRUNCATE-Lücke~~ – geschlossen (Migration 4100 live seit 03.11.2026)
 2. MFA muss im gehosteten Supabase-Projekt aktiv sein; ohne Einspielen gilt dort noch die alte Super-Admin-Regel ohne MFA
 3. Zugangsdaten liegen im Browser/`app_data` unverschlüsselt (nur Organisationsmitglieder) – Verschlüsselung erwägen
 4. Edge Functions (`notify-dispatch`, `ai-assist`) nicht deployt, lokal nicht typgeprüft (kein Deno)
@@ -62,7 +62,7 @@ Supabase · GitHub Pages · Stripe (Beta: aus) · Resend (nicht eingerichtet) ·
 2. 4100 Security-Härtung (TRUNCATE/anon) · 4200 KI-Vorschläge · 4300 Aufbewahrung/Allowlist/Lösch-Fix
 3. **4400 Legal & Beta Compliance** (Rollen+MFA, Rechtstexte, Consent, Nachweise, Moderation, Anfragen, Vorfälle, Audit, Aufbewahrung, Register, Export, Release-Gate, Storage)
 4. **4500 Beta Release** (Tester-Felder, Einladungscodes, Umgebungskennung, Wartung, App-Version, Admin-Übersicht) – siehe `README_BETA.md`
-Alle idempotent, Neuinstallation (47 Migrationen + Seed) erfolgreich. **Live noch nicht eingespielt (3600–4500).**
+Alle idempotent, Neuinstallation (47 Migrationen + Seed) erfolgreich. **Live eingespielt am 03.11.2026 (3600–4500).**
 
 ## RLS POLICIES
 1. RLS auf allen Tabellen in `public`; neue Tabellen nur eigene Zeilen bzw. Admin-Rolle mit `aal2`

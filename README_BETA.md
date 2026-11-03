@@ -159,7 +159,7 @@ Siehe `store/app-store-connect.md`: Developer Program, Bundle ID, App-Datensatz,
 Diese PASS-Ergebnisse ersetzen keine Tests auf echten Geräten und keine juristische Prüfung (Spec §28, Compliance §43).
 
 ## L. Offene Punkte (außerhalb des Codes)
-1. **Live-Datenbank:** Migrationen 3600–4500 einspielen (4100/4400 zuerst).
+1. ~~Live-Datenbank: Migrationen 3600–4500 einspielen~~ – **erledigt am 03.11.2026** (alle Tabellen/Funktionen vorhanden, TRUNCATE gesperrt, Umgebung `beta`).
 2. **Supabase-Dashboard:** Redirect-URLs inkl. `com.husora.app://**`, eigener SMTP-Server (sonst erhalten externe Tester keine Mails), MFA, Leaked-Password-Protection, AV-Vertrag.
 3. **Konten:** Google Play Developer, Apple Developer Program, Upload-Schlüssel, API-Schlüssel, GitHub-Secrets.
 4. **Store-Material:** hochauflösendes Logo (aktuell aus 240-px-Vorlage hochskaliert), Screenshots, Feature-Grafik, Demo-Konto für die Reviews.

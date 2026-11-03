@@ -5007,6 +5007,10 @@ html.dark .status.pending, html.dark .inspection-status-badge { color: #e3d3b2; 
 html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2); }
     }
     /* DARK-MODE-END */
+    #role-switch { position: fixed; left: 14px; bottom: 20px; z-index: 930; display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 14px; border: 1px solid #203a33; border-radius: 999px; background: #203a33; color: #fff; font: inherit; font-size: 13px; font-weight: 700; box-shadow: var(--shadow); cursor: pointer; }
+    #role-switch.partner { background: #fff; color: #203a33; }
+    #role-switch svg { width: 16px; height: 16px; }
+    @media (max-width: 760px) { #role-switch { bottom: calc(84px + env(safe-area-inset-bottom)); left: 10px; height: 34px; padding: 0 11px; font-size: 12.5px; } }
     /* Beta Release: Sperrbildschirm (Umgebung/Update/Wartung), Wartungshinweis, Version, Admin */
     #rel-block { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; background: #203a33; }
     .rel-block-card { width: min(420px, 100%); padding: 28px 24px; border-radius: 16px; background: #fff; color: var(--ink); text-align: center; box-shadow: 0 24px 80px rgba(0, 0, 0, .3); }
@@ -12734,6 +12738,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       try { hubSetPolling(); hubUpdateBadge(); } catch (error) { /* Partner-Portal noch nicht geladen */ }
       if (currentPage === 'house3d') fitHouseScene();
       if (currentPage === 'propertyDetail') initPropertyMap();
+      try { roleSwitchRefresh(); } catch (error) { /* noch nicht bereit */ }
     }
     // Jede Unterseite bekommt im Kopfbereich einen Zurück-Button, falls die Seite selbst keinen setzt.
     function ensureBackButton() {
@@ -17830,6 +17835,30 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         setInterval(() => { if (document.visibilityState === 'visible') relLoadConfig(); }, 15 * 60 * 1000);
       } catch (error) { console.warn('Beta-Release-Start:', error); }
     }, 0);
+    // ----- Test-Umschalter: Hausbesitzer-App ↔ Servicepartner-App (für Beta-Tests) -----
+    function roleSwitchVisible() {
+      try { if (navigator.webdriver && localStorage.getItem('husora-role-switch-ui') !== '1') return false; } catch (error) { /* egal */ }
+      return true;
+    }
+    function roleSwitchRefresh() {
+      let el = document.getElementById('role-switch');
+      if (!roleSwitchVisible()) { el?.remove(); return; }
+      if (!el) { el = document.createElement('button'); el.type = 'button'; el.id = 'role-switch'; el.setAttribute('data-role-switch', ''); document.body.appendChild(el); }
+      const partner = Boolean(pp?.open);
+      el.innerHTML = `${icon(partner ? 'home' : 'users')}<span>${partner ? 'Zur Hausbesitzer-App' : 'Zur Servicepartner-App'}</span>`;
+      el.title = partner ? 'Zur Hausbesitzer-App wechseln (Testmodus)' : 'Zur Servicepartner-App wechseln (Testmodus)';
+      el.setAttribute('aria-label', el.title);
+      el.classList.toggle('partner', partner);
+    }
+    function roleSwitchToggle() {
+      if (pp.open) { ppSetMode('owner'); ppClose(); currentPage = 'dashboard'; render(); showToast('Hausbesitzer-App'); }
+      else { ppSetMode('partner'); ppOpen('dashboard'); showToast('Servicepartner-App'); }
+      roleSwitchRefresh();
+    }
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('[data-role-switch]')) { event.preventDefault(); roleSwitchToggle(); }
+    });
+    setTimeout(roleSwitchRefresh, 0);
     // --- Ersteinrichtung ---
     let onboardingState = loadStore('stugliv-onboarding', null);
     let onboardingStep = 0;
@@ -20643,6 +20672,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const navBadge = (id) => { const n = id === 'orders' ? ppD('orders').filter((o) => o.status === 'offered').length : id === 'messages' ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : id === 'more' ? ppD('inspections').filter((i) => i.status === 'in_progress').length : 0; return n ? `<b class="pp-dot">${n > 9 ? '9+' : n}</b>` : ''; };
       const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${PP_NAV.map(([id, label, ic, short]) => `<button type="button" class="${navActive(id) ? 'active' : ''}" data-pp-view="${id}" aria-label="${label}" aria-current="${navActive(id) ? 'page' : 'false'}">${icon(ic)}<span class="${short ? 'pp-nav-long' : ''}">${label}</span>${short ? `<span class="pp-nav-short">${short}</span>` : ''}${navBadge(id)}</button>`).join('')}</nav>` : '';
       root.innerHTML = `${head}<main class="pp-main" id="pp-main">${betaBannerHtml('partner')}${messages}${body}</main>${nav}`;
+      try { roleSwitchRefresh(); } catch (error) { /* noch nicht bereit */ }
       const main = root.querySelector('.pp-main');
       if (main && pp.keepScroll) main.scrollTop = scroll;
       pp.keepScroll = false;
@@ -23082,6 +23112,15 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           showToast(`Übermittelt: Name und E-Mail${phone ? ', Telefon' : ''}${address ? ', Adresse' : ''}.`);
         });
       }
+      if (button.dataset.ownerAction === 'invite-delete') {
+        const id = button.dataset.id;
+        ownerRun('invite', async () => {
+          await cloudFetch(`/rest/v1/service_partner_invites?organization_id=eq.${cloud.org.id}&service_partner_id=eq.${id}&accepted_at=is.null`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+          if (ownerSide.code?.id === id) ownerSide.code = null;
+          ownerSide.invites = (ownerSide.invites || []).filter((i) => i.service_partner_id !== id || i.accepted_at);
+          showToast('Einladung gelöscht – der Code ist nicht mehr gültig.');
+        });
+      }
       if (button.dataset.ownerAction === 'invite') ownerRun('invite', async () => { const code = await cloudFetch('/rest/v1/rpc/create_service_partner_invite', { method: 'POST', body: { p_service_partner_id: button.dataset.id, p_email: (ownerSide.partners || []).find((p) => p.id === button.dataset.id)?.email || null } }); ownerSide.code = { id: button.dataset.id, code }; });
     });
     document.addEventListener('submit', (event) => {
@@ -23226,7 +23265,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <section class="hub-section"><h3 class="hub-section-title">Deine Servicepartner (${partners.length})</h3>
           ${partners.length ? partners.map((p) => { const [label, tone] = hubStatus(p); const unread = hubUnread(hubThreadMessages({ kind: 'partner', id: p.id })); return `<div class="card hub-partner"><div class="hub-partner-head"><div><strong>${escapeHtml(p.company_name)}</strong><small>${escapeHtml(p.email || 'keine E-Mail hinterlegt')}</small></div><span class="pp-badge ${tone}">${label}</span></div>
             ${hubCodeBox(p)}${p.partner_organization_id ? hubContactHtml(p) + hubAssignHtml(p) : ''}
-            <div class="pp-actions">${p.partner_organization_id ? `<button type="button" class="primary-btn" data-hub-chat="partner:${p.id}">${icon('note')} Nachricht${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button><button type="button" class="secondary-btn" data-hub-tab="orders" data-hub-partner="${p.id}">Auftrag senden</button>${cloudCanWrite() && p.partner_organization_id !== cloud.org?.id ? `<button type="button" class="secondary-btn danger" data-owner-action="disconnect" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>Verbindung trennen</button>` : ''}` : `<button type="button" class="secondary-btn" data-owner-action="invite" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>${hubStatus(p)[0] === 'Einladung offen' ? 'Neuen Code erzeugen' : 'Einladungscode erzeugen'}</button>`}</div></div>`; }).join('') : `<div class="pp-empty">${icon('users')}<strong>Noch keine Servicepartner</strong><p>Lade oben deinen ersten Partner ein.</p></div>`}
+            <div class="pp-actions">${p.partner_organization_id ? `<button type="button" class="primary-btn" data-hub-chat="partner:${p.id}">${icon('note')} Nachricht${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button><button type="button" class="secondary-btn" data-hub-tab="orders" data-hub-partner="${p.id}">Auftrag senden</button>${cloudCanWrite() && p.partner_organization_id !== cloud.org?.id ? `<button type="button" class="secondary-btn danger" data-owner-action="disconnect" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>Verbindung trennen</button>` : ''}` : `<button type="button" class="secondary-btn" data-owner-action="invite" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>${hubStatus(p)[0] === 'Einladung offen' ? 'Neuen Code erzeugen' : 'Einladungscode erzeugen'}</button>${hubStatus(p)[0] === 'Einladung offen' || ownerSide.code?.id === p.id ? `<button type="button" class="secondary-btn danger" data-owner-action="invite-delete" data-id="${p.id}" ${ownerSide.busy ? 'disabled' : ''}>Einladung löschen</button>` : ''}`}</div></div>`; }).join('') : `<div class="pp-empty">${icon('users')}<strong>Noch keine Servicepartner</strong><p>Lade oben deinen ersten Partner ein.</p></div>`}
         </section>`;
     }
     function hubChatListHtml() {
