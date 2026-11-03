@@ -102,10 +102,8 @@ else if (/<head>/i.test(html)) html = html.replace(/<head>/i, `<head>\n  <script
 else fail('index.html: <head> nicht gefunden');
 writeFileSync(join(outDir, 'index.html'), html);
 cpSync(join(root, 'assets'), join(outDir, 'assets'), { recursive: true });
-if (target === 'web') {
-  cpSync(join(root, 'sw.js'), join(outDir, 'sw.js'));
-  if (existsSync(join(root, 'manifest.webmanifest'))) cpSync(join(root, 'manifest.webmanifest'), join(outDir, 'manifest.webmanifest'));
-}
+if (existsSync(join(root, 'manifest.webmanifest'))) cpSync(join(root, 'manifest.webmanifest'), join(outDir, 'manifest.webmanifest'));
+if (target === 'web') cpSync(join(root, 'sw.js'), join(outDir, 'sw.js'));
 const { supabaseKey, ...publicInfo } = runtime;
 writeFileSync(join(outDir, 'husora-build.json'), JSON.stringify(publicInfo, null, 2));
 

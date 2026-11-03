@@ -1,0 +1,116 @@
+name: Android Build
+
+# Push/PR: Prüf-Build (Debug-APK, ohne Signatur-Secrets) – zeigt, dass das Android-Projekt baut.
+# Manuell (Actions → Android Build → Run workflow): signiertes AAB für Beta/Production, optional Upload zu Google Play.
+on:
+  push:
+    branches: [main]
+    paths: ['android/**', 'capacitor.config.json', 'package.json', 'package-lock.json', 'version.json', 'tools/build-app.mjs', 'config/**', '.github/workflows/android.yml']
+  pull_request:
+    paths: ['android/**', 'capacitor.config.json', 'package.json', 'package-lock.json', 'version.json', 'tools/build-app.mjs', 'config/**']
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Umgebung'
+        type: choice
+        options: [beta, production]
+        default: beta
+      track:
+        description: 'Google-Play-Track (none = nur AAB als Artefakt; alpha = Closed Testing; internal = Interner Test)'
+        type: choice
+        options: [none, internal, alpha]
+        default: none
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    # Secrets und Variablen je Umgebung: Settings → Environments → beta / production
+    environment: ${{ inputs.environment || 'beta' }}
+    env:
+      APP_ENV: ${{ inputs.environment || 'beta' }}
+      HUSORA_PUBLIC_SUPABASE_URL: ${{ vars.HUSORA_PUBLIC_SUPABASE_URL }}
+      HUSORA_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.HUSORA_PUBLIC_SUPABASE_ANON_KEY }}
+      HUSORA_SUPPORT_EMAIL: ${{ vars.HUSORA_SUPPORT_EMAIL }}
+      HUSORA_PRODUCTION_SUPABASE_URL: ${{ vars.HUSORA_PRODUCTION_SUPABASE_URL }}
+      HUSORA_BETA_SUPABASE_URL: ${{ vars.HUSORA_BETA_SUPABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Abhängigkeiten
+        run: npm ci
+
+      - name: Release-Checks (Version, Secrets)
+        run: node tools/version.mjs check && node tools/check-secrets.mjs
+
+      - name: App-Inhalt bauen (www/)
+        run: |
+          # Beta ohne hinterlegte Variablen: öffentliche Beta-Werte aus .env.beta.example
+          if [ "$APP_ENV" = "beta" ] && [ -z "$HUSORA_PUBLIC_SUPABASE_URL" ]; then cp .env.beta.example .env.beta; fi
+          node tools/build-app.mjs --env "$APP_ENV" --target native
+
+      - name: Capacitor sync
+        run: npx cap sync android
+
+      - name: Upload-Schlüssel bereitstellen
+        id: keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.HUSORA_UPLOAD_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ] && [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Prüf-Build (Debug-APK)
+        if: steps.keystore.outputs.signed != 'true'
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Release-AAB (signiert)
+        if: steps.keystore.outputs.signed == 'true'
+        working-directory: android
+        env:
+          HUSORA_UPLOAD_KEYSTORE_FILE: ${{ runner.temp }}/upload.jks
+          HUSORA_UPLOAD_KEYSTORE_PASSWORD: ${{ secrets.HUSORA_UPLOAD_KEYSTORE_PASSWORD }}
+          HUSORA_UPLOAD_KEY_ALIAS: ${{ secrets.HUSORA_UPLOAD_KEY_ALIAS }}
+          HUSORA_UPLOAD_KEY_PASSWORD: ${{ secrets.HUSORA_UPLOAD_KEY_PASSWORD }}
+        run: ./gradlew --no-daemon bundleRelease
+
+      - name: Schlüssel entfernen
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload.jks"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: husora-android-${{ env.APP_ENV }}
+          path: |
+            android/app/build/outputs/bundle/release/*.aab
+            android/app/build/outputs/apk/debug/*.apk
+            www/husora-build.json
+          retention-days: 14
+
+      - name: Upload zu Google Play
+        if: steps.keystore.outputs.signed == 'true' && inputs.track != 'none'
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.husora.app
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          track: ${{ inputs.track }}
+          status: completed

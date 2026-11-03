@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Release-Checks (Version konsistent, keine Secrets im Repository)
+        run: node tools/version.mjs check && node tools/check-secrets.mjs
+
       - uses: supabase/setup-cli@v1
         with:
           version: latest

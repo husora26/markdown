@@ -1,0 +1,119 @@
+name: iOS Build
+
+# Push/PR: Prüf-Build für den Simulator (ohne Signatur) – zeigt, dass das Xcode-Projekt baut.
+# Manuell: Archiv mit automatischer Signatur über den App-Store-Connect-API-Schlüssel und Upload zu TestFlight.
+on:
+  push:
+    branches: [main]
+    paths: ['ios/**', 'capacitor.config.json', 'package.json', 'package-lock.json', 'version.json', '.github/workflows/ios.yml']
+  pull_request:
+    paths: ['ios/**', 'capacitor.config.json', 'package.json', 'package-lock.json', 'version.json']
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Umgebung'
+        type: choice
+        options: [beta, production]
+        default: beta
+      upload:
+        description: 'Zu App Store Connect / TestFlight hochladen'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    environment: ${{ inputs.environment || 'beta' }}
+    env:
+      APP_ENV: ${{ inputs.environment || 'beta' }}
+      HUSORA_PUBLIC_SUPABASE_URL: ${{ vars.HUSORA_PUBLIC_SUPABASE_URL }}
+      HUSORA_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.HUSORA_PUBLIC_SUPABASE_ANON_KEY }}
+      HUSORA_SUPPORT_EMAIL: ${{ vars.HUSORA_SUPPORT_EMAIL }}
+      HUSORA_PRODUCTION_SUPABASE_URL: ${{ vars.HUSORA_PRODUCTION_SUPABASE_URL }}
+      HUSORA_BETA_SUPABASE_URL: ${{ vars.HUSORA_BETA_SUPABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Abhängigkeiten
+        run: npm ci
+
+      - name: Release-Checks (Version, Secrets)
+        run: node tools/version.mjs check && node tools/check-secrets.mjs
+
+      - name: App-Inhalt bauen (www/)
+        run: |
+          if [ "$APP_ENV" = "beta" ] && [ -z "$HUSORA_PUBLIC_SUPABASE_URL" ]; then cp .env.beta.example .env.beta; fi
+          node tools/build-app.mjs --env "$APP_ENV" --target native
+
+      - name: Capacitor sync
+        run: npx cap sync ios
+
+      - name: Prüf-Build (Simulator, ohne Signatur)
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build | tail -40
+
+      - name: App-Store-Connect-Schlüssel bereitstellen
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+        run: |
+          test -n "$ASC_KEY_P8_BASE64" || { echo "::error::Secret ASC_KEY_P8_BASE64 fehlt (siehe README_BETA.md)"; exit 1; }
+          echo "$ASC_KEY_P8_BASE64" | base64 -d > "$RUNNER_TEMP/AuthKey_${ASC_KEY_ID}.p8"
+
+      - name: Archiv (automatische Signatur)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Husora.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey_${ASC_KEY_ID}.p8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic archive | tail -40
+
+      - name: Export und Upload zu TestFlight
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          cp ios/ExportOptions.plist "$RUNNER_TEMP/ExportOptions.plist"
+          plutil -replace teamID -string "$APPLE_TEAM_ID" "$RUNNER_TEMP/ExportOptions.plist"
+          if [ "${{ inputs.upload }}" != "true" ]; then plutil -replace destination -string export "$RUNNER_TEMP/ExportOptions.plist"; fi
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Husora.xcarchive" -exportPath "$RUNNER_TEMP/export" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey_${ASC_KEY_ID}.p8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" | tail -40
+
+      - name: Schlüssel entfernen
+        if: always()
+        run: rm -f "$RUNNER_TEMP"/AuthKey_*.p8
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          name: husora-ios-${{ env.APP_ENV }}
+          path: |
+            ${{ runner.temp }}/export/*.ipa
+            www/husora-build.json
+          retention-days: 14
+          if-no-files-found: ignore
