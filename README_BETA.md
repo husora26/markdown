@@ -206,6 +206,11 @@ npm run cap:sync:beta && npx cap open ios   # Product → Archive
 #   iOS:     Actions → „iOS Build“     → Run workflow → environment=beta, upload=true
 ```
 
+## Android-Test-APK (ohne Store)
+Der Workflow `.github/workflows/android-test-apk.yml` baut bei jeder App-Änderung automatisch eine Test-APK (Beta-Umgebung) und stellt sie unter einer festen Adresse bereit:
+**https://github.com/husora26/markdown/releases/download/android-test/husora-beta-test.apk**
+Installation: Link auf dem Android-Handy öffnen → APK öffnen → „Installation aus unbekannten Quellen“ erlauben. Debug-Signatur: bei einem Update ggf. alte Version zuerst deinstallieren. Nur für interne Tests, nicht für Google Play.
+
 ## Manuelle Release-Checkliste (Spec §27, §28, §37)
 **Auth:** [ ] Registrierung · [ ] E-Mail bestätigen (Link öffnet die App) · [ ] Login · [ ] Logout · [ ] Passwort vergessen (Link öffnet die App) · [ ] Passwort ändern · [ ] Sitzung bleibt nach Neustart · [ ] Sitzungsablauf → Hinweis
 **Hausbesitzer:** [ ] Profil · [ ] Haus anlegen/bearbeiten · [ ] Aufgaben · [ ] Hauskontrolle · [ ] Fotos (Kamera + Galerie) · [ ] Dokumente (Upload, Öffnen, Teilen) · [ ] Serviceanfrage · [ ] Partnerkontakt
