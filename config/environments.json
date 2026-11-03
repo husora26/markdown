@@ -3,8 +3,35 @@
   "appId": "com.husora.app",
   "urlScheme": "com.husora.app",
   "environments": {
-    "development": { "appName": "Husora Dev", "serverEnvironment": ["beta", "development"], "allowHttp": true, "projectRefs": [] },
-    "beta": { "appName": "Husora Beta", "serverEnvironment": ["beta"], "allowHttp": false, "projectRefs": ["ggsoygxmcsmrsrbmplrz"] },
-    "production": { "appName": "Husora", "serverEnvironment": ["production"], "allowHttp": false, "projectRefs": [] }
+    "development": {
+      "appName": "Husora Dev",
+      "serverEnvironment": [
+        "beta",
+        "development"
+      ],
+      "allowHttp": true,
+      "projectRefs": [],
+      "publicWebUrl": "http://127.0.0.1:8081/"
+    },
+    "beta": {
+      "appName": "Husora Beta",
+      "serverEnvironment": [
+        "beta"
+      ],
+      "allowHttp": false,
+      "projectRefs": [
+        "ggsoygxmcsmrsrbmplrz"
+      ],
+      "publicWebUrl": "https://husora26.github.io/markdown/"
+    },
+    "production": {
+      "appName": "Husora",
+      "serverEnvironment": [
+        "production"
+      ],
+      "allowHttp": false,
+      "projectRefs": [],
+      "publicWebUrl": null
+    }
   }
 }

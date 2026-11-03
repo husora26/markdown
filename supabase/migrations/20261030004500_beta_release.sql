@@ -288,7 +288,8 @@ language sql stable security definer set search_path = '' as $$
     'invite_ok', private.beta_invite_ok(),
     'roles', jsonb_build_object(
       'owner', exists (select 1 from public.organization_members m join public.organizations o on o.id = m.organization_id
-                       where m.user_id = u.id and m.status = 'active' and o.org_type in ('homeowner', 'both')),
+                       where m.user_id = u.id and m.status = 'active' and o.org_type in ('homeowner', 'both')
+                         and m.role not in ('service_partner', 'cleaner')),
       'partner', exists (select 1 from public.organization_members m join public.organizations o on o.id = m.organization_id
                          where m.user_id = u.id and m.status = 'active' and o.org_type in ('service_partner', 'both')),
       'admin', coalesce(u.is_super_admin, false) or cardinality(coalesce(u.admin_roles, '{}')) > 0))
@@ -325,7 +326,8 @@ begin
   with t as (
     select u.id, u.tester_group, u.beta_group, u.app_platform, u.last_app_version, u.last_app_build, u.last_environment, u.last_seen_at, u.beta_started_at,
            exists (select 1 from public.organization_members m join public.organizations o on o.id = m.organization_id
-                   where m.user_id = u.id and m.status = 'active' and o.org_type in ('homeowner', 'both')) as is_owner,
+                   where m.user_id = u.id and m.status = 'active' and o.org_type in ('homeowner', 'both')
+                     and m.role not in ('service_partner', 'cleaner')) as is_owner,
            exists (select 1 from public.organization_members m join public.organizations o on o.id = m.organization_id
                    where m.user_id = u.id and m.status = 'active' and o.org_type in ('service_partner', 'both')) as is_partner,
            (select jsonb_build_object('at', f.created_at, 'message', left(f.message, 80), 'version', f.app_version)
@@ -367,5 +369,87 @@ grant execute on function public.redeem_beta_invite(text), public.beta_invite_cr
   public.beta_invite_set_active(uuid, boolean), public.admin_set_beta_tester(text, boolean, text), public.my_beta_status(),
   public.report_app_session(text, text, text, text), public.beta_testers_overview(integer) to authenticated;
 
--- Release-Gate: Beta-Umgebung gekennzeichnet (automatische Prüfung)
 comment on function public.report_app_session(text, text, text, text) is 'App-Start/Login: Version, Build, Plattform, Umgebung (Spec §24). Antwort = my_beta_status().';
+
+-- -----------------------------------------------------------------------------
+-- 8) Umgebung „beta“ auch in Feedback, Fehlerberichten und Ereignissen zulassen
+-- -----------------------------------------------------------------------------
+alter table public.analytics_events drop constraint if exists analytics_events_environment_check;
+alter table public.analytics_events add constraint analytics_events_environment_check
+  check (environment is null or environment in ('production', 'staging', 'development', 'beta'));
+alter table public.app_feedback drop constraint if exists app_feedback_beta_check;
+alter table public.app_feedback add constraint app_feedback_beta_check check (
+  (app_role is null or app_role in ('owner', 'partner', 'guest'))
+  and (feedback_type is null or feedback_type in ('idea', 'problem', 'missing', 'unclear', 'praise', 'other'))
+  and (title is null or length(title) <= 160)
+  and (expected_behavior is null or length(expected_behavior) <= 2000)
+  and (actual_behavior is null or length(actual_behavior) <= 2000)
+  and (platform is null or length(platform) <= 40)
+  and (environment is null or environment in ('production', 'staging', 'development', 'beta'))
+  and (severity is null or severity in ('low', 'medium', 'high', 'critical'))
+  and status in ('open', 'in_progress', 'resolved', 'wont_fix'));
+
+-- track_events (aktueller Stand) – einzige Änderung: 'beta' als Umgebung
+CREATE OR REPLACE FUNCTION public.track_events(p_events jsonb, p_organization_id uuid DEFAULT NULL::uuid)
+ RETURNS integer
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare
+  v_user   uuid := private.current_user_id();
+  v_org    uuid;
+  v_ev     jsonb;
+  v_name   text;
+  v_meta   jsonb;
+  v_at     timestamptz;
+  v_count  integer := 0;
+  v_today  integer;
+  v_allowed constant text[] := array['session_started', 'onboarding_started', 'onboarding_completed', 'house_created', 'room_created',
+    'document_uploaded', 'task_created', 'task_completed', 'inspection_started', 'inspection_completed', 'service_search',
+    'subscription_interest', 'partner_profile_completed', 'partner_service_created', 'partner_area_created'];
+begin
+  if v_user is null then raise exception 'Nicht angemeldet' using errcode = '28000'; end if;
+  if not private.beta_config('analytics') then return 0; end if;
+  if not private.has_consent(v_user, 'analytics') then return 0; end if;  -- Einwilligung (TDDDG/DSGVO)
+  if jsonb_typeof(p_events) <> 'array' or jsonb_array_length(p_events) > 50 then
+    raise exception 'Höchstens 50 Ereignisse je Aufruf' using errcode = '22023';
+  end if;
+  -- Organisation nur, wenn der Nutzer Mitglied ist (nie blind vom Client übernehmen)
+  v_org := case when p_organization_id is not null and private.is_org_member(p_organization_id) then p_organization_id end;
+  select count(*) into v_today from public.analytics_events e where e.user_id = v_user and e.created_at > now() - interval '1 day';
+  if v_today >= 2000 then return 0; end if;
+
+  -- Beta-Nutzer markieren (einmalig, Gruppe aus der Konfiguration)
+  update public.users u set is_beta_user = true, beta_started_at = coalesce(u.beta_started_at, now()),
+         beta_group = coalesce(u.beta_group, (select c.value ->> 'default_group' from public.app_config c where c.key = 'beta'))
+  where u.id = v_user and not u.is_beta_user;
+
+  for v_ev in select * from jsonb_array_elements(p_events) loop
+    v_name := v_ev ->> 'event_name';
+    continue when v_name is null or not (v_name = any (v_allowed));
+    -- nur flache, kurze Metadaten ohne verdächtige Schlüssel
+    select coalesce(jsonb_object_agg(k, val), '{}'::jsonb) into v_meta
+    from jsonb_each(case when jsonb_typeof(v_ev -> 'metadata') = 'object' then v_ev -> 'metadata' else '{}'::jsonb end) as m(k, val)
+    where k = any (array['count', 'houses', 'rooms', 'added', 'auto', 'category', 'query_length', 'usage', 'demo_before', 'onboarding',
+                         'feature', 'type', 'severity', 'context', 'rating', 'order_type', 'priority', 'step', 'source'])  -- Allowlist (Datensparsamkeit)
+      and jsonb_typeof(val) in ('string', 'number', 'boolean')
+      and length(val::text) <= 80;
+    v_at := case when (v_ev ->> 'occurred_at') ~ '^\d{4}-\d{2}-\d{2}T' then (v_ev ->> 'occurred_at')::timestamptz end;
+    if v_at is null or v_at > now() + interval '5 minutes' or v_at < now() - interval '90 days' then v_at := now(); end if;
+    insert into public.analytics_events (organization_id, user_id, event_name, entity_type, entity_ref, app_role, app_version, platform, environment, source, metadata, occurred_at)
+    values (v_org, v_user, v_name,
+            case when (v_ev ->> 'entity_type') ~ '^[a-z][a-z0-9_]{1,40}$' then v_ev ->> 'entity_type' end,
+            left(v_ev ->> 'entity_ref', 80),
+            case when v_ev ->> 'app_role' in ('owner', 'partner', 'guest') then v_ev ->> 'app_role' end,
+            left(v_ev ->> 'app_version', 40), left(v_ev ->> 'platform', 40),
+            case when v_ev ->> 'environment' in ('production', 'staging', 'development', 'beta') then v_ev ->> 'environment' end,
+            'client', v_meta, v_at)
+    on conflict do nothing;
+    if found then v_count := v_count + 1; end if;
+  end loop;
+  return v_count;
+end;
+$function$;
+revoke all on function public.track_events(jsonb, uuid) from public, anon;
+grant execute on function public.track_events(jsonb, uuid) to authenticated;

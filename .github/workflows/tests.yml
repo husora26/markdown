@@ -16,9 +16,10 @@ jobs:
       - name: Release-Checks (Version konsistent, keine Secrets im Repository)
         run: node tools/version.mjs check && node tools/check-secrets.mjs
 
+      # Feste CLI-Version (lokal geprüft). CLI 3.x lehnt [inbucket] in config.toml ab – Umstieg separat prüfen.
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.122.0
 
       - name: Supabase lokal starten (alle Migrationen + Testdaten)
         run: supabase start -x studio,mailpit,imgproxy,edge-runtime,logflare,vector,realtime,supavisor,postgres-meta

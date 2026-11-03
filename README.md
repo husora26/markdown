@@ -15,6 +15,10 @@ npm run db:start       # optional: lokale Supabase (Docker), sonst nutzt die App
 npm run test:e2e       # Browser-Tests (lokale Supabase + App auf Port 8081)
 ```
 
+## Android- und iOS-Beta
+
+Husora wird für den Beta-Test als native App (Capacitor) für Android und iOS gebaut. Version: `version.json`. Anleitung, Umgebungen, Store-Checklisten und Befehle: **[README_BETA.md](README_BETA.md)**. Beta-Landingpage: `beta.html`.
+
 ## Aufbau
 
 - `index.html` – die komplette App (HTML, CSS und JavaScript in einer Datei)

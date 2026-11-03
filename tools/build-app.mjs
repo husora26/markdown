@@ -87,6 +87,7 @@ const runtime = {
   urlScheme: cfg.urlScheme,
   appName: envCfg.appName,
   supportEmail: v('HUSORA_SUPPORT_EMAIL') || null,
+  publicWebUrl: v('HUSORA_PUBLIC_WEB_URL') || envCfg.publicWebUrl || null,
   commit,
   builtAt: new Date().toISOString()
 };

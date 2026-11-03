@@ -5007,6 +5007,32 @@ html.dark .status.pending, html.dark .inspection-status-badge { color: #e3d3b2; 
 html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2); }
     }
     /* DARK-MODE-END */
+    /* Beta Release: Sperrbildschirm (Umgebung/Update/Wartung), Wartungshinweis, Version, Admin */
+    #rel-block { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 24px; background: #203a33; }
+    .rel-block-card { width: min(420px, 100%); padding: 28px 24px; border-radius: 16px; background: #fff; color: var(--ink); text-align: center; box-shadow: 0 24px 80px rgba(0, 0, 0, .3); }
+    .rel-block-card img { width: 72px; height: auto; margin-bottom: 8px; filter: drop-shadow(0 0 1px rgba(0,0,0,.6)) brightness(.35); }
+    .rel-block-card h2 { margin: 6px 0 10px; font-size: 21px; }
+    .rel-block-card p { margin: 0 0 18px; color: var(--muted); line-height: 1.5; }
+    .rel-block-card small { display: block; margin-top: 14px; color: var(--muted); font-size: 12px; }
+    .rel-block-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    #rel-maintenance { position: fixed; left: 50%; top: calc(8px + env(safe-area-inset-top)); z-index: 960; display: flex; align-items: center; gap: 8px; width: min(560px, calc(100vw - 24px)); padding: 10px 14px; border-radius: 12px; background: #3a2f12; color: #fff3cf; font-size: 13px; line-height: 1.4; transform: translateX(-50%); box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+    #rel-maintenance svg { flex: 0 0 auto; width: 18px; height: 18px; }
+    .nav-version { margin: 10px 14px 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .app-footer .beta-chip { margin-left: 4px; }
+    .rel-store { flex-wrap: wrap; }
+    .rel-soon { display: inline-flex; align-items: center; min-height: 40px; padding: 0 12px; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); font-size: 13px; }
+    .rel-table-wrap { overflow-x: auto; margin: 8px 0 14px; }
+    .rel-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .rel-table th, .rel-table td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+    .rel-table th { color: var(--muted); font-weight: 650; }
+    .rel-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px 12px; align-items: end; margin: 8px 0 16px; }
+    .rel-form .form-actions { grid-column: 1 / -1; margin: 0; }
+    .rel-check { display: flex; align-items: center; gap: 8px; min-height: 40px; font-size: 14px; }
+    .rel-newcode { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--amber-soft); }
+    .rel-newcode code { font-size: 15px; font-weight: 800; letter-spacing: .04em; }
+    .rel-error { border-color: #d9a3a3; }
+    html.dark .rel-block-card { background: #1c1c1c; color: #eee; }
+    html.dark .rel-block-card img { filter: none; }
   </style>
 </head>
 <body>
@@ -5051,6 +5077,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
             <button data-page="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/></svg><span>Hilfe & Support</span></button>
             <button data-page="legal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6z"/></svg><span>Rechtliches</span></button>
           </nav>
+          <p class="nav-version" data-rel-version></p>
         </div>
         </div>
         </div>
@@ -9060,6 +9087,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     function paymentsDisabled() { try { const c = betaS().config; return c.enabled !== false && !(lcStore('husora-payments', null)?.enabled); } catch (error) { return true; } }
     async function startCheckout(body) {
+      // App-Store-/Play-Regeln: in der nativen App keine externen Käufe digitaler Abos
+      if (hzNative()) throw new Error('Tarife können in der App-Version nicht gebucht werden.');
       if (body?.plan_id && paymentsDisabled()) throw new Error('Zahlungen sind während der Beta deaktiviert');
       const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
       const response = await fetch(`${base}/functions/v1/stripe-checkout`, { method: 'POST', headers: { apikey: cloud.key || CLOUD_DEFAULT.key, Authorization: `Bearer ${cloud.session.access_token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, return_url: `${location.origin}${location.pathname}` }) });
@@ -12676,7 +12705,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const prefix = toast.classList.contains('show') ? `${toast.textContent} ` : '';
         showToast(`${prefix}${plannedCount} ${plannedCount === 1 ? 'Aufgabe' : 'Aufgaben'} automatisch geplant.`);
       }, 0);
-      const pages = { dashboard, portfolio: portfolioPage, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage, betaAdmin: betaAdminPage, adminCompliance: complianceAdminPage };
+      const pages = { dashboard, portfolio: portfolioPage, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage, betaAdmin: () => betaAdminPage() + relAdminHtml(), adminCompliance: complianceAdminPage };
       const labels = { dashboard: 'Übersicht', portfolio: 'Portfolio', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' , betaAdmin: 'Husora Beta Dashboard' , adminCompliance: 'Husora Admin' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
@@ -12697,7 +12726,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       updateProfileSummary();
       updateNotifyBadge();
       renderTabbar();
-      pageContent.innerHTML = betaBannerHtml('owner') + (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()) + appFooterHtml();
+      pageContent.innerHTML = betaBannerHtml('owner') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
       if (currentPage === 'providers') trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `page:${localDateKey(new Date())}` });
       ensureBackButton();
       if (currentPage === 'dashboard') { enhanceDashboardSections(); applySimpleHome(); }
@@ -15524,7 +15553,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       </section>`;
     }
     function appInfoCardHtml() {
-      return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('home')}</span><div><h2 class="card-title">Über Husora</h2><p class="card-caption">Version ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p></div></div>
+      return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('home')}</span><div><h2 class="card-title">Über Husora</h2><p class="card-caption">${relIsBeta() ? 'Beta-Version · ' : ''}Version ${APP_VERSION} (Build ${APP_BUILD_NUMBER}) · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p></div></div>
         <div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}"><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>
       </section>`;
     }
@@ -15591,7 +15620,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <li><strong>Kartendaten</strong> – © OpenStreetMap-Mitwirkende, Open Database License (ODbL)</li>
           <li><strong>Wetterdaten</strong> – Open-Meteo.com, CC BY 4.0</li>
           <li><strong>Fotos und Bilder in der App</strong> – KI-generiert</li>
-        </ul><p>Husora ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p>` }
+        </ul><p>${escapeHtml(relVersionLabel())} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}</p>` }
     };
     let legalTab = 'imprint';
     let settingsView = 'settings-home';
@@ -15601,7 +15630,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const jump = event.target.closest('[data-settings-jump]');
       if (jump) document.getElementById(jump.dataset.settingsJump)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
-    const appFooterHtml = () => `<footer class="app-footer"><button type="button" data-legal-open="imprint">Impressum</button><button type="button" data-legal-open="privacy">Datenschutz</button><button type="button" data-legal-open="terms">AGB</button><button type="button" data-page="settings">Einstellungen</button><span>Husora ${APP_VERSION}</span></footer>`;
+    const appFooterHtml = () => `<footer class="app-footer"><button type="button" data-legal-open="imprint">Impressum</button><button type="button" data-legal-open="privacy">Datenschutz</button><button type="button" data-legal-open="terms">AGB</button><button type="button" data-page="settings">Einstellungen</button><span>${escapeHtml(relVersionLabel())}</span>${relIsBeta() ? '<span class="beta-chip">Beta-Version</span>' : ''}</footer>`;
     function legalDraftNote() {
       const missing = ['company', 'street', 'zip', 'city', 'email'].some((key) => !LEGAL_INFO[key]);
       return missing ? `<div class="legal-draft">${icon('alert')}<span><strong>Entwurf:</strong> Markierte Angaben fehlen noch. Lass die Texte vor der Veröffentlichung im App Store rechtlich prüfen.</span></div>` : '';
@@ -16119,6 +16148,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <button type="button" class="help-action" data-support-mail="bug">${icon('alert')}<span><strong>Fehler melden</strong><small>mit Geräteinfos für eine schnelle Lösung</small></span></button>
           <button type="button" class="help-action" data-support-mail="feedback">${icon('note')}<span><strong>Idee oder Feedback</strong><small>Was sollen wir verbessern?</small></span></button>
         </div>
+        ${relHelpHtml()}
         ${feedbackCardHtml()}
         ${betaPremiumHtml()}
         <section class="card faq-card"><h2 class="card-title">Häufige Fragen</h2>${FAQ.map(([question, answer]) => `<details class="faq-item"><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p></details>`).join('')}</section>`;
@@ -16208,17 +16238,20 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function betaRole() { try { return pp.open ? 'partner' : 'owner'; } catch (error) { return 'owner'; } }
     function betaScreen() { try { return pp.open ? `partner:${pp.detail?.type || pp.view || 'start'}` : String(currentPage || ''); } catch (error) { return ''; } }
     function betaPlatform() {
+      if (hzNativePlatform()) return hzNativePlatform();
       const ua = navigator.userAgent || '';
       const os = /iPhone|iPad|iPod/.test(ua) ? 'ios' : /Android/.test(ua) ? 'android' : /Mac/.test(ua) ? 'mac' : /Win/.test(ua) ? 'windows' : 'desktop';
       const standalone = window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone;
       return `${os}-${standalone ? 'app' : 'web'}`;
     }
     function betaEnvironment() {
+      if (hzRuntime()?.env) return hzRuntime().env;
       const host = location.hostname || '';
       if (!host || host === 'localhost' || /^127\.|^192\.168\.|^10\./.test(host)) return 'development';
+      try { const serverEnv = relS().config?.environment?.name; if (serverEnv === 'beta' || serverEnv === 'production') return serverEnv; } catch (error) { /* noch nicht geladen */ }
       return /github\.io$|husora\./.test(host) ? 'production' : 'staging';
     }
-    function betaVersion() { try { return `${APP_VERSION} (${APP_BUILD})`.slice(0, 40); } catch (error) { return ''; } }
+    function betaVersion() { try { return `${APP_VERSION} (${APP_BUILD_NUMBER})`.slice(0, 40); } catch (error) { return ''; } }
     async function betaLoadConfig() {
       try {
         const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
@@ -16583,7 +16616,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const CLOUD_NOTIFY_CATEGORIES = [['order', 'Aufträge & Anfragen'], ['message', 'Nachrichten'], ['approval', 'Freigaben & Mehrkosten'], ['invoice', 'Rechnungen'], ['repair', 'Mängel & Reparaturen'], ['inspection', 'Kontrollen'], ['agreement', 'Jahresverträge'], ['maintenance', 'Wartung & Automatik']];
     function notifyS() { return window.__husoraNotify || (window.__husoraNotify = { prefs: null, loading: false, vapid: undefined, device: null, busy: false }); }
     function notifyRerender() { try { if (pp.open && pp.view === 'settings') { pp.keepScroll = true; ppRender(); } else if (currentPage === 'settings') render(); } catch (error) { /* optional */ } }
-    function notifyPushSupported() { return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+    function notifyPushSupported() { return !hzNative() && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
     async function notifyLoad() {
       const s = notifyS();
       if (s.loading || !cloudSignedIn()) return;
@@ -17424,6 +17457,379 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       LEGAL_SECTIONS.imprint.html = imprintHtml;
       Object.entries(LEGAL_EXTRA).forEach(([k, [title, html]]) => { LEGAL_SECTIONS[k] = { title, html }; });
     })();
+    // ===== Beta Release & App-Verteilung (Spec „Beta Release & App Distribution“): Umgebung, Version, Rollen,
+    // Einladungscode, Wartung, Fehlerbehandlung, Deep Links, native App (Capacitor), Admin-Übersicht =====
+    // Laufzeit-Konfiguration aus dem Build (tools/build-app.mjs). Fehlt sie (GitHub-Pages-Web-App), gilt das bisherige Verhalten.
+    function hzRuntime() { try { return window.HUSORA_RUNTIME || null; } catch (error) { return null; } }
+    function hzNative() { try { return Boolean(window.Capacitor?.isNativePlatform?.()); } catch (error) { return false; } }
+    function hzNativePlatform() { try { return hzNative() ? String(window.Capacitor.getPlatform() || '') : ''; } catch (error) { return ''; } }
+    function hzPlugin(name) { try { return window.Capacitor?.Plugins?.[name] || null; } catch (error) { return null; } }
+    // Öffentliche Web-Adresse für Einladungstexte (in der nativen App ist location.origin „https://localhost“)
+    function appPublicUrl() {
+      const rt = hzRuntime();
+      if (rt?.publicWebUrl) return rt.publicWebUrl;
+      if (/^https?:$/.test(location.protocol) && !hzNative()) return `${location.origin}${location.pathname}`;
+      return 'https://husora26.github.io/markdown/';
+    }
+    function relCached() { try { return JSON.parse(localStorage.getItem('husora-release-config') || 'null') || {}; } catch (error) { return {}; } }
+    function relS() { return window.__husoraRel || (window.__husoraRel = { config: relCached(), configFresh: false, status: null, envState: 'unknown', admin: null, adminLoading: false, newCode: null, inviteBusy: false, inviteError: '', reportedAt: 0 }); }
+    function relIsBeta() { return /-beta\./.test(APP_VERSION) || hzRuntime()?.env === 'beta'; }
+    function relVersionLabel() { return `${relIsBeta() ? 'Husora Beta' : 'Husora'} ${APP_VERSION} (Build ${APP_BUILD_NUMBER})`; }
+    function relPlatform() { return hzNativePlatform() || 'web'; }
+    function relPendingCode() { try { return localStorage.getItem('husora-invite-code') || ''; } catch (error) { return ''; } }
+    function relSetPendingCode(code) { try { if (code) localStorage.setItem('husora-invite-code', code); else localStorage.removeItem('husora-invite-code'); } catch (error) { /* optional */ } }
+
+    // Netzwerk: Zeitlimit + verständliche Meldungen. Netzwerkfehler bleiben TypeError (= offline, Abgleich später).
+    async function relTimedFetch(url, options = {}, ms = 30000) {
+      const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+      const timer = ctrl ? setTimeout(() => ctrl.abort(), ms) : null;
+      try {
+        return await fetch(url, { ...options, signal: options.signal || ctrl?.signal });
+      } catch (error) {
+        if (error?.name === 'AbortError') throw new TypeError('Zeitüberschreitung – der Husora-Server antwortet gerade nicht. Bitte erneut versuchen.');
+        if (error instanceof TypeError) throw new TypeError('Keine Verbindung zum Husora-Server – bitte Internetverbindung prüfen und erneut versuchen.');
+        throw error;
+      } finally { if (timer) clearTimeout(timer); }
+    }
+
+    // ----- Umgebung, Wartung, Mindest-Build (app_config: environment, maintenance, release) -----
+    function relExpectedEnvs() { const rt = hzRuntime(); if (!rt) return null; return Array.isArray(rt.serverEnvironment) && rt.serverEnvironment.length ? rt.serverEnvironment : [rt.env]; }
+    async function relLoadConfig() {
+      const s = relS();
+      try {
+        const base = String(cloud.url || CLOUD_DEFAULT.url).replace(/\/+$/, '');
+        const key = cloud.key || CLOUD_DEFAULT.key;
+        const res = await relTimedFetch(`${base}/rest/v1/app_config?key=in.(environment,maintenance,release)&select=key,value`, { headers: { apikey: key, Authorization: `Bearer ${key}` } }, 15000);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const rows = await res.json();
+        s.config = Object.fromEntries((Array.isArray(rows) ? rows : []).map((row) => [row.key, row.value || {}]));
+        s.configFresh = true;
+        try { localStorage.setItem('husora-release-config', JSON.stringify(s.config)); } catch (error) { /* optional */ }
+        relEvaluate(true);
+      } catch (error) { relEvaluate(false); }
+    }
+    function relEvaluate(fresh) {
+      const s = relS();
+      const expected = relExpectedEnvs();
+      const serverEnv = s.config?.environment?.name || '';
+      if (!expected) s.envState = 'ok';
+      else if (serverEnv && !expected.includes(serverEnv)) s.envState = 'mismatch';
+      else if (serverEnv) s.envState = 'ok';
+      else if (fresh) s.envState = 'missing';
+      relRenderOverlay();
+      relRenderMaintenance();
+      relRefreshLabels();
+    }
+    // Vor jedem Cloud-Zugriff eines App-Builds: nie mit der falschen Datenbank sprechen
+    async function relEnsureEnvironment() {
+      if (!hzRuntime()) return;
+      const s = relS();
+      if (s.envState === 'ok' && s.configFresh) return;
+      if (!s.configFresh) await relLoadConfig();
+      if (s.envState === 'mismatch') throw new Error(`Sicherheitsstopp: Diese App (${hzRuntime().env}) ist mit einer Husora-Datenbank der Umgebung „${s.config.environment?.name}“ verbunden. Es werden keine Daten übertragen.`);
+      if (s.envState === 'missing') throw new Error('Sicherheitsstopp: Die Husora-Datenbank meldet keine Umgebung – es werden keine Daten übertragen.');
+      if (s.envState !== 'ok') throw new TypeError('Keine Verbindung zum Husora-Server – bitte Internetverbindung prüfen und erneut versuchen.');
+    }
+    function relBlockReason() {
+      const s = relS(); const cfg = s.config || {}; const rt = hzRuntime();
+      if (s.envState === 'mismatch') return { kind: 'env', title: 'Falsche Umgebung', text: `Diese App gehört zur Umgebung „${rt?.env}“, der Husora-Server meldet „${cfg.environment?.name}“. Aus Sicherheitsgründen werden keine Daten übertragen. Bitte installiere die App aus dem richtigen Test- bzw. Store-Kanal.` };
+      if (s.envState === 'missing') return { kind: 'env', title: 'Umgebung nicht bestätigt', text: 'Der Husora-Server meldet keine Umgebungskennung. Aus Sicherheitsgründen werden keine Daten übertragen. Bitte später erneut versuchen.' };
+      const plat = hzNativePlatform();
+      const min = Number(cfg.release?.min_build?.[plat] || 0);
+      if (plat && min && APP_BUILD_NUMBER < min) return { kind: 'update', title: 'Update erforderlich', text: `Diese Version (Build ${APP_BUILD_NUMBER}) wird nicht mehr unterstützt. Bitte installiere die aktuelle Husora-Version (mindestens Build ${min}).`, url: plat === 'android' ? cfg.release?.android_beta_url : cfg.release?.ios_beta_url };
+      if (cfg.maintenance?.enabled && cfg.maintenance?.blocking) return { kind: 'maintenance', title: 'Wartung', text: cfg.maintenance.message || 'Husora wird gerade gewartet. Bitte versuche es in einigen Minuten erneut.' };
+      return null;
+    }
+    function relRenderOverlay() {
+      const reason = relBlockReason();
+      let el = document.getElementById('rel-block');
+      if (!reason) { el?.remove(); return; }
+      if (!el) { el = document.createElement('div'); el.id = 'rel-block'; el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'rel-block-title'); document.body.appendChild(el); }
+      el.dataset.kind = reason.kind;
+      el.innerHTML = `<div class="rel-block-card"><img src="assets/logo.png" alt="" aria-hidden="true"><h2 id="rel-block-title">${escapeHtml(reason.title)}</h2><p>${escapeHtml(reason.text)}</p><div class="rel-block-actions">${reason.url ? `<a class="primary-btn" href="${escapeHtml(reason.url)}" target="_blank" rel="noopener">Aktuelle Version installieren</a>` : ''}<button type="button" class="secondary-btn" data-rel-retry>Erneut prüfen</button></div><small>${escapeHtml(relVersionLabel())}</small></div>`;
+    }
+    function relRenderMaintenance() {
+      const m = relS().config?.maintenance || {};
+      let el = document.getElementById('rel-maintenance');
+      if (!m.enabled || m.blocking) { el?.remove(); return; }
+      if (!el) { el = document.createElement('div'); el.id = 'rel-maintenance'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+      el.innerHTML = `${icon('alert')}<span>${escapeHtml(m.message || 'Wartungshinweis: Einzelne Funktionen können kurzzeitig eingeschränkt sein.')}</span>`;
+    }
+    function relRefreshLabels() {
+      document.querySelectorAll('[data-rel-version]').forEach((node) => { node.textContent = `${relIsBeta() ? 'Beta-Version · ' : ''}${relVersionLabel()}`; });
+    }
+
+    // ----- App-Start/Login: Version melden, Rolle laden, Einladung prüfen -----
+    async function relReportSession(reason = 'start') {
+      const s = relS();
+      if (!cloudSignedIn() || s.reporting) return;
+      if (reason === 'resume' && Date.now() - s.reportedAt < 6 * 3600 * 1000) return;
+      s.reporting = true;
+      try {
+        const status = await cloudFetch('/rest/v1/rpc/report_app_session', { method: 'POST', body: { p_app_version: APP_VERSION, p_app_build: String(APP_BUILD_NUMBER), p_platform: relPlatform(), p_environment: betaEnvironment() } });
+        s.status = status && typeof status === 'object' ? status : null;
+        s.reportedAt = Date.now();
+        if (reason === 'login') relRouteByRole(s.status);
+        relCheckInvite();
+      } catch (error) { /* ältere Datenbank ohne Migration 4500 oder offline – später erneut */ }
+      finally { s.reporting = false; }
+    }
+    // Login → Rollenprüfung → Hausbesitzer-Übersicht oder Servicepartner-Portal
+    function relRouteByRole(status) {
+      const roles = status?.roles || {};
+      try {
+        if (roles.partner && !roles.owner && !pp.open) { ppSetMode('partner'); ppOpen('dashboard'); }
+      } catch (error) { /* Partner-Portal noch nicht bereit */ }
+    }
+    function relCheckInvite() {
+      const st = relS().status;
+      if (!st || !st.invite_required || st.invite_ok) { relCloseInvite(); return; }
+      const pending = relPendingCode();
+      if (pending && !relS().inviteBusy && !relS().inviteError) { relRedeem(pending); return; }
+      relOpenInvite();
+    }
+    function relOpenInvite(prefill) {
+      const s = relS();
+      let m = document.getElementById('rel-invite-modal');
+      if (!m) { m = document.createElement('div'); m.className = 'modal-backdrop'; m.id = 'rel-invite-modal'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'rel-invite-title'); document.body.appendChild(m); }
+      const code = prefill ?? (m.querySelector('input[name=code]')?.value || relPendingCode());
+      m.innerHTML = `<section class="modal"><div class="modal-head"><div><p class="eyebrow">Geschlossene Beta</p><h2 id="rel-invite-title">Einladungscode eingeben</h2></div><button class="close-btn" type="button" data-rel-invite-later aria-label="Schließen">✕</button></div>
+        <p class="settings-hint">Husora ist gerade eine geschlossene Beta. Gib den Code aus deiner Einladung ein (z. B. HUSORA-BETA-2026). Ohne Code kannst du Husora auf diesem Gerät nutzen, aber noch keine Cloud-Daten anlegen.</p>
+        <form id="rel-invite-form" novalidate><label><span class="form-label">Einladungscode</span><input class="form-control" name="code" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="40" required value="${escapeHtml(code || '')}"></label>
+        ${s.inviteError ? `<p class="pp-msg error" role="alert">${icon('alert')}<span>${escapeHtml(s.inviteError)}</span></p>` : ''}
+        <div class="form-actions"><button type="button" class="secondary-btn" data-rel-invite-later>Später</button><button type="submit" class="primary-btn" ${s.inviteBusy ? 'disabled' : ''}>${s.inviteBusy ? 'Prüfe …' : 'Code einlösen'}</button></div></form></section>`;
+      m.classList.add('open');
+    }
+    function relCloseInvite() { document.getElementById('rel-invite-modal')?.classList.remove('open'); }
+    async function relRedeem(code) {
+      const s = relS();
+      const clean = String(code || '').trim();
+      if (!clean) { s.inviteError = 'Bitte den Einladungscode eingeben.'; relOpenInvite(''); return; }
+      if (!cloudSignedIn()) { relSetPendingCode(clean); showToast('Code gespeichert – bitte jetzt anmelden oder ein Konto erstellen.'); relCloseInvite(); return; }
+      s.inviteBusy = true; s.inviteError = ''; relOpenInvite(clean);
+      try {
+        const res = await cloudFetch('/rest/v1/rpc/redeem_beta_invite', { method: 'POST', body: { p_code: clean } });
+        if (!res?.ok) throw new Error(res?.error || 'Dieser Einladungscode ist ungültig.');
+        s.status = res; relSetPendingCode('');
+        s.inviteBusy = false; relCloseInvite();
+        showToast('Willkommen in der Husora Beta – dein Code ist eingelöst.');
+        try { if (pp.open) ppLoad(); else ensureOwnerOrg(); } catch (error) { /* optional */ }
+      } catch (error) {
+        s.inviteError = error.message; relSetPendingCode('');
+      } finally {
+        s.inviteBusy = false;
+        if (document.getElementById('rel-invite-modal')?.classList.contains('open')) relOpenInvite(clean);
+      }
+    }
+
+    // ----- Fehlergrenze: ein Fehler in einer Seite legt nicht die ganze App lahm -----
+    function relSafeHtml(fn, where, partner = false) {
+      try { return fn(); } catch (error) {
+        console.error(error);
+        try { reportClientError(error, `render:${where}`); } catch (e) { /* optional */ }
+        return `<section class="card rel-error" role="alert"><h2 class="card-title">Dieser Bereich konnte nicht angezeigt werden</h2><p class="card-caption">Deine Daten sind nicht verloren – der Fehler wurde automatisch gemeldet. Versuche es erneut oder gehe zur Übersicht.</p><div class="settings-actions"><button type="button" class="primary-btn" data-rel-reload>Erneut versuchen</button><button type="button" class="secondary-btn" ${partner ? 'data-pp-view="dashboard"' : 'data-page="dashboard"'}>Zur Übersicht</button></div></section>`;
+      }
+    }
+
+    // ----- Links: Web (?invite=, ?legal=) und App (com.husora.app://auth#…, ://beta?invite=…, ://partner) -----
+    function relHandleUrl(raw, fromApp = false) {
+      let url;
+      try { url = new URL(raw); } catch (error) { return false; }
+      const hash = url.hash.replace(/^#/, '');
+      if (fromApp && /access_token=|error_description=/.test(hash)) cloudHandleAuthRedirect(hash);
+      const target = `${url.host}${url.pathname}`.replace(/^\/+|\/+$/g, '');
+      const invite = url.searchParams.get('invite') || (target === 'beta' ? url.searchParams.get('code') : '');
+      if (invite) {
+        relSetPendingCode(invite.trim().slice(0, 40));
+        if (cloudSignedIn()) { relS().inviteError = ''; relReportSession('invite').then(() => { if (relS().status && !relS().status.invite_required) showToast('Einladungscode gespeichert.'); }); }
+        else showToast('Einladungscode gespeichert – bitte jetzt anmelden oder ein Konto erstellen.');
+      }
+      if (fromApp && (target === 'partner' || url.searchParams.has('partner'))) { try { ppSetMode('partner'); ppOpen('dashboard'); } catch (error) { /* optional */ } }
+      const legal = url.searchParams.get('legal');
+      const legalTool = ['consent', 'export', 'request', 'delete', 'versions'].includes(legal);
+      if (legalTool) setTimeout(() => { try { legalTab = legal; currentPage = 'legal'; if (pp.open) ppClose?.(); render(); } catch (error) { /* optional */ } }, 200);
+      else if (legal && typeof LEGAL_SECTIONS === 'object' && LEGAL_SECTIONS[legal]) setTimeout(() => { try { if (pp.open) openLegalModal(legal); else { legalTab = legal; currentPage = 'legal'; render(); } } catch (error) { openLegalModal(legal); } }, 200);
+      return true;
+    }
+
+    // ----- Native App (Capacitor): Deep Links, Zurück-Taste, Dateien, externe Links -----
+    async function relNativeSave(url, name) {
+      const Filesystem = hzPlugin('Filesystem');
+      const Share = hzPlugin('Share');
+      if (!Filesystem?.writeFile || !Share?.share) { showToast('Speichern ist in dieser App-Version nicht verfügbar.'); return; }
+      try {
+        const blob = await (await fetch(url)).blob();
+        const data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1] || ''); reader.onerror = () => reject(reader.error); reader.readAsDataURL(blob); });
+        const safe = String(name || 'husora-datei').replace(/[^\w.\-äöüÄÖÜß ]+/g, '_').slice(0, 80) || 'husora-datei';
+        const written = await Filesystem.writeFile({ path: `husora-export/${safe}`, data, directory: 'CACHE', recursive: true });
+        await Share.share({ title: safe, url: written.uri, dialogTitle: 'Datei speichern oder teilen' });
+      } catch (error) {
+        if (!/cancel/i.test(String(error?.message || error))) showToast(`Datei konnte nicht geöffnet werden: ${error?.message || error}`);
+      }
+    }
+    function relOpenExternal(url) {
+      const Browser = hzPlugin('Browser');
+      if (Browser?.open) Browser.open({ url }).catch(() => {}); else location.href = url;
+    }
+    function relPatchNativeFiles() {
+      const originalClick = HTMLAnchorElement.prototype.click;
+      HTMLAnchorElement.prototype.click = function husoraNativeClick() {
+        const href = this.getAttribute('href') || '';
+        if (this.hasAttribute('download') || /^(blob|data):/i.test(href)) { relNativeSave(this.href, this.getAttribute('download') || 'husora-datei'); return; }
+        if (/^https?:/i.test(href) && this.target === '_blank') { relOpenExternal(this.href); return; }
+        originalClick.call(this);
+      };
+      document.addEventListener('click', (event) => {
+        const a = event.target.closest?.('a[href]');
+        if (!a) return;
+        const href = a.getAttribute('href') || '';
+        if (a.hasAttribute('download') || /^(blob|data):/i.test(href)) { event.preventDefault(); relNativeSave(a.href, a.getAttribute('download') || 'husora-datei'); return; }
+        if (/^https?:/i.test(href)) { let external = a.target === '_blank'; try { external = external || new URL(a.href).origin !== location.origin; } catch (error) { /* egal */ } if (external) { event.preventDefault(); relOpenExternal(a.href); } }
+      }, true);
+      const originalOpen = window.open.bind(window);
+      window.open = (url, target, features) => {
+        const value = String(url || '');
+        if (/^(blob|data):/i.test(value)) { relNativeSave(value, 'husora-dokument.pdf'); return null; }
+        if (/^https?:/i.test(value)) { relOpenExternal(value); return null; }
+        return originalOpen(url, target, features);
+      };
+      window.print = () => showToast('Drucken: bitte das PDF über „Teilen“ öffnen und von dort drucken.');
+    }
+    function relBackButton() {
+      const modal = [...document.querySelectorAll('.modal-backdrop.open')].pop();
+      if (modal) { modal.classList.remove('open'); return; }
+      const menu = document.querySelector('.nav-menu.open');
+      if (menu) { menu.classList.remove('open'); return; }
+      const back = document.querySelector('#pp-main .pp-back, [data-action="go-back"]');
+      if (back) { back.click(); return; }
+      if (!pp.open && currentPage !== 'dashboard') { currentPage = 'dashboard'; render(); return; }
+      hzPlugin('App')?.minimizeApp?.();
+    }
+    function relNativeInit() {
+      if (!hzNative()) return;
+      document.documentElement.classList.add('native-app', `native-${hzNativePlatform()}`);
+      const App = hzPlugin('App');
+      App?.addListener?.('appUrlOpen', (event) => { try { relHandleUrl(event.url, true); } catch (error) { reportClientError(error, 'deeplink'); } });
+      App?.addListener?.('resume', () => { relLoadConfig(); if (cloudSignedIn()) relReportSession('resume'); });
+      App?.addListener?.('backButton', () => relBackButton());
+      App?.getLaunchUrl?.().then((result) => { if (result?.url) relHandleUrl(result.url, true); }).catch(() => {});
+      relPatchNativeFiles();
+    }
+
+    // ----- Hilfe-Seite: Beta-Kennzeichnung, App testen, Einladungscode -----
+    function relHelpHtml() {
+      const rel = relS().config?.release || {};
+      const st = relS().status;
+      const store = !hzNative() ? `<div class="settings-actions rel-store">${rel.android_beta_url ? `<a class="primary-btn" href="${escapeHtml(rel.android_beta_url)}" target="_blank" rel="noopener">Android Beta testen</a>` : '<span class="rel-soon">Android Beta – Link folgt</span>'}${rel.ios_beta_url ? `<a class="primary-btn" href="${escapeHtml(rel.ios_beta_url)}" target="_blank" rel="noopener">iPhone Beta testen</a>` : '<span class="rel-soon">iPhone Beta (TestFlight) – Link folgt</span>'}</div>` : '';
+      const invite = st?.invite_required && !st.invite_ok ? '<div class="settings-actions"><button type="button" class="secondary-btn" data-rel-invite-open>Einladungscode eingeben</button></div>' : '';
+      return `<section class="card settings-card" id="rel-help"><div class="settings-card-head"><span class="settings-icon"><span class="beta-chip">Beta</span></span><div><h2 class="card-title">${relIsBeta() ? 'Beta-Version' : 'App-Version'}</h2><p class="card-caption" data-rel-version>${escapeHtml(`${relIsBeta() ? 'Beta-Version · ' : ''}${relVersionLabel()}`)}</p></div></div>
+        <p class="settings-hint">${relIsBeta() ? 'Du testest eine Vorabversion. Einzelne Funktionen können sich noch ändern. Fehler und Ideen meldest du am schnellsten über „Feedback“ bzw. 🐞.' : 'Husora auf dem Smartphone nutzen:'}</p>${store}${invite}
+        ${rel.support_email ? `<p class="settings-hint">Support: <a href="mailto:${escapeHtml(rel.support_email)}">${escapeHtml(rel.support_email)}</a></p>` : ''}</section>`;
+    }
+
+    // ----- Husora Admin: Beta-Tester, Einladungen, Release-Konfiguration (Spec §23) -----
+    async function relLoadAdmin() {
+      const s = relS();
+      if (s.adminLoading) return;
+      s.adminLoading = true;
+      try {
+        const data = await cloudFetch('/rest/v1/rpc/beta_testers_overview', { method: 'POST', body: { p_limit: 300 } });
+        s.admin = { data };
+        await relLoadConfig();
+      } catch (error) { s.admin = { error: error.message }; }
+      finally { s.adminLoading = false; if (currentPage === 'betaAdmin' && !pp.open) render(); }
+    }
+    function relAdminHtml() {
+      if (!cloudSignedIn()) return '';
+      // MFA-Hürde zeigt betaAdminPage(); hier nur den geladenen Status lesen (kein zweites Laden/Rendern)
+      try { const st = admS().status; if (!st || !st.roles?.length || (st.mfa_required && st.aal !== 'aal2')) return ''; } catch (error) { return ''; }
+      const s = relS();
+      if (!s.admin) { relLoadAdmin(); return '<section class="card"><p class="settings-hint">Beta-Tester werden geladen …</p></section>'; }
+      if (s.admin.error) return `<section class="card" id="rel-admin"><h2 class="card-title">Beta-Tester & Release</h2><p class="card-caption">${escapeHtml(s.admin.error)}</p><div class="settings-actions"><button type="button" class="secondary-btn" data-rel-admin-reload>Erneut laden</button></div></section>`;
+      const d = s.admin.data || {}; const t = d.totals || {};
+      const rel = s.config?.release || {}; const mt = s.config?.maintenance || {};
+      const n = (v) => (v == null ? '–' : Number(v).toLocaleString('de-DE'));
+      const list = (obj) => Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<li><span>${escapeHtml(k)}</span><b>${n(v)}</b></li>`).join('') || '<li><span>–</span><b></b></li>';
+      const groupLabel = { homeowner: 'Hausbesitzer', service_partner: 'Servicepartner', internal: 'Intern' };
+      const roleLabel = { homeowner: 'Hausbesitzer', service_partner: 'Servicepartner', both: 'Beide', none: '–' };
+      const rows = (d.testers || []).map((x) => `<tr><td><code>${escapeHtml(x.ref)}</code></td><td>${escapeHtml(roleLabel[x.role] || x.role || '–')}</td><td>${escapeHtml(groupLabel[x.tester_group] || '–')}</td><td>${escapeHtml(x.platform || '–')}</td><td>${escapeHtml(x.version || '–')}${x.build ? ` (${escapeHtml(x.build)})` : ''}</td><td>${x.last_seen ? escapeHtml(fmtDateTime(x.last_seen)) : '–'}</td><td>${x.last_error ? `<span title="${escapeHtml(x.last_error.message || '')}">${escapeHtml(fmtDateTime(x.last_error.at))}</span>` : '–'}</td></tr>`).join('');
+      const invites = (d.invites || []).map((i) => `<tr><td><code>${escapeHtml(i.hint)}</code></td><td>${escapeHtml(i.label || '–')}</td><td>${escapeHtml(groupLabel[i.tester_group] || '–')}</td><td>${n(i.used)} / ${n(i.max)}</td><td>${i.expires_at ? escapeHtml(fmtDate(String(i.expires_at).slice(0, 10))) : 'unbegrenzt'}</td><td>${i.active ? `<button type="button" class="secondary-btn" data-rel-invite-active="${i.id}" data-active="0">Deaktivieren</button>` : `<button type="button" class="secondary-btn" data-rel-invite-active="${i.id}" data-active="1">Aktivieren</button>`}</td></tr>`).join('');
+      const groupSel = (name) => `<select class="form-control" name="${name}"><option value="">–</option><option value="homeowner">Hausbesitzer</option><option value="service_partner">Servicepartner</option><option value="internal">Intern</option></select>`;
+      return `<section class="card" id="rel-admin"><div class="settings-card-head"><div><h2 class="card-title"><span class="beta-chip">Beta</span> Beta-Tester & Release</h2><p class="card-caption">Pseudonymisiert – keine E-Mail-Adressen oder Namen. Umgebung des Servers: <strong>${escapeHtml(s.config?.environment?.name || 'unbekannt')}</strong> · diese App: ${escapeHtml(relVersionLabel())}</p></div><button type="button" class="secondary-btn" data-rel-admin-reload>${icon('undo')} Aktualisieren</button></div>
+        <div class="beta-kpis"><div class="beta-kpi"><span>Beta-Tester</span><strong>${n(t.testers)}</strong></div><div class="beta-kpi"><span>Aktiv 7 Tage</span><strong>${n(t.active_7d)}</strong></div><div class="beta-kpi"><span>Aktiv 30 Tage</span><strong>${n(t.active_30d)}</strong></div></div>
+        <div class="beta-two"><div><h3 class="beta-sub">Testgruppen</h3><ul class="beta-list">${list(Object.fromEntries(Object.entries(t.by_group || {}).map(([k, v]) => [groupLabel[k] || k, v])))}</ul></div><div><h3 class="beta-sub">Plattformen</h3><ul class="beta-list">${list(t.by_platform)}</ul><h3 class="beta-sub">App-Versionen</h3><ul class="beta-list">${list(t.by_version)}</ul></div></div>
+        <h3 class="beta-sub">Tester</h3><div class="rel-table-wrap"><table class="rel-table"><thead><tr><th>Kennung</th><th>Rolle</th><th>Gruppe</th><th>Plattform</th><th>Version</th><th>Zuletzt aktiv</th><th>Letzter Fehler</th></tr></thead><tbody>${rows || '<tr><td colspan="7">Noch keine Beta-Tester.</td></tr>'}</tbody></table></div>
+        <h3 class="beta-sub">Einladungscodes</h3>
+        ${s.newCode ? `<p class="rel-newcode" role="status">Neuer Code (wird nur jetzt angezeigt): <code>${escapeHtml(s.newCode)}</code> <button type="button" class="secondary-btn" data-rel-copy="${escapeHtml(s.newCode)}">Kopieren</button></p>` : ''}
+        <div class="rel-table-wrap"><table class="rel-table"><thead><tr><th>Code</th><th>Bezeichnung</th><th>Gruppe</th><th>Genutzt</th><th>Gültig bis</th><th></th></tr></thead><tbody>${invites || '<tr><td colspan="6">Noch keine Codes.</td></tr>'}</tbody></table></div>
+        <form id="rel-admin-invite-form" class="rel-form"><label><span class="form-label">Bezeichnung</span><input class="form-control" name="label" maxlength="120" placeholder="z. B. Hausbesitzer Welle 1"></label><label><span class="form-label">Testgruppe</span>${groupSel('group')}</label><label><span class="form-label">Max. Nutzungen</span><input class="form-control" name="max" type="number" min="1" max="1000" value="1"></label><label><span class="form-label">Gültig (Tage)</span><input class="form-control" name="days" type="number" min="0" max="365" value="60"></label><label><span class="form-label">Eigener Code (optional)</span><input class="form-control" name="code" maxlength="40" placeholder="HUSORA-BETA-2026" autocapitalize="characters"></label><div class="form-actions"><button type="submit" class="primary-btn">Code erzeugen</button></div></form>
+        <h3 class="beta-sub">Konto als Tester markieren</h3>
+        <form id="rel-admin-tester-form" class="rel-form"><label><span class="form-label">E-Mail des Kontos</span><input class="form-control" name="email" type="email" required maxlength="160"></label><label><span class="form-label">Testgruppe</span>${groupSel('group')}</label><label class="rel-check"><input type="checkbox" name="beta" checked> Beta-Tester</label><div class="form-actions"><button type="submit" class="secondary-btn">Speichern</button></div></form>
+        <h3 class="beta-sub">Release & Wartung</h3>
+        <form id="rel-admin-config-form" class="rel-form"><label><span class="form-label">Android Beta-Link (Play Closed Testing)</span><input class="form-control" name="android" type="url" value="${escapeHtml(rel.android_beta_url || '')}" placeholder="https://play.google.com/apps/testing/com.husora.app"></label><label><span class="form-label">iPhone Beta-Link (TestFlight)</span><input class="form-control" name="ios" type="url" value="${escapeHtml(rel.ios_beta_url || '')}" placeholder="https://testflight.apple.com/join/…"></label><label><span class="form-label">Support-E-Mail</span><input class="form-control" name="support" type="email" value="${escapeHtml(rel.support_email || '')}"></label><label><span class="form-label">Feedback-Link (optional)</span><input class="form-control" name="feedback" type="url" value="${escapeHtml(rel.feedback_url || '')}"></label><label><span class="form-label">Aktuelle Version</span><input class="form-control" name="latest" maxlength="40" value="${escapeHtml(rel.latest_version || '')}"></label><label><span class="form-label">Mindest-Build Android</span><input class="form-control" name="min_android" type="number" min="0" value="${Number(rel.min_build?.android || 0)}"></label><label><span class="form-label">Mindest-Build iOS</span><input class="form-control" name="min_ios" type="number" min="0" value="${Number(rel.min_build?.ios || 0)}"></label><label class="rel-check"><input type="checkbox" name="invite" ${rel.invite_required ? 'checked' : ''}> Einladungscode für neue Konten erforderlich</label><label class="rel-check"><input type="checkbox" name="mt_on" ${mt.enabled ? 'checked' : ''}> Wartungshinweis anzeigen</label><label class="rel-check"><input type="checkbox" name="mt_block" ${mt.blocking ? 'checked' : ''}> App während der Wartung sperren</label><label><span class="form-label">Wartungstext</span><input class="form-control" name="mt_msg" maxlength="300" value="${escapeHtml(mt.message || '')}"></label><div class="form-actions"><button type="submit" class="primary-btn">Release-Einstellungen speichern</button></div></form>
+      </section>`;
+    }
+    async function relSaveConfig(key, value) {
+      const rows = await cloudFetch(`/rest/v1/app_config?key=eq.${key}`, { method: 'PATCH', body: { value }, headers: { Prefer: 'return=representation' } });
+      if (!Array.isArray(rows) || !rows.length) throw new Error('Keine Berechtigung (Super-Admin mit MFA erforderlich).');
+    }
+    document.addEventListener('submit', async (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement) || !/^rel-/.test(form.id)) return;
+      event.preventDefault();
+      const f = Object.fromEntries(new FormData(form).entries());
+      const s = relS();
+      if (form.id === 'rel-invite-form') { relRedeem(f.code); return; }
+      try {
+        if (form.id === 'rel-admin-invite-form') {
+          const res = await cloudFetch('/rest/v1/rpc/beta_invite_create', { method: 'POST', body: { p_label: f.label || null, p_tester_group: f.group || null, p_max_uses: Number(f.max) || 1, p_valid_days: Number(f.days) || 0, p_code: f.code || null } });
+          s.newCode = res?.code || null;
+          showToast('Einladungscode erzeugt.');
+        } else if (form.id === 'rel-admin-tester-form') {
+          await cloudFetch('/rest/v1/rpc/admin_set_beta_tester', { method: 'POST', body: { p_email: f.email, p_is_beta: Boolean(f.beta), p_tester_group: f.group || null } });
+          showToast('Tester gespeichert.');
+        } else if (form.id === 'rel-admin-config-form') {
+          const rel = s.config?.release || {};
+          await relSaveConfig('release', { ...rel, android_beta_url: f.android || null, ios_beta_url: f.ios || null, support_email: f.support || null, feedback_url: f.feedback || null, latest_version: f.latest || null, min_build: { android: Number(f.min_android) || 0, ios: Number(f.min_ios) || 0 }, invite_required: Boolean(f.invite) });
+          await relSaveConfig('maintenance', { enabled: Boolean(f.mt_on), blocking: Boolean(f.mt_block), message: f.mt_msg || null });
+          showToast('Release-Einstellungen gespeichert.');
+        }
+        s.admin = null;
+        await relLoadAdmin();
+      } catch (error) { showToast(error.message); }
+    });
+    document.addEventListener('click', async (event) => {
+      const t = event.target;
+      if (!(t instanceof Element)) return;
+      if (t.closest('[data-rel-retry]')) { relS().configFresh = false; await relLoadConfig(); if (cloudSignedIn()) relReportSession('retry'); return; }
+      if (t.closest('[data-rel-reload]')) { if (pp.open) ppRender(); else render(); return; }
+      if (t.closest('[data-rel-invite-later]')) { relS().inviteError = ''; relCloseInvite(); return; }
+      if (t.closest('[data-rel-invite-open]')) { relOpenInvite(); return; }
+      if (t.closest('[data-rel-admin-reload]')) { relS().admin = null; relS().newCode = null; render(); return; }
+      const copy = t.closest('[data-rel-copy]');
+      if (copy) { try { await navigator.clipboard.writeText(copy.dataset.relCopy); showToast('Kopiert.'); } catch (error) { showToast(copy.dataset.relCopy); } return; }
+      const act = t.closest('[data-rel-invite-active]');
+      if (act) {
+        try { await cloudFetch('/rest/v1/rpc/beta_invite_set_active', { method: 'POST', body: { p_id: act.dataset.relInviteActive, p_active: act.dataset.active === '1' } }); relS().admin = null; await relLoadAdmin(); }
+        catch (error) { showToast(error.message); }
+      }
+    });
+    // Start (nach dem restlichen Setup, damit alle Bausteine bereitstehen)
+    setTimeout(() => {
+      try {
+        relNativeInit();
+        relEvaluate(false);
+        relLoadConfig();
+        const params = new URLSearchParams(location.search);
+        if (params.has('invite') || params.has('legal')) {
+          relHandleUrl(location.href);
+          params.delete('invite');
+          history.replaceState(null, '', location.pathname + (params.toString() ? `?${params}` : '') + location.hash);
+        }
+        if (cloudSignedIn()) relReportSession('start');
+        setInterval(() => { if (document.visibilityState === 'visible') relLoadConfig(); }, 15 * 60 * 1000);
+      } catch (error) { console.warn('Beta-Release-Start:', error); }
+    }, 0);
     // --- Ersteinrichtung ---
     let onboardingState = loadStore('stugliv-onboarding', null);
     let onboardingStep = 0;
@@ -19119,7 +19525,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const CLOUD_STAFF_ROLES = ['admin', 'property_manager', 'service_manager'];
     // Husora-Projekt in Supabase. Der öffentliche Schlüssel (publishable) darf in der App stehen –
     // alle Daten schützt Row Level Security. Der geheime Schlüssel gehört nie hierher.
-    const CLOUD_DEFAULT = { url: 'https://ggsoygxmcsmrsrbmplrz.supabase.co', key: 'sb_publishable_WFT_U9J4uvAgPHZHdvhjIw_uX08VjS4' };
+    // App-Builds (Android/iOS, eigener Web-Build) bringen URL und Schlüssel ihrer Umgebung mit (tools/build-app.mjs).
+    const CLOUD_DEFAULT = hzRuntime()?.supabaseUrl ? { url: hzRuntime().supabaseUrl, key: hzRuntime().supabaseKey } : { url: 'https://ggsoygxmcsmrsrbmplrz.supabase.co', key: 'sb_publishable_WFT_U9J4uvAgPHZHdvhjIw_uX08VjS4' };
     let cloud = { url: '', key: '', session: null, org: null, autoSync: true, lastSyncAt: '', deviceId: '', files: [], propertyMap: {} };
     try {
       const stored = JSON.parse(localStorage.getItem(CLOUD_STORE) || 'null');
@@ -19127,6 +19534,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     } catch (error) { cloud = { ...cloud, ...CLOUD_DEFAULT }; }
     // Ältere App-Versionen haben eine leere Verbindung gespeichert – dann gilt das Husora-Projekt
     if (!cloud.url && !cloud.disconnected) { cloud.url = CLOUD_DEFAULT.url; cloud.key = CLOUD_DEFAULT.key; }
+    // App-Build: Umgebung ist fest – nie ein anderes (z. B. früher gespeichertes) Projekt verwenden
+    if (hzRuntime()?.supabaseUrl && (cloud.url !== CLOUD_DEFAULT.url || cloud.key !== CLOUD_DEFAULT.key || cloud.disconnected)) {
+      if (cloud.url !== CLOUD_DEFAULT.url) { cloud.session = null; cloud.org = null; cloud.orgs = []; cloud.lastSyncAt = ''; }
+      cloud.url = CLOUD_DEFAULT.url; cloud.key = CLOUD_DEFAULT.key; cloud.disconnected = false;
+    }
     if (!cloud.deviceId) cloud.deviceId = (window.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now().toString(16)}-${Math.random().toString(16).slice(2, 14)}`).slice(0, 36);
     const cloudState = { busy: '', error: '', notice: '', summary: null, usage: null, remoteNewer: false, draftEmail: cloud.session?.email || '' };
     const cloudFiles = new Set(Array.isArray(cloud.files) ? cloud.files : []);
@@ -19157,15 +19569,17 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (status === 404 || /could not find|does not exist|schema cache/i.test(message)) return 'Husora-Tabellen nicht gefunden – bitte zuerst die Husora-Datenbank in das Supabase-Projekt einspielen (siehe Hinweis unten).';
       if (status === 401 || status === 403 || /row-level security|permission denied|JWT/i.test(message)) return 'Keine Berechtigung – bitte abmelden und erneut anmelden.';
       if (status === 413) return 'Die Daten sind zu groß für eine einzelne Übertragung.';
+      if (status >= 500) return `Der Husora-Server hat gerade ein Problem (Fehler ${status}) – bitte in einigen Minuten erneut versuchen.`;
       return message ? `Supabase: ${message}` : `Supabase antwortet mit Fehler ${status}.`;
     }
     async function cloudFetch(path, { method = 'GET', body, headers = {}, auth = true, retry = true } = {}) {
+      await relEnsureEnvironment();
       if (auth) await cloudEnsureToken();
-      const response = await fetch(cloudBase() + path, {
+      const response = await relTimedFetch(cloudBase() + path, {
         method,
         headers: { apikey: cloud.key, 'Content-Type': 'application/json', ...(auth && cloud.session ? { Authorization: `Bearer ${cloud.session.access_token}` } : {}), ...headers },
         body: body === undefined ? undefined : JSON.stringify(body)
-      });
+      }, 30000);
       if (response.status === 401 && auth && retry && cloud.session?.refresh_token) {
         await cloudRefresh();
         return cloudFetch(path, { method, body, headers, auth, retry: false });
@@ -19198,6 +19612,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         email: data.user?.email || (previous && previous !== next ? '' : cloud.session?.email) || ''
       };
       persistCloud();
+      // Neue Anmeldung (nicht nur Token-Erneuerung): Version melden, Rolle laden, Einladung prüfen
+      if (next && next !== previous) setTimeout(() => { try { relReportSession('login'); } catch (error) { /* optional */ } }, 0);
     }
     // Hausbesitzer-Ansicht ohne Organisation (z. B. nach Anmeldung im Partner-Portal): eigene Organisation laden bzw. anlegen
     let ownerOrgLoading = null;
@@ -19211,8 +19627,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       try {
         data = await cloudFetch('/auth/v1/token?grant_type=refresh_token', { method: 'POST', body: { refresh_token: cloud.session.refresh_token }, auth: false });
       } catch (error) {
+        if (error instanceof TypeError) throw error;  // offline: Sitzung behalten, später erneut
         cloud.session = null;
         persistCloud();
+        setTimeout(() => { try { showToast('Deine Anmeldung ist abgelaufen – bitte erneut anmelden.'); if (pp.open) ppRender(); else if (currentPage === 'settings') rerenderCloud(); } catch (e) { /* optional */ } }, 0);
         throw new Error('Die Anmeldung ist abgelaufen – bitte erneut anmelden.');
       }
       cloudSetSession(data);
@@ -19223,6 +19641,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
 
     async function cloudConnect(url, key) {
+      if (hzRuntime()?.supabaseUrl && String(url || '').trim().replace(/\/+$/, '') !== CLOUD_DEFAULT.url) throw new Error('In dieser App ist die Husora-Umgebung fest eingestellt.');
       const cleanUrl = String(url || '').trim().replace(/\/+$/, '').replace(/\/(rest|auth)\/v1.*$/, '');
       const cleanKey = String(key || '').trim();
       if (!/^https?:\/\/[^\s/]+$/i.test(cleanUrl)) throw new Error('Bitte die Projekt-URL angeben, z. B. https://abcd1234.supabase.co');
@@ -19273,7 +19692,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     // Rücksprung aus Bestätigungs-/Passwort-Mail: zur App, im Partner-Portal mit ?partner.
     // Supabase nutzt die Adresse nur, wenn sie im Projekt unter Authentication → URL Configuration freigegeben ist.
-    const cloudRedirect = () => encodeURIComponent(location.origin + location.pathname + (pp?.open || /[?&]partner\b/.test(location.search) ? '?partner' : ''));
+    const cloudRedirect = () => encodeURIComponent(hzNative()
+      ? `${hzRuntime()?.urlScheme || 'com.husora.app'}://auth${pp?.open ? '?partner' : ''}`
+      : location.origin + location.pathname + (pp?.open || /[?&]partner\b/.test(location.search) ? '?partner' : ''));
     const CONFIRM_HINT = 'Falls nach dem Tippen auf den Link eine Fehlerseite (z. B. „localhost“) erscheint: Die E-Mail ist trotzdem bestätigt – komm hierher zurück und melde dich mit E-Mail und Passwort an.';
     // Supabase meldet bei bereits registrierter E-Mail aus Sicherheitsgründen keinen Fehler,
     // sondern einen Benutzer ohne Identitäten – das wird hier erkannt.
@@ -19364,8 +19785,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return { bucket: 'husora-private', dir: `${org}/documents`, ext };
     }
     async function cloudStorageFetch(path, options = {}) {
+      await relEnsureEnvironment();
       await cloudEnsureToken();
-      const response = await fetch(`${cloudBase()}/storage/v1/${path}`, { ...options, headers: { apikey: cloud.key, Authorization: `Bearer ${cloud.session.access_token}`, ...(options.headers || {}) } });
+      const response = await relTimedFetch(`${cloudBase()}/storage/v1/${path}`, { ...options, headers: { apikey: cloud.key, Authorization: `Bearer ${cloud.session.access_token}`, ...(options.headers || {}) } }, 120000);
       if (!response.ok) {
         let data = null;
         try { data = await response.json(); } catch (error) { /* keine JSON-Antwort */ }
@@ -19839,10 +20261,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }).catch((error) => { cloudState.error = error instanceof TypeError ? 'Offline – Cloud derzeit nicht erreichbar.' : error.message; updateCloudStatusLine(); });
     }
     // Rückkehr aus der Bestätigungs- oder Passwort-Mail (#access_token=…&type=signup|recovery)
-    (function cloudHandleAuthRedirect() {
-      const hash = new URLSearchParams(location.hash.replace(/^#/, ''));
+    // (auch für Deep Links der App: com.husora.app://auth#access_token=…)
+    function cloudHandleAuthRedirect(hashString) {
+      const fromLocation = hashString === undefined;
+      const hash = new URLSearchParams(String(fromLocation ? location.hash : hashString).replace(/^#/, ''));
       if (!hash.get('access_token') && !hash.get('error_description')) return;
-      history.replaceState(null, '', location.pathname + location.search);
+      if (fromLocation) history.replaceState(null, '', location.pathname + location.search);
       if (hash.get('error_description')) { setTimeout(() => showToast(`Anmeldelink: ${hash.get('error_description').replace(/\+/g, ' ')}`), 300); return; }
       if (!cloudConnected()) return;
       cloudSetSession({ access_token: hash.get('access_token'), refresh_token: hash.get('refresh_token'), expires_in: Number(hash.get('expires_in')) || 3600, expires_at: Number(hash.get('expires_at')) || undefined });
@@ -19857,7 +20281,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         }
         if (pp.open) ppLoad(); else if (currentPage === 'settings' || currentPage === 'partnerHub') rerenderCloud();
       }).catch((error) => showToast(error.message));
-    })();
+    }
+    cloudHandleAuthRedirect();
     if (sessionStorage.getItem('husora-cloud-loaded')) {
       const loaded = sessionStorage.getItem('husora-cloud-loaded');
       sessionStorage.removeItem('husora-cloud-loaded');
@@ -20212,7 +20637,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       else if (!signedIn) body = ppLoginHtml();
       else if (!pp.ctx && pp.busy === 'load') body = ppSkeleton();
       else if (!org) body = ppOnboardingHtml();
-      else body = ppViewHtml();
+      else body = relSafeHtml(() => ppViewHtml(), `partner:${pp.view}`, true);
       const messages = `${pp.error ? `<p class="pp-msg error" role="alert">${icon('alert')}<span>${escapeHtml(pp.error)}</span></p>` : ''}`;
       const navActive = (id) => pp.view === id || (id === 'more' && !PP_NAV.some(([v]) => v === pp.view));
       const navBadge = (id) => { const n = id === 'orders' ? ppD('orders').filter((o) => o.status === 'offered').length : id === 'messages' ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : id === 'more' ? ppD('inspections').filter((i) => i.status === 'in_progress').length : 0; return n ? `<b class="pp-dot">${n > 9 ? '9+' : n}</b>` : ''; };
@@ -21387,7 +21812,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <div class="segmented" role="radiogroup" aria-label="Sprache">${APP_LANGS.map(([id, label]) => `<button type="button" role="radio" aria-checked="${appLang === id}" class="${appLang === id ? 'active' : ''}" data-app-lang="${id}" data-no-i18n>${label}</button>`).join('')}</div>
           <p class="pp-hint">Gilt für die ganze App (Hausbesitzer- und Partner-Ansicht) auf diesem Gerät. Eigene Einträge wie Namen, Adressen und Notizen werden nicht übersetzt.</p>`)}
         ${card('Daten & App', 'Cloud-Speicher und Datensicherung.', 'document', `<div class="pp-embed">${cloudCardHtml()}${backupCardHtml()}</div>`)}
-        ${card('Über Husora', `Version ${APP_VERSION} · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}`, 'help', `<div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}" data-legal-modal><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>`)}`;
+        ${card('Über Husora', `${relIsBeta() ? 'Beta-Version · ' : ''}Version ${APP_VERSION} (Build ${APP_BUILD_NUMBER}) · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}`, 'help', `<div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}" data-legal-modal><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>`)}`;
     }
     document.addEventListener('change', (event) => {
       const orderOpt = event.target.closest?.('#partner-portal [data-pp-order-opt]');
@@ -21583,7 +22008,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         }).join('')}</div>
         ${ppAbsencesHtml()}
         ${ppIsAdmin() ? `<form class="pp-card pp-form" data-pp-form="member-invite"><h3>Mitarbeiter einladen</h3><div class="pp-grid"><label class="full"><span class="form-label">Name</span><input class="form-control" name="display_name" maxlength="120" placeholder="Vor- und Nachname"></label><label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" required></label><label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" inputmode="tel" maxlength="40"></label><label class="full"><span class="form-label">Info</span><input class="form-control" name="info" maxlength="1000" placeholder="z. B. Spezialgebiet, Arbeitszeiten"></label><label class="full"><span class="form-label">Rolle</span><select class="form-control" name="role">${roles.map(([r, l]) => `<option value="${r}" ${r === 'technician' ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label></div><div class="pp-actions"><button class="primary-btn" type="submit" ${ppDisabled()}>Einladung erstellen</button></div><p class="pp-hint">Der Mitarbeiter erstellt mit genau dieser E-Mail ein Husora-Konto, öffnet das Partner-Portal und gibt den Code ein.</p></form>
-          ${ppD('invites').length ? ppSection('Offene Einladungen', ppD('invites').map((inv) => `<div class="pp-card pp-invite"><div><strong>${escapeHtml(inv.display_name || inv.email)}</strong><small>${inv.display_name ? `${escapeHtml(inv.email)} · ` : ''}${escapeHtml(PP_ROLE_LABELS[inv.role] || inv.role)} · gültig bis ${escapeHtml(fmtDate(inv.expires_at.slice(0, 10)))}</small></div><code>${escapeHtml(inv.code)}</code><a class="secondary-btn" href="mailto:${encodeURIComponent(inv.email)}?subject=${encodeURIComponent(`Einladung zu ${ppOrg().name} in Husora`)}&body=${encodeURIComponent(`Hallo,\n\ndu bist eingeladen, im Husora Partner-Portal für ${ppOrg().name} mitzuarbeiten.\n\n1. ${location.origin}${location.pathname} öffnen\n2. Mit dieser E-Mail-Adresse ein Konto erstellen\n3. Partner-Portal → Einladungscode: ${inv.code}\n\nViele Grüße`)}">E-Mail</a><button type="button" class="secondary-btn danger" data-pp-action="invite-delete" data-id="${inv.id}">Zurückziehen</button></div>`).join('')) : ''}` : ''}`;
+          ${ppD('invites').length ? ppSection('Offene Einladungen', ppD('invites').map((inv) => `<div class="pp-card pp-invite"><div><strong>${escapeHtml(inv.display_name || inv.email)}</strong><small>${inv.display_name ? `${escapeHtml(inv.email)} · ` : ''}${escapeHtml(PP_ROLE_LABELS[inv.role] || inv.role)} · gültig bis ${escapeHtml(fmtDate(inv.expires_at.slice(0, 10)))}</small></div><code>${escapeHtml(inv.code)}</code><a class="secondary-btn" href="mailto:${encodeURIComponent(inv.email)}?subject=${encodeURIComponent(`Einladung zu ${ppOrg().name} in Husora`)}&body=${encodeURIComponent(`Hallo,\n\ndu bist eingeladen, im Husora Partner-Portal für ${ppOrg().name} mitzuarbeiten.\n\n1. ${appPublicUrl()} öffnen\n2. Mit dieser E-Mail-Adresse ein Konto erstellen\n3. Partner-Portal → Einladungscode: ${inv.code}\n\nViele Grüße`)}">E-Mail</a><button type="button" class="secondary-btn danger" data-pp-action="invite-delete" data-id="${inv.id}">Zurückziehen</button></div>`).join('')) : ''}` : ''}`;
     }
     // ----- Servicegebiete (mehrere je Betrieb) -----
     function ppAreasHtml() {
@@ -22582,7 +23007,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const max = entitlements.limit('users');
       const used = members.length + team.invites.length;
       const orgs = cloud.orgs || [];
-      const mail = (invite) => `mailto:${encodeURIComponent(invite.email)}?subject=${encodeURIComponent(`Einladung zu „${cloud.org.name}“ in Husora`)}&body=${encodeURIComponent(`Hallo,\n\nich lade dich zu unseren Ferienhäusern in Husora ein (${roleLabel(invite.role)}).\n\n1. ${location.origin}${location.pathname} öffnen\n2. Einstellungen → Daten & App → mit dieser E-Mail-Adresse (${invite.email}) anmelden oder Konto erstellen\n3. Unter „Mitglieder“ den Einladungscode eingeben: ${invite.code}\n\nViele Grüße`)}`;
+      const mail = (invite) => `mailto:${encodeURIComponent(invite.email)}?subject=${encodeURIComponent(`Einladung zu „${cloud.org.name}“ in Husora`)}&body=${encodeURIComponent(`Hallo,\n\nich lade dich zu unseren Ferienhäusern in Husora ein (${roleLabel(invite.role)}).\n\n1. ${appPublicUrl()} öffnen\n2. Einstellungen → Daten & App → mit dieser E-Mail-Adresse (${invite.email}) anmelden oder Konto erstellen\n3. Unter „Mitglieder“ den Einladungscode eingeben: ${invite.code}\n\nViele Grüße`)}`;
       return `<section class="card settings-card" id="settings-members"><div class="settings-card-head"><span class="settings-icon">${icon('users')}</span><div><h2 class="card-title">Mitglieder</h2><p class="card-caption">Familie, Miteigentümer oder Hausverwaltung mitarbeiten lassen · ${used} von ${Number.isFinite(max) ? max : '∞'} Benutzern (Tarif ${escapeHtml(entitlements.plan().name)})</p></div></div>
         ${orgs.length > 1 ? `<label class="team-org"><span class="form-label">Organisation</span><select class="form-control" data-team-org>${orgs.map((org) => `<option value="${escapeHtml(org.organization_id)}" ${org.organization_id === cloud.org.id ? 'selected' : ''}>${escapeHtml(org.name)} · ${escapeHtml(roleLabel(org.role))}</option>`).join('')}</select></label>` : ''}
         ${team.error ? `<p class="cloud-message error">${icon('alert')}<span>${escapeHtml(team.error)}</span></p>` : ''}
@@ -22708,14 +23133,14 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return ['nicht eingeladen', 'muted'];
     }
     function hubInviteText(code) {
-      return `Hallo,\n\nich verwalte mein Ferienhaus mit Husora und möchte dir Aufträge und Nachrichten direkt über das Husora Partner-Portal senden.\n\n1. ${location.origin}${location.pathname} öffnen und „Servicepartner“ wählen\n2. Konto erstellen und deinen Betrieb anlegen\n3. Unter „Kunden & Objekte“ diesen Code eingeben: ${code}\n\nDer Code ist 30 Tage gültig.\n\nViele Grüße\n${profileData?.name && profileData.name !== 'Max Mustermann' ? profileData.name : ''}`;
+      return `Hallo,\n\nich verwalte mein Ferienhaus mit Husora und möchte dir Aufträge und Nachrichten direkt über das Husora Partner-Portal senden.\n\n1. ${appPublicUrl()} öffnen und „Servicepartner“ wählen\n2. Konto erstellen und deinen Betrieb anlegen\n3. Unter „Kunden & Objekte“ diesen Code eingeben: ${code}\n\nDer Code ist 30 Tage gültig.\n\nViele Grüße\n${profileData?.name && profileData.name !== 'Max Mustermann' ? profileData.name : ''}`;
     }
     function hubCodeBox(p) {
       const code = ownerSide.code?.id === p.id ? ownerSide.code.code : (ownerSide.invites || []).find((i) => i.service_partner_id === p.id && !i.accepted_at && new Date(i.expires_at) > new Date())?.code;
       if (!code || p.partner_organization_id) return '';
       const text = hubInviteText(code);
       return `<div class="hub-code"><span class="pp-eyebrow">Einladungscode</span><code>${escapeHtml(code)}</code>
-        <div class="hub-code-actions"><button type="button" class="secondary-btn" data-hub-copy="${escapeHtml(code)}">Kopieren</button>${navigator.share ? `<button type="button" class="secondary-btn" data-hub-share="${p.id}">Teilen</button>` : ''}<a class="secondary-btn" href="mailto:${encodeURIComponent(p.email || '')}?subject=${encodeURIComponent('Einladung ins Husora Partner-Portal')}&body=${encodeURIComponent(text)}">E-Mail</a><a class="secondary-btn" href="sms:?&body=${encodeURIComponent(`Husora Partner-Portal: ${location.origin}${location.pathname} – Einladungscode ${code}`)}">SMS</a></div>
+        <div class="hub-code-actions"><button type="button" class="secondary-btn" data-hub-copy="${escapeHtml(code)}">Kopieren</button>${navigator.share ? `<button type="button" class="secondary-btn" data-hub-share="${p.id}">Teilen</button>` : ''}<a class="secondary-btn" href="mailto:${encodeURIComponent(p.email || '')}?subject=${encodeURIComponent('Einladung ins Husora Partner-Portal')}&body=${encodeURIComponent(text)}">E-Mail</a><a class="secondary-btn" href="sms:?&body=${encodeURIComponent(`Husora Partner-Portal: ${appPublicUrl()} – Einladungscode ${code}`)}">SMS</a></div>
         <small>Gültig 30 Tage, nur einmal verwendbar. Der Partner gibt den Code in seinem Partner-Portal unter „Kunden & Objekte“ ein.</small></div>`;
     }
     // ----- Kontaktdaten an den Servicepartner: Name und E-Mail aus dem Konto, Telefon/Adresse nur nach Freigabe -----

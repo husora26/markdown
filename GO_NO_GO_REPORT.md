@@ -61,7 +61,8 @@ Supabase · GitHub Pages · Stripe (Beta: aus) · Resend (nicht eingerichtet) ·
 1. 3600 Kosten & Freigaben · 3700 Beta Mode · 3800 Benachrichtigungen & Chat · 3900 Wiederkehr & Automatik · 4000 Bewertungen/Angebote/Notdienst
 2. 4100 Security-Härtung (TRUNCATE/anon) · 4200 KI-Vorschläge · 4300 Aufbewahrung/Allowlist/Lösch-Fix
 3. **4400 Legal & Beta Compliance** (Rollen+MFA, Rechtstexte, Consent, Nachweise, Moderation, Anfragen, Vorfälle, Audit, Aufbewahrung, Register, Export, Release-Gate, Storage)
-Alle idempotent, Neuinstallation (46 Migrationen + Seed) erfolgreich. **Live noch nicht eingespielt.**
+4. **4500 Beta Release** (Tester-Felder, Einladungscodes, Umgebungskennung, Wartung, App-Version, Admin-Übersicht) – siehe `README_BETA.md`
+Alle idempotent, Neuinstallation (47 Migrationen + Seed) erfolgreich. **Live noch nicht eingespielt (3600–4500).**
 
 ## RLS POLICIES
 1. RLS auf allen Tabellen in `public`; neue Tabellen nur eigene Zeilen bzw. Admin-Rolle mit `aal2`

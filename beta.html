@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#203a33">
+  <title>Husora Beta testen</title>
+  <meta name="description" content="Husora Beta für Android und iPhone testen – Ferienhaus organisieren, kontrollieren und betreuen lassen.">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <style>
+    :root { color-scheme: light dark; --bg: #f4efe4; --card: #ffffff; --ink: #203a33; --muted: #5f6b63; --line: #e2dccf; --green: #2f6b55; --accent: #203a33; --chip: #f6e7c8; --chip-ink: #87622b; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #111513; --card: #1b201d; --ink: #e8efe9; --muted: #a3b0a7; --line: #2c3530; --green: #7fc2a4; --accent: #2f6b55; --chip: #3a3020; --chip-ink: #f1d39b; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    header { background: #203a33; color: #fff; padding: 28px 16px 36px; text-align: center; }
+    header img { width: 96px; height: auto; }
+    header h1 { margin: 10px 0 6px; font-size: clamp(26px, 6vw, 36px); letter-spacing: .02em; }
+    header p { margin: 0 auto; max-width: 560px; color: #d7e4dc; }
+    .chip { display: inline-block; margin-bottom: 6px; padding: 2px 10px; border-radius: 999px; background: var(--chip); color: var(--chip-ink); font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    main { max-width: 720px; margin: -20px auto 0; padding: 0 16px 40px; }
+    .card { margin-bottom: 16px; padding: 22px 20px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+    h2 { margin: 0 0 10px; font-size: 20px; }
+    .stores { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .store { display: flex; flex-direction: column; justify-content: center; min-height: 64px; padding: 12px 16px; border-radius: 12px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 700; font-size: 17px; }
+    .store small { font-weight: 500; font-size: 13px; opacity: .85; }
+    .store[aria-disabled="true"] { background: transparent; color: var(--muted); border: 1px dashed var(--line); pointer-events: none; }
+    .invite { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--chip); color: var(--chip-ink); }
+    .invite code { font-size: 17px; font-weight: 800; letter-spacing: .04em; }
+    ol { margin: 0; padding-left: 22px; } li { margin: 4px 0; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .links { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    a { color: var(--green); }
+    footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 16px 32px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="assets/logo.png" alt="Husora Logo">
+    <div><span class="chip">Beta</span></div>
+    <h1>Husora Beta testen</h1>
+    <p>Dein Ferienhaus organisiert, kontrolliert und gut betreut – auch wenn du nicht vor Ort bist. Hilf uns, Husora gemeinsam weiterzuentwickeln.</p>
+  </header>
+  <main>
+    <section class="card" aria-labelledby="t-install">
+      <h2 id="t-install">App installieren</h2>
+      <div class="stores">
+        <a class="store" id="android" href="#" aria-disabled="true" rel="noopener">Android Beta testen<small id="android-sub">Link folgt in Kürze</small></a>
+        <a class="store" id="ios" href="#" aria-disabled="true" rel="noopener">iPhone Beta testen<small id="ios-sub">TestFlight-Link folgt in Kürze</small></a>
+      </div>
+      <div class="invite" id="invite" hidden>Dein Einladungscode: <code id="invite-code"></code><br><span class="muted">Gib ihn nach der Registrierung in der App ein – oder öffne <a id="invite-web" href="index.html">Husora im Browser</a>, dann wird er automatisch übernommen.</span></div>
+      <p class="muted">Kein passendes Gerät? Husora läuft auch im Browser: <a href="index.html">Husora Web-App öffnen</a>.</p>
+    </section>
+    <section class="card" aria-labelledby="t-steps">
+      <h2 id="t-steps">So startest du</h2>
+      <ol>
+        <li>Beta-Link öffnen und die App installieren (Android: Google Play Test, iPhone: TestFlight).</li>
+        <li>Konto mit deiner E-Mail-Adresse registrieren und die Adresse bestätigen.</li>
+        <li>Datenschutzhinweise und Beta-Bedingungen lesen und akzeptieren.</li>
+        <li>Rolle wählen: Hausbesitzer oder Servicepartner.</li>
+        <li>Einladungscode eingeben, falls du einen erhalten hast.</li>
+        <li>Profil vervollständigen und – als Hausbesitzer – dein Haus anlegen.</li>
+        <li>Loslegen und Feedback geben: Button „Feedback“ bzw. 🐞 in der App.</li>
+      </ol>
+    </section>
+    <section class="card" aria-labelledby="t-what">
+      <h2 id="t-what">Was ist die Beta?</h2>
+      <p>Die Beta ist eine Vorabversion für eingeladene Testerinnen und Tester. Funktionen können sich noch ändern, es kann zu Fehlern kommen und es gibt keine Bezahlfunktionen. Bitte keine Daten eingeben, deren Verlust dir schaden würde – exportiere wichtige Unterlagen zusätzlich.</p>
+      <p class="muted">Aktuelle Version: <strong id="version">1.0.0-beta.1</strong></p>
+    </section>
+    <section class="card" aria-labelledby="t-help">
+      <h2 id="t-help">Datenschutz, Support und Feedback</h2>
+      <div class="links">
+        <a href="index.html?legal=privacy">Datenschutzerklärung</a>
+        <a href="index.html?legal=beta_terms">Beta-Bedingungen</a>
+        <a href="index.html?legal=imprint">Impressum</a>
+        <a id="support" href="mailto:info@husora.de">Support per E-Mail</a>
+        <a id="feedback" href="index.html">Feedback geben</a>
+      </div>
+      <p class="muted">Diese Seite lädt keine Tracking- oder Werbedienste. Die Store-Links werden aus der Husora-Konfiguration gelesen.</p>
+    </section>
+  </main>
+  <footer>Husora – Smart House Care · Beta</footer>
+  <script>
+    (function () {
+      var SUPABASE_URL = 'https://ggsoygxmcsmrsrbmplrz.supabase.co';
+      var KEY = 'sb_publishable_WFT_U9J4uvAgPHZHdvhjIw_uX08VjS4';
+      var params = new URLSearchParams(location.search);
+      var code = (params.get('invite') || '').replace(/[^A-Za-z0-9-]/g, '').slice(0, 40);
+      if (code) {
+        document.getElementById('invite').hidden = false;
+        document.getElementById('invite-code').textContent = code.toUpperCase();
+        document.getElementById('invite-web').href = 'index.html?invite=' + encodeURIComponent(code);
+      }
+      function setStore(id, url, sub) {
+        if (!url || !/^https:\/\//.test(url)) return;
+        var a = document.getElementById(id);
+        a.href = url; a.removeAttribute('aria-disabled'); a.target = '_blank';
+        document.getElementById(id + '-sub').textContent = sub;
+      }
+      fetch(SUPABASE_URL + '/rest/v1/app_config?key=eq.release&select=value', { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } })
+        .then(function (r) { return r.ok ? r.json() : []; })
+        .then(function (rows) {
+          var rel = (rows && rows[0] && rows[0].value) || {};
+          setStore('android', rel.android_beta_url, 'Google Play – geschlossener Test');
+          setStore('ios', rel.ios_beta_url, 'Apple TestFlight');
+          if (rel.latest_version) document.getElementById('version').textContent = rel.latest_version;
+          if (rel.support_email) { var s = document.getElementById('support'); s.href = 'mailto:' + rel.support_email; }
+          if (rel.feedback_url && /^https:\/\//.test(rel.feedback_url)) document.getElementById('feedback').href = rel.feedback_url;
+        })
+        .catch(function () { /* offline: Platzhalter bleiben */ });
+    })();
+  </script>
+</body>
+</html>
