@@ -20976,7 +20976,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     function ppOrderCard(o) {
       const prio = PP_PRIORITY[o.priority] && o.priority !== 'normal' ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : '';
-      return `<button type="button" class="pp-item ${['urgent', 'emergency'].includes(o.priority) ? 'is-urgent' : ''}" data-pp-open="order:${o.id}"><span class="pp-item-main"><strong>${prio}${escapeHtml(o.title)}</strong><small>${escapeHtml(o.property?.name || 'Objekt')} · ${escapeHtml(ppCustomerName(o.organization_id))}</small><small>${icon('calendar')} ${escapeHtml(ppDateTime(o.scheduled_at))}${o.assigned_user_id ? ` · ${escapeHtml(ppMemberName(o.assigned_user_id) || 'zugewiesen')}` : ''}${o.order_type && o.order_type !== 'other' ? ` · ${escapeHtml(PP_ORDER_TYPES[o.order_type] || o.order_type)}` : ''}</small></span>${ppBadge(PP_ORDER_STATUS, o.status)}</button>`;
+      return `<button type="button" class="pp-item ${['urgent', 'emergency'].includes(o.priority) ? 'is-urgent' : ''}" data-pp-open="order:${o.id}"><span class="pp-item-main"><strong>${prio}${escapeHtml(o.title)}</strong><small>${escapeHtml(o.property?.name || 'Objekt')} · ${escapeHtml(ppOrderCustomerLabel(o))}</small><small>${icon('calendar')} ${escapeHtml(ppDateTime(o.scheduled_at))}${o.assigned_user_id ? ` · ${escapeHtml(ppMemberName(o.assigned_user_id) || 'zugewiesen')}` : ''}${o.order_type && o.order_type !== 'other' ? ` · ${escapeHtml(PP_ORDER_TYPES[o.order_type] || o.order_type)}` : ''}</small></span>${ppBadge(PP_ORDER_STATUS, o.status)}</button>`;
     }
     // ----- Kennzahlen auf der Startseite (Phase 5): heute, überfällig, wartet, Angebote, Umsatz im Monat -----
     function ppKpisHtml(todayItems) {
@@ -21038,7 +21038,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const offered = ppD('orders').filter((o) => o.status === 'offered');
       const todayItems = [...ppD('orders').filter((o) => ppDayKey(o.scheduled_at) === today && !['completed', 'cancelled', 'rejected'].includes(o.status)), ...ppD('inspections').filter((i) => ppDayKey(i.scheduled_at) === today && i.status !== 'cancelled')];
       const upcoming = ppD('inspections').filter((i) => ['scheduled', 'in_progress'].includes(i.status));
-      const urgent = ppD('inspections').flatMap((i) => (i.items || []).filter((item) => item.status === 'defect').map((item) => ({ ...item, inspection: i })));
+      const defects = ppDefectSummary();
       const unpaid = ppD('invoices').filter((i) => ['received', 'approved', 'overdue'].includes(i.status));
       const quotes = ppD('quotes').filter((q) => ['requested', 'received'].includes(q.status));
       const unread = ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe());
@@ -21050,7 +21050,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ${ppTilesHtml()}
         ${offered.length && ppHomePrefs().showOffered ? ppFoldSection('offered', 'Neue Anfragen', offered.map(ppOrderCard)) : ''}
         ${!ppHomePrefs().showToday ? '' : ppFoldSection('today', 'Heute', todayItems.map((x) => (x.order_number ? ppOrderCard(x) : ppInspectionCard(x))), '<p class="pp-muted">Heute stehen keine Termine an.</p>')}
-        ${urgent.length && ppHomePrefs().showUrgent ? ppFoldSection('urgent', 'Dringende Mängel', urgent.map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.inspection.property?.name || '')}${item.notes ? ` · ${escapeHtml(item.notes)}` : ''}</small></span><span class="pp-badge red">Mangel</span></button>`)) : ''}
+        ${defects.total && ppHomePrefs().showUrgent ? ppFoldSection('urgent', 'Dringende Mängel', [
+          ...defects.open.map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.inspection.property?.name || ppPropertyName(item.inspection.property_id) || '')}${item.notes ? ` · ${escapeHtml(item.notes)}` : ''}</small></span><span class="pp-badge red">Mangel</span></button>`),
+          ...defects.asked.map((r) => `<button type="button" class="pp-item" data-pp-view="defects"><span class="pp-item-main"><strong>${escapeHtml(r.title)}</strong><small>${escapeHtml([ppPropertyName(r.property_id), ppCustomerName(r.organization_id)].filter(Boolean).join(' · '))}</small></span><span class="pp-badge amber">Angefragt</span></button>`),
+          ...defects.commissioned.map((r) => (defects.orderOf(r) ? ppOrderCard(defects.orderOf(r)) : `<button type="button" class="pp-item" data-pp-view="defects"><span class="pp-item-main"><strong>${escapeHtml(r.title)}</strong><small>${escapeHtml(ppPropertyName(r.property_id) || '')}</small></span><span class="pp-badge green">Beauftragt</span></button>`))
+        ]) : ''}
         ${!ppHomePrefs().showActivity ? '' : ppFoldSection('activity', 'Letzte Aktivität', ppD('orders').slice().sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)).slice(0, 30).map(ppOrderCard), '<p class="pp-muted">Noch keine Aufträge. Sobald ein Kunde dich beauftragt, erscheint der Auftrag hier.</p>')}
         ${!(pp.ctx?.links || []).length ? `<div class="pp-card pp-tip">${icon('users')}<div><strong>Kunden verbinden</strong><p>Hausbesitzer laden dich in ihrer Husora-App unter Einstellungen → Servicepartner ein. Den Code gibst du unter „Kunden & Objekte“ ein.</p><button type="button" class="secondary-btn" data-pp-view="customers">Code eingeben</button></div></div>` : ''}`;
     }
@@ -21066,6 +21070,17 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const next = document.querySelector('#partner-portal [data-pp-order-q]'); if (next) { next.focus(); try { next.setSelectionRange(pos, pos); } catch (error) { /* optional */ } }
       }, 250);
     });
+    // Kunde eines Auftrags: Husora-Hausbesitzer (Organisation) oder eigener Kunde des Betriebs (Kundenkartei)
+    function ppOrderCustomerKey(o) {
+      if (o.organization_id !== ppOrg()?.id) return `org:${o.organization_id}`;
+      const c = ppOwnCustomer(ppD('properties').find((p) => p.id === o.property_id) || o.property);
+      return c ? `cust:${c.id}` : 'own';
+    }
+    function ppOrderCustomerLabel(o) {
+      if (o.organization_id !== ppOrg()?.id) return ppCustomerName(o.organization_id);
+      const c = ppOwnCustomer(ppD('properties').find((p) => p.id === o.property_id) || o.property);
+      return c ? ppCustomerLabel(c) : 'Eigene Aufträge';
+    }
     function ppOrdersHtml() {
       const filters = [['new', 'Neu', (o) => o.status === 'offered'], ['active', 'Aktiv', (o) => ORDER_RUNNING.includes(o.status)], ['waiting', 'Wartet', (o) => ORDER_WAITING.includes(o.status)], ['done', 'Erledigt', (o) => o.status === 'completed'], ['all', 'Alle', () => true]];
       const [, , fn] = filters.find(([id]) => id === pp.filter) || filters[1];
@@ -21074,14 +21089,20 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const list = ppD('orders').filter(fn)
         .filter((o) => !pp.orderPrio || (pp.orderPrio === 'urgent' ? ['urgent', 'emergency'].includes(o.priority) : o.priority === pp.orderPrio))
         .filter((o) => !pp.orderType || (o.order_type || 'other') === pp.orderType)
+        .filter((o) => !pp.orderCustomer || ppOrderCustomerKey(o) === pp.orderCustomer)
+        .filter((o) => !pp.orderProperty || o.property_id === pp.orderProperty)
         .filter((o) => !q || [o.title, o.order_number, o.property?.name, ppCustomerName(o.organization_id), o.description].some((x) => String(x || '').toLowerCase().includes(q)))
         .sort(pp.orderSort === 'priority' ? (a, b) => (rankP[a.priority] ?? 3) - (rankP[b.priority] ?? 3) || new Date(a.scheduled_at || '2999') - new Date(b.scheduled_at || '2999')
           : pp.orderSort === 'newest' ? (a, b) => new Date(b.created_at) - new Date(a.created_at)
           : (a, b) => new Date(a.scheduled_at || '2999') - new Date(b.scheduled_at || '2999'));
       const types = [...new Set(ppD('orders').map((o) => o.order_type || 'other'))].sort();
+      const customers = [...new Map(ppD('orders').map((o) => [ppOrderCustomerKey(o), ppOrderCustomerLabel(o)])).entries()].sort((a, b) => a[1].localeCompare(b[1], 'de'));
+      const houses = [...new Map(ppD('orders').filter((o) => !pp.orderCustomer || ppOrderCustomerKey(o) === pp.orderCustomer).filter((o) => o.property_id).map((o) => [o.property_id, o.property?.name || ppPropertyName(o.property_id) || 'Objekt'])).entries()].sort((a, b) => a[1].localeCompare(b[1], 'de'));
       const tools = `<div class="pp-order-tools"><input class="form-control" type="search" data-pp-order-q value="${escapeHtml(pp.orderQuery || '')}" placeholder="Suchen: Titel, Haus, Kunde, Nummer" aria-label="Aufträge durchsuchen">
         <select class="form-control" data-pp-order-opt="orderPrio" aria-label="Priorität"><option value="">Alle Prioritäten</option>${[['urgent', 'Dringend & Notfall'], ['high', 'Wichtig'], ['normal', 'Normal'], ['low', 'Niedrig']].map(([v, l]) => `<option value="${v}" ${pp.orderPrio === v ? 'selected' : ''}>${l}</option>`).join('')}</select>
         ${types.length > 1 ? `<select class="form-control" data-pp-order-opt="orderType" aria-label="Auftragsart"><option value="">Alle Arten</option>${types.map((t) => `<option value="${t}" ${pp.orderType === t ? 'selected' : ''}>${escapeHtml(PP_ORDER_TYPES[t] || t)}</option>`).join('')}</select>` : ''}
+        ${customers.length ? `<select class="form-control" data-pp-order-opt="orderCustomer" aria-label="Kunde"><option value="">Alle Kunden</option>${customers.map(([k, l]) => `<option value="${escapeHtml(k)}" ${pp.orderCustomer === k ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select>` : ''}
+        ${houses.length || pp.orderProperty ? `<select class="form-control" data-pp-order-opt="orderProperty" aria-label="Gebäude"><option value="">Alle Gebäude</option>${houses.map(([k, l]) => `<option value="${k}" ${pp.orderProperty === k ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select>` : ''}
         <select class="form-control" data-pp-order-opt="orderSort" aria-label="Sortierung">${[['date', 'Nach Termin'], ['priority', 'Nach Priorität'], ['newest', 'Neueste zuerst']].map(([v, l]) => `<option value="${v}" ${(pp.orderSort || 'date') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>`;
       return `<div class="pp-page-head"><h1>Aufträge</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-order">${icon('plus')} Auftrag</button>` : ''}</div>
         <div class="pp-filters">${filters.map(([id, label, f]) => `<button type="button" class="${pp.filter === id ? 'active' : ''}" data-pp-filter="${id}">${label} <b>${ppD('orders').filter(f).length}</b></button>`).join('')}</div>
@@ -21089,7 +21110,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ${pp.form === 'new-order' ? ppNewOrderForm() : ''}
         ${pp.form === 'batch-invoice' ? ppBatchInvoiceForm() : ''}
         ${list.some(ppSelectable) && !pp.sel.size ? `<p class="pp-hint pp-sel-hint">Tipp: Aufträge links anhaken, um mehrere ${ppIsLead() ? 'zusammen anzunehmen, einem Mitarbeiter zuzuordnen, ' : ''}zusammen zu beenden oder in einer Rechnung abzurechnen.</p>` : ''}
-        <div class="pp-list">${list.map(ppOrderRow).join('') || ppEmpty('Keine Aufträge', q || pp.orderPrio || pp.orderType ? 'Keine Treffer – Suche oder Filter anpassen.' : pp.filter === 'new' ? 'Keine neuen Anfragen.' : 'In dieser Ansicht gibt es keine Aufträge.')}</div>${ppBatchBarHtml()}`;
+        <div class="pp-list">${list.map(ppOrderRow).join('') || ppEmpty('Keine Aufträge', q || pp.orderPrio || pp.orderType || pp.orderCustomer || pp.orderProperty ? 'Keine Treffer – Suche oder Filter anpassen.' : pp.filter === 'new' ? 'Keine neuen Anfragen.' : 'In dieser Ansicht gibt es keine Aufträge.')}</div>${ppBatchBarHtml()}`;
     }
     function ppNewOrderForm(propertyId = '') {
       const own = ppD('properties').filter((p) => p.organization_id === ppOrg().id);
@@ -22110,11 +22131,21 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     // offene Mängel aus Kontrollen (je Prüfpunkt), neueste zuerst
     const ppOpenDefects = () => ppD('inspections').filter((i) => i.status !== 'cancelled').flatMap((i) => (i.items || []).filter((item) => item.status === 'defect').map((item) => ({ ...item, inspection: i })))
       .sort((a, b) => String(b.checked_at || b.inspection.completed_at || '').localeCompare(String(a.checked_at || a.inspection.completed_at || '')));
+    // Eine Quelle für alle Mängel-Zahlen (Kachel, Startseite, Mängel-Seite):
+    // offen = Kontroll-Mangel ohne Anfrage · angefragt = beim Kunden angefragt · beauftragt = angenommen, Auftrag läuft
+    function ppDefectSummary() {
+      const orderOf = (r) => ppD('orders').find((o) => o.id === r.service_order_id);
+      const repairs = ppD('repairs');
+      const open = ppOpenDefects().filter((item) => !ppRepairForItem(item.id));
+      const asked = repairs.filter((r) => r.status === 'reported');
+      const commissioned = repairs.filter((r) => ['approved', 'assigned', 'in_progress'].includes(r.status) && !['completed', 'cancelled', 'rejected'].includes(orderOf(r)?.status));
+      return { open, asked, commissioned, orderOf, total: open.length + asked.length + commissioned.length };
+    }
     function ppTileInfo(id) {
       const today = ppToday();
       if (id === 'orders') { const open = ppOpenOrders(); const offered = ppD('orders').filter((o) => o.status === 'offered').length; return { value: open.length, unit: 'offen', note: offered ? `${offered} neue Anfrage${offered === 1 ? '' : 'n'}` : 'keine neuen Anfragen', tone: offered ? 'amber' : '' }; }
       if (id === 'inspections') { const list = ppD('inspections'); const open = list.filter((i) => i.status === 'scheduled').length; const running = list.filter((i) => i.status === 'in_progress').length; return { value: open + running, unit: 'offen', note: running ? `${running} in Bearbeitung` : `${list.filter((i) => i.status === 'completed').length} abgeschlossen` }; }
-      if (id === 'defects') { const rep = ppD('repairs'); const asked = rep.filter((r) => r.status === 'reported').length; const work = rep.filter((r) => ['approved', 'assigned', 'in_progress'].includes(r.status)).length; const n = ppOpenDefects().filter((item) => !ppRepairForItem(item.id)).length + asked + work; return { value: n, unit: n === 1 ? 'Mangel' : 'Mängel', note: work ? `${work} beauftragt` : asked ? `${asked} angefragt` : n ? 'aus Kontrollen gemeldet' : 'alles in Ordnung', tone: work ? 'amber' : n ? 'red' : '' }; }
+      if (id === 'defects') { const d = ppDefectSummary(); const asked = d.asked.length; const work = d.commissioned.length; const n = d.total; return { value: n, unit: n === 1 ? 'Mangel' : 'Mängel', note: work ? `${work} beauftragt` : asked ? `${asked} angefragt` : n ? 'aus Kontrollen gemeldet' : 'alles in Ordnung', tone: work ? 'amber' : n ? 'red' : '' }; }
       if (id === 'finance') { const unpaid = ppD('invoices').filter((i) => ['received', 'approved', 'overdue'].includes(i.status)); const sum = unpaid.reduce((s, x) => s + Number(x.amount_gross || 0), 0); return { value: unpaid.length, unit: 'offen', note: unpaid.length ? ppMoney(sum, unpaid[0]?.currency) : `${ppD('quotes').filter((q) => ['requested', 'received'].includes(q.status)).length} offene Angebote` }; }
       if (id === 'calendar') { const n = [...ppD('orders').filter((o) => ppDayKey(o.scheduled_at) === today && !['completed', 'cancelled', 'rejected'].includes(o.status)), ...ppD('inspections').filter((i) => ppDayKey(i.scheduled_at) === today && i.status !== 'cancelled')].length; return { value: n, unit: n === 1 ? 'Termin' : 'Termine', note: 'heute' }; }
       if (id === 'customers') { const c = ppD('customers').length; return { value: c, unit: c === 1 ? 'Kunde' : 'Kunden', note: `${ppD('properties').length} Objekte` }; }
@@ -22143,10 +22174,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function ppDefectsHtml() {
       const repairs = ppD('repairs');
       const orderOf = (r) => ppD('orders').find((o) => o.id === r.service_order_id);
-      const asked = repairs.filter((r) => r.status === 'reported');
-      const commissioned = repairs.filter((r) => r.service_order_id && orderOf(r) && !['completed', 'cancelled', 'rejected'].includes(orderOf(r).status));
+      const sum = ppDefectSummary();
+      const asked = sum.asked;
+      const commissioned = sum.commissioned;
       const closed = repairs.filter((r) => ['completed', 'cancelled'].includes(r.status) || (r.service_order_id && ['completed'].includes(orderOf(r)?.status))).slice(0, 10);
-      const list = ppOpenDefects();
+      const list = sum.open;
       const lead = ppIsLead();
       const repairCard = (r) => `<div class="pp-item pp-repair"><span class="pp-item-main"><strong>${escapeHtml(r.title)}</strong><small>${escapeHtml([ppPropertyName(r.property_id), ppCustomerName(r.organization_id)].filter(Boolean).join(' · '))}${r.offered_at ? ` · ${escapeHtml(ppDate(r.offered_at))}` : ''}</small>${r.response_note ? `<small>„${escapeHtml(r.response_note)}“</small>` : ''}</span>${r.estimated_cost != null ? `<span class="pp-amount">${escapeHtml(ppMoney(r.estimated_cost))}</span>` : ''}${ppBadge(PP_REPAIR_STATUS, r.status)}</div>`;
       const defectRow = (item) => {
@@ -22160,7 +22192,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return `${ppBack()}<div class="pp-page-head"><h1>Mängel</h1>${lead && ppD('properties').some((p) => p.organization_id !== ppOrg()?.id) ? `<button type="button" class="primary-btn" data-pp-action="repair-form" data-item="new">${icon('plus')} Mangel melden</button>` : ''}</div>
         <p class="pp-muted">Festgestellte Mängel fragst du beim Kunden an. Nimmt er an, entsteht ein Auftrag: Termin festlegen, beseitigen und abrechnen wie bei jedem Auftrag.</p>
         ${pp.form === 'repair:new' ? ppRepairFormHtml({ key: 'new', choose: true }) : ''}
-        ${commissioned.length ? ppSection(`Beauftragt – Termin festlegen (${commissioned.length})`, `<div class="pp-list">${commissioned.map((r) => ppOrderCard(orderOf(r))).join('')}</div>`) : ''}
+        ${commissioned.length ? ppSection(`Beauftragt – Termin festlegen (${commissioned.length})`, `<div class="pp-list">${commissioned.map((r) => (orderOf(r) ? ppOrderCard(orderOf(r)) : repairCard(r))).join('')}</div>`) : ''}
         ${asked.length ? ppSection(`Beim Kunden angefragt (${asked.length})`, `<div class="pp-list">${asked.map(repairCard).join('')}</div>`) : ''}
         ${ppSection(`Offene Mängel aus Kontrollen (${list.length})`, `<div class="pp-list">${list.map(defectRow).join('') || ppEmpty('Keine offenen Mängel', 'Mängel, die du bei Kontrollen meldest, erscheinen hier.')}</div>`)}
         ${closed.length ? ppSection('Erledigt & abgelehnt', `<div class="pp-list">${closed.map(repairCard).join('')}</div>`) : ''}`;
@@ -22200,7 +22232,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     document.addEventListener('change', (event) => {
       const orderOpt = event.target.closest?.('#partner-portal [data-pp-order-opt]');
-      if (orderOpt) { pp[orderOpt.dataset.ppOrderOpt] = orderOpt.value; pp.keepScroll = true; ppRender(); return; }
+      if (orderOpt) {
+        pp[orderOpt.dataset.ppOrderOpt] = orderOpt.value;
+        if (orderOpt.dataset.ppOrderOpt === 'orderCustomer' && pp.orderProperty && orderOpt.value
+            && !ppD('orders').some((o) => o.property_id === pp.orderProperty && ppOrderCustomerKey(o) === orderOpt.value)) pp.orderProperty = '';
+        pp.keepScroll = true; ppRender(); return;
+      }
       const calFilter = event.target.closest?.('#partner-portal [data-pp-cal-filter]');
       if (calFilter) { if (calFilter.dataset.ppCalFilter === 'member') pp.calMember = calFilter.value; else pp.calType = calFilter.value; pp.keepScroll = true; ppRender(); return; }
       const batchMember = event.target.closest?.('#partner-portal [data-pp-batch-member]');
@@ -22235,7 +22272,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return `<div class="pp-page-head"><h1>Mehr</h1></div><div class="pp-list">
         ${item('customers', 'Kunden & Objekte', `${custCount} Kunde${custCount === 1 ? '' : 'n'} · ${ppD('properties').length} Objekt${ppD('properties').length === 1 ? '' : 'e'}`, 'property')}
         ${item('inspections', 'Kontrollen', openInsp ? `${openInsp} offen` : 'Keine offenen Kontrollen', 'inspection')}
-        ${item('defects', 'Mängel', ((n) => (n ? `${n} offen` : 'Keine offenen Mängel'))(ppOpenDefects().length), 'alert')}
+        ${item('defects', 'Mängel', ((n) => (n ? `${n} offen` : 'Keine offenen Mängel'))(ppDefectSummary().total), 'alert')}
         ${item('documents', 'Dokumente', ((n) => `${n} Dokument${n === 1 ? '' : 'e'}`)(ppD('documents').filter((d) => !/^image\//.test(d.file_type || '')).length), 'document')}
         </div><div class="pp-list" style="margin-top:12px">
         ${item('agreements', 'Jahresverträge', ((list) => { const open = list.filter((a) => a.status === 'proposed' && a.proposed_by === 'owner').length; const act = list.filter((a) => a.status === 'active').length; return `${act} aktiv${open ? ` · ${open} neuer Vorschlag` : ''}`; })(ppD('agreements')), 'calendar')}
