@@ -23,5 +23,8 @@ App-Aufgaben (local-first) bleiben unberührt: `project_app_tasks` löscht nur A
 ## Rücknahme (falls nötig)
 Die Migration ist additiv. Rücknahme ohne Datenverlust des Bestands: pg_cron-Job `husora-maintenance` entfernen, neue Trigger (`service_orders_source`, `service_orders_default_item`, `service_orders_zy_sync_items`, `service_orders_budget_guard`, `repairs_link_finding`, `service_tasks_occurrence_guard`, `service_agreements_versioning/_snapshot`, `soi_*`) löschen. Neue Spalten/Tabellen können bestehen bleiben.
 
+## Live eingespielt (04.11.2026)
+Beta-Projekt `ggsoygxmcsmrsrbmplrz`, in sechs Teilen (`hybrid_service_part1` … `part6`). Ergebnis geprüft: 25 Vorlagen, alle 46 Bestandsaufträge mit genau einer Position, Quellen `app_task` 42 / `manual` 3 / `finding` 1, 96 App-Aufgaben unverändert, alle 9 neuen Trigger aktiv, pg_cron-Job `husora-maintenance` (`29 3 * * *`) angelegt, Terminvorschau korrekt, Probelauf des Schedulers ohne Fehler, `run_maintenance_scheduler` für angemeldete Nutzer nicht ausführbar. Sicherheitsprüfung (Supabase Advisor): keine neuen Tabellen ohne RLS-Richtlinie, keine neue Funktion für `anon` ausführbar; die neuen RPCs erscheinen wie alle bestehenden als „security definer für angemeldete Nutzer“ – gewollt, die Berechtigung wird in jeder Funktion geprüft.
+
 ## Manuelle Schritte in Supabase
 Keine. pg_cron ist im Projekt aktiv; der Job wird von der Migration angelegt. Wartungspläne in der App erscheinen, sobald die Migration eingespielt ist (vorher blendet die App den Bereich mit Hinweis aus).
