@@ -118,6 +118,20 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const auf = await P.$$eval('#partner-portal .pp-sfold', (e) => e.every((c) => !c.classList.contains('closed')));
     if (!zu || !auf || label !== 'Alle aufklappen') throw new Error(`${zu}/${auf}/${label}`); return 'ok';
   });
+  await step('Einstellungen: untere Leiste – Platz 2 auf „Mängel“, doppelte Wahl tauscht, Standard', async () => {
+    await P.evaluate(() => { pp.view = 'settings'; pp.detail = null; ppRender(); }); await P.waitForTimeout(200);
+    await P.selectOption('[data-pp-nav-slot="1"]', 'defects'); await P.waitForTimeout(200);
+    const nav1 = await P.$$eval('.pp-nav button', (e) => e.map((b) => b.dataset.ppView).join(','));
+    await P.selectOption('[data-pp-nav-slot="0"]', 'defects'); await P.waitForTimeout(200);
+    const nav2 = await P.$$eval('.pp-nav button', (e) => e.map((b) => b.dataset.ppView).join(','));
+    await P.click('.pp-nav [data-pp-view=defects]'); await P.waitForTimeout(200);
+    const active = await P.$eval('.pp-nav button.active', (e) => e.dataset.ppView);
+    await P.click('.pp-top [data-pp-action=top-back]'); await P.waitForTimeout(200); const back = await P.evaluate(() => pp.view);
+    await P.evaluate(() => { pp.view = 'settings'; ppRender(); }); await P.click('[data-pp-nav-reset]'); await P.waitForTimeout(200);
+    const nav3 = await P.$$eval('.pp-nav button', (e) => e.map((b) => b.dataset.ppView).join(','));
+    if (nav1 !== 'dashboard,defects,calendar,messages,more' || nav2 !== 'defects,dashboard,calendar,messages,more' || active !== 'defects' || back !== 'dashboard' || nav3 !== 'dashboard,orders,calendar,messages,more') throw new Error([nav1, nav2, active, back, nav3].join(' | '));
+    return 'Mängel unten, Tausch, aktiv, Zurück → Start, Standard';
+  });
   console.log(res.join('\n')); if (errs.length) console.log('JS-Fehler:\n' + errs.join('\n'));
   await b.close();
 })();

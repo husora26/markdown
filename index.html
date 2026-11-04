@@ -2750,6 +2750,7 @@
     .pp-fold.closed .pp-fold-head { margin-bottom: 0; }
     .pp-fold-more { display: block; width: 100%; margin-top: 8px; }
     .pp-sfold-head { cursor: pointer; user-select: none; align-items: center; }
+    .pp-nav-slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
     .pp-sfold-head > div { flex: 1; min-width: 0; }
     .pp-sfold-head .pp-fold-chev { margin-left: auto; }
     .pp-sfold.closed .pp-fold-chev { transform: rotate(-90deg); }
@@ -5585,6 +5586,15 @@ Disposition – alle Aufträge, Mitarbeiter einteilen|Dispatch – all orders, a
 Dokument|Document|Dokument
 Dokumente|Documents|Dokument
 Dringende Mängel|Urgent defects|Akuta brister
+Untere Leiste|Bottom bar|Nedre fältet
+Welche vier Bereiche die Leiste unten zeigt – „Mehr“ bleibt immer rechts.|Which four sections the bottom bar shows – “More” always stays on the right.|Vilka fyra delar det nedre fältet visar – ”Mer” stannar alltid till höger.
+Platz 1|Slot 1|Plats 1
+Platz 2|Slot 2|Plats 2
+Platz 3|Slot 3|Plats 3
+Platz 4|Slot 4|Plats 4
+Platz 5|Slot 5|Plats 5
+Untere Leiste angepasst.|Bottom bar updated.|Nedre fältet uppdaterat.
+Standard wiederhergestellt.|Default restored.|Standard återställd.
 Aufträge deiner Kunden annehmen, Hauskontrollen durchführen, Fotos und Rechnungen direkt beim Kunden ablegen.|Accept your customers' orders, carry out house inspections and file photos and invoices directly with the customer.|Ta emot dina kunders uppdrag, genomför husbesiktningar och lägg foton och fakturor direkt hos kunden.
 Ein Konto für alles: Mit derselben E-Mail nutzt du Husora auch als Hausbesitzer. Hast du schon ein Konto, melde dich einfach an.|One account for everything: with the same email you can also use Husora as a homeowner. If you already have an account, just sign in.|Ett konto för allt: med samma e-post kan du även använda Husora som husägare. Har du redan ett konto loggar du bara in.
 Ein Konto für alles: Mit derselben E-Mail nutzt du Husora als Hausbesitzer und im Partner-Portal als Servicepartner.|One account for everything: with the same email you use Husora as a homeowner and as a service partner in the partner portal.|Ett konto för allt: med samma e-post använder du Husora som husägare och som servicepartner i partnerportalen.
@@ -20814,6 +20824,20 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const PP_QUOTE_STATUS = { requested: ['Angefragt', 'amber'], received: ['Eingereicht', 'amber'], approved: ['Angenommen', 'done'], rejected: ['Abgelehnt', 'red'], expired: ['Abgelaufen', 'muted'] };
     // Untere Leiste: genau fünf Symbole – alles Weitere unter „Mehr“
     const PP_NAV = [['dashboard', 'Start', 'home'], ['orders', 'Aufträge', 'task'], ['calendar', 'Kalender', 'calendar'], ['messages', 'Nachrichten', 'note', 'Chat'], ['more', 'Mehr', 'menu']];
+    // Untere Leiste: 4 frei wählbare Plätze, „Mehr“ bleibt immer rechts (Einstellungen → Untere Leiste)
+    const PP_NAV_CHOICES = [['dashboard', 'Start', 'home'], ['orders', 'Aufträge', 'task'], ['calendar', 'Kalender', 'calendar'], ['messages', 'Nachrichten', 'note', 'Chat'],
+      ['inspections', 'Kontrollen', 'inspection'], ['defects', 'Mängel', 'alert'], ['customers', 'Kunden', 'property'], ['finance', 'Finanzen', 'cost'],
+      ['agreements', 'Verträge', 'calendar'], ['documents', 'Dokumente', 'document'], ['team', 'Team', 'users'], ['settings', 'Einstellungen', 'gear']];
+    const PP_NAV_KEY = 'husora-pp-nav';
+    const PP_NAV_DEFAULT = ['dashboard', 'orders', 'calendar', 'messages'];
+    function ppNavSlots() {
+      try {
+        const v = JSON.parse(localStorage.getItem(PP_NAV_KEY) || 'null');
+        if (Array.isArray(v) && v.length === 4 && new Set(v).size === 4 && v.every((id) => PP_NAV_CHOICES.some(([c]) => c === id))) return v;
+      } catch (error) { /* Standard */ }
+      return PP_NAV_DEFAULT.slice();
+    }
+    function ppNavItems() { return [...ppNavSlots().map((id) => PP_NAV_CHOICES.find(([c]) => c === id)), PP_NAV[PP_NAV.length - 1]]; }
     const PP_MORE_VIEWS = ['customers', 'inspections', 'defects', 'documents', 'finance', 'agreements', 'services', 'team', 'company', 'settings'];
     const pp = { open: false, view: 'dashboard', detail: null, filter: 'active', busy: '', error: '', notice: '', ctx: null, data: null, loadedAt: '', thumbs: {}, form: null };
     try { const cached = JSON.parse(localStorage.getItem(PP_CACHE_KEY) || 'null'); if (cached?.ctx) Object.assign(pp, { ctx: cached.ctx, data: cached.data, loadedAt: cached.loadedAt }); } catch (error) { /* kein Cache */ }
@@ -21066,9 +21090,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       else if (!org) body = ppOnboardingHtml();
       else body = relSafeHtml(() => ppViewHtml(), `partner:${pp.view}`, true);
       const messages = `${pp.error ? `<p class="pp-msg error" role="alert">${icon('alert')}<span>${escapeHtml(pp.error)}</span></p>` : ''}`;
-      const navActive = (id) => pp.view === id || (id === 'more' && !PP_NAV.some(([v]) => v === pp.view));
+      const navItems = ppNavItems();
+      const navActive = (id) => pp.view === id || (id === 'more' && !navItems.some(([v]) => v === pp.view));
       const navBadge = (id) => { const n = id === 'orders' ? ppD('orders').filter((o) => o.status === 'offered').length : id === 'messages' ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : id === 'more' ? ppD('inspections').filter((i) => i.status === 'in_progress').length : 0; return n ? `<b class="pp-dot">${n > 9 ? '9+' : n}</b>` : ''; };
-      const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${PP_NAV.map(([id, label, ic, short]) => `<button type="button" class="${navActive(id) ? 'active' : ''}" data-pp-view="${id}" aria-label="${label}" aria-current="${navActive(id) ? 'page' : 'false'}">${icon(ic)}<span class="${short ? 'pp-nav-long' : ''}">${label}</span>${short ? `<span class="pp-nav-short">${short}</span>` : ''}${navBadge(id)}</button>`).join('')}</nav>` : '';
+      const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${navItems.map(([id, label, ic, short]) => `<button type="button" class="${navActive(id) ? 'active' : ''}" data-pp-view="${id}" aria-label="${label}" aria-current="${navActive(id) ? 'page' : 'false'}">${icon(ic)}<span class="${short ? 'pp-nav-long' : ''}">${label}</span>${short ? `<span class="pp-nav-short">${short}</span>` : ''}${navBadge(id)}</button>`).join('')}</nav>` : '';
       root.innerHTML = `${head}<main class="pp-main" id="pp-main">${betaBannerHtml('partner')}${messages}${body}</main>${nav}`;
       try { roleSwitchRefresh(); } catch (error) { /* noch nicht bereit */ }
       const main = root.querySelector('.pp-main');
@@ -22372,6 +22397,19 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }, { notice: 'Mangel beim Kunden angefragt – sobald er annimmt, erscheint der Auftrag unter Mängel.' });
     });
     // Einstellungen des Partner-Portals
+    document.addEventListener('change', (event) => {
+      const sel = event.target.closest?.('#partner-portal [data-pp-nav-slot]');
+      if (!sel) return;
+      const slots = ppNavSlots(); const i = Number(sel.dataset.ppNavSlot); const prev = slots[i]; const other = slots.indexOf(sel.value);
+      slots[i] = sel.value; if (other >= 0 && other !== i) slots[other] = prev; // doppelt gewählt → Plätze tauschen
+      try { localStorage.setItem(PP_NAV_KEY, JSON.stringify(slots)); } catch (error) { /* nur Komfort */ }
+      showToast('Untere Leiste angepasst.'); pp.keepScroll = true; ppRender();
+    });
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('#partner-portal [data-pp-nav-reset]')) return;
+      try { localStorage.removeItem(PP_NAV_KEY); } catch (error) { /* nur Komfort */ }
+      showToast('Standard wiederhergestellt.'); pp.keepScroll = true; ppRender();
+    });
     const PP_SFOLD_KEY = 'husora-pp-settings-folds';
     function ppSettingsFolds() { try { return JSON.parse(localStorage.getItem(PP_SFOLD_KEY) || '{}') || {}; } catch (error) { return {}; } }
     function ppSettingsFoldSet(update) { const st = ppSettingsFolds(); update(st); try { localStorage.setItem(PP_SFOLD_KEY, JSON.stringify(st)); } catch (error) { /* nur Komfort */ } pp.keepScroll = true; ppRender(); }
@@ -22402,6 +22440,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       };
       const out = `
         ${card('Startseite', 'Welche Kacheln die Startseite zeigt.', 'home', `<div class="pp-tile-picks">${PP_TILES.map(([id, label, ic]) => `<label class="pp-tile-pick ${tiles.includes(id) ? 'on' : ''}"><input type="checkbox" data-pp-tile-toggle="${id}" ${tiles.includes(id) ? 'checked' : ''}><span>${icon(ic)} ${escapeHtml(label)}</span></label>`).join('')}</div><div class="pp-actions flat"><button type="button" class="secondary-btn" data-pp-tile-reset>Standard wiederherstellen</button></div>`)}
+        ${card('Untere Leiste', 'Welche vier Bereiche die Leiste unten zeigt – „Mehr“ bleibt immer rechts.', 'menu', `<div class="pp-nav-slots">${ppNavSlots().map((id, i) => `<label><span class="form-label">Platz ${i + 1}</span><select class="form-control" data-pp-nav-slot="${i}">${PP_NAV_CHOICES.map(([v, l]) => `<option value="${v}" ${v === id ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label>`).join('')}<label><span class="form-label">Platz 5</span><input class="form-control" value="Mehr" disabled></label></div><div class="pp-actions flat"><button type="button" class="secondary-btn" data-pp-nav-reset>Standard wiederherstellen</button></div>`)}
         ${card('Aussehen der Kacheln', 'Bilder oder farbige Kacheln auf der Startseite – die Farbe wählst du frei.', 'home', tileLookControlsHtml('pp-tile', ppHomePrefs().tileStyle || 'photo', ppHomePrefs().tileColor))}
         ${card('Benachrichtigungen', 'Was dir Husora meldet – in der App, per Push oder E-Mail.', 'bell', notifyPrefsBodyHtml())}
         ${card('Darstellung & Sprache', 'Hell oder dunkel, Schriftgröße und Sprache der App.', 'text', `<span class="form-label">Erscheinungsbild</span>
@@ -22923,7 +22962,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (a === 'reload') { ppLoad(); return; }
       if (a === 'top-back') {
         if (pp.detail) { pp.detail = pp.prev?.detail && pp.prev.detail.id !== pp.detail?.id ? pp.prev.detail : null; pp.prev = null; }
-        else if (PP_MORE_VIEWS.includes(pp.view)) pp.view = 'more';
+        else if (PP_MORE_VIEWS.includes(pp.view) && !ppNavSlots().includes(pp.view)) pp.view = 'more';
         else pp.view = 'dashboard';
         pp.form = null; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo(0, 0); return;
       }
