@@ -132,6 +132,31 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     if (nav1 !== 'dashboard,defects,calendar,messages,more' || nav2 !== 'defects,dashboard,calendar,messages,more' || active !== 'defects' || back !== 'dashboard' || nav3 !== 'dashboard,orders,calendar,messages,more') throw new Error([nav1, nav2, active, back, nav3].join(' | '));
     return 'Mängel unten, Tausch, aktiv, Zurück → Start, Standard';
   });
+  await step('Unterseiten: kein Beta-Hinweis, nur auf der Startseite', async () => {
+    await P.evaluate(() => { pp.view = 'orders'; pp.detail = null; ppRender(); }); await P.waitForTimeout(150);
+    const onSub = await P.$('#partner-portal .beta-banner');
+    await P.evaluate(() => { pp.view = 'dashboard'; ppRender(); }); await P.waitForTimeout(150);
+    const onHome = await P.$('#partner-portal .beta-banner');
+    const expected = await P.evaluate(() => Boolean(betaBannerHtml('partner')));
+    if (onSub || Boolean(onHome) !== expected) throw new Error(`Unterseite ${Boolean(onSub)}, Start ${Boolean(onHome)}, erwartet ${expected}`); return expected ? 'nur Startseite' : 'Hinweis für dieses Konto aus, Unterseiten ohne';
+  });
+  await step('Nachrichten: eigene löschen (für beide), empfangene für sich ausblenden', async () => {
+    const ORDER = sql(`select id from service_orders where organization_id='${POrg}' and title='Auftrag A ${N}'`);
+    const ME = sql(`select pu.id from public.users pu join auth.users u on u.id=pu.auth_user_id where u.email='${P_EMAIL}'`);
+    const OTHER = sql(`select pu.id from public.users pu join auth.users u on u.id=pu.auth_user_id where u.email='admin@husora.test'`);
+    const M1 = sql(`insert into messages (organization_id, sender_user_id, service_order_id, message) values ('${POrg}', '${ME}', '${ORDER}', 'Meine Nachricht ${N}') returning id`).split('\n')[0];
+    const M2 = sql(`insert into messages (organization_id, sender_user_id, service_order_id, message) values ('${POrg}', '${OTHER}', '${ORDER}', 'Fremde Nachricht ${N}') returning id`).split('\n')[0];
+    await P.evaluate(async (id) => { await ppLoad(); pp.view = 'orders'; pp.detail = { type: 'order', id }; ppRender(); }, ORDER); await wait();
+    const before = await P.$$eval('#partner-portal .pp-bubble', (e) => e.length);
+    await P.click(`[data-pp-msg-del="${M1}"]`); await wait();
+    const m1 = sql(`select count(*) from messages where id='${M1}'`);
+    await P.click(`[data-pp-msg-del="${M2}"]`); await P.waitForTimeout(300);
+    const m2 = sql(`select count(*) from messages where id='${M2}'`);
+    await P.evaluate(async () => { await ppLoad(); ppRender(); }); await wait();
+    const after = await P.$$eval('#partner-portal .pp-bubble', (e) => e.map((x) => x.textContent).join('|'));
+    if (before !== 2 || m1 !== '0' || m2 !== '1' || after.includes('Nachricht ' + N)) throw new Error(JSON.stringify({ before, m1, m2, after: after.slice(0, 120) }));
+    return 'eigene gelöscht, fremde nur ausgeblendet (bleibt nach Neuladen weg)';
+  });
   console.log(res.join('\n')); if (errs.length) console.log('JS-Fehler:\n' + errs.join('\n'));
   await b.close();
 })();

@@ -2810,6 +2810,10 @@
     .pp-bubble.me { justify-self: end; border-radius: 14px 14px 4px 14px; background: var(--green-soft); border-color: #cfdccd; }
     .pp-bubble p { margin: 0; font-size: 14px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
     .pp-bubble small { display: block; margin-top: 3px; color: var(--muted); font-size: 11.5px; }
+    .pp-bubble { position: relative; }
+    .pp-msg-del { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; margin: -6px -6px -8px 6px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted); vertical-align: middle; cursor: pointer; opacity: .65; }
+    .pp-msg-del svg { width: 15px; height: 15px; }
+    .pp-msg-del:hover, .pp-msg-del:focus-visible { opacity: 1; color: var(--red, #b91c1c); background: rgba(185, 28, 28, .08); }
     .pp-send { display: flex; gap: 8px; }
     .pp-send .form-control { flex: 1; min-width: 0; }
     .pp-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
@@ -5586,6 +5590,15 @@ Disposition – alle Aufträge, Mitarbeiter einteilen|Dispatch – all orders, a
 Dokument|Document|Dokument
 Dokumente|Documents|Dokument
 Dringende Mängel|Urgent defects|Akuta brister
+Diese Nachricht löschen? Sie wird auch beim Kunden entfernt.|Delete this message? It will also be removed for the customer.|Radera meddelandet? Det tas även bort hos kunden.
+Diese Nachricht nur für dich ausblenden? Der Absender sieht sie weiterhin.|Hide this message just for you? The sender will still see it.|Dölja meddelandet bara för dig? Avsändaren ser det fortfarande.
+Nachricht gelöscht.|Message deleted.|Meddelandet raderat.
+Nachricht ausgeblendet.|Message hidden.|Meddelandet dolt.
+Nachricht löschen|Delete message|Radera meddelande
+Nachricht ausblenden|Hide message|Dölj meddelande
+Löschen (für alle)|Delete (for everyone)|Radera (för alla)
+Für mich ausblenden|Hide for me|Dölj för mig
+Die Nachricht konnte nicht gelöscht werden.|The message could not be deleted.|Meddelandet kunde inte raderas.
 Untere Leiste|Bottom bar|Nedre fältet
 Welche vier Bereiche die Leiste unten zeigt – „Mehr“ bleibt immer rechts.|Which four sections the bottom bar shows – “More” always stays on the right.|Vilka fyra delar det nedre fältet visar – ”Mer” stannar alltid till höger.
 Platz 1|Slot 1|Plats 1
@@ -20960,7 +20973,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             ppQ('service_partner_reviews?select=id,organization_id,service_order_id,rating,comment,partner_reply,replied_at,created_at&order=created_at.desc&limit=200').catch(() => []),
             ppQ('service_order_items?select=*&order=sort_order.asc&limit=3000').catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items };
+          pp.data = { orders, inspections, quotes, invoices, messages: ppWithoutHidden(messages), customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items };
           pp.access = {};
         } else {
           pp.data = null;
@@ -21062,7 +21075,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (d?.type === 'order') { const o = ppD('orders').find((x) => x.id === d.id); return ['Auftrag', o?.title || 'Auftrag']; }
       if (d?.type === 'inspection') { const i = ppD('inspections').find((x) => x.id === d.id); return ['Kontrolle', i?.property?.name || ppPropertyName(i?.property_id) || 'Kontrolle']; }
       if (d?.type === 'customer') return ['Kunde', (pp.ctx?.links || []).find((l) => l.organization_id === d.id)?.organization_name || ppCustomerLabel(ppD('customers').find((c) => c.id === d.id)) || 'Kunde'];
-      if (d?.type === 'chat') return ['Nachrichten', (pp.ctx?.links || []).find((l) => l.organization_id === d.id)?.organization_name || 'Gespräch'];
+      if (d?.type === 'chat') return ['Nachrichten', (pp.ctx?.links || []).find((l) => l.service_partner_id === d.id || l.organization_id === d.id)?.organization_name || 'Gespräch'];
       if (!pp.view || pp.view === 'dashboard') return null;
       return PP_VIEW_TITLES[pp.view] || ['Servicepartner', pp.view];
     }
@@ -21094,7 +21107,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const navActive = (id) => pp.view === id || (id === 'more' && !navItems.some(([v]) => v === pp.view));
       const navBadge = (id) => { const n = id === 'orders' ? ppD('orders').filter((o) => o.status === 'offered').length : id === 'messages' ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : id === 'more' ? ppD('inspections').filter((i) => i.status === 'in_progress').length : 0; return n ? `<b class="pp-dot">${n > 9 ? '9+' : n}</b>` : ''; };
       const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${navItems.map(([id, label, ic, short]) => `<button type="button" class="${navActive(id) ? 'active' : ''}" data-pp-view="${id}" aria-label="${label}" aria-current="${navActive(id) ? 'page' : 'false'}">${icon(ic)}<span class="${short ? 'pp-nav-long' : ''}">${label}</span>${short ? `<span class="pp-nav-short">${short}</span>` : ''}${navBadge(id)}</button>`).join('')}</nav>` : '';
-      root.innerHTML = `${head}<main class="pp-main" id="pp-main">${betaBannerHtml('partner')}${messages}${body}</main>${nav}`;
+      root.innerHTML = `${head}<main class="pp-main" id="pp-main">${sub ? '' : betaBannerHtml('partner')}${messages}${body}</main>${nav}`;
       try { roleSwitchRefresh(); } catch (error) { /* noch nicht bereit */ }
       const main = root.querySelector('.pp-main');
       // gleiche Ansicht neu gezeichnet (z. B. nach dem Senden): Position halten; Wechsel der Ansicht scrollt der Aufrufer selbst
@@ -21427,7 +21440,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <div class="pp-actions"><label class="primary-btn pp-file">${icon('plus')} Foto aufnehmen<input type="file" accept="image/*" capture="environment" multiple hidden data-pp-upload="order:${o.id}"></label><label class="secondary-btn pp-file">Dokument<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" multiple hidden data-pp-upload="order:${o.id}"></label></div>`)}
         ${ppSection('Kontrolle', `${ppD('inspections').filter((i) => i.property_id === o.property_id && i.status !== 'cancelled').slice(0, 3).map(ppInspectionCard).join('')}
           ${ppD('templates').length ? `<div class="pp-inline"><select class="form-control" data-pp-field="tpl">${ppD('templates').map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('')}</select><button type="button" class="secondary-btn" data-pp-action="start-inspection" data-property="${o.property_id}" ${ppDisabled()}>Kontrolle starten</button></div>` : ''}`)}
-        ${ppSection('Nachrichten', `<div class="pp-thread">${thread.map((m) => `<div class="pp-bubble ${m.sender_user_id === ppMe() ? 'me' : ''}">${(m.document_id || m.photo_id) && /^📎/.test(m.message || '') ? '' : `<p>${escapeHtml(m.message)}</p>`}${chatAttachmentHtml(m, 'partner')}<small>${escapeHtml(m.sender_user_id === ppMe() ? 'Du' : ppMemberName(m.sender_user_id) || 'Kunde')} · ${escapeHtml(fmtDateTime(m.created_at))}</small></div>`).join('') || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
+        ${ppSection('Nachrichten', `<div class="pp-thread">${thread.map((m) => `<div class="pp-bubble ${m.sender_user_id === ppMe() ? 'me' : ''}">${(m.document_id || m.photo_id) && /^📎/.test(m.message || '') ? '' : `<p>${escapeHtml(m.message)}</p>`}${chatAttachmentHtml(m, 'partner')}<small>${escapeHtml(m.sender_user_id === ppMe() ? 'Du' : ppMemberName(m.sender_user_id) || 'Kunde')} · ${escapeHtml(fmtDateTime(m.created_at))}${ppMsgDelBtn(m)}</small></div>`).join('') || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
           <form class="pp-send" data-pp-form="message" data-order="${o.id}" data-org="${o.organization_id}"><label class="secondary-btn pp-file chat-attach-pick" title="Foto oder Datei anhängen" aria-label="Foto oder Datei anhängen">📎<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" hidden data-pp-chat-attach="${o.id}"></label><input class="form-control" name="message" placeholder="Nachricht an den Kunden …" maxlength="2000" required><button class="primary-btn" type="submit" aria-label="Senden" ${ppDisabled()}>Senden</button></form>`)}
         ${ppSection('Verlauf', `<div class="order-events" data-order-events="${o.id}" data-side="partner">${orderEventsHtml(o, 'partner')}</div>`)}
         ${[...ORDER_RUNNING, 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
@@ -21827,11 +21840,43 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (!link) return `${ppBack()}${ppEmpty('Gespräch nicht gefunden', 'Die Verbindung zu diesem Kunden besteht nicht mehr.')}`;
       const list = ppD('messages').filter((m) => m.service_partner_id === servicePartnerId).slice().reverse();
       let day = '';
-      const bubbles = list.map((m) => { const d = ppDayKey(m.created_at); const sep = d !== day ? `<div class="hub-day">${escapeHtml(d === ppToday() ? 'Heute' : new Date(m.created_at).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }))}</div>` : ''; day = d; const mine = m.sender_user_id === ppMe(); return `${sep}<div class="pp-bubble ${mine ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(mine ? 'Du' : ppMemberName(m.sender_user_id) || link.organization_name)} · ${escapeHtml(ppTime(m.created_at))}${mine ? (m.read_at ? ' · gelesen' : '') : ''}</small></div>`; }).join('');
+      const bubbles = list.map((m) => { const d = ppDayKey(m.created_at); const sep = d !== day ? `<div class="hub-day">${escapeHtml(d === ppToday() ? 'Heute' : new Date(m.created_at).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }))}</div>` : ''; day = d; const mine = m.sender_user_id === ppMe(); return `${sep}<div class="pp-bubble ${mine ? 'me' : ''}"><p>${escapeHtml(m.message)}</p><small>${escapeHtml(mine ? 'Du' : ppMemberName(m.sender_user_id) || link.organization_name)} · ${escapeHtml(ppTime(m.created_at))}${mine ? (m.read_at ? ' · gelesen' : '') : ''}${ppMsgDelBtn(m)}</small></div>`; }).join('');
       return `${ppBack()}<div class="pp-detail-head"><div><span class="pp-eyebrow">Kunde</span><h1>${escapeHtml(link.organization_name)}</h1></div></div>
         <div class="pp-thread pp-chat" id="pp-chat">${bubbles || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
         <form class="pp-send pp-send-sticky" data-pp-form="chat" data-sp="${servicePartnerId}" data-org="${link.organization_id}"><textarea class="form-control" name="message" rows="1" maxlength="4000" placeholder="Nachricht an ${escapeHtml(link.organization_name)} …" required></textarea><button class="primary-btn" type="submit" ${ppDisabled()}>Senden</button></form>`;
     }
+    // Nachrichten löschen: eigene für beide Seiten (Datenbank erlaubt nur dem Absender das Löschen),
+    // empfangene nur für sich ausblenden (je Gerät gemerkt, gelten danach als gelesen)
+    const PP_HIDDEN_MSGS = 'husora-pp-hidden-messages';
+    function ppHiddenMsgs() { try { return new Set(JSON.parse(localStorage.getItem(PP_HIDDEN_MSGS) || '[]')); } catch (error) { return new Set(); } }
+    function ppWithoutHidden(list) { const h = ppHiddenMsgs(); return h.size ? (list || []).filter((m) => !h.has(m.id)) : (list || []); }
+    function ppMsgDelBtn(m) {
+      if (!m?.id || String(m.id).startsWith('tmp')) return '';
+      const mine = m.sender_user_id === ppMe();
+      return `<button type="button" class="pp-msg-del" data-pp-msg-del="${m.id}" aria-label="${mine ? 'Nachricht löschen' : 'Nachricht ausblenden'}" title="${mine ? 'Löschen (für alle)' : 'Für mich ausblenden'}">${icon('trash')}</button>`;
+    }
+    document.addEventListener('click', async (event) => {
+      const btn = event.target.closest('#partner-portal [data-pp-msg-del]');
+      if (!btn) return;
+      const m = ppD('messages').find((x) => x.id === btn.dataset.ppMsgDel);
+      if (!m) return;
+      const mine = m.sender_user_id === ppMe();
+      if (mine) {
+        if (!confirm('Diese Nachricht löschen? Sie wird auch beim Kunden entfernt.')) return;
+        ppRun('message-delete', async () => {
+          const rows = await cloudFetch(`/rest/v1/messages?id=eq.${m.id}`, { method: 'DELETE', headers: { Prefer: 'return=representation' } });
+          if (!Array.isArray(rows) || !rows.length) throw new Error('Die Nachricht konnte nicht gelöscht werden.');
+          pp.data.messages = ppD('messages').filter((x) => x.id !== m.id);
+        }, { reload: false, notice: 'Nachricht gelöscht.' });
+        return;
+      }
+      if (!confirm('Diese Nachricht nur für dich ausblenden? Der Absender sieht sie weiterhin.')) return;
+      const hidden = ppHiddenMsgs(); hidden.add(m.id);
+      try { localStorage.setItem(PP_HIDDEN_MSGS, JSON.stringify([...hidden].slice(-3000))); } catch (error) { /* nur Komfort */ }
+      if (!m.read_at) cloudFetch(`/rest/v1/messages?id=eq.${m.id}`, { method: 'PATCH', body: { read_at: new Date().toISOString() }, headers: { Prefer: 'return=minimal' } }).catch(() => {});
+      pp.data.messages = ppD('messages').filter((x) => x.id !== m.id);
+      ppSaveCache(); showToast('Nachricht ausgeblendet.'); pp.keepScroll = true; ppRender();
+    });
     async function ppMarkRead(filter) {
       const unread = ppD('messages').filter((m) => filter(m) && !m.read_at && m.sender_user_id !== ppMe());
       if (!unread.length) return;
@@ -21842,7 +21887,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     async function ppRefreshMessages() {
       if (!pp.data || pp.busy) return;
       try {
-        pp.data.messages = await ppQ('messages?select=*&order=created_at.desc&limit=400');
+        pp.data.messages = ppWithoutHidden(await ppQ('messages?select=*&order=created_at.desc&limit=400'));
         if (pp.detail?.type === 'chat') await ppMarkRead((m) => m.service_partner_id === pp.detail.id);
         const box = document.getElementById('pp-chat');
         const draft = document.querySelector('[data-pp-form=chat] textarea')?.value || '';
