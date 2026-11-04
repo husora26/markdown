@@ -3124,6 +3124,7 @@
     .beta-types span { display: inline-block; padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; }
     .beta-types input:checked + span { background: var(--green-soft); border-color: var(--green); color: var(--green); font-weight: 700; }
     .beta-types input:focus-visible + span { outline: 2px solid var(--green); outline-offset: 2px; }
+    /* Sterne stehen im HTML absteigend (5 … 1) und werden umgekehrt angezeigt: links 1, rechts 5 – so färbt „~“ alle kleineren Werte mit */
     .beta-stars { display: flex; gap: 4px; flex-direction: row-reverse; justify-content: flex-end; }
     .beta-stars input { position: absolute; opacity: 0; }
     .beta-stars span { font-size: 34px; line-height: 1; color: var(--line); cursor: pointer; transition: color .1s; }
@@ -16471,7 +16472,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (!m) return '';
       const mail = (() => { try { return cloudSignedIn() ? '' : `<label><span class="form-label">E-Mail für Rückfragen (optional)</span><input class="form-control" type="email" name="email" maxlength="120" value="${escapeHtml(profileData?.email || '')}"></label>`; } catch (error) { return ''; } })();
       const head = (title, sub) => `<div class="beta-modal-head"><div><span class="beta-chip">Husora Beta</span><h2>${title}</h2>${sub ? `<p>${sub}</p>` : ''}</div><button type="button" class="beta-modal-x" data-beta-close aria-label="Schließen">×</button></div>`;
-      const stars = (name, value = 0) => `<div class="beta-stars" role="radiogroup" aria-label="Bewertung">${[1, 2, 3, 4, 5].map((n) => `<label title="${n} von 5"><input type="radio" name="${name}" value="${n}" ${n === value ? 'checked' : ''} required><span>★</span></label>`).join('')}</div>`;
+      const stars = (name, value = 0) => `<div class="beta-stars" role="radiogroup" aria-label="Bewertung">${[5, 4, 3, 2, 1].map((n) => `<label title="${n} von 5"><input type="radio" name="${name}" value="${n}" ${n === value ? 'checked' : ''} required><span>★</span></label>`).join('')}</div>`;
       let body = '';
       if (m.kind === 'feedback' || m.kind === 'bug') {
         const tabs = `<div class="beta-tabs" role="tablist"><button type="button" role="tab" class="${m.kind === 'feedback' ? 'on' : ''}" data-beta-open="feedback">Feedback</button><button type="button" role="tab" class="${m.kind === 'bug' ? 'on' : ''}" data-beta-open="bug">🐞 Fehler melden</button></div>`;
@@ -16913,7 +16914,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (r) return `<div class="hub-review"><span class="hub-review-stars" aria-label="${r.rating} von 5 Sternen">${starsText(r.rating)}</span>${r.comment ? `<small>„${escapeHtml(r.comment)}“</small>` : ''}${r.partner_reply ? `<small class="hub-review-reply"><b>${escapeHtml(o.partner?.company_name || 'Partner')}:</b> ${escapeHtml(r.partner_reply)}</small>` : ''}</div>`;
       if (!cloudCanWrite()) return '';
       if (p11S().reviewForm !== o.id) return `<button type="button" class="secondary-btn hub-review-btn" data-hub-review-open="${o.id}">★ ${escapeHtml(o.partner?.company_name || 'Servicepartner')} bewerten</button>`;
-      return `<form class="hub-review-form" data-hub-review="${o.id}"><div class="beta-stars" role="radiogroup" aria-label="Bewertung">${[1, 2, 3, 4, 5].map((n) => `<label title="${n} von 5"><input type="radio" name="rating" value="${n}" required><span>★</span></label>`).join('')}</div>
+      return `<form class="hub-review-form" data-hub-review="${o.id}"><div class="beta-stars" role="radiogroup" aria-label="Bewertung">${[5, 4, 3, 2, 1].map((n) => `<label title="${n} von 5"><input type="radio" name="rating" value="${n}" required><span>★</span></label>`).join('')}</div>
         <textarea class="form-control textarea" name="comment" rows="2" maxlength="2000" placeholder="Wie lief der Auftrag? (optional, sieht der Partner)"></textarea>
         <small class="settings-hint">Bitte sachlich – siehe <button type="button" class="text-btn" data-legal-open="review_rules">Bewertungsregeln</button>.</small>
         <div class="pp-actions"><button type="button" class="secondary-btn" data-hub-review-cancel>Abbrechen</button><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Bewertung senden</button></div></form>`;
