@@ -618,6 +618,13 @@
     .pp-top .pp-icon-btn { width: 40px; height: 40px; min-height: 40px; padding: 0; justify-content: center; border: 1px solid rgba(255,253,248,.45); border-radius: 50%; background: rgba(20, 35, 27, .25); color: #fff9eb; }
     .pp-top .pp-icon-btn .pp-count { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #c0503f; color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; }
     .pp-top .pp-icon-btn { position: relative; }
+    .pp-lang { position: relative; display: inline-flex; }
+    .pp-top .pp-lang-btn { font-size: 12.5px; font-weight: 800; letter-spacing: .04em; }
+    .pp-lang-menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 60; min-width: 170px; padding: 6px; border-radius: 14px; background: var(--paper, #fffdf8); color: var(--ink, #1f2d25); border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(15, 23, 42, .22); display: grid; gap: 2px; }
+    .pp-lang-menu button { display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; color: inherit; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+    .pp-lang-menu button b { width: 28px; font-size: 12px; color: var(--muted); }
+    .pp-lang-menu button.active { background: var(--green-soft, rgba(47, 93, 80, .12)); font-weight: 700; }
+    .pp-lang-menu button:hover { background: rgba(127, 127, 127, .1); }
     /* Kopf der Startseite: Betrieb und Rolle */
     .pp-company { display: flex; align-items: center; gap: 12px; margin: 2px 0 14px; }
     .pp-company-mark { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 14px; background: var(--green); color: #fff; font-size: 17px; font-weight: 800; }
@@ -5557,6 +5564,36 @@ Disposition – alle Aufträge, Mitarbeiter einteilen|Dispatch – all orders, a
 Dokument|Document|Dokument
 Dokumente|Documents|Dokument
 Dringende Mängel|Urgent defects|Akuta brister
+Aufträge deiner Kunden annehmen, Hauskontrollen durchführen, Fotos und Rechnungen direkt beim Kunden ablegen.|Accept your customers' orders, carry out house inspections and file photos and invoices directly with the customer.|Ta emot dina kunders uppdrag, genomför husbesiktningar och lägg foton och fakturor direkt hos kunden.
+Ein Konto für alles: Mit derselben E-Mail nutzt du Husora auch als Hausbesitzer. Hast du schon ein Konto, melde dich einfach an.|One account for everything: with the same email you can also use Husora as a homeowner. If you already have an account, just sign in.|Ett konto för allt: med samma e-post kan du även använda Husora som husägare. Har du redan ett konto loggar du bara in.
+Ein Konto für alles: Mit derselben E-Mail nutzt du Husora als Hausbesitzer und im Partner-Portal als Servicepartner.|One account for everything: with the same email you use Husora as a homeowner and as a service partner in the partner portal.|Ett konto för allt: med samma e-post använder du Husora som husägare och som servicepartner i partnerportalen.
+Alle Kunden|All customers|Alla kunder
+Alle Gebäude|All buildings|Alla byggnader
+Eigene Aufträge|Own orders|Egna uppdrag
+Weniger anzeigen|Show less|Visa färre
+Heute auf der Startseite|Today on the home screen|Idag på startsidan
+Dringende Mängel auf der Startseite|Urgent defects on the home screen|Akuta brister på startsidan
+Letzte Aktivität auf der Startseite|Recent activity on the home screen|Senaste aktivitet på startsidan
+Ausgeschaltet findest du die Termine des Tages weiter im Kalender.|When switched off, you will still find today's appointments in the calendar.|När det är avstängt hittar du dagens tider i kalendern.
+Ausgeschaltet findest du Mängel weiter unter „Kontrollen“ und in der Kachel „Mängel“.|When switched off, you will still find defects under “Inspections” and in the “Defects” tile.|När det är avstängt hittar du brister under ”Besiktningar” och i rutan ”Brister”.
+Ausgeschaltet findest du alle Aufträge weiter unter „Aufträge“.|When switched off, you will still find all orders under “Orders”.|När det är avstängt hittar du alla uppdrag under ”Uppdrag”.
+Positionen|Items|Poster
+Nicht erledigt|Not done|Inte klar
+Entfällt|Not needed|Utgår
+Wartet auf Bestätigung des Kunden.|Waiting for the customer's confirmation.|Väntar på kundens bekräftelse.
+Konditionen ändern|Change terms|Ändra villkor
+Fortsetzen|Resume|Återuppta
+Neue Fassung vorschlagen|Propose new version|Föreslå ny version
+Max. je Einsatz|Max. per visit|Max. per besök
+Beauftragung|Ordering|Beställning
+automatisch im vereinbarten Rahmen|automatically within the agreed limits|automatiskt inom överenskomna ramar
+Freigabe je Einsatz|Approval per visit|Godkännande per besök
+Fassung|Version|Version
+Leistungsbereiche|Service areas|Tjänsteområden
+Automatisch aus Dauerauftrag|Automatically from standing order|Automatiskt från stående uppdrag
+Aus Wartungsplan des Kunden|From the customer's maintenance plan|Från kundens underhållsplan
+Aus Mangel/Kontrolle|From defect/inspection|Från brist/besiktning
+Vom Kunden bestätigt am|Confirmed by the customer on|Bekräftat av kunden den
 Dänemark|Denmark|Danmark
 E-Mail|E-mail|E-post
 Eigene Rechnung (PDF)|Own invoice (PDF)|Egen faktura (PDF)
@@ -20795,6 +20832,28 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }
       return root;
     }
+    // Sprachumschaltung direkt in der Kopfleiste des Partner-Portals (Deutsch / English / Svenska)
+    const PP_LANG_REOPEN = 'husora-pp-reopen';
+    function ppLangSwitchHtml() {
+      const code = { de: 'DE', en: 'EN', sv: 'SV' }[appLang] || 'DE';
+      return `<div class="pp-lang ${pp.langOpen ? 'open' : ''}" data-no-i18n><button type="button" class="pp-icon-btn pp-lang-btn" data-pp-lang-toggle aria-haspopup="true" aria-expanded="${Boolean(pp.langOpen)}" aria-label="Sprache: ${escapeHtml(APP_LANGS.find(([id]) => id === appLang)?.[1] || 'Deutsch')}" title="Sprache / Language / Språk">${code}</button>${pp.langOpen ? `<div class="pp-lang-menu" role="menu">${APP_LANGS.map(([id, label]) => `<button type="button" role="menuitemradio" aria-checked="${appLang === id}" class="${appLang === id ? 'active' : ''}" data-pp-lang="${id}"><b>${id.toUpperCase()}</b> ${label}</button>`).join('')}</div>` : ''}</div>`;
+    }
+    document.addEventListener('click', (event) => {
+      const toggle = event.target.closest('#partner-portal [data-pp-lang-toggle]');
+      const pick = event.target.closest('#partner-portal [data-pp-lang]');
+      if (pick) {
+        const lang = pick.dataset.ppLang;
+        pp.langOpen = false;
+        if (lang === appLang) { pp.keepScroll = true; ppRender(); return; }
+        // Neustart zum Übersetzen: danach wieder im Partner-Portal an derselben Stelle öffnen
+        try { sessionStorage.setItem(PP_LANG_REOPEN, JSON.stringify({ view: pp.view || 'dashboard', at: Date.now() })); } catch (error) { /* optional */ }
+        setAppLanguage(lang);
+        return;
+      }
+      if (toggle) { pp.langOpen = !pp.langOpen; pp.keepScroll = true; ppRender(); return; }
+      if (pp.langOpen && !event.target.closest('#partner-portal .pp-lang')) { pp.langOpen = false; pp.keepScroll = true; ppRender(); }
+    });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && pp.langOpen) { pp.langOpen = false; pp.keepScroll = true; ppRender(); } });
     function ppOpen(view) {
       pp.open = true;
       if (view) pp.view = view;
@@ -20961,7 +21020,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const signedIn = cloudSignedIn();
       const unreadCount = signedIn && org ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : 0;
       const head = `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="home" aria-label="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}" title="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}">${org ? '' : `<span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span>`}<img class="pp-top-logo" src="assets/logo.png" alt="" aria-hidden="true"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></button>
-        <div class="pp-top-actions">${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-view="messages" aria-label="Nachrichten" title="Nachrichten">${icon('note')}${unreadCount ? `<span class="pp-count">${unreadCount > 9 ? '9+' : unreadCount}</span>` : ''}</button><button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button><button type="button" class="pp-icon-btn" data-pp-view="settings" aria-label="Einstellungen" title="Einstellungen">${icon('gear')}</button>` : ''}</div></header>`;
+        <div class="pp-top-actions">${ppLangSwitchHtml()}${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-view="messages" aria-label="Nachrichten" title="Nachrichten">${icon('note')}${unreadCount ? `<span class="pp-count">${unreadCount > 9 ? '9+' : unreadCount}</span>` : ''}</button><button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button><button type="button" class="pp-icon-btn" data-pp-view="settings" aria-label="Einstellungen" title="Einstellungen">${icon('gear')}</button>` : ''}</div></header>`;
       let body;
       if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal arbeitet mit dem Husora-Cloud-Speicher.', `<div class="pp-actions" style="justify-content:center"><button type="button" class="primary-btn" data-pp-action="connect-default">Mit Husora verbinden</button></div>`);
       else if (!signedIn) body = ppLoginHtml();
@@ -24618,7 +24677,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     // Link für Servicepartner (…/?partner): startet direkt im Partner-Portal
     const startAsPartner = (() => { try { return new URLSearchParams(location.search).has('partner'); } catch (error) { return false; } })();
     if (startAsPartner && !onboardingState) { onboardingState = { status: 'done', at: new Date().toISOString(), partnerLink: true }; saveStore('stugliv-onboarding', onboardingState); }
-    if (startAsPartner || ppMode() === 'partner') setTimeout(() => { document.querySelectorAll('.modal-backdrop.open').forEach((m) => { if (startAsPartner && m.id === 'onboarding-modal') m.classList.remove('open'); }); ppOpen('dashboard'); }, 0);
+    // nach einem Sprachwechsel im Partner-Portal dorthin zurück (nur direkt nach dem Neustart)
+    const ppReopen = (() => { try { const v = JSON.parse(sessionStorage.getItem(PP_LANG_REOPEN) || 'null'); sessionStorage.removeItem(PP_LANG_REOPEN); return v && Date.now() - v.at < 60000 ? v : null; } catch (error) { return null; } })();
+    if (ppReopen && !startAsPartner && ppMode() !== 'partner') setTimeout(() => { ppOpen(ppReopen.view === 'settings' ? 'settings' : 'dashboard'); if (ppReopen.view && ppReopen.view !== 'settings') { pp.view = ppReopen.view; ppRender(); } }, 0);
+    if (startAsPartner || ppMode() === 'partner') setTimeout(() => { document.querySelectorAll('.modal-backdrop.open').forEach((m) => { if (startAsPartner && m.id === 'onboarding-modal') m.classList.remove('open'); }); ppOpen(ppReopen?.view || 'dashboard'); }, 0);
     // Offline-Hinweis: Daten bleiben lokal gespeichert, Abgleich folgt automatisch
     function updateOnlineState() {
       let banner = document.getElementById('offline-banner');
