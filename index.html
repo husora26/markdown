@@ -3717,6 +3717,18 @@
     @media (max-width: 760px) { .settings-jump { display: none; } .settings-group:not(.active) { display: none; } }
     .settings-group-head { margin: 0 2px 12px; }
     .settings-group-head h2 { margin: 0; font-size: 19px; }
+    .settings-group-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .settings-fold-all { font-size: 13px; }
+    /* Einstellungen: jede Karte auf-/zuklappbar (Zustand je Gerät) */
+    .fold-card > .fold-head { cursor: pointer; user-select: none; display: flex; align-items: center; gap: 12px; }
+    .fold-card > .fold-head > :first-child { min-width: 0; }
+    .fold-card > .fold-head:focus-visible { outline: 2px solid var(--accent, #2f5d50); outline-offset: 2px; border-radius: 8px; }
+    .fold-card .fold-chev { margin-left: auto; flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); display: inline-flex; align-items: center; justify-content: center; color: var(--muted); font-size: 14px; line-height: 1; transition: transform .15s; pointer-events: none; }
+    .fold-card > .fold-head > .fold-chev ~ * { flex: none; }
+    .fold-card.folded .fold-chev { transform: rotate(-90deg); }
+    .fold-card.folded > :not(.fold-head) { display: none !important; }
+    .fold-card.folded > .fold-head { margin-bottom: 0; border-bottom: 0; padding-bottom: 0; }
+    .fold-card.folded { padding-bottom: 14px; }
     .settings-group-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
     .settings-group .settings-grid > .profile-form { padding: 20px; }
     .settings-group .settings-grid > * { margin: 0; }
@@ -15658,6 +15670,62 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}"><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>
       </section>`;
     }
+    // Einstellungen: Karten auf-/zuklappen. Die Karten werden von vielen Funktionen gebaut und teils einzeln neu gezeichnet,
+    // daher wird die Klappfunktion nach jedem Zeichnen am DOM ergänzt (Zustand je Karte in localStorage).
+    const SETTINGS_FOLD_KEY = 'husora-settings-folds';
+    function settingsFolds() { try { return JSON.parse(localStorage.getItem(SETTINGS_FOLD_KEY) || '{}') || {}; } catch (error) { return {}; } }
+    function settingsFoldSave(st) { try { localStorage.setItem(SETTINGS_FOLD_KEY, JSON.stringify(st)); } catch (error) { /* nur Komfort */ } }
+    function settingsCardKey(card) { return card.id || (card.querySelector('.card-title, h2, h3')?.textContent || '').trim().slice(0, 60); }
+    function settingsFoldApply(root = document) {
+      const st = settingsFolds();
+      root.querySelectorAll('.settings-group .settings-grid > section.card').forEach((card) => {
+        const head = card.querySelector(':scope > .settings-card-head, :scope > .card-head, :scope > .card-title');
+        const key = settingsCardKey(card);
+        if (!head || !key) return;
+        if (!card.classList.contains('fold-card')) {
+          card.classList.add('fold-card'); head.classList.add('fold-head');
+          head.setAttribute('role', 'button'); head.setAttribute('tabindex', '0');
+          head.insertAdjacentHTML('beforeend', '<span class="fold-chev" aria-hidden="true">▾</span>');
+        }
+        card.dataset.foldKey = key;
+        const folded = st[key] === true;
+        card.classList.toggle('folded', folded);
+        head.setAttribute('aria-expanded', String(!folded));
+      });
+      root.querySelectorAll('[data-settings-fold-all]').forEach((btn) => {
+        const cards = [...(document.getElementById(btn.dataset.settingsFoldAll)?.querySelectorAll('.fold-card') || [])];
+        btn.textContent = cards.length && cards.every((c) => c.classList.contains('folded')) ? 'Alle aufklappen' : 'Alle zuklappen';
+      });
+    }
+    let settingsFoldQueued = false;
+    new MutationObserver(() => {
+      if (settingsFoldQueued || currentPage !== 'settings') return;
+      settingsFoldQueued = true;
+      requestAnimationFrame(() => { settingsFoldQueued = false; if (currentPage === 'settings') settingsFoldApply(); });
+    }).observe(document.getElementById('page-content') || document.body, { childList: true, subtree: true });
+    function settingsFoldToggle(card) {
+      const st = settingsFolds(); const key = card.dataset.foldKey;
+      if (st[key]) delete st[key]; else st[key] = true;
+      settingsFoldSave(st); settingsFoldApply();
+    }
+    document.addEventListener('click', (event) => {
+      const all = event.target.closest('[data-settings-fold-all]');
+      if (all) {
+        const cards = [...(document.getElementById(all.dataset.settingsFoldAll)?.querySelectorAll('.fold-card') || [])];
+        const close = !cards.every((c) => c.classList.contains('folded'));
+        const st = settingsFolds(); cards.forEach((c) => { if (close) st[c.dataset.foldKey] = true; else delete st[c.dataset.foldKey]; });
+        settingsFoldSave(st); settingsFoldApply(); return;
+      }
+      const head = event.target.closest('.fold-card > .fold-head');
+      if (!head) return;
+      // Bedienelemente in der Kopfzeile (Schalter, Knöpfe, Links) behalten ihre eigene Funktion
+      const ctl = event.target.closest('button, a, input, select, textarea, label, summary');
+      if (ctl && head.contains(ctl)) return;
+      settingsFoldToggle(head.parentElement);
+    });
+    document.addEventListener('keydown', (event) => {
+      if ((event.key === 'Enter' || event.key === ' ') && event.target.matches?.('.fold-card > .fold-head')) { event.preventDefault(); settingsFoldToggle(event.target.parentElement); }
+    });
     function settingsPage() {
       const groups = [
         ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, tileLookSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
@@ -15667,7 +15735,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       ];
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Einstellungen</h1><p class="subtitle">Startseite, Darstellung, Erinnerungen und Datensicherung.</p></div></div>
         <nav class="settings-jump" aria-label="Bereiche der Einstellungen">${groups.map(([id, title]) => `<button type="button" data-settings-jump="${id}">${title}</button>`).join('')}</nav>
-        ${groups.map(([id, title, caption, builders]) => `<section class="settings-group ${id === settingsView ? 'active' : ''}" id="${id}"><div class="settings-group-head"><h2>${title}</h2><p>${caption}</p></div><div class="settings-grid">${builders.map((build) => build()).join('')}</div></section>`).join('')}`;
+        ${groups.map(([id, title, caption, builders]) => `<section class="settings-group ${id === settingsView ? 'active' : ''}" id="${id}"><div class="settings-group-head"><div class="settings-group-title"><h2>${title}</h2><button type="button" class="text-btn settings-fold-all" data-settings-fold-all="${id}">Alle zuklappen</button></div><p>${caption}</p></div><div class="settings-grid">${builders.map((build) => build()).join('')}</div></section>`).join('')}`;
     }
     // Weitere Karten hängen sich hier ein (Darstellung, Benachrichtigungen …).
     const settingsCardBuilders = [backupCardHtml, appInfoCardHtml];
