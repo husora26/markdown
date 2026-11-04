@@ -69,12 +69,12 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await P.screenshot({ path: OUT + '/1-liste.png', fullPage: true });
     if (!txt.includes('Dringend') || !txt.includes('Garten') || !txt.includes('Reinigung')) throw new Error(txt.slice(0, 200)); return 'Dringend · Wichtig · Art je Auftrag';
   });
-  await step('Filter Priorität „Dringend & Notfall“', async () => {
-    await P.selectOption('[data-pp-order-opt=orderPrio]', 'urgent'); await P.waitForTimeout(200);
-    const n = await names(); if (n.join() !== 'gestern') throw new Error(n.join()); return n.join();
+  await step('Kein Prioritätsfilter mehr (Sortierung nach Priorität bleibt)', async () => {
+    const has = await P.$('[data-pp-order-opt=orderPrio]'); const sort = await P.$$eval('[data-pp-order-opt=orderSort] option', (e) => e.map((o) => o.value));
+    if (has || !sort.includes('priority')) throw new Error(`Filter ${Boolean(has)}, Sortierung ${sort}`); return 'entfernt';
   });
   await step('Filter Auftragsart und Suche', async () => {
-    await P.selectOption('[data-pp-order-opt=orderPrio]', ''); await P.selectOption('[data-pp-order-opt=orderType]', 'repair'); await P.waitForTimeout(200);
+    await P.selectOption('[data-pp-order-opt=orderType]', 'repair'); await P.waitForTimeout(200);
     const byType = (await names()).join();
     await P.selectOption('[data-pp-order-opt=orderType]', ''); await P.fill('[data-pp-order-q]', 'heute'); await P.waitForTimeout(500);
     const bySearch = (await names()).join(); const focused = await P.evaluate(() => document.activeElement?.hasAttribute('data-pp-order-q'));
