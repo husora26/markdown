@@ -2840,6 +2840,47 @@
     .owner-inline .primary-btn { min-height: 44px; }
     /* Partner-Portal für Hausbesitzer + Messenger */
     .hub-tabs { margin: 4px 0 14px; }
+    /* Hybrid Service: Wartung */
+    .mt-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 0 0 14px; }
+    .mt-kpi { border: 1px solid var(--line, #e2e8f0); border-radius: 12px; padding: 10px 12px; background: var(--paper, #fff); display: flex; flex-direction: column; gap: 2px; }
+    .mt-kpi b { font-size: 1.4rem; line-height: 1.1; }
+    .mt-kpi span { font-size: .82rem; opacity: .8; }
+    .mt-kpi.amber b { color: #b45309; } .mt-kpi.red b { color: #b91c1c; } .mt-kpi.blue b { color: #1d4ed8; } .mt-kpi.green b { color: #15803d; }
+    .mt-occ-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+    .mt-occ { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 10px; align-items: start; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; padding: 10px 12px; background: var(--paper, #fff); }
+    .mt-occ.overdue { border-left: 4px solid #dc2626; } .mt-occ.owner_action_required, .mt-occ.due { border-left: 4px solid #d97706; }
+    .mt-occ-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .mt-occ-main small, .mt-item small { opacity: .85; overflow-wrap: anywhere; }
+    .mt-occ-actions, .mt-occ .mt-inline { grid-column: 1 / -1; }
+    .mt-pick { width: 20px; height: 20px; margin-top: 2px; } .mt-pick-spacer { width: 20px; }
+    .mt-reason { color: #b45309; }
+    .mt-inline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; padding: 10px; border-radius: 10px; background: var(--soft, rgba(148, 163, 184, .12)); }
+    .mt-inline .full, .mt-inline .pp-actions, .mt-inline small { grid-column: 1 / -1; }
+    .mt-bundle-bar { position: sticky; bottom: 8px; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 12px; margin: 0 0 10px; border-radius: 12px; background: var(--paper, #fff); border: 1px solid var(--line, #e2e8f0); box-shadow: 0 6px 18px rgba(15, 23, 42, .12); }
+    .mt-bundle-bar > span { flex: 1 1 200px; } .mt-bundle-bar select { flex: 1 1 160px; max-width: 260px; }
+    .mt-modes { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+    .mt-mode { display: flex; gap: 8px; align-items: flex-start; border: 1px solid var(--line, #e2e8f0); border-radius: 10px; padding: 8px 10px; cursor: pointer; }
+    .mt-mode.on { border-color: var(--accent, #2563eb); box-shadow: 0 0 0 1px var(--accent, #2563eb) inset; }
+    .mt-mode span { display: flex; flex-direction: column; gap: 2px; } .mt-mode small { opacity: .8; }
+    .mt-preview { margin: 12px 0; } .mt-preview-list { margin: 4px 0 0; padding-left: 20px; display: grid; gap: 2px; }
+    .mt-items { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
+    .mt-item { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; padding: 6px 0; border-top: 1px dashed var(--line, #e2e8f0); }
+    .mt-item > span:first-child { display: flex; flex-direction: column; gap: 2px; }
+    .mt-source { display: inline-block; margin: 6px 0 0; padding: 2px 8px; border-radius: 999px; background: var(--soft, rgba(148, 163, 184, .15)); font-size: .78rem; }
+    .mt-source.agreement_auto { background: rgba(37, 99, 235, .12); } .mt-source.finding { background: rgba(217, 119, 6, .14); }
+    .mt-confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin: 8px 0; padding: 8px 10px; border-radius: 10px; background: rgba(21, 128, 61, .08); }
+    .mt-confirmed { color: #15803d; margin: 8px 0; }
+    .mt-checks { display: flex; flex-direction: column; gap: 6px; margin: 6px 0; }
+    .mt-check { display: flex; gap: 8px; align-items: center; min-height: 32px; }
+    .mt-check input { width: 20px; height: 20px; }
+    .mt-occ svg, .mt-plan svg, .mt-import svg, .mt-items svg, .mt-source svg, .mt-confirm svg, .mt-confirmed svg, .mt-bundle-bar svg, .mt-form .settings-actions svg, .hub-list-head svg, .mt-item-card svg, .pp-hint svg { width: 1.05em; height: 1.05em; vertical-align: -0.15em; flex: none; }
+    .mt-occ-actions .primary-btn, .mt-occ-actions .secondary-btn { min-height: 36px; padding: 6px 12px; }
+    .mt-tasks-hint { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; border-left: 4px solid #d97706; }
+    .mt-tasks-hint svg { width: 1.05em; height: 1.05em; vertical-align: -0.15em; }
+    .hub-list-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    html.dark .mt-kpi, html.dark .mt-occ, html.dark .mt-bundle-bar { background: var(--paper, #1e293b); border-color: rgba(148, 163, 184, .25); }
+    html.dark .mt-kpi.amber b, html.dark .mt-reason { color: #fbbf24; } html.dark .mt-kpi.red b { color: #f87171; } html.dark .mt-kpi.blue b { color: #93c5fd; } html.dark .mt-kpi.green b, html.dark .mt-confirmed { color: #4ade80; }
+    @media (max-width: 560px) { .mt-occ { grid-template-columns: auto 1fr; } .mt-occ > .pp-badge { grid-column: 2; justify-self: start; } .mt-item { grid-template-columns: 1fr auto; } }
     .hub-count { display: inline-grid; place-items: center; min-width: 19px; height: 19px; margin-left: 4px; padding: 0 5px; border-radius: 10px; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; line-height: 1; }
     .msg-wrap[hidden] { display: none; }
     .msg-item { border-left-color: #c9a96a; }
@@ -6476,7 +6517,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       { id: 'fjallbacka-stadservice', initials: 'FS', name: 'Fjällbacka Städservice AB', category: 'house', services: 'Hausreinigung · Umzugsreinigung · Bauendreinigung', town: 'Grebbestad', website: 'https://www.fjallbackastadservice.se/', distances: { grebbestad: 1 } },
       { id: 'vaster-bygg', initials: 'VB', name: 'Väster Bygg i Bohuslän AB', category: 'renovation', services: 'Neubau · Reparaturen · Umbau und Erweiterung', town: 'Grebbestad', website: 'https://www.vasterbygg.com/om-oss/', distances: { grebbestad: 1 } },
       { id: 'nortivo', initials: 'NS', name: 'Nortivo Service AB', category: 'inspection', specialty: 'Hausbetreuung / Reinigung', priority: 'A', services: 'Fritidshus-Tillsyn · Reinigung · Rasen · einfache Instandhaltung', town: 'Sunne / ganz Värmland', phone: '079-104 20 46', email: 'bokning@nortivoservice.se', website: 'https://nortivoservice.se/nortivo-fritidsboende/', distances: { sunne: 0 } },
-      { id: 'nordbas', initials: 'NB', name: 'Nordbas Fastighetsservice', category: 'inspection', services: 'Ferienhaus-Tillsyn mit Fotorapport · Objektrundgänge · dokumentierte Kontrollen', town: 'Einsatzgebiet Rättvik', website: 'https://www.nordbas.com/fastighetsskotsel-leksand.html', distances: { rattvik: 0 } },
+      { id: 'nordbas', initials: 'NB', name: 'Nordbas Fastighetsservice', category: 'inspection', services: 'Ferienhaus-Tillsyn mit Fotorapport · Objektrundgänge · Außenpflege · Rasen, Schnee, Gestrüpp · Festvertrag oder Einzelauftrag', town: 'Einsatzgebiet Rättvik / Leksand / Falun / Borlänge', phone: '+46 70 301 38 55', email: 'info@nordbas.com', website: 'https://www.nordbas.com/fastighetsskotsel-leksand.html', distances: { rattvik: 0 } },
       { id: 'hustillsyn-bohuslan', initials: 'HB', name: 'Hustillsyn i Bohuslän', category: 'inspection', services: 'Hauskontrolle: Heizung, Wasser, Kühlgeräte, Fenster, Türen, Keller, Lecks & Außenbereich', town: 'Einsatzgebiet Grebbestad', website: 'https://hustillsyn-bohuslan.se/', distances: { grebbestad: 0 } },
       { id: 'gasthamnsbolaget', initials: 'GB', name: 'Gästhamnsbolaget · Bostadstillsyn', category: 'inspection', services: 'Regelmäßige Innen- und Außenkontrollen · Heizung, Wasser, Sicherungen, Schädlingsfallen', town: 'Hamburgsund', website: 'https://gasthamnsbolaget.se/tjanster/bostadstillsyn/', distances: { grebbestad: 15 } }
     ];
@@ -6558,7 +6599,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       { id: "dalarna-h033", name: "Basis Snickeri AB", category: "renovation", specialty: "Schreinerei", town: "Leksand", services: "Bauschreinerei und Holzarbeiten", priority: "A", hint: "Lokaler Schreiner in Leksand", region: "dalarna" },
       { id: "dalarna-h034", name: "Siljan Bygg & Design", category: "renovation", specialty: "Bau / Design", town: "Siljansnäs / Leksand", services: "Bau, Innenausbau und Design", priority: "A", hint: "Regionaler Partner am Siljansee", region: "dalarna" },
       { id: "dalarna-h035", name: "Takläggarna Dalarna AB", category: "renovation", specialty: "Dach / Reparatur", town: "Borlänge", services: "Dacharbeiten und Dachsanierung", priority: "A", hint: "Spezialist für Dacharbeiten", region: "dalarna" },
-      { id: "dalarna-h036", name: "Dalarnas Takmontage AB", category: "renovation", specialty: "Dach / Reparatur", town: "Falun", services: "Dachmontage und Dacharbeiten", priority: "A", hint: "Lokaler Dachbetrieb in Falun", region: "dalarna" },
+      { id: "dalarna-h036", name: "Dalarnas Takmontage AB", category: "renovation", specialty: "Dach / Reparatur", town: "Falun", services: "Dachmontage, Dachdeckung und Dachwechsel – Dalarna, Gävleborg und Teile Mittelschwedens", phone: "+46 10 585 00 70", priority: "A", hint: "Lokaler Dachbetrieb in Falun", region: "dalarna" },
       { id: "dalarna-h037", name: "Christers Tak AB", category: "renovation", specialty: "Dach / Reparatur", town: "Falun", services: "Dacharbeiten und Reparaturen", priority: "A", hint: "Lokaler Dachanbieter", region: "dalarna" },
       { id: "dalarna-h038", name: "VDT - Västerdala Tak AB", category: "renovation", specialty: "Dach / Reparatur", town: "Falun / Västerdalarna", services: "Dacharbeiten und Sanierung", priority: "A", hint: "Regionaler Dachanbieter", region: "dalarna" },
       { id: "dalarna-h039", name: "TK Tak & Ventilation", category: "renovation", specialty: "Dach / Lüftung", town: "Mora", services: "Dach- und Lüftungsarbeiten", priority: "A", hint: "Kombiniert Dach und Lüftung", region: "dalarna" },
@@ -6689,7 +6730,33 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       { id: "sk-s006", name: "Kvalitetsbyggen", category: "renovation", specialty: "Anbau / Renovierung", town: "Kristianstad", services: "Anbauten und Renovierungen, ROT", website: "https://www.kvalitetsbyggen.se/", priority: "A", region: "skåne" },
       { id: "sk-s007", name: "Emilssons Bygg", category: "renovation", specialty: "Renovierung alter Häuser", town: "Simrishamn", services: "Renovierung älterer Häuser", website: "https://www.emilssonsbygg.se/", priority: "A", region: "skåne" },
       { id: "sk-s008", name: "Byggfirma Ystad", category: "renovation", specialty: "Bad / Dach / Anbau", town: "Ystad", services: "Bad, Dach, An- und Umbau in ganz Skåne, ROT", website: "https://byggfirma-ystad.se/", priority: "A", region: "skåne" },
-      { id: "sk-s009", name: "Byggfirma Vellinge", category: "renovation", specialty: "Anbau / Dach / Bad", town: "Vellinge / Skanör", services: "Anbauten, Dach und Bad", website: "https://byggfirma-vellinge.se/", priority: "A", region: "skåne" }
+      { id: "sk-s009", name: "Byggfirma Vellinge", category: "renovation", specialty: "Anbau / Dach / Bad", town: "Vellinge / Skanör", services: "Anbauten, Dach und Bad", website: "https://byggfirma-vellinge.se/", priority: "A", region: "skåne" },
+      // Partnerregister Mittel-/Nordschweden (Recherche 04.11.2026, Husora-Status „nicht kontaktiert“ – vor Aktivierung F-skatt, Versicherung und Zertifikate prüfen)
+      { id: "nn-h001", name: "Fjellservice Jämtland AB", category: "inspection", specialty: "Ferienhaus-Tillsyn / Hausservice", town: "Storlien / Åre", services: "Ferienhaus-Tillsyn, Reinigung, Bau und Renovierung – Service das ganze Jahr", phone: "+46 70 230 70 21", email: "info@fjellservice.se", website: "https://fjellservice.se/", priority: "A", region: "jämtland" },
+      { id: "nn-k001", name: "Oktopal AB", category: "inspection", specialty: "Hausbesichtigung / Feuchte & Radon", town: "Östersund / Frösön / Umeå / Sundsvall", services: "Hausbesichtigung, OVK (Lüftungskontrolle), Energieausweis, Feuchte- und Radonmessung und -sanierung, Bau-/VVS-Projektleitung", phone: "063-12 35 30 / 090-12 35 30 / 060-12 35 30", email: "info@oktopal.se", website: "https://oktopal.se/", priority: "A", region: "jämtland" },
+      { id: "nn-k002", name: "A3P Byggkonsult AB", category: "inspection", specialty: "Hausbesichtigung", town: "Hudiksvall / Hälsingland / Gävleborg", services: "Übergabe- und Hausbesichtigungen (Överlåtelsebesiktning)", website: "https://a3pbyggkonsult.se/om/", priority: "A", region: "gävleborg" },
+      { id: "or-h101", name: "Trygg Förvaltning / Fastighetsvård i Örebro AB", category: "house", specialty: "Hausmeister / Garten / Winterdienst", town: "Pålsboda / Örebro län", services: "Hausmeisterdienst, Besichtigung, Notdienst, Reinigung, Umzug, Grünflächen und Schneeräumung", phone: "070-396 03 01", email: "info@tryggforvaltning.se", website: "https://tryggforvaltning.se/", priority: "A", region: "örebro" },
+      { id: "nn-h002", name: "Hjälpande Händer Västernorrland AB", category: "house", specialty: "Hausbetreuung / Garten / Winterdienst", town: "Sundsvall / Västernorrland", services: "Hauspflege, Reinigung, Garten, Schneeschippen, Malerarbeiten, kleinere Bauarbeiten", email: "info@hjalpande-hander.se", website: "https://www.hjalpandehander.se/", priority: "B", hint: "Einsatzgebiet vor Beauftragung bestätigen", region: "västernorrland" },
+      { id: "nn-h003", name: "HSB Södra Norrland", category: "house", specialty: "Hausmeisterdienst", town: "Gävle / Sundsvall / Östersund", services: "Hausmeisterdienst und Objektbetrieb, Innen- und Außenpflege", phone: "010-303 23 00", website: "https://www.hsb.se/sodra-norrland/tjanster/fastighetsservice/", priority: "B", hint: "Schwerpunkt Wohnungsgenossenschaften (BRF) – für Privat-Ferienhäuser vorher anfragen", region: "gävleborg" },
+      { id: "dalarna-h101", name: "HSB MälarDalarna", category: "house", specialty: "Hausmeisterdienst", town: "Borlänge / Dalarna", services: "Hausmeisterdienst, Reinigung, Außenanlagen/Garten, Spezialreparaturen", phone: "010-303 27 00", website: "https://www.hsb.se/malardalarna/fastighetsforvaltning/fastighetsskotsel/", priority: "B", hint: "Schwerpunkt Wohnungsgenossenschaften (BRF) – für Privat-Ferienhäuser vorher anfragen", region: "dalarna" },
+      { id: "dalarna-s101", name: "STH Bygg AB", category: "renovation", specialty: "Bau / Renovierung", town: "Svärdsjö / Falun", services: "Bau, Renovierung, Dach, Fenster, Küche/Bad, Blockhausarbeiten", phone: "+46 70 228 55 85", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "dalarna" },
+      { id: "or-s101", name: "Proffsbyggarna AB", category: "renovation", specialty: "Bau / Renovierung", town: "Örebro", services: "Bau, Renovierung, Wohnungsbau", phone: "+46 19 25 00 90", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "örebro" },
+      { id: "or-s102", name: "Best Bygg i Örebro AB", category: "renovation", specialty: "Bau / Schreiner", town: "Örebro", services: "Bau, Schreinerarbeiten, Renovierung", phone: "+46 73 143 02 00", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "örebro" },
+      { id: "or-s103", name: "Premie Bygg i Mellansverige AB", category: "renovation", specialty: "Bau / Dach / Drainage", town: "Örebro", services: "Bau, Renovierung, Drainage, Dach, Fenster", phone: "+46 70 568 70 64", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "örebro" },
+      { id: "or-s104", name: "019 Partners AB – Bygg & Fastigheter", category: "renovation", specialty: "Bau / Schreiner", town: "Örebro", services: "Bau, Schreinerarbeiten, Immobilienprojekte", phone: "+46 19 700 19 19", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "örebro" },
+      { id: "or-s105", name: "NFD BYGG AB", category: "renovation", specialty: "Bau / Renovierung / Maler", town: "Örebro", services: "Bau, Renovierung, Malerarbeiten, Schreiner, Küche, Fliesen", phone: "+46 70 254 83 68", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "örebro" },
+      { id: "nn-s001", name: "YH BYGG AB", category: "renovation", specialty: "Bau / Renovierung", town: "Gävle", services: "Bau und Renovierung", phone: "+46 72 930 53 83", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "gävleborg" },
+      { id: "nn-k003", name: "KA BESIKTNING", category: "inspection", specialty: "Bautechnische Besichtigung", town: "Gävle / Sandviken / Ockelbo / Hofors / Söderhamn", services: "Bautechnische Besichtigung", phone: "+46 72 350 83 29", priority: "B", hint: "Zertifizierungen vor Beauftragung erfragen", region: "gävleborg" },
+      { id: "nn-k004", name: "Byggbesikta i Sundsvall AB", category: "inspection", specialty: "Hausbesichtigung", town: "Alnö / Sundsvall", services: "Haus- und Baubesichtigung", phone: "+46 70 870 46 06", priority: "B", hint: "Zertifizierungen und Einsatzgebiet erfragen", region: "västernorrland" },
+      { id: "nn-k005", name: "Besiktningsbolaget Norrland", category: "inspection", specialty: "Hausbesichtigung / Energie", town: "Östersund / Jämtland / Härjedalen", services: "Hausbesichtigung, Zustandsbewertung, Energiedienste, OVK, Drohneninspektion", phone: "+46 70 638 94 93", priority: "B", hint: "Leistungsumfang vor Beauftragung erfragen", region: "jämtland" },
+      { id: "nn-k006", name: "Bosyn Fastighetsbesiktningar / Bosyn AB", category: "inspection", specialty: "Hausbesichtigung", town: "Umeå / Västerbotten", services: "Hausbesichtigung, bautechnische Beratung", phone: "+46 90 206 01 00", priority: "B", region: "västerbotten" },
+      { id: "nn-k007", name: "Arctic Byggkonsult", category: "inspection", specialty: "Hausbesichtigung / Bauleitung", town: "Umeå / Västerbotten / Norrbotten / Västernorrland", services: "Kontrollansvarig (PBL), Hausbesichtigung, Energieausweis, Projekt-/Bauleitung, Feuchtemessung", phone: "+46 72 528 48 47", email: "info@arcticbyggkonsult.se", website: "https://www.arcticbyggkonsult.se/", priority: "A", region: "västerbotten" },
+      { id: "nn-s002", name: "Länsbygg Luleå", category: "renovation", specialty: "Bau / Besichtigung", town: "Luleå", services: "Bau, Bauberatung, Baubesichtigung, Schreinerarbeiten", phone: "+46 920 22 03 00", priority: "B", hint: "Leistungsumfang vor Beauftragung erfragen", region: "norrbotten" },
+      { id: "nn-s003", name: "ATAs BYGG AB", category: "renovation", specialty: "Bau / Schreiner", town: "Härnösand", services: "Bau und Schreinerarbeiten", phone: "+46 70 352 64 77", priority: "B", hint: "Leistungsumfang vor Beauftragung erfragen", region: "västernorrland" },
+      { id: "nn-s004", name: "Bauer Byggentreprenad Östersund", category: "renovation", specialty: "Bau / Schreiner", town: "Östersund / Jämtland", services: "Bau und Schreinerarbeiten", phone: "+46 76 839 70 94", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "jämtland" },
+      { id: "nn-s005", name: "NT BYGG AB / Nt Bygg i Östersund AB", category: "renovation", specialty: "Bau / Dach / Fassade", town: "Frösön / Östersund", services: "Bau, Schreiner, Dach, Fassadenrenovierung", phone: "+46 73 650 97 84", priority: "B", hint: "Firmenname vor Beauftragung prüfen", region: "jämtland" },
+      { id: "nn-s006", name: "Kruger Bygg o Mark AB", category: "renovation", specialty: "Bau / Erdarbeiten / Dach", town: "Lit / Östersund / Åre", services: "Bau, Erdarbeiten, Dach, Fassade, Fenster, Pflasterarbeiten", phone: "+46 72 685 30 85", priority: "B", hint: "Kontaktdaten vor Beauftragung prüfen", region: "jämtland" },
+      { id: "nn-s007", name: "Hagafönster AB", category: "renovation", specialty: "Fenster / Türen", town: "Umeå", services: "Fenster und Türen, Fenstereinbau, Fassade/Wintergarten", phone: "+46 90 18 18 00", priority: "B", region: "västerbotten" },
     ];
     const varmlandDistanceByLocality = [
       ['kristinehamn', 80], ['filipstad', 78], ['säffle', 74], ['arvika', 60],
@@ -6755,9 +6822,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       'malmö': [55.605, 13.003], lund: [55.705, 13.191], helsingborg: [56.046, 12.694], kristianstad: [56.031, 14.153], ystad: [55.430, 13.820], simrishamn: [55.557, 14.350],
       tomelilla: [55.544, 13.954], borrby: [55.452, 14.198], 'åhus': [55.926, 14.290], landskrona: [55.870, 12.830], vellinge: [55.471, 13.017], 'skanör': [55.416, 12.849],
       'svalöv': [55.913, 13.106], 'löddeköpinge': [55.766, 13.016], 'höör': [55.937, 13.541], 'hässleholm': [56.159, 13.766], 'ängelholm': [56.243, 12.862], 'österlen': [55.55, 14.15],
+      sandviken: [60.617, 16.775], 'söderhamn': [61.304, 17.062], hudiksvall: [61.729, 17.104], 'bollnäs': [61.348, 16.394], ockelbo: [60.890, 16.716], hofors: [60.547, 16.288],
+      'östersund': [63.179, 14.636], 'frösön': [63.196, 14.540], 'åre': [63.399, 13.081], storlien: [63.317, 12.100], lit: [63.317, 14.850], sundsvall: [62.391, 17.307],
+      'härnösand': [62.633, 17.938], 'alnö': [62.43, 17.43], 'umeå': [63.826, 20.263], 'skellefteå': [64.750, 20.951], 'luleå': [65.584, 22.155], 'piteå': [65.317, 21.480], 'pålsboda': [59.066, 15.336],
       grebbestad: [58.69, 11.25], 'fjällbacka': [58.60, 11.29], hamburgsund: [58.56, 11.27], tanum: [58.72, 11.32], 'resö': [58.68, 11.28]
     };
-    const REGION_CENTERS = { dalarna: [60.9, 14.9], 'värmland': [59.9, 13.2], 'bohuslän': [58.65, 11.3], 'örebro': [59.27, 15.21], 'västra götaland': [58.25, 12.6], 'småland': [57.1, 15.0], 'östergötland': [58.4, 15.6], 'västmanland': [59.7, 16.2], uppsala: [60.0, 17.6], 'södermanland': [59.05, 16.7], 'skåne': [55.9, 13.6] };
+    const REGION_CENTERS = { dalarna: [60.9, 14.9], 'värmland': [59.9, 13.2], 'bohuslän': [58.65, 11.3], 'örebro': [59.27, 15.21], 'västra götaland': [58.25, 12.6], 'småland': [57.1, 15.0], 'östergötland': [58.4, 15.6], 'västmanland': [59.7, 16.2], uppsala: [60.0, 17.6], 'södermanland': [59.05, 16.7], 'skåne': [55.9, 13.6], 'gävleborg': [61.3, 16.4], 'jämtland': [63.2, 14.2], 'västernorrland': [62.8, 17.6], 'västerbotten': [64.6, 19.0], 'norrbotten': [66.3, 21.5] };
     const LOCALITY_KEYS = Object.keys(LOCALITIES).sort((a, b) => b.length - a.length);
     const haversineKm = (a, b) => {
       const rad = (value) => value * Math.PI / 180;
@@ -9367,6 +9437,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const workCount = tasks.filter((task) => taskStatus(task) === 'In Bearbeitung').length;
       const archivedCount = tasks.filter(isArchivedTask).length;
       return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
+        ${typeof mtTasksHintHtml === 'function' ? mtTasksHintHtml() : ''}
         <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-template-picker>${icon('task')} Aufgabenpaket aus Vorlage wählen</button></div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount - workCount} offen${workCount ? ` · <span class="ptask-work-count">${workCount} in Bearbeitung</span>` : ''} · ${tasks.length - openCount - archivedCount} erledigt${archivedCount ? ` · ${archivedCount} im Archiv` : ''}</p></div></div>
         <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
@@ -12529,7 +12600,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       geoQueue = task.catch(() => {});
       return task;
     }
-    const REGION_WORDS = /^(värmland|dalarna|bohuslän|örebro län|småland|kalmar län|östergötland|västmanland|uppsala län|södermanland|sörmland|skåne|ganz sörmland|västra götaland|ganz värmland|regional)$/i;
+    const REGION_WORDS = /^(värmland|dalarna|bohuslän|örebro län|gävleborg|jämtland|härjedalen|hälsingland|västernorrland|västerbotten|norrbotten|småland|kalmar län|östergötland|västmanland|uppsala län|södermanland|sörmland|skåne|ganz sörmland|västra götaland|ganz värmland|regional)$/i;
     function providerPlace(provider) {
       const raw = String(provider.town || '').split('/').map((part) => part.replace(/^einsatz(gebiet|bereich)\s*/i, '').trim()).filter(Boolean);
       const place = raw.find((part) => !REGION_WORDS.test(part) && !/regional|westlich|ganz/i.test(part)) || raw[0] || '';
@@ -20679,7 +20750,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -20704,9 +20775,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             ppQ('repairs?service_partner_id=not.is.null&select=id,organization_id,property_id,inspection_id,inspection_item_id,service_order_id,title,description,priority,status,estimated_cost,actual_cost,offered_at,response_note,created_at&order=created_at.desc&limit=300').catch(() => []),
             ppQ(`service_order_cost_items?organization_id=eq.${org.id}&select=*&order=created_at.asc&limit=3000`).catch(() => []),
             ppQ('approval_requests?select=id,organization_id,service_order_id,service_partner_id,title,description,amount,currency,status,auto_approved,response_note,created_at,decided_at&order=created_at.desc&limit=500').catch(() => []),
-            ppQ('service_partner_reviews?select=id,organization_id,service_order_id,rating,comment,partner_reply,replied_at,created_at&order=created_at.desc&limit=200').catch(() => [])
+            ppQ('service_partner_reviews?select=id,organization_id,service_order_id,rating,comment,partner_reply,replied_at,created_at&order=created_at.desc&limit=200').catch(() => []),
+            ppQ('service_order_items?select=*&order=sort_order.asc&limit=3000').catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews };
+          pp.data = { orders, inspections, quotes, invoices, messages, customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items };
           pp.access = {};
         } else {
           pp.data = null;
@@ -21102,6 +21174,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         </div>
         ${ORDER_RUNNING.includes(o.status) ? ppAccessHtml(o) : ''}
         ${o.description ? `<div class="pp-card"><span class="pp-eyebrow">Beschreibung</span><p class="pp-text">${escapeHtml(o.description)}</p></div>` : ''}
+        ${ppOrderItemsHtml(o)}
         ${o.organization_id !== ppOrg()?.id && lead && ['accepted', 'scheduled', ...ORDER_RUNNING, 'completed'].includes(o.status) ? (pp.form === `repair-order:${o.id}` ? ppRepairFormHtml({ key: o.id, propertyId: o.property_id, orderId: o.id }) : `<button type="button" class="secondary-btn pp-repair-btn" data-pp-action="repair-form-order" data-id="${o.id}">${icon('alert')} Mangel festgestellt – Beseitigung anfragen</button>`) : ''}
         ${o.response_note ? `<div class="pp-card"><span class="pp-eyebrow">Deine Antwort</span><p class="pp-text">${escapeHtml(o.response_note)}</p></div>` : ''}
         ${actions}
@@ -21613,7 +21686,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     });
     // ----- Mehrere Aufträge zusammen beenden / zusammen abrechnen, Jahresverträge -----
     pp.sel = pp.sel || new Set();
-    const PP_AGREEMENT_STATUS = { proposed: ['Vorgeschlagen', 'amber'], active: ['Aktiv', 'green'], declined: ['Abgelehnt', 'red'], ended: ['Beendet', 'muted'], cancelled: ['Zurückgezogen', 'muted'] };
+    const PP_AGREEMENT_STATUS = { proposed: ['Vorgeschlagen', 'amber'], active: ['Aktiv', 'green'], paused: ['Pausiert', 'muted'], declined: ['Abgelehnt', 'red'], ended: ['Beendet', 'muted'], cancelled: ['Zurückgezogen', 'muted'] };
     const ppAgreementOf = (o) => (o?.agreement_id ? ppD('agreements').find((a) => a.id === o.agreement_id) || { id: o.agreement_id, title: 'Jahresvertrag' } : null);
     const ppOrderBilled = (o) => ppD('invoices').some((i) => i.service_order_id === o.id && i.status !== 'cancelled') || ppD('invoiceLines').some((l) => l.service_order_id === o.id);
     const ppCanBill = () => ppIsLead() || ppRole() === 'accounting';
@@ -21754,6 +21827,92 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <label class="pp-pdf-pick full">${icon('document')}<span><strong>Eigene Rechnung als PDF (optional)</strong><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf"></span></label></div>
         <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button type="submit" class="primary-btn" ${ppDisabled()}>Jahresrechnung senden</button></div></form>`;
     }
+    // ----- Hybrid Service: Dauerauftrags-Konditionen (beide Seiten), Positionen/Checkliste im Partnerauftrag -----
+    function agPricingLabels() { return { annual: 'Jahrespreis', per_visit: 'Preis je Einsatz', hourly: 'Stundenpreis', flat: 'Pauschale je Einsatz', quote_required: 'Angebot je Einsatz' }; }
+    let agTermsOpen = '';
+    function agTermsHtml(a, side) {
+      if (!a || !('pricing_type' in a)) return '';
+      const m = (v) => (v == null ? '–' : ppMoney(v, a.currency));
+      const period = { month: 'Monat', quarter: 'Quartal', year: 'Jahr', term: 'Laufzeit' }[a.budget_period] || a.budget_period;
+      const canEdit = side === 'owner' ? cloudCanWrite() : ppIsLead();
+      const facts = `<dl class="pp-ag-facts ag-terms"><div><dt>Preisart</dt><dd>${escapeHtml(agPricingLabels()[a.pricing_type] || a.pricing_type)}</dd></div>${['per_visit', 'flat', 'hourly'].includes(a.pricing_type) ? `<div><dt>${a.pricing_type === 'hourly' ? 'Stundensatz' : 'Preis je Einsatz'}</dt><dd>${escapeHtml(m(a.unit_price))} ${a.tax_mode === 'net' ? 'netto' : a.tax_mode === 'exempt' ? 'steuerfrei' : 'brutto'}</dd></div>` : ''}<div><dt>Max. je Einsatz</dt><dd>${escapeHtml(m(a.max_price_per_visit))}</dd></div><div><dt>Budget je ${escapeHtml(period)}</dt><dd>${escapeHtml(m(a.budget_period_amount))}</dd></div><div><dt>Beauftragung</dt><dd>${a.approval_mode === 'auto_within_limits' ? 'automatisch im vereinbarten Rahmen' : 'Freigabe je Einsatz'}</dd></div>${(a.categories || []).length ? `<div><dt>Leistungsbereiche</dt><dd>${escapeHtml(a.categories.join(', '))}</dd></div>` : ''}<div><dt>Fassung</dt><dd>${a.version || 1}${a.status === 'paused' ? ' · pausiert' : ''}</dd></div></dl>`;
+      const busy = (side === 'owner' ? ownerSide.busy : pp.busy) ? 'disabled' : '';
+      const buttons = canEdit && ['proposed', 'active', 'paused'].includes(a.status) ? `<div class="settings-actions"><button type="button" class="secondary-btn" data-ag-terms="edit" data-side="${side}" data-id="${a.id}" ${busy}>Konditionen ändern</button>${a.status === 'active' ? `<button type="button" class="secondary-btn" data-ag-terms="pause" data-side="${side}" data-id="${a.id}" ${busy}>Pausieren</button>` : a.status === 'paused' ? `<button type="button" class="secondary-btn" data-ag-terms="resume" data-side="${side}" data-id="${a.id}" ${busy}>Fortsetzen</button>` : ''}</div>` : '';
+      if (agTermsOpen !== `${side}:${a.id}`) return facts + buttons;
+      const sel = (x, y) => (x === y ? 'selected' : '');
+      return `${facts}<form class="pp-card pp-form ag-terms-form" data-ag-terms-form="${a.id}" data-side="${side}"><h3>Konditionen ändern</h3><p class="settings-hint">Änderungen an Preis, Umfang oder Budget erzeugen eine neue Vertragsfassung. Bis die andere Seite zustimmt, beauftragt Husora nichts automatisch.</p>
+        <div class="pp-grid">
+          <label><span class="form-label">Preisart</span><select class="form-control" name="pricing_type">${Object.entries(agPricingLabels()).map(([v, l]) => `<option value="${v}" ${sel(a.pricing_type, v)}>${l}</option>`).join('')}</select></label>
+          <label><span class="form-label">Preis je Einsatz / Stundensatz</span><input class="form-control" name="unit_price" type="number" min="0" step="0.01" value="${escapeHtml(a.unit_price ?? '')}"></label>
+          <label><span class="form-label">Steuer</span><select class="form-control" name="tax_mode"><option value="gross" ${sel(a.tax_mode, 'gross')}>Preise brutto</option><option value="net" ${sel(a.tax_mode, 'net')}>Preise netto</option><option value="exempt" ${sel(a.tax_mode, 'exempt')}>steuerfrei</option></select></label>
+          <label><span class="form-label">Maximal je Einsatz</span><input class="form-control" name="max_price_per_visit" type="number" min="0" step="0.01" value="${escapeHtml(a.max_price_per_visit ?? '')}"></label>
+          <label><span class="form-label">Budget</span><input class="form-control" name="budget_period_amount" type="number" min="0" step="0.01" value="${escapeHtml(a.budget_period_amount ?? '')}"></label>
+          <label><span class="form-label">je</span><select class="form-control" name="budget_period">${[['month', 'Monat'], ['quarter', 'Quartal'], ['year', 'Jahr'], ['term', 'Laufzeit']].map(([v, l]) => `<option value="${v}" ${sel(a.budget_period, v)}>${l}</option>`).join('')}</select></label>
+          <label class="full"><span class="form-label">Beauftragung durch Wartungspläne</span><select class="form-control" name="approval_mode"><option value="owner_each" ${sel(a.approval_mode, 'owner_each')}>Jeder Einsatz braucht die Freigabe des Eigentümers</option><option value="auto_within_limits" ${sel(a.approval_mode, 'auto_within_limits')}>Automatisch, solange Umfang, Preis und Budget eingehalten sind</option></select></label>
+          <label class="full"><span class="form-label">Leistungsbereiche (Kategorien, mit Komma getrennt)</span><input class="form-control" name="categories" value="${escapeHtml((a.categories || []).join(', '))}" placeholder="z. B. Garten, Außenanlage"></label>
+        </div>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-ag-terms="close" data-side="${side}" data-id="${a.id}">Abbrechen</button><button type="submit" class="primary-btn" ${busy}>Neue Fassung vorschlagen</button></div></form>`;
+    }
+    function agTermsRerender(side) { if (side === 'owner') hubRerender(); else { pp.keepScroll = true; ppRender(); } }
+    function agTermsRun(side, label, task, notice) {
+      if (side === 'owner') ownerRun(label, async () => { await task(); showToast(notice); });
+      else ppRun(label, task, { notice });
+    }
+    document.addEventListener('click', (event) => {
+      const b = event.target.closest('[data-ag-terms]');
+      if (!b) return;
+      const { side, id } = b.dataset;
+      const kind = b.dataset.agTerms;
+      if (kind === 'edit') { agTermsOpen = `${side}:${id}`; agTermsRerender(side); return; }
+      if (kind === 'close') { agTermsOpen = ''; agTermsRerender(side); return; }
+      if (kind === 'pause' && !confirm('Dauerauftrag pausieren? Solange er pausiert ist, beauftragt Husora daraus nichts automatisch.')) return;
+      agTermsRun(side, 'agreement', () => cloudFetch('/rest/v1/rpc/set_agreement_paused', { method: 'POST', body: { p_agreement_id: id, p_paused: kind === 'pause' } }), kind === 'pause' ? 'Dauerauftrag pausiert.' : 'Dauerauftrag fortgesetzt.');
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-ag-terms-form]');
+      if (!form) return;
+      event.preventDefault();
+      const f = Object.fromEntries(new FormData(form));
+      const terms = { pricing_type: f.pricing_type, unit_price: f.unit_price, max_price_per_visit: f.max_price_per_visit, budget_period_amount: f.budget_period_amount, budget_period: f.budget_period, tax_mode: f.tax_mode, approval_mode: f.approval_mode,
+        categories: String(f.categories || '').split(',').map((s) => s.trim()).filter(Boolean).slice(0, 20) };
+      if (['per_visit', 'flat', 'hourly'].includes(terms.pricing_type) && terms.unit_price === '') { showToast('Bitte den Preis je Einsatz bzw. Stundensatz angeben.'); return; }
+      const side = form.dataset.side;
+      agTermsRun(side, 'agreement', async () => { await cloudFetch('/rest/v1/rpc/update_agreement_terms', { method: 'POST', body: { p_agreement_id: form.dataset.agTermsForm, p_terms: terms } }); agTermsOpen = ''; }, 'Neue Vertragsfassung gesendet – die andere Seite muss zustimmen.');
+    });
+    function ppOrderItemsHtml(o) {
+      const items = ppD('items').filter((i) => i.service_order_id === o.id).sort((a, b) => a.sort_order - b.sort_order);
+      const src = { maintenance: 'Aus Wartungsplan des Kunden', agreement_auto: 'Automatisch aus Dauerauftrag', finding: 'Aus Mangel/Kontrolle', emergency: 'Notfall' }[o.source_type];
+      const running = ['accepted', 'scheduled', 'in_progress', 'waiting_customer', 'waiting_parts'].includes(o.status);
+      const st = { open: ['offen', 'muted'], done: ['erledigt', 'green'], not_done: ['nicht erledigt', 'red'], skipped: ['übersprungen', 'muted'] };
+      const ag = o.agreement_id ? ppD('agreements').find((a) => a.id === o.agreement_id) : null;
+      const head = `${src ? `<p class="pp-hint">${icon('calendar')} ${escapeHtml(src)}${o.source_type === 'agreement_auto' && o.agreement_version ? ` · Vertragsfassung ${o.agreement_version}` : ''}${o.source_type === 'agreement_auto' && o.estimated_cost != null ? ` · freigegebener Rahmen ${escapeHtml(ppMoney(o.estimated_cost, o.currency))}${ag?.max_price_per_visit != null ? ` (max. ${escapeHtml(ppMoney(ag.max_price_per_visit, o.currency))} je Einsatz)` : ''} – Mehrkosten bitte unten zur Freigabe anfragen` : ''}</p>` : ''}${o.status === 'completed' && 'owner_confirmed_at' in o ? (o.owner_confirmed_at ? `<p class="pp-hint">${icon('check')} Vom Kunden bestätigt am ${escapeHtml(fmtDate(o.owner_confirmed_at))}</p>` : o.owner_dispute_note ? `<p class="pp-hint pp-red">${icon('alert')} Rückfrage des Kunden: „${escapeHtml(o.owner_dispute_note)}“</p>` : '<p class="pp-hint">Wartet auf Bestätigung des Kunden.</p>') : ''}`;
+      const show = items.length > 1 || items.some((i) => (i.checklist || []).length || i.status !== 'open' || i.partner_note);
+      if (!show) return head;
+      const can = running && ppCanWork(o);
+      return `${head}${ppSection(`Positionen (${items.length})`, items.map((i) => {
+        const checks = (i.checklist || []).map((c) => (typeof c === 'string' ? c : c?.label)).filter(Boolean);
+        const s = st[i.status] || [i.status, 'muted'];
+        return `<div class="pp-card mt-item-card"><div class="pp-row"><strong>${escapeHtml(i.title)}</strong><span class="pp-badge ${s[1]}">${escapeHtml(s[0])}</span></div>
+          ${checks.length ? `<div class="mt-checks">${checks.map((c) => `<label class="mt-check"><input type="checkbox" data-pp-item-check="${i.id}" data-key="${escapeHtml(c)}" ${i.checklist_results?.[c] === true ? 'checked' : ''} ${can ? '' : 'disabled'}><span>${escapeHtml(c)}</span></label>`).join('')}</div>` : ''}
+          ${i.partner_note ? `<p class="pp-text">„${escapeHtml(i.partner_note)}“</p>` : ''}
+          ${can ? `<div class="pp-actions"><button type="button" class="${i.status === 'done' ? 'primary-btn' : 'secondary-btn'}" data-pp-item="${i.id}" data-status="done" ${ppDisabled()}>${icon('check')} Erledigt</button><button type="button" class="secondary-btn" data-pp-item="${i.id}" data-status="not_done" ${ppDisabled()}>Nicht erledigt</button><button type="button" class="secondary-btn" data-pp-item="${i.id}" data-status="skipped" ${ppDisabled()}>Entfällt</button></div>` : ''}
+        </div>`;
+      }).join(''))}`;
+    }
+    function ppCanWork(o) { return o.service_partner_id === pp.ctx?.self_partner_id || o.assigned_user_id === ppMe() || ppIsLead(); }
+    document.addEventListener('change', (event) => {
+      const box = event.target.closest?.('#partner-portal [data-pp-item-check]');
+      if (!box) return;
+      ppRun('item', () => cloudFetch('/rest/v1/rpc/update_order_item', { method: 'POST', body: { p_item_id: box.dataset.ppItemCheck, p_status: null, p_results: { [box.dataset.key]: box.checked }, p_note: null } }), { notice: '' });
+    });
+    document.addEventListener('click', (event) => {
+      const b = event.target.closest('#partner-portal [data-pp-item]');
+      if (!b) return;
+      const status = b.dataset.status;
+      let note = null;
+      if (status !== 'done') { note = window.prompt(status === 'skipped' ? 'Warum entfällt die Position?' : 'Was konnte nicht erledigt werden? (der Kunde wird informiert)', ''); if (note === null) return; if (!note.trim()) { showToast('Bitte kurz begründen.'); return; } }
+      ppRun('item', () => cloudFetch('/rest/v1/rpc/update_order_item', { method: 'POST', body: { p_item_id: b.dataset.ppItem, p_status: status, p_results: null, p_note: note } }), { notice: status === 'done' ? 'Position erledigt.' : 'Position vermerkt.' });
+    });
     function ppAgreementsHtml() {
       const list = ppD('agreements');
       const card = (a) => {
@@ -21773,9 +21932,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <dl class="pp-ag-facts"><div class="wide"><dt>${(a.task_titles || []).length > 1 ? 'Aufgaben' : 'Aufgabe'}</dt><dd>${escapeHtml(agTasksText(a))}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(ppMoney(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}${orders.length > done ? ` · ${orders.length - done} offen` : ''}</dd></div>${invoices.length ? `<div><dt>Abgerechnet</dt><dd>${invoices.map((i) => `${escapeHtml(i.invoice_number || '')} (${escapeHtml(ppMoney(i.amount_gross, i.currency))})`).join(', ')}</dd></div>` : ''}</dl>
           ${a.notes ? `<p class="pp-hint">${escapeHtml(a.notes)}</p>` : ''}
           ${agAutoHtml(a, ppIsLead())}
+          ${agTermsHtml(a, 'partner')}
           ${pp.form === `agreement-bill:${a.id}` ? ppAgreementBillForm(a) : pp.form === `agreement-edit:${a.id}` ? agEditFormHtml({ ...a, own: a.organization_id === ppOrg().id }, 'data-pp-form="agreement-edit"', [...new Set(ppD('orders').filter((o) => o.organization_id === a.organization_id).map((o) => o.title.split(' · ')[0]))].slice(0, 30)) : actions ? `<div class="pp-actions">${actions}</div>` : ''}</article>`;
       };
-      const groups = [['Offene Vorschläge', list.filter((a) => a.status === 'proposed')], ['Aktive Verträge', list.filter((a) => a.status === 'active')], ['Beendet', list.filter((a) => ['ended', 'declined', 'cancelled'].includes(a.status))]];
+      const groups = [['Offene Vorschläge', list.filter((a) => a.status === 'proposed')], ['Aktive Verträge', list.filter((a) => ['active', 'paused'].includes(a.status))], ['Beendet', list.filter((a) => ['ended', 'declined', 'cancelled'].includes(a.status))]];
       return `<div class="pp-page-head"><h1>Jahresverträge</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-ag="new">${icon('plus')} Vertrag</button>` : ''}</div>
         <p class="pp-hint">Wiederkehrende Aufgaben (z. B. Rasen mähen, monatliche Kontrolle) zum festen Jahrespreis – einmal im Jahr abrechnen statt jeden Einsatz einzeln.</p>
         ${pp.form === 'agreement' ? ppAgreementForm() : ''}
@@ -22855,6 +23015,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         cloudFetch(`/rest/v1/service_agreements?organization_id=eq.${org}&select=*,partner:service_partners(company_name),property:properties(name,app_ref)&order=starts_on.desc&limit=300`).catch(() => []),
         cloudFetch(`/rest/v1/properties?organization_id=eq.${org}&select=id,name,app_ref&order=name.asc&limit=500`).catch(() => [])
       ]);
+      await mtLoad(org).catch((error) => console.warn('Wartungspläne nicht geladen:', error));
       ownerSide.shares = await cloudFetch(`/rest/v1/order_access_shares?organization_id=eq.${org}&revoked_at=is.null&valid_until=gt.${encodeURIComponent(new Date().toISOString())}&select=id,service_order_id,valid_until,view_count,last_viewed_at&order=created_at.desc`).catch(() => []);
       ownerImportInvoices().catch((error) => console.warn('Rechnungen nicht übernommen:', error));
       // Fortschritt der Partner in die lokalen Aufgaben übernehmen
@@ -23488,7 +23649,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const chips = `<div class="pp-filters hub-order-filters">${filters.map(([id, label, f]) => `<button type="button" class="${(hub.orderFilter || 'all') === id ? 'active' : ''}" data-hub-order-filter="${id}">${label} <b>${mine.filter(f).length}</b></button>`).join('')}</div>`;
       const groups = new Map();
       shown.forEach((o) => { const key = o.partner?.company_name || 'Servicepartner'; groups.set(key, [...(groups.get(key) || []), o]); });
-      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${['urgent', 'emergency', 'high'].includes(o.priority) ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : ''}${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubOrderApprovalsHtml(o)}${hubOrderQuotesHtml(o)}${hubReviewHtml(o)}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${o.status === 'offered' && cloudCanWrite() ? `<button type="button" class="secondary-btn danger" data-hub-withdraw="${o.id}">Anfrage zurückziehen</button>` : ''}${['completed', 'cancelled', 'rejected'].includes(o.status) ? `<button type="button" class="secondary-btn" data-hub-archive="${o.id}">${hubArchived().has(o.id) ? 'Aus dem Archiv holen' : 'Ins Archiv'}</button>` : ''}${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
+      const orderCard = (o) => { const unread = hubUnread(hubThreadMessages({ kind: 'order', id: o.id })); return `<div class="card hub-order"><div class="hub-partner-head"><div><strong>${['urgent', 'emergency', 'high'].includes(o.priority) ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : ''}${escapeHtml(o.title)}</strong><small>${o.property?.name ? `${icon('property')} ${escapeHtml(o.property.name)} · ` : ''}${escapeHtml(o.order_number)}${o.scheduled_at ? ` · ${escapeHtml(fmtDateTime(o.scheduled_at))}` : ''}</small>${o.response_note ? `<small class="hub-note">„${escapeHtml(o.response_note)}“</small>` : ''}</div><span class="pp-badge ${(PP_ORDER_STATUS[o.status] || [])[1] || 'muted'}">${escapeHtml((PP_ORDER_STATUS[o.status] || [o.status])[0])}</span></div>${(ownerSide.invoices || []).filter((inv) => inv.service_order_id === o.id).map((inv) => `<div class="hub-invoice">${icon('document')}<span><strong>Rechnung ${escapeHtml(inv.invoice_number || '')}</strong><small>${escapeHtml(ppMoney(inv.amount_gross, inv.currency))}${inv.due_date ? ` · fällig ${escapeHtml(fmtDate(inv.due_date))}` : ''}</small></span>${inv.document ? `<button type="button" class="secondary-btn" data-hub-invoice="${inv.id}">PDF öffnen</button>` : ''}</div>`).join('')}${hubOrderHybridHtml(o)}${hubOrderApprovalsHtml(o)}${hubOrderQuotesHtml(o)}${hubReviewHtml(o)}${hubAccessHtml(o)}<details class="hub-history" data-hub-history="${o.id}"><summary>Verlauf</summary><div class="hub-history-body" data-order-events="${o.id}" data-side="owner">${orderEvents[o.id] && !orderEvents[o.id].loading ? orderEventsHtml(o, 'owner') : ''}</div></details><div class="pp-actions"><button type="button" class="secondary-btn" data-hub-chat="order:${o.id}">${icon('note')} Nachrichten zum Auftrag${unread ? ` <b class="hub-count">${unread}</b>` : ''}</button>${o.status === 'offered' && cloudCanWrite() ? `<button type="button" class="secondary-btn danger" data-hub-withdraw="${o.id}">Anfrage zurückziehen</button>` : ''}${['completed', 'cancelled', 'rejected'].includes(o.status) ? `<button type="button" class="secondary-btn" data-hub-archive="${o.id}">${hubArchived().has(o.id) ? 'Aus dem Archiv holen' : 'Ins Archiv'}</button>` : ''}${ORDER_RUNNING.includes(o.status) && !(ownerSide.shares || []).some((sh) => sh.service_order_id === o.id) && hub.accessForm !== o.id ? `<button type="button" class="secondary-btn" data-hub-access="${o.id}">${icon('key')} Zugang teilen</button>` : ''}</div></div>`; };
       const rank = (o) => ({ in_progress: 0, scheduled: 1, accepted: 2, offered: 3, completed: 4 }[o.status] ?? 5);
       const list = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0], 'de')).map(([name, list]) => {
         const houses = new Map();
@@ -23672,7 +23833,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       hubRerender();
     });
     // ----- Jahresverträge (Hausbesitzer-Seite) -----
-    const AG_STATUS = { proposed: 'Vorgeschlagen', active: 'Aktiv', declined: 'Abgelehnt', ended: 'Beendet', cancelled: 'Zurückgezogen' };
+    const AG_STATUS = { proposed: 'Vorgeschlagen', active: 'Aktiv', paused: 'Pausiert', declined: 'Abgelehnt', ended: 'Beendet', cancelled: 'Zurückgezogen' };
     function hubAgreementsHtml() {
       const list = (ownerSide.agreements || []).filter((a) => !hub.partnerFilter || a.service_partner_id === hub.partnerFilter);
       const partners = (ownerSide.partners || []).filter((p) => p.partner_organization_id);
@@ -23689,6 +23850,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <dl class="pp-ag-facts"><div class="wide"><dt>${(a.task_titles || []).length > 1 ? 'Aufgaben' : 'Aufgabe'}</dt><dd>${escapeHtml(agTasksText(a))}${a.interval_label ? ` · ${escapeHtml(a.interval_label)}` : ''}</dd></div><div><dt>Jahrespreis</dt><dd>${escapeHtml(money(a.annual_price, a.currency))}</dd></div><div><dt>Laufzeit</dt><dd>${escapeHtml(fmtDate(a.starts_on))} – ${escapeHtml(fmtDate(a.ends_on))}</dd></div><div><dt>Einsätze</dt><dd>${done} erledigt${a.visits_per_year ? ` von ${a.visits_per_year}` : ''}</dd></div>${billed.length ? `<div><dt>Abgerechnet</dt><dd>${billed.map((i) => escapeHtml(money(i.amount_gross, i.currency))).join(', ')}</dd></div>` : ''}</dl>
           ${a.notes ? `<p class="settings-hint">${escapeHtml(a.notes)}</p>` : ''}
           ${agAutoHtml(a, cloudCanWrite())}
+          ${agTermsHtml(a, 'owner')}
           ${hub.agEdit === a.id ? agEditFormHtml(a, 'data-owner-form="agreement-edit"', recurring) : `<div class="settings-actions">${incoming ? `<button type="button" class="primary-btn" data-owner-ag="accept" data-id="${a.id}" ${busy}>Annehmen</button><button type="button" class="secondary-btn" data-owner-ag="decline" data-id="${a.id}" ${busy}>Ablehnen</button>` : ''}${a.status === 'proposed' && a.proposed_by === 'owner' ? '<small class="settings-hint">Wartet auf Zustimmung des Partners</small>' : ''}  ${['proposed', 'active'].includes(a.status) ? `<button type="button" class="secondary-btn" data-owner-ag="edit" data-id="${a.id}" ${busy}>${icon('edit')} Bearbeiten</button>` : ''}${!billed.length ? `<button type="button" class="secondary-btn danger" data-owner-ag="delete" data-id="${a.id}" ${busy}>Löschen</button>` : ''}${a.status === 'active' || (a.status === 'proposed' && a.proposed_by === 'owner') ? `<button type="button" class="secondary-btn" data-owner-ag="end" data-id="${a.id}" ${busy}>${a.status === 'proposed' ? 'Zurückziehen' : 'Beenden'}</button>` : ''}</div>`}</article>`;
       };
       const form = partners.length && props.length ? `<form class="card hub-agreement-form" data-owner-form="agreement"><h3 class="card-title">Jahresvertrag vorschlagen</h3>
@@ -23704,7 +23866,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <label class="full"><span class="form-label">Hinweise</span><textarea class="form-control" name="notes" rows="2" maxlength="2000"></textarea></label>
         </div><div class="settings-actions"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>Vorschlag senden</button></div></form>`
         : '<p class="settings-hint">Verbinde zuerst einen Servicepartner (Reiter „Partner &amp; Codes“), dann kannst du mit ihm einen Jahresvertrag vereinbaren.</p>';
-      const groups = [['Offene Vorschläge', list.filter((a) => a.status === 'proposed')], ['Aktive Verträge', list.filter((a) => a.status === 'active')], ['Beendet', list.filter((a) => ['ended', 'declined', 'cancelled'].includes(a.status))]];
+      const groups = [['Offene Vorschläge', list.filter((a) => a.status === 'proposed')], ['Aktive Verträge', list.filter((a) => ['active', 'paused'].includes(a.status))], ['Beendet', list.filter((a) => ['ended', 'declined', 'cancelled'].includes(a.status))]];
       return `${groups.filter(([, rows]) => rows.length).map(([title, rows]) => `<h2 class="hub-list-title">${title}</h2>${rows.map(card).join('')}`).join('')}${form}`;
     }
     document.addEventListener('click', (event) => {
@@ -23734,18 +23896,347 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         showToast('Vorschlag gesendet – der Partner muss den Jahresvertrag noch annehmen.');
       });
     });
+    // ===== Hybrid Service: Wartungspläne, Fälligkeiten, Beauftragung (Migration 4700) =====
+    // Plan = dauerhafte Regel (maintenance) · Fälligkeit = service_tasks (Sicht maintenance_occurrences) · Auftrag = service_orders + Positionen
+    const mt = { available: null, plans: null, occ: null, templates: null, form: null, filter: 'action', picked: new Set(), open: '', previewTimer: null };
+    const MT_MODES = [
+      ['owner_self_service', 'Ich erledige selbst', 'Husora erinnert dich, es wird kein Auftrag erstellt.'],
+      ['owner_approval', 'Servicepartner nach meiner Freigabe', 'Husora meldet die Fälligkeit, du entscheidest und beauftragst.'],
+      ['agreement_auto', 'Automatisch über Dauerauftrag', 'Nur mit gültigem Dauerauftrag: Husora prüft Umfang, Preis und Budget und beauftragt sonst nicht.'],
+      ['unassigned', 'Noch offen – später entscheiden', 'Die Fälligkeit bleibt offen, bis du jemanden bestimmst.']
+    ];
+    const MT_INTERVALS = [['once', 'einmalig'], ['daily', 'täglich'], ['weekly', 'wöchentlich'], ['every_n_weeks', 'alle N Wochen'], ['monthly', 'monatlich'], ['every_n_months', 'alle N Monate'], ['quarterly', 'vierteljährlich'], ['semi_annual', 'halbjährlich'], ['yearly', 'jährlich'], ['seasonal', 'saisonal (jährlich in der Saison)'], ['custom', 'eigenes Intervall']];
+    const MT_STATUS = { upcoming: ['Anstehend', 'muted'], due: ['Fällig', 'amber'], owner_action_required: ['Entscheidung nötig', 'amber'], overdue: ['Überfällig', 'red'], partner_requested: ['Beim Partner angefragt', 'blue'], assigned: ['Partner beauftragt', 'blue'], in_progress: ['In Arbeit', 'blue'], completed: ['Erledigt', 'green'], skipped: ['Übersprungen', 'muted'], cancelled: ['Entfallen', 'muted'] };
+    const MT_WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+    const MT_MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+    const MT_SOURCE = { maintenance: 'Wartungsplan', agreement_auto: 'Automatisch aus Dauerauftrag', finding: 'Aus Mangel/Kontrolle', emergency: 'Notfall' };
+    function mtIntervalLabel(p) {
+      const n = Number(p.interval_value) || 0;
+      const base = { every_n_weeks: `alle ${n || 2} Wochen`, every_n_months: `alle ${n || 2} Monate`, custom: `alle ${n || 1} ${{ day: 'Tage', week: 'Wochen', month: 'Monate', year: 'Jahre' }[p.interval_unit || 'day']}` }[p.interval_type]
+        || (MT_INTERVALS.find(([id]) => id === p.interval_type) || [, p.interval_type || '–'])[1];
+      const extra = [p.weekday && ['weekly', 'every_n_weeks'].includes(p.interval_type) ? MT_WEEKDAYS[p.weekday - 1] : '', p.day_of_month ? `am ${p.day_of_month}.` : '',
+        p.season_start_month && p.season_end_month ? `${MT_MONTHS[p.season_start_month - 1].slice(0, 3)}–${MT_MONTHS[p.season_end_month - 1].slice(0, 3)}` : ''].filter(Boolean);
+      return [base, ...extra].join(' · ');
+    }
+    const mtModeLabel = (mode) => (MT_MODES.find(([id]) => id === mode) || [, mode])[1];
+    const mtPropName = (id) => (ownerSide.cloudProperties || []).find((p) => p.id === id)?.name || 'Haus';
+    const mtPartnerName = (id) => (ownerSide.partners || []).find((p) => p.id === id)?.company_name || '';
+    async function mtLoad(org) {
+      const from = localDateKey(new Date(Date.now() - 90 * 86400000));
+      try {
+        const [plans, occ, templates, extra] = await Promise.all([
+          cloudFetch(`/rest/v1/maintenance?organization_id=eq.${org}&archived_at=is.null&select=*&order=next_due_at.asc.nullslast&limit=300`),
+          cloudFetch(`/rest/v1/maintenance_occurrences?organization_id=eq.${org}&local_scheduled_date=gte.${from}&select=*&order=scheduled_start.asc&limit=600`),
+          mt.templates ? Promise.resolve(mt.templates) : cloudFetch('/rest/v1/maintenance_templates?select=key,title,category,task_type,default_interval_type,default_interval_value,priority,season_start_month,season_end_month&order=category.asc,title.asc'),
+          cloudFetch(`/rest/v1/service_orders?organization_id=eq.${org}&select=id,source_type,owner_confirmed_at,owner_dispute_note,agreement_version,estimated_cost,items:service_order_items(id,occurrence_id,title,status,checklist,checklist_results,partner_note,unit_price,line_total,sort_order)&order=created_at.desc&limit=200`)
+        ]);
+        Object.assign(mt, { available: true, plans, occ, templates });
+        const byId = new Map(extra.map((x) => [x.id, x]));
+        (ownerSide.orders || []).forEach((o) => { const x = byId.get(o.id); if (x) Object.assign(o, x, { items: (x.items || []).sort((a, b) => a.sort_order - b.sort_order) }); });
+      } catch (error) {
+        // Server noch ohne Migration 4700: Bereich ausblenden statt Fehler
+        if (/maintenance_occurrences|service_order_items|maintenance_templates|source_type|does not exist|schema cache/i.test(error.message || '')) { mt.available = false; return; }
+        throw error;
+      }
+    }
+    function mtActionCount() { return (mt.occ || []).filter((o) => ['owner_action_required', 'overdue', 'due'].includes(o.occurrence_status) && !(o.service_order_id && !['rejected', 'cancelled', 'completed'].includes(o.order_status))).length; }
+    function mtOccRow(o) {
+      const st = MT_STATUS[o.occurrence_status] || [o.occurrence_status, 'muted'];
+      const open = ['pending', 'assigned'].includes(o.task_status) && !(o.service_order_id && !['rejected', 'cancelled', 'completed'].includes(o.order_status));
+      const canPick = open && o.task_status === 'pending';
+      const write = cloudCanWrite();
+      const busy = ownerSide.busy ? 'disabled' : '';
+      const partners = (ownerSide.partners || []).filter((p) => p.partner_organization_id && p.status === 'active');
+      const date = o.local_due_date || o.local_scheduled_date;
+      const moved = o.local_due_date && o.local_scheduled_date && o.local_due_date !== o.local_scheduled_date;
+      const inline = mt.open === `order:${o.id}` ? `<div class="mt-inline" data-mt-inline="${o.id}">
+          <label><span class="form-label">Servicepartner</span><select class="form-control" name="partner">${partners.map((p) => `<option value="${p.id}" ${p.id === o.service_partner_id ? 'selected' : ''}>${escapeHtml(p.company_name)}</option>`).join('')}</select></label>
+          <label><span class="form-label">Preisrahmen (optional)</span><input class="form-control" name="cost" type="number" min="0" step="1" placeholder="${escapeHtml(ownerSide.orgCurrency || 'EUR')}"></label>
+          <label class="full"><span class="form-label">Hinweis an den Partner</span><input class="form-control" name="note" maxlength="500"></label>
+          <div class="pp-actions"><button type="button" class="secondary-btn" data-mt-action="close">Abbrechen</button><button type="button" class="primary-btn" data-mt-action="order-send" data-id="${o.id}" ${busy || (partners.length ? '' : 'disabled')}>${icon('check')} Anfrage senden</button></div>
+          ${partners.length ? '<small class="settings-hint">Mit dem Senden gibst du diese Fälligkeit zur Anfrage frei. Verbindlich wird der Auftrag erst, wenn der Partner annimmt; Preis und Termin stehen dann im Auftrag.</small>' : '<small class="settings-hint">Noch kein verbundener Servicepartner – lade ihn im Reiter „Partner &amp; Codes“ ein.</small>'}
+        </div>` : mt.open === `move:${o.id}` ? `<div class="mt-inline" data-mt-inline="${o.id}"><label><span class="form-label">Neuer Termin (nur diese Fälligkeit)</span><input class="form-control" type="date" name="date" value="${escapeHtml(date || '')}"></label>
+          <div class="pp-actions"><button type="button" class="secondary-btn" data-mt-action="close">Abbrechen</button><button type="button" class="primary-btn" data-mt-action="move-save" data-id="${o.id}" ${busy}>Verschieben</button></div></div>` : '';
+      return `<div class="mt-occ ${o.occurrence_status}">
+        ${canPick && write ? `<input type="checkbox" class="mt-pick" data-mt-pick="${o.id}" aria-label="Für gemeinsamen Auftrag auswählen" ${mt.picked.has(o.id) ? 'checked' : ''}>` : '<span class="mt-pick-spacer"></span>'}
+        <div class="mt-occ-main"><strong>${escapeHtml(o.title)}</strong>
+          <small>${icon('calendar')} ${escapeHtml(fmtDate(date))}${moved ? ' (verschoben)' : ''} · ${icon('property')} ${escapeHtml(mtPropName(o.property_id))} · ${escapeHtml(mtModeLabel(o.automation_mode))}${o.service_partner_id ? ` · ${escapeHtml(mtPartnerName(o.service_partner_id))}` : ''}</small>
+          ${o.blocked_reason ? `<small class="mt-reason">${icon('alert')} ${escapeHtml(o.blocked_reason)}</small>` : ''}
+          ${o.skip_reason ? `<small class="settings-hint">Grund: ${escapeHtml(o.skip_reason)}</small>` : ''}
+          ${o.service_order_id ? `<small>${icon('task')} Auftrag ${escapeHtml(o.order_number || '')} · ${escapeHtml((PP_ORDER_STATUS[o.order_status] || [o.order_status])[0])}${o.order_status === 'completed' ? (o.owner_confirmed_at ? ' · von dir bestätigt' : ' · <b>Abschluss bestätigen</b>') : ''}</small>` : ''}
+        </div>
+        <span class="pp-badge ${st[1]}">${escapeHtml(st[0])}</span>
+        ${open && write ? `<div class="pp-actions mt-occ-actions">
+          ${o.task_status === 'pending' ? `<button type="button" class="primary-btn" data-mt-action="order" data-id="${o.id}" ${busy}>Beauftragen</button>` : ''}
+          <button type="button" class="secondary-btn" data-mt-action="done" data-id="${o.id}" ${busy}>${icon('check')} Selbst erledigt</button>
+          <button type="button" class="secondary-btn" data-mt-action="skip" data-id="${o.id}" ${busy}>Überspringen</button>
+          ${o.task_status === 'pending' ? `<button type="button" class="secondary-btn" data-mt-action="move" data-id="${o.id}" ${busy}>Verschieben</button>` : ''}
+        </div>` : o.service_order_id ? `<div class="pp-actions mt-occ-actions"><button type="button" class="secondary-btn" data-hub-tab="orders">Zum Auftrag</button></div>` : ''}
+        ${inline}
+      </div>`;
+    }
+    function mtPlanForm(plan) {
+      const p = plan || { automation_mode: 'owner_self_service', interval_type: 'monthly', start_date: localDateKey(new Date()), local_time: '09:00', lead_days: 14, reminder_days: [7, 1, 0], priority: 'normal' };
+      const props = ownerSide.cloudProperties || [];
+      const partners = (ownerSide.partners || []).filter((x) => x.partner_organization_id && x.status === 'active');
+      const ags = (ownerSide.agreements || []).filter((a) => ['active', 'paused', 'proposed'].includes(a.status));
+      const mode = p.automation_mode;
+      const show = (modes) => (modes.includes(mode) ? '' : 'hidden');
+      const sel = (a, b) => (String(a ?? '') === String(b ?? '') ? 'selected' : '');
+      return `<form class="card hub-card mt-form" data-mt-form="${plan ? plan.id : 'new'}">
+        <h2 class="card-title">${plan ? 'Wartungsplan bearbeiten' : 'Neuer Wartungsplan'}</h2>
+        <p class="card-caption">Ein Wartungsplan ist eine Regel, kein Auftrag: Husora erzeugt daraus Fälligkeiten und – je nach Zuständigkeit – Erinnerungen, Freigabeanfragen oder Aufträge.</p>
+        <div class="pp-grid">
+          ${plan ? `<div class="full"><span class="form-label">Haus</span><strong>${escapeHtml(mtPropName(p.property_id))}</strong></div>` : `<label><span class="form-label">Haus</span><select class="form-control" name="property_id" required>${props.map((x) => `<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('')}</select></label>`}
+          ${plan ? '' : `<label><span class="form-label">Vorlage (optional)</span><select class="form-control" name="template_key" data-mt-template><option value="">– eigene Aufgabe –</option>${(mt.templates || []).map((t) => `<option value="${escapeHtml(t.key)}">${escapeHtml(t.category)} · ${escapeHtml(t.title)}</option>`).join('')}</select></label>`}
+          <label class="full"><span class="form-label">Titel</span><input class="form-control" name="title" required maxlength="200" value="${escapeHtml(p.title || '')}"></label>
+          <label><span class="form-label">Kategorie</span><input class="form-control" name="category" maxlength="80" value="${escapeHtml(p.category || '')}" placeholder="z. B. Garten"></label>
+          <label><span class="form-label">Priorität</span><select class="form-control" name="priority">${[['low', 'niedrig'], ['normal', 'normal'], ['high', 'hoch'], ['urgent', 'dringend']].map(([v, l]) => `<option value="${v}" ${sel(p.priority, v)}>${l}</option>`).join('')}</select></label>
+          <label><span class="form-label">Wiederholung</span><select class="form-control" name="interval_type" data-mt-interval>${MT_INTERVALS.map(([v, l]) => `<option value="${v}" ${sel(p.interval_type, v)}>${l}</option>`).join('')}</select></label>
+          <label data-mt-for="every_n_weeks every_n_months custom daily" ${['every_n_weeks', 'every_n_months', 'custom', 'daily'].includes(p.interval_type) ? '' : 'hidden'}><span class="form-label">Alle … (Anzahl)</span><input class="form-control" name="interval_value" type="number" min="1" max="366" value="${escapeHtml(p.interval_value ?? '')}"></label>
+          <label data-mt-for="custom" ${p.interval_type === 'custom' ? '' : 'hidden'}><span class="form-label">Einheit</span><select class="form-control" name="interval_unit">${[['day', 'Tage'], ['week', 'Wochen'], ['month', 'Monate'], ['year', 'Jahre']].map(([v, l]) => `<option value="${v}" ${sel(p.interval_unit, v)}>${l}</option>`).join('')}</select></label>
+          <label data-mt-for="weekly every_n_weeks" ${['weekly', 'every_n_weeks'].includes(p.interval_type) ? '' : 'hidden'}><span class="form-label">Wochentag</span><select class="form-control" name="weekday"><option value="">wie Startdatum</option>${MT_WEEKDAYS.map((d, i) => `<option value="${i + 1}" ${sel(p.weekday, i + 1)}>${d}</option>`).join('')}</select></label>
+          <label data-mt-for="monthly every_n_months quarterly semi_annual yearly seasonal" ${['monthly', 'every_n_months', 'quarterly', 'semi_annual', 'yearly', 'seasonal'].includes(p.interval_type) ? '' : 'hidden'}><span class="form-label">Tag im Monat</span><input class="form-control" name="day_of_month" type="number" min="1" max="31" value="${escapeHtml(p.day_of_month ?? '')}" placeholder="wie Startdatum (31 = Monatsende)"></label>
+          <label><span class="form-label">Start</span><input class="form-control" name="start_date" type="date" required value="${escapeHtml(p.start_date || '')}"></label>
+          <label><span class="form-label">Ende (optional)</span><input class="form-control" name="end_date" type="date" value="${escapeHtml(p.end_date || '')}"></label>
+          <label><span class="form-label">Uhrzeit</span><input class="form-control" name="local_time" type="time" value="${escapeHtml(String(p.local_time || '09:00').slice(0, 5))}"></label>
+          <label><span class="form-label">Saison von</span><select class="form-control" name="season_start_month"><option value="">ganzjährig</option>${MT_MONTHS.map((m, i) => `<option value="${i + 1}" ${sel(p.season_start_month, i + 1)}>${m}</option>`).join('')}</select></label>
+          <label><span class="form-label">Saison bis</span><select class="form-control" name="season_end_month"><option value="">ganzjährig</option>${MT_MONTHS.map((m, i) => `<option value="${i + 1}" ${sel(p.season_end_month, i + 1)}>${m}</option>`).join('')}</select></label>
+          <fieldset class="full mt-modes"><legend class="form-label">Wer kümmert sich?</legend>${MT_MODES.map(([v, l, d]) => `<label class="mt-mode ${mode === v ? 'on' : ''}"><input type="radio" name="automation_mode" value="${v}" ${mode === v ? 'checked' : ''}><span><strong>${l}</strong><small>${d}</small></span></label>`).join('')}</fieldset>
+          <label data-mt-mode="owner_approval agreement_auto" ${show(['owner_approval', 'agreement_auto'])}><span class="form-label">Servicepartner</span><select class="form-control" name="assigned_partner_id"><option value="">${mode === 'agreement_auto' ? 'aus dem Dauerauftrag' : 'bei Fälligkeit wählen'}</option>${partners.map((x) => `<option value="${x.id}" ${sel(p.assigned_partner_id, x.id)}>${escapeHtml(x.company_name)}</option>`).join('')}</select></label>
+          <label data-mt-mode="agreement_auto" ${show(['agreement_auto'])}><span class="form-label">Dauerauftrag</span><select class="form-control" name="service_agreement_id"><option value="">– wählen –</option>${ags.map((a) => `<option value="${a.id}" ${sel(p.service_agreement_id, a.id)} ${a.status === 'active' && a.approval_mode === 'auto_within_limits' ? '' : 'disabled'}>${escapeHtml(a.title)} · ${escapeHtml(a.property?.name || '')}${a.status !== 'active' ? ` (${escapeHtml(AG_STATUS[a.status] || a.status)})` : a.approval_mode !== 'auto_within_limits' ? ' (Freigabe je Einsatz)' : ''}</option>`).join('')}</select></label>
+          <label data-mt-mode="owner_approval agreement_auto" ${show(['owner_approval', 'agreement_auto'])}><span class="form-label">Budgetgrenze je Einsatz (optional)</span><input class="form-control" name="budget_limit" type="number" min="0" step="1" value="${escapeHtml(p.budget_limit ?? '')}"></label>
+          <label><span class="form-label">Vorlauf (Tage)</span><input class="form-control" name="lead_days" type="number" min="1" max="120" value="${escapeHtml(p.lead_days ?? 14)}"></label>
+          <label><span class="form-label">Erinnern (Tage vorher)</span><input class="form-control" name="reminder_days" value="${escapeHtml((p.reminder_days || [7, 1, 0]).join(', '))}" placeholder="7, 1, 0"></label>
+          <label><span class="form-label">Dauer (Minuten)</span><input class="form-control" name="estimated_duration_minutes" type="number" min="1" max="10080" value="${escapeHtml(p.estimated_duration_minutes ?? '')}"></label>
+          <label class="full"><span class="form-label">Checkliste (eine Zeile je Punkt)</span><textarea class="form-control" name="checklist" rows="3" maxlength="3000">${escapeHtml((Array.isArray(p.checklist) ? p.checklist : []).map((c) => (typeof c === 'string' ? c : c?.label || '')).join('\n'))}</textarea></label>
+          <label class="full"><span class="form-label">Beschreibung</span><textarea class="form-control" name="description" rows="2" maxlength="4000">${escapeHtml(p.description || '')}</textarea></label>
+        </div>
+        <div class="mt-preview" id="mt-preview" aria-live="polite"><span class="form-label">Nächste Termine</span><p class="settings-hint">wird berechnet …</p></div>
+        <div class="settings-actions"><button type="button" class="secondary-btn" data-mt-action="close">Abbrechen</button><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>${icon('check')} Plan speichern</button></div>
+      </form>`;
+    }
+    function mtReadForm(form) {
+      const f = new FormData(form);
+      const v = (k) => String(f.get(k) ?? '').trim();
+      const num = (k) => (v(k) === '' ? null : Number(v(k)));
+      const body = {
+        title: v('title'), category: v('category') || null, priority: v('priority') || 'normal', interval_type: v('interval_type'),
+        interval_value: num('interval_value'), interval_unit: v('interval_unit') || null, weekday: num('weekday'), day_of_month: num('day_of_month'),
+        start_date: v('start_date') || null, end_date: v('end_date') || null, local_time: v('local_time') || '09:00',
+        season_start_month: num('season_start_month'), season_end_month: num('season_end_month'), automation_mode: v('automation_mode') || 'owner_self_service',
+        assigned_partner_id: v('assigned_partner_id') || null, service_agreement_id: v('service_agreement_id') || null, budget_limit: num('budget_limit'),
+        lead_days: num('lead_days') || 14, estimated_duration_minutes: num('estimated_duration_minutes'), description: v('description') || null,
+        reminder_days: v('reminder_days').split(/[,; ]+/).filter(Boolean).map(Number).filter((n) => Number.isInteger(n) && n >= 0 && n <= 60).slice(0, 5),
+        checklist: v('checklist').split('\n').map((s) => s.trim()).filter(Boolean).slice(0, 40)
+      };
+      if (form.dataset.mtForm !== 'new') body.id = form.dataset.mtForm; else { body.property_id = v('property_id'); if (v('template_key')) body.template_key = v('template_key'); }
+      if (body.interval_type !== 'custom') body.interval_unit = null;
+      if (!['weekly', 'every_n_weeks'].includes(body.interval_type)) body.weekday = null;
+      if (!['monthly', 'every_n_months', 'quarterly', 'semi_annual', 'yearly', 'seasonal'].includes(body.interval_type)) body.day_of_month = null;
+      if (!!body.season_start_month !== !!body.season_end_month) throw new Error('Bitte Saisonbeginn und -ende angeben oder beide leer lassen.');
+      if (body.end_date && body.start_date && body.end_date < body.start_date) throw new Error('Das Ende liegt vor dem Start.');
+      if (body.automation_mode === 'agreement_auto' && !body.service_agreement_id) throw new Error('Für die automatische Beauftragung bitte einen aktiven Dauerauftrag wählen.');
+      return body;
+    }
+    function mtPreview(form) {
+      clearTimeout(mt.previewTimer);
+      mt.previewTimer = setTimeout(async () => {
+        const box = document.getElementById('mt-preview');
+        if (!box || !form.isConnected) return;
+        let body; try { body = mtReadForm(form); } catch (error) { box.innerHTML = `<span class="form-label">Nächste Termine</span><p class="settings-hint">${escapeHtml(error.message)}</p>`; return; }
+        if (!body.start_date) return;
+        const tz = mt.plans?.find((p) => p.id === body.id)?.timezone;
+        try {
+          const rows = await cloudFetch('/rest/v1/rpc/maintenance_preview', { method: 'POST', body: { p_plan: { ...body, timezone: tz || undefined }, p_count: 6 } });
+          box.innerHTML = `<span class="form-label">Nächste Termine</span>${rows.length ? `<ol class="mt-preview-list">${rows.map((r) => `<li>${escapeHtml(new Date(r.scheduled_for).toLocaleString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }))}</li>`).join('')}</ol>` : '<p class="settings-hint">Mit diesen Angaben gibt es keinen weiteren Termin.</p>'}`;
+        } catch (error) { box.innerHTML = `<span class="form-label">Nächste Termine</span><p class="settings-hint">${escapeHtml(error.message)}</p>`; }
+      }, 350);
+    }
+    function mtImportHtml() {
+      const selected = (autoTasks.templates || []).filter((t) => t.selected);
+      const props = ownerSide.cloudProperties || [];
+      if (!selected.length || !props.length || !cloudCanWrite()) return '';
+      return `<section class="card hub-card mt-import"><h2 class="card-title">${icon('task')} Automatik in Wartungspläne übernehmen</h2>
+        <p class="card-caption">Du nutzt ${selected.length} automatische Aufgabe${selected.length === 1 ? '' : 'n'} auf diesem Gerät. Als Wartungsplan laufen sie geräteübergreifend auf dem Server, mit Erinnerungen und optionaler Beauftragung. Bereits übernommene Vorlagen werden übersprungen; die Geräte-Automatik wird für übernommene Vorlagen ausgeschaltet (keine doppelten Aufgaben).</p>
+        <div class="pp-inline"><select class="form-control" data-mt-import-prop aria-label="Haus">${props.map((p) => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')}</select><button type="button" class="secondary-btn" data-mt-action="import" ${ownerSide.busy ? 'disabled' : ''}>Übernehmen</button></div></section>`;
+    }
+    // Hinweis auf der Aufgaben-Seite: Server-Fälligkeiten aus Wartungsplänen (Eigentümerentscheidung) + Sprung in die Wartung
+    function mtTasksHintHtml() {
+      if (!cloudReady() || !mt.available || !mt.occ) return '';
+      const n = mtActionCount();
+      const plans = (mt.plans || []).filter((p) => p.status === 'active').length;
+      if (!n && !plans) return '';
+      return `<section class="card mt-tasks-hint"><div><h2 class="card-title">${icon('calendar')} Wartungspläne</h2><p class="card-caption">${n ? `<b>${n}</b> Fälligkeit${n === 1 ? '' : 'en'} brauch${n === 1 ? 't' : 'en'} deine Entscheidung (selbst erledigen, beauftragen oder überspringen).` : `${plans} aktive${plans === 1 ? 'r' : ''} Wartungsplan${plans === 1 ? '' : 'pläne'} – aktuell ist nichts zu entscheiden.`}</p></div><button type="button" class="${n ? 'primary-btn' : 'secondary-btn'}" data-mt-open>Zur Wartung</button></section>`;
+    }
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-mt-open]')) return;
+      hub.tab = 'maintenance'; mt.filter = 'action';
+      document.querySelector('.nav [data-page="partnerHub"]')?.click() || (currentPage = 'partnerHub', render());
+    });
+    function hubMaintenanceHtml() {
+      if (mt.available === false) return '<section class="card hub-card"><h2 class="card-title">Wartungspläne</h2><p class="settings-hint">Wartungspläne stehen zur Verfügung, sobald die Husora-Datenbank aktualisiert ist (Migration 4700).</p></section>';
+      if (mt.plans === null) return '<div class="pp-skel"><i></i><i></i></div>';
+      const occ = mt.occ || [];
+      const openOrder = (o) => o.service_order_id && !['rejected', 'cancelled', 'completed'].includes(o.order_status);
+      const groups = {
+        action: (o) => !openOrder(o) && ['owner_action_required', 'overdue', 'due'].includes(o.occurrence_status),
+        upcoming: (o) => o.occurrence_status === 'upcoming',
+        partner: (o) => ['partner_requested', 'assigned', 'in_progress'].includes(o.occurrence_status) || (o.order_status === 'completed' && !o.owner_confirmed_at),
+        done: (o) => ['completed', 'skipped', 'cancelled'].includes(o.occurrence_status),
+        all: () => true
+      };
+      const thirty = Date.now() - 30 * 86400000;
+      const tiles = [['Handlungsbedarf', occ.filter(groups.action).length, 'amber'], ['Beim Partner', occ.filter((o) => ['partner_requested', 'assigned', 'in_progress'].includes(o.occurrence_status)).length, 'blue'],
+        ['Blockiert', occ.filter((o) => o.owner_action === 'blocked' && o.task_status === 'pending').length, 'red'], ['Erledigt (30 Tage)', occ.filter((o) => o.occurrence_status === 'completed' && new Date(o.completed_at || 0) > thirty).length, 'green']];
+      const chips = [['action', 'Handlungsbedarf'], ['upcoming', 'Anstehend'], ['partner', 'Beim Partner'], ['done', 'Erledigt'], ['all', 'Alle']];
+      const shown = occ.filter(groups[mt.filter] || groups.action).sort((a, b) => (mt.filter === 'done' ? -1 : 1) * (new Date(a.scheduled_start) - new Date(b.scheduled_start))).slice(0, 120);
+      const picked = [...mt.picked].map((id) => occ.find((o) => o.id === id)).filter(Boolean);
+      const partners = (ownerSide.partners || []).filter((p) => p.partner_organization_id && p.status === 'active');
+      const bundle = picked.length ? `<div class="mt-bundle-bar"><span><b>${picked.length}</b> Fälligkeit${picked.length === 1 ? '' : 'en'} gewählt${new Set(picked.map((o) => o.property_id)).size > 1 ? ' – <b class="pp-red">nur Fälligkeiten desselben Hauses lassen sich bündeln</b>' : ''}</span>
+          <select class="form-control" data-mt-bundle-partner aria-label="Servicepartner">${partners.map((p) => `<option value="${p.id}">${escapeHtml(p.company_name)}</option>`).join('')}</select>
+          <button type="button" class="secondary-btn" data-mt-action="unpick">Auswahl aufheben</button>
+          <button type="button" class="primary-btn" data-mt-action="bundle" ${ownerSide.busy || !partners.length ? 'disabled' : ''}>${icon('check')} ${picked.length > 1 ? `Gemeinsam beauftragen (${picked.length})` : 'Beauftragen'}</button></div>` : '';
+      const planCard = (p) => {
+        const next = occ.find((o) => o.maintenance_id === p.id && !['completed', 'skipped', 'cancelled'].includes(o.task_status));
+        const busy = ownerSide.busy ? 'disabled' : '';
+        const ag = (ownerSide.agreements || []).find((a) => a.id === p.service_agreement_id);
+        return `<article class="card hub-agreement mt-plan ${p.status}"><div class="hub-partner-head"><div><strong>${escapeHtml(p.title)}</strong><small>${icon('property')} ${escapeHtml(mtPropName(p.property_id))} · ${escapeHtml(mtIntervalLabel(p))}</small></div><span class="hub-status ${p.status === 'active' ? 'active' : 'ended'}">${p.status === 'active' ? 'aktiv' : 'pausiert'}</span></div>
+          <dl class="pp-ag-facts"><div><dt>Zuständig</dt><dd>${escapeHtml(mtModeLabel(p.automation_mode))}</dd></div>${p.assigned_partner_id ? `<div><dt>Partner</dt><dd>${escapeHtml(mtPartnerName(p.assigned_partner_id))}</dd></div>` : ''}${ag ? `<div><dt>Dauerauftrag</dt><dd>${escapeHtml(ag.title)}</dd></div>` : ''}<div><dt>Nächster Termin</dt><dd>${next ? escapeHtml(fmtDate(next.local_due_date || next.local_scheduled_date)) : '–'}</dd></div>${p.last_performed_at ? `<div><dt>Zuletzt erledigt</dt><dd>${escapeHtml(fmtDate(p.last_performed_at))}</dd></div>` : ''}${p.budget_limit != null ? `<div><dt>Budget je Einsatz</dt><dd>${escapeHtml(ppMoney(p.budget_limit, p.currency))}</dd></div>` : ''}</dl>
+          ${cloudCanWrite() ? `<div class="settings-actions"><button type="button" class="secondary-btn" data-mt-action="edit" data-id="${p.id}" ${busy}>${icon('edit')} Bearbeiten</button>${p.status === 'active' ? `<button type="button" class="secondary-btn" data-mt-action="pause" data-id="${p.id}" ${busy}>Pausieren</button><button type="button" class="secondary-btn" data-mt-action="refresh" data-id="${p.id}" ${busy}>Jetzt prüfen</button>` : `<button type="button" class="secondary-btn" data-mt-action="resume" data-id="${p.id}" ${busy}>Fortsetzen</button>`}<button type="button" class="secondary-btn danger" data-mt-action="archive" data-id="${p.id}" ${busy}>Archivieren</button></div>` : ''}
+        </article>`;
+      };
+      const editing = mt.form ? mtPlanForm(mt.form === 'new' ? null : mt.plans.find((p) => p.id === mt.form)) : '';
+      return `<div class="mt-kpis">${tiles.map(([l, n, c]) => `<div class="mt-kpi ${c}"><b>${n}</b><span>${l}</span></div>`).join('')}</div>
+        ${editing}
+        <h2 class="hub-list-title">Fälligkeiten</h2>
+        <div class="pp-filters hub-order-filters">${chips.map(([id, l]) => `<button type="button" class="${mt.filter === id ? 'active' : ''}" data-mt-filter="${id}">${l} <b>${occ.filter(groups[id]).length}</b></button>`).join('')}</div>
+        ${bundle}
+        ${shown.length ? `<div class="mt-occ-list">${shown.map(mtOccRow).join('')}</div>` : `<p class="settings-hint">${mt.filter === 'action' ? 'Gerade ist nichts zu entscheiden.' : 'In dieser Ansicht gibt es keine Fälligkeiten.'}</p>`}
+        <div class="hub-list-head"><h2 class="hub-list-title">Wartungspläne</h2>${cloudCanWrite() && !mt.form ? `<button type="button" class="primary-btn" data-mt-action="new">${icon('plus')} Wartungsplan</button>` : ''}</div>
+        ${mt.plans.length ? mt.plans.map(planCard).join('') : `<p class="settings-hint">Noch keine Wartungspläne. Lege einen an – zum Beispiel „Rasen mähen, wöchentlich April–Oktober“ – und entscheide, ob du selbst erledigst oder ein Servicepartner beauftragt wird.</p>`}
+        ${mtImportHtml()}`;
+    }
+    async function mtImport(propertyId) {
+      const selected = (autoTasks.templates || []).filter((t) => t.selected);
+      const existing = new Set((mt.plans || []).filter((p) => p.property_id === propertyId).map((p) => p.title));
+      const keys = new Set((mt.templates || []).map((t) => t.key));
+      let made = 0;
+      for (const t of selected) {
+        if (existing.has(t.title)) continue;
+        const months = templateMonths(t);
+        const body = { property_id: propertyId, title: t.title, interval_type: 'custom', interval_value: Math.min(366, Math.max(1, Number(t.interval) || 365)), interval_unit: 'day', start_date: localDateKey(new Date(Date.now() + 7 * 86400000)), automation_mode: 'owner_self_service' };
+        if (t.builtin && keys.has(t.id)) body.template_key = t.id;
+        if (months?.length) { body.season_start_month = months[0] + 1; body.season_end_month = months[months.length - 1] + 1; }
+        if (Number(t.interval) >= 365) { body.interval_type = 'yearly'; body.interval_value = null; body.interval_unit = null; }
+        await cloudFetch('/rest/v1/rpc/save_maintenance_plan', { method: 'POST', body: { p_plan: body } });
+        t.selected = false; made += 1;
+      }
+      persistAutoTasks();
+      showToast(made ? `${made} Wartungsplan${made === 1 ? '' : 'e'} angelegt – die Geräte-Automatik für diese Vorlagen ist aus.` : 'Alle gewählten Vorlagen sind für dieses Haus schon als Wartungsplan angelegt.');
+    }
+    document.addEventListener('click', (event) => {
+      if (currentPage !== 'partnerHub') return;
+      const f = event.target.closest('[data-mt-filter]');
+      if (f) { mt.filter = f.dataset.mtFilter; hubRerender(); return; }
+      const b = event.target.closest('[data-mt-action]');
+      if (!b) return;
+      const kind = b.dataset.mtAction;
+      const id = b.dataset.id;
+      const occ = (mt.occ || []).find((o) => o.id === id);
+      const rpc = (name, body) => cloudFetch(`/rest/v1/rpc/${name}`, { method: 'POST', body });
+      if (kind === 'new') { mt.form = 'new'; hubRerender(); const form = document.querySelector('[data-mt-form]'); if (form) { mtPreview(form); form.scrollIntoView({ behavior: 'smooth', block: 'start' }); } return; }
+      if (kind === 'edit') { mt.form = id; hubRerender(); const form = document.querySelector('[data-mt-form]'); if (form) { mtPreview(form); form.scrollIntoView({ behavior: 'smooth', block: 'start' }); } return; }
+      if (kind === 'close') { mt.form = null; mt.open = ''; hubRerender(); return; }
+      if (kind === 'order' || kind === 'move') { mt.open = `${kind}:${id}`; hubRerender(); return; }
+      if (kind === 'unpick') { mt.picked.clear(); hubRerender(); return; }
+      if (kind === 'order-send') {
+        const box = document.querySelector(`[data-mt-inline="${id}"]`);
+        const partner = box?.querySelector('[name=partner]')?.value; const cost = box?.querySelector('[name=cost]')?.value; const note = box?.querySelector('[name=note]')?.value;
+        if (!partner) { showToast('Bitte einen Servicepartner wählen.'); return; }
+        ownerRun('mt', async () => { await rpc('request_maintenance_service', { p_task_ids: [id], p_service_partner_id: partner, p_note: note || null, p_estimated_cost: cost === '' || cost == null ? null : Number(cost) }); mt.open = ''; showToast('Anfrage an den Servicepartner gesendet.'); });
+        return;
+      }
+      if (kind === 'bundle') {
+        const ids = [...mt.picked]; const partner = document.querySelector('[data-mt-bundle-partner]')?.value;
+        if (!partner) { showToast('Bitte einen Servicepartner wählen.'); return; }
+        ownerRun('mt', async () => { await rpc('request_maintenance_service', { p_task_ids: ids, p_service_partner_id: partner, p_note: null, p_estimated_cost: null }); mt.picked.clear(); showToast(ids.length > 1 ? `Ein Auftrag mit ${ids.length} Positionen gesendet.` : 'Anfrage gesendet.'); });
+        return;
+      }
+      if (kind === 'done') { const note = window.prompt(`„${occ?.title || 'Aufgabe'}“ als erledigt markieren. Notiz (optional):`, ''); if (note === null) return; ownerRun('mt', async () => { await rpc('complete_maintenance_task', { p_task_id: id, p_note: note || null }); showToast('Als erledigt eingetragen.'); }); return; }
+      if (kind === 'skip') { const reason = window.prompt('Warum entfällt dieser Termin? (Pflichtangabe)', ''); if (reason === null) return; if (!reason.trim()) { showToast('Bitte einen Grund angeben.'); return; } ownerRun('mt', async () => { await rpc('skip_maintenance_task', { p_task_id: id, p_reason: reason.trim() }); showToast('Termin übersprungen – die Serie läuft unverändert weiter.'); }); return; }
+      if (kind === 'move-save') { const date = document.querySelector(`[data-mt-inline="${id}"] [name=date]`)?.value; if (!date) { showToast('Bitte ein Datum wählen.'); return; } ownerRun('mt', async () => { await rpc('reschedule_maintenance_task', { p_task_id: id, p_date: date }); mt.open = ''; showToast('Termin verschoben. Folgetermine bleiben im ursprünglichen Rhythmus.'); }); return; }
+      if (['pause', 'resume', 'archive'].includes(kind)) {
+        const plan = (mt.plans || []).find((p) => p.id === id);
+        if (kind === 'archive' && !confirm(`Wartungsplan „${plan?.title || ''}“ archivieren? Erledigte Fälligkeiten bleiben in der Historie, künftige offene entfallen.`)) return;
+        ownerRun('mt', async () => { await rpc('set_maintenance_plan_status', { p_plan_id: id, p_status: { pause: 'paused', resume: 'active', archive: 'archived' }[kind] }); showToast({ pause: 'Plan pausiert – es entstehen keine neuen Fälligkeiten.', resume: 'Plan fortgesetzt.', archive: 'Plan archiviert.' }[kind]); });
+        return;
+      }
+      if (kind === 'refresh') { ownerRun('mt', async () => { const r = await rpc('refresh_maintenance_plan', { p_plan_id: id }); showToast(r?.blocked ? `${r.blocked} Fälligkeit(en) blockiert – Grund steht an der Fälligkeit.` : r?.orders ? `${r.orders} Auftrag/Aufträge automatisch erstellt.` : 'Plan geprüft – alles aktuell.'); }); return; }
+      if (kind === 'import') { const prop = document.querySelector('[data-mt-import-prop]')?.value; if (prop) ownerRun('mt', () => mtImport(prop)); }
+    });
+    document.addEventListener('change', (event) => {
+      const pick = event.target.closest?.('[data-mt-pick]');
+      if (pick) { if (pick.checked) mt.picked.add(pick.dataset.mtPick); else mt.picked.delete(pick.dataset.mtPick); hubRerender(); return; }
+      const form = event.target.closest?.('[data-mt-form]');
+      if (!form) return;
+      if (event.target.matches('[data-mt-template]')) {
+        const t = (mt.templates || []).find((x) => x.key === event.target.value);
+        if (t) {
+          form.elements.title.value = t.title; form.elements.category.value = t.category || ''; form.elements.priority.value = t.priority || 'normal';
+          form.elements.interval_type.value = t.default_interval_type; form.elements.interval_value.value = t.default_interval_value ?? '';
+          form.elements.season_start_month.value = t.season_start_month ?? ''; form.elements.season_end_month.value = t.season_end_month ?? '';
+        }
+      }
+      const type = form.elements.interval_type.value;
+      form.querySelectorAll('[data-mt-for]').forEach((el) => { el.hidden = !el.dataset.mtFor.split(' ').includes(type); });
+      const mode = form.querySelector('[name=automation_mode]:checked')?.value;
+      form.querySelectorAll('[data-mt-mode]').forEach((el) => { el.hidden = !el.dataset.mtMode.split(' ').includes(mode); });
+      form.querySelectorAll('.mt-mode').forEach((el) => el.classList.toggle('on', el.querySelector('input').checked));
+      mtPreview(form);
+    });
+    document.addEventListener('input', (event) => { const form = event.target.closest?.('[data-mt-form]'); if (form && event.target.matches('input[type=number], input[type=date], input[type=time]')) mtPreview(form); });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-mt-form]');
+      if (!form) return;
+      event.preventDefault();
+      let body; try { body = mtReadForm(form); } catch (error) { showToast(error.message); return; }
+      ownerRun('mt', async () => { await cloudFetch('/rest/v1/rpc/save_maintenance_plan', { method: 'POST', body: { p_plan: body } }); mt.form = null; showToast(body.id ? 'Wartungsplan gespeichert – künftige Termine neu berechnet.' : 'Wartungsplan angelegt.'); });
+    });
+    // Auftrag: Herkunft, Positionen mit Checkliste und Abschlussbestätigung (Hausbesitzer)
+    function hubOrderHybridHtml(o) {
+      const items = o.items || [];
+      const src = MT_SOURCE[o.source_type];
+      const itemStatus = { open: ['offen', 'muted'], done: ['erledigt', 'green'], not_done: ['nicht erledigt', 'red'], skipped: ['übersprungen', 'muted'] };
+      const showItems = items.length > 1 || items.some((i) => (i.checklist || []).length || i.partner_note);
+      const list = showItems ? `<div class="mt-items"><span class="pp-eyebrow">Positionen (${items.length})</span>${items.map((i) => { const st = itemStatus[i.status] || [i.status, 'muted']; const checks = (i.checklist || []).map((c) => (typeof c === 'string' ? c : c?.label)).filter(Boolean); return `<div class="mt-item"><span><strong>${escapeHtml(i.title)}</strong>${checks.length ? `<small>${checks.map((c) => `${i.checklist_results?.[c] === true ? '✓' : i.checklist_results?.[c] === false ? '✗' : '○'} ${escapeHtml(c)}`).join(' · ')}</small>` : ''}${i.partner_note ? `<small>„${escapeHtml(i.partner_note)}“</small>` : ''}</span>${i.line_total != null ? `<b>${escapeHtml(ppMoney(i.line_total, o.currency))}</b>` : ''}<span class="pp-badge ${st[1]}">${escapeHtml(st[0])}</span></div>`; }).join('')}</div>` : '';
+      let confirm = '';
+      if (o.status === 'completed' && 'owner_confirmed_at' in o) {
+        confirm = o.owner_confirmed_at ? `<p class="mt-confirmed">${icon('check')} Abschluss von dir bestätigt am ${escapeHtml(fmtDate(o.owner_confirmed_at))}</p>`
+          : `<div class="mt-confirm">${o.owner_dispute_note ? `<small class="mt-reason">${icon('alert')} Deine Rückfrage: „${escapeHtml(o.owner_dispute_note)}“</small>` : '<small>Der Partner hat den Einsatz als erledigt gemeldet. Passt alles?</small>'}${cloudCanWrite() ? `<span class="pp-actions"><button type="button" class="secondary-btn" data-hub-confirm="dispute" data-id="${o.id}" ${ownerSide.busy ? 'disabled' : ''}>Rückfrage / Mangel</button><button type="button" class="primary-btn" data-hub-confirm="ok" data-id="${o.id}" ${ownerSide.busy ? 'disabled' : ''}>${icon('check')} Abschluss bestätigen</button></span>` : ''}</div>`;
+      }
+      return `${src ? `<small class="mt-source ${o.source_type}">${escapeHtml(src)}${o.source_type === 'agreement_auto' && o.agreement_version ? ` · Vertragsfassung ${o.agreement_version}` : ''}${o.source_type === 'agreement_auto' && o.estimated_cost != null ? ` · Rahmen ${escapeHtml(ppMoney(o.estimated_cost, o.currency))}` : ''}</small>` : ''}${list}${confirm}`;
+    }
+    document.addEventListener('click', (event) => {
+      const b = event.target.closest('[data-hub-confirm]');
+      if (!b) return;
+      const ok = b.dataset.hubConfirm === 'ok';
+      let note = null;
+      if (!ok) { note = window.prompt('Was passt nicht? Der Servicepartner erhält deine Rückfrage.', ''); if (note === null) return; if (!note.trim()) { showToast('Bitte kurz beschreiben, was nicht passt.'); return; } }
+      ownerRun('confirm', async () => { await cloudFetch('/rest/v1/rpc/confirm_service_completion', { method: 'POST', body: { p_order_id: b.dataset.id, p_ok: ok, p_note: note } }); showToast(ok ? 'Abschluss bestätigt – danke!' : 'Rückfrage an den Servicepartner gesendet.'); });
+    });
     function partnerHubPage() {
-      const tabs = [['partners', 'Partner & Codes'], ['chat', 'Messenger'], ['orders', 'Aufträge'], ['agreements', 'Jahresverträge']];
+      const tabs = [['partners', 'Partner & Codes'], ['chat', 'Messenger'], ['orders', 'Aufträge'], ['maintenance', 'Wartung'], ['agreements', 'Jahresverträge']];
       const head = `<div class="welcome"><div><p class="eyebrow">Servicepartner</p><h1>Partner-Portal</h1><p class="subtitle">Servicepartner einladen, Aufträge senden und direkt mit ihnen schreiben.</p></div></div>`;
       if (!cloudReady()) return `${head}<div class="hub-login"><p class="settings-hint" style="margin:0 0 12px">Das Partner-Portal nutzt deinen Husora Cloud-Speicher. Melde dich einmal an – deine Daten auf diesem Gerät bleiben erhalten.</p>${cloudCardHtml()}</div>`;
       if (ownerSide.partners === null && !ownerSide.busy) hubRefresh();
       const unread = hubTotalUnread();
-      const body = hub.tab === 'chat' ? (hub.thread ? hubThreadHtml() : hubChatListHtml()) : hub.tab === 'orders' ? hubOrdersHtml() : hub.tab === 'agreements' ? hubAgreementsHtml() : hubPartnersHtml();
+      const body = hub.tab === 'chat' ? (hub.thread ? hubThreadHtml() : hubChatListHtml()) : hub.tab === 'orders' ? hubOrdersHtml() : hub.tab === 'agreements' ? hubAgreementsHtml() : hub.tab === 'maintenance' ? hubMaintenanceHtml() : hubPartnersHtml();
       const filterable = (ownerSide.partners || []).filter((p) => p.partner_organization_id || (ownerSide.orders || []).some((o) => o.service_partner_id === p.id) || (ownerSide.agreements || []).some((a) => a.service_partner_id === p.id));
       if (hub.partnerFilter && !filterable.some((p) => p.id === hub.partnerFilter)) hub.partnerFilter = '';
       const partnerFilter = ['chat', 'orders', 'agreements'].includes(hub.tab) && !hub.thread && filterable.length > 1 ? `<label class="hub-partner-filter"><span>${icon('users')} Servicepartner</span><select class="form-control" data-hub-partner-filter aria-label="Servicepartner auswählen"><option value="">Alle Servicepartner</option>${filterable.map((p) => `<option value="${p.id}" ${hub.partnerFilter === p.id ? 'selected' : ''}>${escapeHtml(p.company_name)}</option>`).join('')}</select></label>` : '';
       return `${head}
-        <div class="pp-filters hub-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" aria-selected="${hub.tab === id}" class="${hub.tab === id ? 'active' : ''}" data-hub-tab="${id}">${label}${id === 'chat' && unread ? ` <b class="hub-count">${unread}</b>` : ''}${id === 'orders' && (ownerSide.approvals || []).some((a) => a.status === 'pending') ? ` <b class="hub-count">${(ownerSide.approvals || []).filter((a) => a.status === 'pending').length}</b>` : ''}${id === 'agreements' && (ownerSide.agreements || []).some((a) => a.status === 'proposed' && a.proposed_by === 'partner') ? ' <b class="hub-count">!</b>' : ''}</button>`).join('')}</div>
+        <div class="pp-filters hub-tabs" role="tablist">${tabs.map(([id, label]) => `<button type="button" role="tab" aria-selected="${hub.tab === id}" class="${hub.tab === id ? 'active' : ''}" data-hub-tab="${id}">${label}${id === 'chat' && unread ? ` <b class="hub-count">${unread}</b>` : ''}${id === 'orders' && (ownerSide.approvals || []).some((a) => a.status === 'pending') ? ` <b class="hub-count">${(ownerSide.approvals || []).filter((a) => a.status === 'pending').length}</b>` : ''}${id === 'agreements' && (ownerSide.agreements || []).some((a) => a.status === 'proposed' && a.proposed_by === 'partner') ? ' <b class="hub-count">!</b>' : ''}${id === 'maintenance' && mtActionCount() ? ` <b class="hub-count">${mtActionCount()}</b>` : ''}</button>`).join('')}</div>
         ${ownerSide.error ? `<p class="cloud-message error">${icon('alert')}<span>${escapeHtml(ownerSide.error)}</span></p>` : ''}
         ${ownerSide.partners === null ? '<div class="pp-skel"><i></i><i></i></div>' : `${partnerFilter}${body}`}`;
     }
