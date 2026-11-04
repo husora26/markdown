@@ -103,13 +103,13 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const bereiche = await P.evaluate(() => PP_SERVICE_GROUPS.map(([, n]) => n).join(', '));
     if (bereiche !== 'Hauskontrolle, Servicearbeiten, Sanierungen' || !db.includes('450.00/job') || !db.includes('520.00/hour')) throw new Error(`${bereiche} · ${db}`); return `${bereiche} · DB: ${db}`;
   });
-  await step('Leistungen: Zurück führt zu „Mehr“', async () => {
-    await P.click('.pp-main .pp-back'); await P.waitForTimeout(200); const v = await P.evaluate(() => pp.view); if (v !== 'more') throw new Error(v); return v;
+  await step('Leistungen: Zurück-Pfeil oben führt zu „Mehr“', async () => {
+    await P.click('.pp-top [data-pp-action=top-back]'); await P.waitForTimeout(200); const v = await P.evaluate(() => pp.view); if (v !== 'more') throw new Error(v); return v;
   });
   await step('Firma: volle Handybreite, Zurück führt zu „Mehr“', async () => {
     await view('company'); await P.screenshot({ path: OUT + '/5-firma.png' });
     const w = await P.evaluate(() => document.querySelector('[data-pp-form=company-edit]').offsetWidth);
-    await P.click('.pp-main .pp-back'); await P.waitForTimeout(200); const v = await P.evaluate(() => pp.view);
+    await P.click('.pp-top [data-pp-action=top-back]'); await P.waitForTimeout(200); const v = await P.evaluate(() => pp.view);
     if (w < 340 || v !== 'more') throw new Error(`Breite ${w}, Ansicht ${v}`); return `Formularbreite ${w}px von 390 · zurück: ${v}`;
   });
   await step('Rechnung erstellen → PDF erzeugt und an Hausbesitzer gesendet', async () => {

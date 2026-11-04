@@ -618,6 +618,21 @@
     .pp-top .pp-icon-btn { width: 40px; height: 40px; min-height: 40px; padding: 0; justify-content: center; border: 1px solid rgba(255,253,248,.45); border-radius: 50%; background: rgba(20, 35, 27, .25); color: #fff9eb; }
     .pp-top .pp-icon-btn .pp-count { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #c0503f; color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; }
     .pp-top .pp-icon-btn { position: relative; }
+    /* Unterseiten: Kopfleiste mit Zurück-Pfeil, Rubrik und Titel (wie Hausbesitzer-App) */
+    .pp-top.pp-top-sub { gap: 12px; }
+    .pp-top-back { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; height: 40px; padding: 0 14px 0 10px; border: 1px solid rgba(255, 253, 248, .45); border-radius: 20px; color: #fffdf8; background: rgba(20, 35, 27, .25); font: inherit; font-size: 13.5px; font-weight: 650; cursor: pointer; }
+    .pp-top-back:hover { background: rgba(255, 253, 248, .16); }
+    .pp-top-back svg { width: 17px; height: 17px; transform: rotate(180deg); }
+    .pp-top-title { flex: 1; min-width: 0; }
+    .pp-top-title small { display: block; color: #d7e2da; font-size: 10.5px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+    .pp-top-title strong { display: block; overflow: hidden; color: #fffdf8; font-size: 18px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; text-overflow: ellipsis; }
+    #partner-portal.pp-sub .pp-main .pp-back { display: none; }
+    @media (max-width: 560px) {
+      .pp-top-back { width: 40px; padding: 0; justify-content: center; }
+      .pp-top-back span { display: none; }
+      .pp-top-title strong { font-size: 17px; }
+      .pp-top-sub .pp-top-extra { display: none; }
+    }
     .pp-lang { position: relative; display: inline-flex; }
     .pp-top .pp-lang-btn { font-size: 12.5px; font-weight: 800; letter-spacing: .04em; }
     .pp-lang-menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 60; min-width: 170px; padding: 6px; border-radius: 14px; background: var(--paper, #fffdf8); color: var(--ink, #1f2d25); border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(15, 23, 42, .22); display: grid; gap: 2px; }
@@ -21013,6 +21028,20 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
 
     // ----- Rahmen -----
+    // Kopfleiste auf Unterseiten wie in der Hausbesitzer-App: Zurück-Pfeil + Rubrik + Seitentitel
+    const PP_VIEW_TITLES = { orders: ['Arbeit', 'Aufträge'], calendar: ['Arbeit', 'Kalender'], messages: ['Kunden', 'Nachrichten'], more: ['Servicepartner', 'Mehr'],
+      customers: ['Kunden', 'Kunden & Objekte'], inspections: ['Arbeit', 'Kontrollen'], defects: ['Arbeit', 'Mängel'], documents: ['Kunden', 'Dokumente'],
+      agreements: ['Finanzen', 'Jahresverträge'], finance: ['Finanzen', 'Angebote & Rechnungen'], services: ['Betrieb', 'Leistungen'], team: ['Betrieb', 'Mitarbeiter'],
+      company: ['Betrieb', 'Firma'], settings: ['App', 'Einstellungen'] };
+    function ppTopTitle() {
+      const d = pp.detail;
+      if (d?.type === 'order') { const o = ppD('orders').find((x) => x.id === d.id); return ['Auftrag', o?.title || 'Auftrag']; }
+      if (d?.type === 'inspection') { const i = ppD('inspections').find((x) => x.id === d.id); return ['Kontrolle', i?.property?.name || ppPropertyName(i?.property_id) || 'Kontrolle']; }
+      if (d?.type === 'customer') return ['Kunde', (pp.ctx?.links || []).find((l) => l.organization_id === d.id)?.organization_name || ppCustomerLabel(ppD('customers').find((c) => c.id === d.id)) || 'Kunde'];
+      if (d?.type === 'chat') return ['Nachrichten', (pp.ctx?.links || []).find((l) => l.organization_id === d.id)?.organization_name || 'Gespräch'];
+      if (!pp.view || pp.view === 'dashboard') return null;
+      return PP_VIEW_TITLES[pp.view] || ['Servicepartner', pp.view];
+    }
     function ppRender() {
       if (!pp.open) return;
       const root = ppEnsureRoot();
@@ -21025,8 +21054,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const org = ppOrg();
       const signedIn = cloudSignedIn();
       const unreadCount = signedIn && org ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : 0;
-      const head = `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="home" aria-label="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}" title="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}">${org ? '' : `<span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span>`}<img class="pp-top-logo" src="assets/logo.png" alt="" aria-hidden="true"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></button>
-        <div class="pp-top-actions">${ppLangSwitchHtml()}${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-view="messages" aria-label="Nachrichten" title="Nachrichten">${icon('note')}${unreadCount ? `<span class="pp-count">${unreadCount > 9 ? '9+' : unreadCount}</span>` : ''}</button><button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button><button type="button" class="pp-icon-btn" data-pp-view="settings" aria-label="Einstellungen" title="Einstellungen">${icon('gear')}</button>` : ''}</div></header>`;
+      const sub = signedIn && org ? ppTopTitle() : null;
+      root.classList.toggle('pp-sub', Boolean(sub));
+      const head = sub ? `<header class="pp-top pp-top-sub"><button type="button" class="pp-top-back" data-pp-action="top-back" aria-label="Zurück" title="Zurück">${icon('arrow')}<span>Zurück</span></button><div class="pp-top-title"><small>${escapeHtml(sub[0])}</small><strong>${escapeHtml(sub[1])}</strong></div>
+        <div class="pp-top-actions">${ppLangSwitchHtml()}<button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button><button type="button" class="pp-icon-btn pp-top-extra" data-pp-view="messages" aria-label="Nachrichten" title="Nachrichten">${icon('note')}${unreadCount ? `<span class="pp-count">${unreadCount > 9 ? '9+' : unreadCount}</span>` : ''}</button></div></header>` : `<header class="pp-top"><button type="button" class="pp-brand pp-brand-btn" data-pp-action="home" aria-label="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}" title="${org ? 'Zum Start' : 'Zurück zu den Einstellungen'}">${org ? '' : `<span class="pp-brand-back" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></span>`}<img class="pp-top-logo" src="assets/logo.png" alt="" aria-hidden="true"><span class="brand-wordmark"><span class="breadcrumb-brand">HUSORA</span><span class="brand-region">Smart House Care</span></span></button>
+        <div class="pp-top-actions">${ppLangSwitchHtml()}${signedIn && org ? `<button type="button" class="pp-icon-btn" data-pp-view="messages" aria-label="Nachrichten" title="Nachrichten">${icon('note')}${unreadCount ? `<span class="pp-count">${unreadCount > 9 ? '9+' : unreadCount}</span>` : ''}</button><button type="button" class="pp-icon-btn" data-pp-action="reload" aria-label="Aktualisieren" title="Aktualisieren">${pp.busy === 'load' ? '<span class="pp-spin"></span>' : icon('clock')}</button>` : ''}</div></header>`;
       let body;
       if (!cloudConnected()) body = ppEmpty('Keine Cloud-Verbindung', 'Das Partner-Portal arbeitet mit dem Husora-Cloud-Speicher.', `<div class="pp-actions" style="justify-content:center"><button type="button" class="primary-btn" data-pp-action="connect-default">Mit Husora verbinden</button></div>`);
       else if (!signedIn) body = ppLoginHtml();
@@ -22889,6 +22921,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         return;
       }
       if (a === 'reload') { ppLoad(); return; }
+      if (a === 'top-back') {
+        if (pp.detail) { pp.detail = pp.prev?.detail && pp.prev.detail.id !== pp.detail?.id ? pp.prev.detail : null; pp.prev = null; }
+        else if (PP_MORE_VIEWS.includes(pp.view)) pp.view = 'more';
+        else pp.view = 'dashboard';
+        pp.form = null; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo(0, 0); return;
+      }
       if (a === 'back' && !pp.detail && PP_MORE_VIEWS.includes(pp.view)) { pp.view = 'more'; pp.form = null; ppRender(); document.querySelector('.pp-main')?.scrollTo(0, 0); return; }
       if (a === 'back') { pp.detail = pp.prev?.detail && pp.prev.detail.id !== pp.detail?.id ? pp.prev.detail : null; pp.prev = null; pp.form = null; ppRender(); return; }
       if (a === 'cancel-form') { pp.form = null; ppRender(); return; }

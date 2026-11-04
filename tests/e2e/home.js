@@ -64,7 +64,8 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   });
   await step('Kachel öffnet Bereich (Mängel)', async () => { await P.click('.pp-home-tile[data-pp-view=defects]'); await wait(); return `${await P.evaluate(() => pp.view)} · ${await P.textContent('.pp-page-head h1')}`; });
   await step('Einstellungen: Kacheln wählen (Nachrichten an, Kalender aus)', async () => {
-    await P.click('.pp-top [data-pp-view=settings]'); await wait();
+    if (await P.$('.pp-top [data-pp-view=settings]')) throw new Error('Zahnrad noch in der Kopfleiste');
+    await P.click('.pp-nav [data-pp-view=more], [data-pp-view=more]'); await wait(); await P.click('.pp-main [data-pp-view=settings]'); await wait();
     await P.check('[data-pp-tile-toggle=messages]'); await P.uncheck('[data-pp-tile-toggle=calendar]');
     await P.screenshot({ path: OUT + '/2-einstellungen.png', fullPage: true });
     await P.evaluate(() => { pp.view = 'dashboard'; ppRender(); });
