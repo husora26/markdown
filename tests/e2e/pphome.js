@@ -99,6 +99,25 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await P.selectOption('[data-pp-order-opt=orderCustomer]', ''); await P.waitForTimeout(200);
     if (st.prop || st.n !== 2) throw new Error(JSON.stringify(st)); return '2 Aufträge von Anna Berg, Gebäudefilter zurückgesetzt';
   });
+  await step('Einstellungen: Karten „Darstellung & Sprache“ und „Daten & App“ auf-/zuklappbar', async () => {
+    await P.evaluate(() => { pp.view = 'settings'; pp.detail = null; ppRender(); }); await P.waitForTimeout(200);
+    const n = await P.$$eval('#partner-portal .pp-sfold', (e) => e.length);
+    for (const t of ['Darstellung & Sprache', 'Daten & App']) { await P.click(`#partner-portal [data-pp-sfold="${t}"]`); await P.waitForTimeout(150); }
+    const st = await P.evaluate(() => ({ look: document.querySelector('[data-pp-sfold="Darstellung & Sprache"]').closest('.pp-sfold').classList.contains('closed'), lang: !!document.querySelector('#partner-portal .pp-sfold [data-app-lang]'), data: document.querySelector('[data-pp-sfold="Daten & App"]').closest('.pp-sfold').classList.contains('closed') }));
+    await P.screenshot({ path: OUT + '/2-einstellungen-zu.png' });
+    await P.reload(); await P.waitForFunction(() => !pp.busy && pp.data, null, { timeout: 25000 }); await P.evaluate(() => { ppOpen('settings'); }); await P.waitForTimeout(400);
+    const after = await P.$eval('[data-pp-sfold="Daten & App"]', (e) => e.closest('.pp-sfold').classList.contains('closed'));
+    for (const t of ['Darstellung & Sprache', 'Daten & App']) { await P.click(`#partner-portal [data-pp-sfold="${t}"]`); await P.waitForTimeout(150); }
+    if (n < 6 || !st.look || st.lang || !st.data || !after) throw new Error(JSON.stringify({ n, ...st, after })); return `${n} Karten, Zustand bleibt nach Neuladen`;
+  });
+  await step('Einstellungen: Alle zuklappen / Alle aufklappen', async () => {
+    await P.click('#partner-portal [data-pp-sfold-all]'); await P.waitForTimeout(200);
+    const zu = await P.$$eval('#partner-portal .pp-sfold', (e) => e.every((c) => c.classList.contains('closed')));
+    const label = await P.$eval('#partner-portal [data-pp-sfold-all]', (e) => e.textContent);
+    await P.click('#partner-portal [data-pp-sfold-all]'); await P.waitForTimeout(200);
+    const auf = await P.$$eval('#partner-portal .pp-sfold', (e) => e.every((c) => !c.classList.contains('closed')));
+    if (!zu || !auf || label !== 'Alle aufklappen') throw new Error(`${zu}/${auf}/${label}`); return 'ok';
+  });
   console.log(res.join('\n')); if (errs.length) console.log('JS-Fehler:\n' + errs.join('\n'));
   await b.close();
 })();

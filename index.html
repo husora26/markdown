@@ -2734,6 +2734,12 @@
     .pp-fold.closed .pp-fold-chev { transform: rotate(-90deg); }
     .pp-fold.closed .pp-fold-head { margin-bottom: 0; }
     .pp-fold-more { display: block; width: 100%; margin-top: 8px; }
+    .pp-sfold-head { cursor: pointer; user-select: none; align-items: center; }
+    .pp-sfold-head > div { flex: 1; min-width: 0; }
+    .pp-sfold-head .pp-fold-chev { margin-left: auto; }
+    .pp-sfold.closed .pp-fold-chev { transform: rotate(-90deg); }
+    .pp-sfold.closed .pp-sfold-head { margin-bottom: 0; }
+    .pp-sfold-head:focus-visible { outline: 2px solid var(--accent, #2f5d50); outline-offset: 3px; border-radius: 10px; }
     .pp-section-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 8px; }
     .pp-section-head h2 { margin: 0; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
     .pp-list { display: grid; gap: 8px; }
@@ -22334,12 +22340,35 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }, { notice: 'Mangel beim Kunden angefragt – sobald er annimmt, erscheint der Auftrag unter Mängel.' });
     });
     // Einstellungen des Partner-Portals
+    const PP_SFOLD_KEY = 'husora-pp-settings-folds';
+    function ppSettingsFolds() { try { return JSON.parse(localStorage.getItem(PP_SFOLD_KEY) || '{}') || {}; } catch (error) { return {}; } }
+    function ppSettingsFoldSet(update) { const st = ppSettingsFolds(); update(st); try { localStorage.setItem(PP_SFOLD_KEY, JSON.stringify(st)); } catch (error) { /* nur Komfort */ } pp.keepScroll = true; ppRender(); }
+    document.addEventListener('click', (event) => {
+      const all = event.target.closest('#partner-portal [data-pp-sfold-all]');
+      if (all) { const titles = pp.sfoldTitles || []; ppSettingsFoldSet((st) => { const close = !titles.every((t) => st[t] === true); titles.forEach((t) => { if (close) st[t] = true; else delete st[t]; }); }); return; }
+      const head = event.target.closest('#partner-portal [data-pp-sfold]');
+      if (!head) return;
+      ppSettingsFoldSet((st) => { const t = head.dataset.ppSfold; if (st[t]) delete st[t]; else st[t] = true; });
+    });
+    document.addEventListener('keydown', (event) => {
+      const head = (event.key === 'Enter' || event.key === ' ') && event.target.closest?.('#partner-portal [data-pp-sfold]');
+      if (!head) return;
+      event.preventDefault();
+      ppSettingsFoldSet((st) => { const t = head.dataset.ppSfold; if (st[t]) delete st[t]; else st[t] = true; });
+    });
     function ppSettingsHtml() {
       const tiles = ppTiles();
       const sizes = [['normal', 'Normal'], ['large', 'Groß'], ['xlarge', 'Sehr groß']];
       const themes = [['light', 'Hell', 'sun'], ['dark', 'Dunkel', 'moon'], ['system', 'Automatisch', 'gear']];
-      const card = (title, caption, ic, body, id = '') => `<section class="pp-card pp-settings-card" ${id ? `id="${id}"` : ''}><div class="pp-settings-head"><span class="pp-settings-icon">${icon(ic)}</span><div><h2>${title}</h2><p>${caption}</p></div></div>${body}</section>`;
-      return `${ppBack()}<div class="pp-page-head"><h1>Einstellungen</h1></div>
+      // jede Karte auf-/zuklappbar (Zustand je Gerät, Schlüssel = deutscher Titel)
+      const folds = ppSettingsFolds();
+      const titles = [];
+      const card = (title, caption, ic, body, id = '') => {
+        titles.push(title);
+        const closed = folds[title] === true;
+        return `<section class="pp-card pp-settings-card pp-sfold ${closed ? 'closed' : ''}" ${id ? `id="${id}"` : ''}><div class="pp-settings-head pp-sfold-head" role="button" tabindex="0" aria-expanded="${!closed}" data-pp-sfold="${escapeHtml(title)}"><span class="pp-settings-icon">${icon(ic)}</span><div><h2>${title}</h2><p>${caption}</p></div><span class="pp-fold-chev" aria-hidden="true">▾</span></div>${closed ? '' : body}</section>`;
+      };
+      const out = `
         ${card('Startseite', 'Welche Kacheln die Startseite zeigt.', 'home', `<div class="pp-tile-picks">${PP_TILES.map(([id, label, ic]) => `<label class="pp-tile-pick ${tiles.includes(id) ? 'on' : ''}"><input type="checkbox" data-pp-tile-toggle="${id}" ${tiles.includes(id) ? 'checked' : ''}><span>${icon(ic)} ${escapeHtml(label)}</span></label>`).join('')}</div><div class="pp-actions flat"><button type="button" class="secondary-btn" data-pp-tile-reset>Standard wiederherstellen</button></div>`)}
         ${card('Aussehen der Kacheln', 'Bilder oder farbige Kacheln auf der Startseite – die Farbe wählst du frei.', 'home', tileLookControlsHtml('pp-tile', ppHomePrefs().tileStyle || 'photo', ppHomePrefs().tileColor))}
         ${card('Benachrichtigungen', 'Was dir Husora meldet – in der App, per Push oder E-Mail.', 'bell', notifyPrefsBodyHtml())}
@@ -22354,6 +22383,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <p class="pp-hint">Gilt für die ganze App (Hausbesitzer- und Partner-Ansicht) auf diesem Gerät. Eigene Einträge wie Namen, Adressen und Notizen werden nicht übersetzt.</p>`)}
         ${card('Daten & App', 'Cloud-Speicher und Datensicherung.', 'document', `<div class="pp-embed">${cloudCardHtml()}${backupCardHtml()}</div>`)}
         ${card('Über Husora', `${relIsBeta() ? 'Beta-Version · ' : ''}Version ${APP_VERSION} (Build ${APP_BUILD_NUMBER}) · Stand ${escapeHtml(fmtDateFull(APP_BUILD))}`, 'help', `<div class="settings-links">${[['imprint', 'Impressum'], ['privacy', 'Datenschutzerklärung'], ['terms', 'AGB'], ['partners', 'Hinweis zu Partnerdaten'], ['licenses', 'Lizenzen & Datenquellen']].map(([id, label]) => `<button type="button" data-legal-open="${id}" data-legal-modal><span>${label}</span>${icon('arrow')}</button>`).join('')}</div>`)}`;
+      pp.sfoldTitles = titles;
+      const allClosed = titles.length && titles.every((t) => folds[t] === true);
+      return `${ppBack()}<div class="pp-page-head"><h1>Einstellungen</h1><button type="button" class="text-btn" data-pp-sfold-all>${allClosed ? 'Alle aufklappen' : 'Alle zuklappen'}</button></div>` + out;
     }
     document.addEventListener('change', (event) => {
       const orderOpt = event.target.closest?.('#partner-portal [data-pp-order-opt]');
