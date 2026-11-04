@@ -2615,6 +2615,8 @@
     .pp-main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 16px calc(40px + env(safe-area-inset-bottom)); }
     .pp-main::after { content: ''; display: block; height: 1px; }
     .pp-main > * { max-width: 760px; margin-left: auto; margin-right: auto; }
+    /* alle Blöcke der Hauptspalte mittig – auch wenn ein Block eigene Außenabstände setzt */
+    #partner-portal .pp-main > * { margin-left: auto; margin-right: auto; }
     /* die allgemeine main-Regel (margin: 0 auto) ließ den Inhalt auf Inhaltsbreite schrumpfen */
     .pp > .pp-main { width: 100%; max-width: none; margin: 0; }
     .pp-obj { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; align-items: start; }
@@ -2718,6 +2720,13 @@
     .pp-tile.amber { border-color: #e7cfa6; background: var(--amber-soft); }
     .pp-tile.red { border-color: #ebc3bd; background: var(--red-soft); }
     .pp-section { margin: 0 auto 16px; }
+    .pp-fold-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 4px 0; margin: 0 0 8px; background: none; border: 0; cursor: pointer; color: inherit; font: inherit; text-align: left; min-height: 36px; }
+    .pp-fold-head h2 { margin: 0; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; display: flex; align-items: center; gap: 8px; }
+    .pp-fold-count { display: inline-flex; min-width: 22px; height: 20px; padding: 0 7px; align-items: center; justify-content: center; border-radius: 999px; background: var(--line); color: var(--ink); font-size: 11.5px; letter-spacing: 0; }
+    .pp-fold-chev { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--line); color: var(--muted); transition: transform .15s; flex: none; }
+    .pp-fold.closed .pp-fold-chev { transform: rotate(-90deg); }
+    .pp-fold.closed .pp-fold-head { margin-bottom: 0; }
+    .pp-fold-more { display: block; width: 100%; margin-top: 8px; }
     .pp-section-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 8px; }
     .pp-section-head h2 { margin: 0; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
     .pp-list { display: grid; gap: 8px; }
@@ -3245,7 +3254,7 @@
     .hub-partner-filter span { display: inline-flex; align-items: center; gap: 6px; flex: none; }
     .hub-partner-filter svg { width: 15px; height: 15px; }
     .hub-partner-filter select { flex: 1; min-width: 0; min-height: 42px; font-size: 15px; }
-    .pp-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 14px; }
+    .pp-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 auto 14px; }
     .pp-kpi { display: grid; gap: 1px; padding: 10px 11px; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); text-align: left; cursor: pointer; }
     .pp-kpi b { font-size: 20px; line-height: 1.15; overflow-wrap: anywhere; }
     .pp-kpi span { color: var(--muted); font-size: 12px; font-weight: 600; }
@@ -21000,6 +21009,29 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (kind === 'waiting') { pp.view = 'orders'; pp.filter = 'waiting'; }
       pp.detail = null; pp.form = null; ppRender();
     });
+    // Startseite: Bereiche ein-/ausklappbar (Zustand je Gerät), je Bereich zuerst 3 Einträge, dann „Alle anzeigen“
+    const PP_FOLD_KEY = 'husora-pp-home-folds';
+    function ppFoldState() { if (!pp.folds) { try { pp.folds = JSON.parse(localStorage.getItem(PP_FOLD_KEY) || '{}') || {}; } catch (error) { pp.folds = {}; } } return pp.folds; }
+    function ppFoldSection(key, title, items, emptyHtml = '') {
+      const closed = ppFoldState()[key] === 'closed';
+      const all = Boolean(pp.foldAll?.[key]);
+      const shown = all ? items : items.slice(0, 3);
+      const more = items.length > 3 ? `<button type="button" class="secondary-btn pp-fold-more" data-pp-fold-all="${key}">${all ? 'Weniger anzeigen' : `Alle anzeigen (${items.length})`}</button>` : '';
+      return `<section class="pp-section pp-fold ${closed ? 'closed' : ''}" data-pp-fold-section="${key}"><button type="button" class="pp-fold-head" data-pp-fold="${key}" aria-expanded="${!closed}"><h2>${escapeHtml(title)}${items.length ? ` <span class="pp-fold-count">${items.length}</span>` : ''}</h2><span class="pp-fold-chev" aria-hidden="true">▾</span></button>${closed ? '' : items.length ? `<div class="pp-list">${shown.join('')}</div>${more}` : emptyHtml}</section>`;
+    }
+    document.addEventListener('click', (event) => {
+      const head = event.target.closest('#partner-portal [data-pp-fold]');
+      const allBtn = event.target.closest('#partner-portal [data-pp-fold-all]');
+      if (!head && !allBtn) return;
+      if (head) {
+        const st = ppFoldState(); const key = head.dataset.ppFold;
+        if (st[key] === 'closed') delete st[key]; else st[key] = 'closed';
+        try { localStorage.setItem(PP_FOLD_KEY, JSON.stringify(st)); } catch (error) { /* nur Komfort */ }
+      } else {
+        pp.foldAll = { ...(pp.foldAll || {}), [allBtn.dataset.ppFoldAll]: !pp.foldAll?.[allBtn.dataset.ppFoldAll] };
+      }
+      pp.keepScroll = true; ppRender();
+    });
     function ppDashboardHtml() {
       const today = ppToday();
       const open = ppOpenOrders();
@@ -21016,10 +21048,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return `<div class="pp-company"><span class="pp-company-mark" aria-hidden="true">${escapeHtml(initials)}</span><div><h1 data-no-i18n>${escapeHtml(org?.name || '')}</h1><p><b>${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())}</b>${pp.loadedAt ? ` · <span>Stand</span> ${escapeHtml(fmtDateTime(pp.loadedAt))}` : ''}</p></div></div>
         ${ppKpisHtml(todayItems)}
         ${ppTilesHtml()}
-        ${offered.length && ppHomePrefs().showOffered ? ppSection('Neue Anfragen', `<div class="pp-list">${offered.map(ppOrderCard).join('')}</div>`) : ''}
-        ${ppSection('Heute', todayItems.length ? `<div class="pp-list">${todayItems.map((x) => (x.order_number ? ppOrderCard(x) : ppInspectionCard(x))).join('')}</div>` : '<p class="pp-muted">Heute stehen keine Termine an.</p>')}
-        ${urgent.length ? ppSection('Dringende Mängel', `<div class="pp-list">${urgent.slice(0, 6).map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.inspection.property?.name || '')}${item.notes ? ` · ${escapeHtml(item.notes)}` : ''}</small></span><span class="pp-badge red">Mangel</span></button>`).join('')}</div>`) : ''}
-        ${ppSection('Letzte Aktivität', `<div class="pp-list">${ppD('orders').slice().sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)).slice(0, 5).map(ppOrderCard).join('') || '<p class="pp-muted">Noch keine Aufträge. Sobald ein Kunde dich beauftragt, erscheint der Auftrag hier.</p>'}</div>`)}
+        ${offered.length && ppHomePrefs().showOffered ? ppFoldSection('offered', 'Neue Anfragen', offered.map(ppOrderCard)) : ''}
+        ${!ppHomePrefs().showToday ? '' : ppFoldSection('today', 'Heute', todayItems.map((x) => (x.order_number ? ppOrderCard(x) : ppInspectionCard(x))), '<p class="pp-muted">Heute stehen keine Termine an.</p>')}
+        ${urgent.length && ppHomePrefs().showUrgent ? ppFoldSection('urgent', 'Dringende Mängel', urgent.map((item) => `<button type="button" class="pp-item" data-pp-open="inspection:${item.inspection.id}"><span class="pp-item-main"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.inspection.property?.name || '')}${item.notes ? ` · ${escapeHtml(item.notes)}` : ''}</small></span><span class="pp-badge red">Mangel</span></button>`)) : ''}
+        ${!ppHomePrefs().showActivity ? '' : ppFoldSection('activity', 'Letzte Aktivität', ppD('orders').slice().sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)).slice(0, 30).map(ppOrderCard), '<p class="pp-muted">Noch keine Aufträge. Sobald ein Kunde dich beauftragt, erscheint der Auftrag hier.</p>')}
         ${!(pp.ctx?.links || []).length ? `<div class="pp-card pp-tip">${icon('users')}<div><strong>Kunden verbinden</strong><p>Hausbesitzer laden dich in ihrer Husora-App unter Einstellungen → Servicepartner ein. Den Code gibst du unter „Kunden & Objekte“ ein.</p><button type="button" class="secondary-btn" data-pp-view="customers">Code eingeben</button></div></div>` : ''}`;
     }
     // Auftragssuche: neu zeichnen nach kurzer Pause, Fokus und Cursor bleiben erhalten
@@ -22066,7 +22098,14 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const PP_TILES_DEFAULT = ['orders', 'inspections', 'defects', 'finance', 'calendar', 'customers'];
     const PP_TILES_KEY = 'husora-pp-tiles';
     const PP_HOME_KEY = 'husora-pp-home';
-    const ppHomePrefs = () => { try { return { showOffered: true, ...JSON.parse(localStorage.getItem(PP_HOME_KEY) || '{}') }; } catch (error) { return { showOffered: true }; } };
+    // Bereiche der Startseite, einzeln unter Einstellungen → Darstellung abschaltbar
+    const PP_HOME_SECTIONS = [
+      ['showOffered', 'Neue Anfragen', 'Ausgeschaltet findest du neue Anfragen weiter unter „Aufträge → Neu“ und an der Zahl im Menü.'],
+      ['showToday', 'Heute', 'Ausgeschaltet findest du die Termine des Tages weiter im Kalender.'],
+      ['showUrgent', 'Dringende Mängel', 'Ausgeschaltet findest du Mängel weiter unter „Kontrollen“ und in der Kachel „Mängel“.'],
+      ['showActivity', 'Letzte Aktivität', 'Ausgeschaltet findest du alle Aufträge weiter unter „Aufträge“.']
+    ];
+    const ppHomePrefs = () => { const base = { showOffered: true, showToday: true, showUrgent: true, showActivity: true }; try { return { ...base, ...JSON.parse(localStorage.getItem(PP_HOME_KEY) || '{}') }; } catch (error) { return base; } };
     const ppTiles = () => { try { const saved = JSON.parse(localStorage.getItem(PP_TILES_KEY) || 'null'); if (Array.isArray(saved)) return saved.filter((id) => PP_TILES.some(([t]) => t === id)); } catch (error) { /* Standard */ } return [...PP_TILES_DEFAULT]; };
     // offene Mängel aus Kontrollen (je Prüfpunkt), neueste zuerst
     const ppOpenDefects = () => ppD('inspections').filter((i) => i.status !== 'cancelled').flatMap((i) => (i.items || []).filter((item) => item.status === 'defect').map((item) => ({ ...item, inspection: i })))
@@ -22149,7 +22188,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ${card('Benachrichtigungen', 'Was dir Husora meldet – in der App, per Push oder E-Mail.', 'bell', notifyPrefsBodyHtml())}
         ${card('Darstellung & Sprache', 'Hell oder dunkel, Schriftgröße und Sprache der App.', 'text', `<span class="form-label">Erscheinungsbild</span>
           <div class="segmented" role="radiogroup" aria-label="Erscheinungsbild">${themes.map(([id, label, ic]) => `<button type="button" role="radio" aria-checked="${displaySettings.theme === id}" class="${displaySettings.theme === id ? 'active' : ''}" data-display-theme="${id}">${icon(ic)} ${label}</button>`).join('')}</div>
-          <label class="pp-check pp-home-toggle"><input type="checkbox" data-pp-home-pref="showOffered" ${ppHomePrefs().showOffered ? 'checked' : ''}><span><strong>Neue Anfragen auf der Startseite</strong><small>Ausgeschaltet findest du neue Anfragen weiter unter „Aufträge → Neu“ und an der Zahl im Menü.</small></span></label>
+          <span class="form-label" style="margin-top:14px;display:block">Bereiche auf der Startseite</span>
+          ${PP_HOME_SECTIONS.map(([key, label, hint]) => `<label class="pp-check pp-home-toggle"><input type="checkbox" data-pp-home-pref="${key}" ${ppHomePrefs()[key] ? 'checked' : ''}><span><strong>${key === 'showOffered' ? 'Neue Anfragen auf der Startseite' : `${label} auf der Startseite`}</strong><small>${hint}</small></span></label>`).join('')}
           <span class="form-label" style="margin-top:14px;display:block">Schriftgröße</span>
           <div class="segmented" role="radiogroup" aria-label="Schriftgröße">${sizes.map(([id, label]) => `<button type="button" role="radio" aria-checked="${displaySettings.textSize === id}" class="${displaySettings.textSize === id ? 'active' : ''}" data-display-size="${id}">${label}</button>`).join('')}</div>
           <span class="form-label" style="margin-top:14px;display:block">Sprache</span>
@@ -22168,7 +22208,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const pref = event.target.closest?.('#partner-portal [data-pp-home-pref]');
       if (pref) {
         try { localStorage.setItem(PP_HOME_KEY, JSON.stringify({ ...ppHomePrefs(), [pref.dataset.ppHomePref]: pref.checked })); } catch (error) { /* optional */ }
-        showToast(pref.checked ? 'Neue Anfragen erscheinen auf der Startseite.' : 'Neue Anfragen werden auf der Startseite ausgeblendet.');
+        const label = (PP_HOME_SECTIONS.find(([k]) => k === pref.dataset.ppHomePref) || [])[1] || 'Bereich';
+        showToast(pref.dataset.ppHomePref === 'showOffered' ? (pref.checked ? 'Neue Anfragen erscheinen auf der Startseite.' : 'Neue Anfragen werden auf der Startseite ausgeblendet.') : `„${label}“ wird auf der Startseite ${pref.checked ? 'angezeigt' : 'ausgeblendet'}.`);
         pp.keepScroll = true; ppRender(); return;
       }
       const box = event.target.closest?.('#partner-portal [data-pp-tile-toggle]');
