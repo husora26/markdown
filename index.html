@@ -12918,7 +12918,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       updateProfileSummary();
       updateNotifyBadge();
       renderTabbar();
-      pageContent.innerHTML = betaBannerHtml('owner') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
+      pageContent.innerHTML = (currentPage === 'dashboard' ? betaBannerHtml('owner') : '') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
       if (currentPage === 'providers') trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `page:${localDateKey(new Date())}` });
       ensureBackButton();
       if (uiState) { uiRestore(pageContent, uiState); if (Math.abs(window.scrollY - uiScrollY) > 2) window.scrollTo(0, uiScrollY); }

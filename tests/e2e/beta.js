@@ -24,6 +24,11 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   const flush = (p) => p.evaluate(async () => { await betaFlush(); return JSON.parse(localStorage.getItem('husora-beta-events') || '[]').length; });
 
   const H = await device('H');
+  await step('Beta-Hinweis nur auf der Hauptseite', async () => {
+    await H.evaluate(() => { currentPage = 'tasks'; render(); }); await H.waitForTimeout(200);
+    const onSub = await H.evaluate(() => Boolean(document.querySelector('#page-content .beta-banner')));
+    if (onSub) throw new Error('auf Unterseite sichtbar'); return 'Unterseite ohne Hinweis';
+  });
   await step('Banner und Feedback-Button sichtbar', async () => {
     await H.evaluate(() => { currentPage = 'dashboard'; render(); }); await H.waitForTimeout(200);
     const v = await H.evaluate(() => ({ banner: document.querySelector('.beta-banner')?.textContent.replace(/\s+/g, ' '), fab: Boolean(document.querySelector('#beta-fab .beta-fab-main')) }));
