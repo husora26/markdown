@@ -3646,6 +3646,73 @@
     .ob-next button > svg:last-child { flex: 0 0 auto; width: 16px; height: 16px; margin-left: auto; color: var(--muted); }
     .ob-next strong { display: block; font-size: 14px; }
     .ob-next small { display: block; color: var(--muted); font-size: 13px; }
+    /* Einrichtung (homeowner_v1 / service_partner_v1) */
+    .ob-shell-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .ob-progress { flex: 1 1 auto; display: grid; gap: 6px; }
+    .ob-progress span { color: var(--muted); font-size: 12.5px; font-weight: 700; }
+    .ob-progress::after { content: ''; display: block; height: 6px; border-radius: 6px; background: #e3e1d9; grid-row: 2; grid-column: 1; }
+    .ob-progress i { display: block; height: 6px; border-radius: 6px; background: var(--green); grid-row: 2; grid-column: 1; z-index: 1; transition: width .3s ease; }
+    .ob-later { flex: 0 0 auto; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); font-size: 13px; font-weight: 700; cursor: pointer; }
+    .ob-later:hover, .ob-later:focus-visible { border-color: var(--green); }
+    .ob-form { display: grid; gap: 12px; }
+    .ob-form label { display: grid; gap: 4px; }
+    .ob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ob-grid .full { grid-column: 1 / -1; }
+    .ob-error { margin: 0; padding: 10px 12px; border-radius: 10px; color: #8a1f17; background: #fdecea; font-size: 13.5px; }
+    .ob-actions-shell { justify-content: space-between; align-items: center; }
+    .ob-actions-main { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-left: auto; }
+    .ob-skip { min-height: 46px; padding: 0 8px; color: var(--muted); font-weight: 700; }
+    .ob-done-note { margin: 0 0 10px; color: #2f8a57; font-size: 13.5px; font-weight: 700; }
+    .ob-note { margin: 12px 0 0; padding: 10px 12px; border-left: 3px solid #e3c35a; border-radius: 8px; background: #fffbea; color: #5e4a07; font-size: 13px; line-height: 1.5; }
+    .ob-legal { margin: 14px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+    .ob-legal .text-btn { display: inline; min-height: 0; padding: 0; font-size: inherit; text-decoration: underline; vertical-align: baseline; }
+    .ob-meter { display: grid; gap: 6px; margin: 0 0 14px; }
+    .ob-meter span { color: var(--muted); font-size: 13px; }
+    .ob-meter::after { content: ''; display: block; height: 6px; border-radius: 6px; background: #e3e1d9; grid-row: 2; grid-column: 1; }
+    .ob-meter i { display: block; height: 6px; border-radius: 6px; background: var(--green); grid-row: 2; grid-column: 1; z-index: 1; }
+    .ob-meter:not(:has(span))::after, .ob-meter:not(:has(span)) i { grid-row: 1; }
+    .ob-meter-text { margin: 0 0 8px; font-size: 14px; }
+    .ob-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+    .ob-chips button { min-height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 13px; cursor: pointer; }
+    .ob-chips button.on, .ob-chips button:hover { border-color: var(--green); background: var(--green-soft); }
+    .ob-house-pick { display: grid; gap: 8px; }
+    .ob-house-pick label { display: flex; gap: 10px; align-items: center; padding: 12px; border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; }
+    .ob-house-pick label:has(input:checked) { border-color: var(--green); background: var(--green-soft); }
+    .ob-house-pick strong { display: block; font-size: 14px; }
+    .ob-house-pick small { display: block; color: var(--muted); font-size: 12.5px; }
+    .ob-steps-list { display: grid; gap: 8px; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.5; }
+    .ob-check { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+    .ob-check li { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 4px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .ob-check li:last-child { border-bottom: 0; }
+    .ob-check li > span:first-child { display: grid; place-items: center; flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line); color: var(--muted); font-size: 12px; font-weight: 800; }
+    .ob-check li.ok > span:first-child { border-color: #2f8a57; background: #2f8a57; color: white; }
+    .ob-check li.ok .ob-check-text { color: var(--muted); }
+    .ob-check-text { flex: 1 1 auto; }
+    .ob-check-text small { color: var(--muted); }
+    .ob-check .text-btn { margin-left: auto; font-weight: 700; }
+    .ob-checklist { margin-bottom: 16px; border: 1.5px solid #cfe1d4; }
+    .ob-check-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .ob-check-head .card-caption { margin: 2px 0 0; }
+    .ob-resume { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 60; display: flex; align-items: center; gap: 10px; width: max-content; max-width: calc(100vw - 24px); padding: 8px 8px 8px 14px; transform: translateX(-50%); border: 1px solid var(--line); border-radius: 999px; background: var(--paper, white); box-shadow: 0 10px 30px rgba(20, 30, 24, .18); font-size: 13px; }
+    .ob-resume > span { display: flex; align-items: center; gap: 6px; font-weight: 700; }
+    .ob-resume svg { width: 16px; height: 16px; color: var(--green); }
+    .ob-resume .primary-btn { min-height: 38px; padding: 0 14px; font-size: 13px; white-space: nowrap; }
+    .ob-resume .close-btn { min-width: 32px; min-height: 32px; border: 0; background: transparent; font-size: 20px; cursor: pointer; color: var(--muted); }
+    .ob-guide-pill { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 12px; min-height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 700; cursor: pointer; }
+    .ob-guide-pill svg { width: 15px; height: 15px; color: var(--green); }
+    .ob-guide { margin: 0 0 14px; padding: 14px 16px; border: 1px solid #cfe1d4; border-radius: 14px; background: var(--green-soft); }
+    .ob-guide h3 { margin: 0 0 6px; font-size: 15px; }
+    .ob-guide ul { margin: 0 0 8px; padding-left: 18px; font-size: 13.5px; line-height: 1.55; }
+    .ob-guide-actions { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+    .ob-pp { padding: 4px 0 8px; }
+    .ob-pp-title { margin: 6px 0 6px; font-size: 22px; line-height: 1.25; }
+    .ob-pp .pp-card { margin: 10px 0; }
+    .ob-pp-resume { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 12px; padding: 10px 12px; border: 1px solid #cfe1d4; border-radius: 14px; background: var(--green-soft); font-size: 13.5px; font-weight: 700; }
+    .ob-pp-resume > svg { width: 18px; height: 18px; color: var(--green); }
+    .ob-pp-resume .primary-btn { margin-left: auto; min-height: 38px; padding: 0 14px; font-size: 13px; }
+    @media (max-width: 340px) { .ob-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 520px) { .ob-actions-shell { flex-direction: column-reverse; align-items: stretch; } .ob-actions-shell > .secondary-btn, .ob-actions-shell > span { align-self: flex-start; } .ob-actions-main { margin-left: 0; justify-content: stretch; } .ob-actions-main .primary-btn { flex: 1 1 100%; } .ob-resume { border-radius: 16px; flex-wrap: wrap; justify-content: center; } }
+    @media (prefers-reduced-motion: reduce) { .ob-progress i { transition: none; } }
     .demo-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 16px; padding: 12px 16px; border: 1px solid #f0dd8c; border-radius: 12px; color: #6f5200; background: #fffbea; font-size: 13.5px; line-height: 1.5; }
     .demo-banner > svg { flex: 0 0 auto; width: 20px; height: 20px; }
     .demo-banner > span { flex: 1 1 240px; }
@@ -5013,6 +5080,11 @@ html.dark .ob-lead { color: #c0c8c3; }
 html.dark .ob-dots i { background: #31302b; }
 html.dark .ob-dots i.on { background: var(--green-solid); }
 html.dark .ob-hero { background: var(--green-solid); }
+html.dark .ob-progress::after, html.dark .ob-meter::after { background: #3a423d; }
+html.dark .ob-note { background: #3a3320; color: #f0dfa8; }
+html.dark .ob-error { background: #4a2420; color: #f6c9c3; }
+html.dark .ob-next button { background: var(--paper); color: var(--ink); }
+html.dark .ob-checklist, html.dark .ob-guide { border-color: #3d5446; }
 html.dark .ob-next button { background: #1c1c1c; }
 html.dark .demo-banner { border: 1px solid #675e37; color: #f9e5af; background: #312b13; }
 @media (max-width: 760px) {
@@ -5590,6 +5662,161 @@ Disposition – alle Aufträge, Mitarbeiter einteilen|Dispatch – all orders, a
 Dokument|Document|Dokument
 Dokumente|Documents|Dokument
 Dringende Mängel|Urgent defects|Akuta brister
+Bitte wählen …|Please choose …|Välj …
+Andere|Other|Annan
+Später fortsetzen|Continue later|Fortsätt senare
+Später erledigen|Do later|Gör senare
+Willkommen bei Husora|Welcome to Husora|Välkommen till Husora
+Dein Ferienhaus verdient gute Betreuung. Mit Husora verwaltest du dein Haus, planst Wartungsarbeiten, organisierst Kontrollen und findest passende Servicepartner – alles an einem Ort.|Your holiday home deserves good care. With Husora you manage your house, plan maintenance, organise inspections and find suitable service partners – all in one place.|Ditt fritidshus förtjänar god omsorg. Med Husora förvaltar du ditt hus, planerar underhåll, organiserar tillsyn och hittar passande servicepartner – allt på ett ställe.
+Haus & Hausprofil|House & house profile|Hus & husprofil
+in wenigen Minuten angelegt|set up in a few minutes|klart på några minuter
+Aufgaben & Wartung|Tasks & maintenance|Uppgifter & underhåll
+mit Erinnerungen|with reminders|med påminnelser
+und Servicepartner in der Nähe|and service partners nearby|och servicepartner i närheten
+Wie möchtest du Husora nutzen?|How would you like to use Husora?|Hur vill du använda Husora?
+Hausbesitzer – jetzt starten|Homeowner – start now|Husägare – börja nu
+Eigenes Ferienhaus verwalten und Servicepartner beauftragen|Manage your own holiday home and hire service partners|Förvalta ditt eget fritidshus och anlita servicepartner
+Aufträge von Hausbesitzern annehmen und erledigen|Accept and complete jobs from homeowners|Ta emot och utför uppdrag från husägare
+Mit der Nutzung gelten die|By using the app, the|Vid användning gäller
+Nutzungsbedingungen|Terms of use|Användarvillkoren
+und die|and the|och
+(Entwurf).|(draft) apply.|(utkast).
+Ich möchte mich erst umsehen (Demo)|I'd like to look around first (demo)|Jag vill titta runt först (demo)
+Dein erstes Haus|Your first house|Ditt första hus
+Dein Haus ist angelegt.|Your house has been created.|Ditt hus är skapat.
+Du hast mehrere Häuser. Welches richten wir zuerst ein?|You have several houses. Which one shall we set up first?|Du har flera hus. Vilket ska vi börja med?
+Weiteres Haus|Another house|Ytterligare hus
+Beginne mit deinem Ferienhaus. Du kannst die Angaben selbst eintragen oder ein Immobilieninserat importieren.|Start with your holiday home. You can enter the details yourself or import a property listing.|Börja med ditt fritidshus. Du kan fylla i uppgifterna själv eller importera en bostadsannons.
+Name des Hauses *|Name of the house *|Husets namn *
+Adresse oder Ort|Address or place|Adress eller ort
+Region / Provinz|Region / province|Region / landskap
+Wie nutzt du das Haus?|How do you use the house?|Hur använder du huset?
+Nur selbst|Only myself|Bara själv
+Eigennutzung, keine Gäste|Own use, no guests|Eget bruk, inga gäster
+Auch Vermietung|Also rented out|Även uthyrning
+Gäste, Reinigung, Gästewechsel|Guests, cleaning, changeovers|Gäster, städning, gästbyten
+Dein Name (optional, Absender in Aufträgen)|Your name (optional, sender of requests)|Ditt namn (valfritt, avsändare i uppdrag)
+Haus speichern|Save house|Spara hus
+Inserat importieren|Import listing|Importera annons
+Lerne dein Haus kennen|Get to know your house|Lär känna ditt hus
+Lege zuerst ein Haus an – danach kannst du hier die wichtigsten Angaben ergänzen.|First create a house – then you can add the key details here.|Skapa först ett hus – sedan kan du komplettera de viktigaste uppgifterna här.
+Haus anlegen|Create house|Skapa hus
+Mit den wichtigsten Angaben kann Husora passende Aufgaben und Kontrollen vorschlagen. Alles ist freiwillig und später änderbar.|With the key details Husora can suggest suitable tasks and inspections. Everything is optional and can be changed later.|Med de viktigaste uppgifterna kan Husora föreslå passande uppgifter och tillsyn. Allt är frivilligt och kan ändras senare.
+Wohnfläche (m²)|Living area (m²)|Boyta (m²)
+Grundstück (m²)|Plot (m²)|Tomt (m²)
+Kamin / Feuerstätte|Fireplace / stove|Kamin / eldstad
+Zustand des Gebäudes|Condition of the building|Byggnadens skick
+Fotos, Sanierungen und Dokumente ergänzt du später im Hausprofil.|You can add photos, renovations and documents later in the house profile.|Foton, renoveringar och dokument lägger du till senare i husprofilen.
+Speichern & weiter|Save & continue|Spara & fortsätt
+Deine erste Aufgabe|Your first task|Din första uppgift
+Lege eine Wartungsaufgabe an oder nutze eine passende Vorlage.|Create a maintenance task or use a suitable template.|Skapa en underhållsuppgift eller använd en passande mall.
+Dach und Dachrinnen kontrollieren|Check roof and gutters|Kontrollera tak och hängrännor
+Heizung prüfen|Check heating|Kontrollera uppvärmningen
+Wasserleitungen vor dem Winter kontrollieren|Check water pipes before winter|Kontrollera vattenledningar före vintern
+Rauchmelder prüfen|Test smoke detectors|Testa brandvarnare
+Fenster und Türen kontrollieren|Check windows and doors|Kontrollera fönster och dörrar
+Außenwasser abstellen|Turn off outdoor water|Stäng av utevattnet
+Aufgabe *|Task *|Uppgift *
+Wiederholung|Repeat|Upprepning
+Ausführliches Formular|Full form|Utförligt formulär
+Behalte den Zustand deines Hauses im Blick|Keep an eye on your house's condition|Håll koll på husets skick
+Mit einer Hauskontrolle prüfst du wichtige Bereiche regelmäßig und dokumentierst Auffälligkeiten.|With a house inspection you check important areas regularly and document anything unusual.|Med en hustillsyn kontrollerar du viktiga delar regelbundet och dokumenterar avvikelser.
+Kontrollplan|Inspection plan|Tillsynsplan
+mit Prüfpositionen je Bereich (Dach, Wasser, Heizung …)|with check points per area (roof, water, heating …)|med kontrollpunkter per område (tak, vatten, värme …)
+Fotos und Notizen|Photos and notes|Foton och anteckningar
+je Position, Mängel markieren|per item, mark defects|per punkt, markera brister
+festlegen – selbst oder durch einen Servicepartner|– yourself or via a service partner|– själv eller via en servicepartner
+Mangel → Reparatur:|Defect → repair:|Brist → reparation:
+aus einem Mangel wird mit einem Klick eine Aufgabe|one click turns a defect into a task|ett klick gör en brist till en uppgift
+Eine Hauskontrolle ersetzt keine fachliche Prüfung und ist keine Garantie für die technische Sicherheit des Gebäudes.|A house inspection does not replace a professional survey and is no guarantee of the building's technical safety.|En hustillsyn ersätter inte en fackmässig besiktning och är ingen garanti för byggnadens tekniska säkerhet.
+Hauskontrolle öffnen|Open house inspection|Öppna hustillsyn
+Wiederkehrende Aufgaben automatisch planen|Plan recurring tasks automatically|Planera återkommande uppgifter automatiskt
+Husora unterstützt dich bei wiederkehrenden Wartungs- und Saisonaufgaben.|Husora helps you with recurring maintenance and seasonal tasks.|Husora hjälper dig med återkommande underhåll och säsongsuppgifter.
+Einmalig oder wiederkehrend|One-off or recurring|Engångs eller återkommande
+– mit Startdatum und Intervall|– with start date and interval|– med startdatum och intervall
+jedes Jahr im Oktober „Ferienhaus winterfest machen“|every October “winterise the holiday home”|varje oktober ”vinterbona fritidshuset”
+– erst wenn du sie einschaltest|– only once you switch them on|– först när du slår på dem
+Automatik ansehen|View automation|Visa automatik
+Mehr erfahren|Learn more|Läs mer
+Unterstützung vor Ort finden|Find local support|Hitta hjälp på plats
+Finde passende Betriebe für Kontrollen, Wartung, Reparaturen und Sanierungen.|Find suitable businesses for inspections, maintenance, repairs and renovations.|Hitta passande företag för tillsyn, underhåll, reparationer och renoveringar.
+Suche nach Leistung und Entfernung|Search by service and distance|Sök efter tjänst och avstånd
+zu deinem Haus|to your house|till ditt hus
+und Aufgaben direkt an den Partner senden|and send tasks directly to the partner|och skicka uppgifter direkt till partnern
+Anfragen und Nachrichten|Requests and messages|Förfrågningar och meddelanden
+im Partner-Portal (ab PRO)|in the partner portal (PRO and up)|i partnerportalen (från PRO)
+Die Liste stammt aus öffentlichen Quellen und ist keine Empfehlung; Preise und Verfügbarkeit erfragst du beim Betrieb.|The list comes from public sources and is not a recommendation; ask the business about prices and availability.|Listan kommer från offentliga källor och är ingen rekommendation; fråga företaget om priser och tillgänglighet.
+Alles Wichtige an einem Ort|Everything important in one place|Allt viktigt på ett ställe
+Behalte Termine, Unterlagen, Fristen und Kosten deines Hauses im Blick.|Keep track of your house's appointments, documents, deadlines and costs.|Håll koll på husets tider, dokument, frister och kostnader.
+Termine, Buchungen und Fälligkeiten|Appointments, bookings and due dates|Tider, bokningar och förfallodagar
+Rechnungen, Verträge und Unterlagen je Haus|Invoices, contracts and documents per house|Fakturor, avtal och dokument per hus
+Jahreskosten und Ausgaben|Annual costs and expenses|Årskostnader och utgifter
+Dein Husora-Start ist geschafft|Your Husora start is complete|Din Husora-start är klar
+wichtige Aufgaben erledigt|key tasks done|viktiga uppgifter klara
+Erstes Haus angelegt|First house created|Första huset skapat
+Hausprofil ergänzt|House profile completed|Husprofil kompletterad
+Erste Aufgabe erstellt|First task created|Första uppgiften skapad
+Hauskontrolle eingerichtet|House inspection set up|Hustillsyn inrättad
+Servicepartner gefunden/zugeordnet|Service partner found/assigned|Servicepartner hittad/kopplad
+Jetzt erledigen|Do it now|Gör det nu
+Erledigen|Do it|Gör det
+Dein Husora-Start|Your Husora start|Din Husora-start
+Ausblenden|Hide|Dölj
+(optional)|(optional)|(valfritt)
+Einrichtung fortsetzen|Continue setup|Fortsätt konfigurationen
+Weiter mit der Einrichtung|Continue with setup|Fortsätt med konfigurationen
+✓ Bereits erledigt – du kannst dir den Schritt erneut ansehen.|✓ Already done – you can review this step again.|✓ Redan klart – du kan titta på steget igen.
+✓ Bereits erledigt|✓ Already done|✓ Redan klart
+Was kann ich hier tun?|What can I do here?|Vad kan jag göra här?
+Nicht mehr anzeigen|Don't show again|Visa inte igen
+Ersteinrichtung starten|Start initial setup|Starta första konfigurationen
+Erstes Haus, Hausprofil, erste Aufgabe und wichtige Funktionen|First house, house profile, first task and key features|Första huset, husprofil, första uppgiften och viktiga funktioner
+Hilfe-Tipps ausschalten|Turn off help tips|Stäng av hjälptips
+Hilfe-Tipps einschalten|Turn on help tips|Slå på hjälptips
+Willkommen bei Husora für Servicepartner|Welcome to Husora for service partners|Välkommen till Husora för servicepartner
+Richte dein Unternehmensprofil ein und verwalte Aufträge, Termine, Dokumentation und Abrechnung an einem Ort.|Set up your company profile and manage jobs, appointments, documentation and billing in one place.|Konfigurera din företagsprofil och hantera uppdrag, tider, dokumentation och fakturering på ett ställe.
+Dauer: etwa 5 Minuten · jederzeit unterbrechbar|Takes about 5 minutes · pause any time|Tar cirka 5 minuter · kan avbrytas när som helst
+Einrichtung starten|Start setup|Starta konfigurationen
+Dein Unternehmensprofil|Your company profile|Din företagsprofil
+Diese Angaben sehen Hausbesitzer, wenn sie dich als Servicepartner finden oder beauftragen.|Homeowners see these details when they find or hire you as a service partner.|Husägare ser dessa uppgifter när de hittar eller anlitar dig som servicepartner.
+Ansprechpartner *|Contact person *|Kontaktperson *
+Kurzbeschreibung|Short description|Kort beskrivning
+Wo bist du im Einsatz?|Where do you work?|Var är du verksam?
+Lege fest, in welchen Orten oder Regionen du Aufträge annehmen möchtest. Husora schlägt dich Hausbesitzern in diesen Gebieten vor.|Define the places or regions where you accept jobs. Husora suggests you to homeowners in these areas.|Ange i vilka orter eller regioner du tar uppdrag. Husora föreslår dig för husägare i dessa områden.
+Was bietest du an?|What do you offer?|Vad erbjuder du?
+Wähle die Leistungen, die du für Ferienhäuser anbietest – mit Preis je Einsatz, Stunde oder Paket.|Choose the services you offer for holiday homes – priced per visit, hour or package.|Välj de tjänster du erbjuder för fritidshus – med pris per besök, timme eller paket.
+Noch keine Leistung aktiv|No service active yet|Ingen tjänst aktiv ännu
+Leistungen & Preise bearbeiten|Edit services & prices|Redigera tjänster & priser
+Leistungen anlegen|Add services|Lägg till tjänster
+So erhältst du Aufträge|How you receive jobs|Så får du uppdrag
+Hausbesitzer können dir Aufgaben oder Kontrollen schicken. Du siehst neue Anfragen, kannst sie annehmen und planen.|Homeowners can send you tasks or inspections. You see new requests and can accept and schedule them.|Husägare kan skicka uppgifter eller tillsyn till dig. Du ser nya förfrågningar och kan acceptera och planera dem.
+Auftragsbereich öffnen|Open jobs|Öppna uppdrag
+Vom Termin bis zum Abschluss|From appointment to completion|Från bokning till avslut
+Husora führt dich durch jeden Einsatz – mit Checklisten, Fotos und Rückmeldungen für den Hausbesitzer.|Husora guides you through every visit – with checklists, photos and feedback for the homeowner.|Husora guidar dig genom varje besök – med checklistor, foton och återkoppling till husägaren.
+Verstanden|Got it|Uppfattat
+Arbeiten nachvollziehbar dokumentieren|Document work transparently|Dokumentera arbetet spårbart
+Füge Fotos, Notizen, Prüfpunkte und Ergebnisse hinzu. So sieht der Hausbesitzer, was erledigt wurde.|Add photos, notes, check points and results so the homeowner can see what was done.|Lägg till foton, anteckningar, kontrollpunkter och resultat så att husägaren ser vad som gjorts.
+Dokumentation ersetzt keine fachliche Prüfung oder Abnahme nach den geltenden Vorschriften.|Documentation does not replace a professional inspection or acceptance under applicable regulations.|Dokumentation ersätter inte en fackmässig besiktning eller godkännande enligt gällande regler.
+Angebote, Rechnungen und Zahlungen|Quotes, invoices and payments|Offerter, fakturor och betalningar
+Erstelle Angebote, rechne erledigte Arbeiten ab und behalte offene Zahlungen im Blick.|Create quotes, bill completed work and keep track of outstanding payments.|Skapa offerter, fakturera utfört arbete och håll koll på obetalda belopp.
+Steuerliche und rechtliche Anforderungen an Rechnungen prüfst du bitte selbst bzw. mit deiner Steuerberatung.|Please check tax and legal requirements for invoices yourself or with your tax adviser.|Kontrollera skatte- och rättsliga krav på fakturor själv eller med din skatterådgivare.
+Finanzen ansehen|View finances|Visa ekonomi
+Mitarbeitende hinzufügen|Add employees|Lägg till medarbetare
+Lade Mitarbeitende ein und weise ihnen Aufträge zu. Jede Person sieht nur, was ihre Rolle erlaubt.|Invite employees and assign jobs to them. Each person only sees what their role allows.|Bjud in medarbetare och tilldela dem uppdrag. Var och en ser bara det rollen tillåter.
+Team verwalten|Manage team|Hantera team
+Dein Unternehmen ist startklar|Your company is ready to go|Ditt företag är redo
+Du kannst jetzt Aufträge empfangen, planen, dokumentieren und abrechnen.|You can now receive, schedule, document and bill jobs.|Nu kan du ta emot, planera, dokumentera och fakturera uppdrag.
+wichtige Schritte erledigt|key steps done|viktiga steg klara
+Zur Startseite|To the start page|Till startsidan
+Dein Unternehmen ist bereit?|Is your company ready?|Är ditt företag redo?
+Firmenprofil vollständig|Company profile complete|Företagsprofil komplett
+Servicegebiet festgelegt|Service area defined|Serviceområde fastställt
+Leistungen angelegt|Services added|Tjänster tillagda
+Auftragsbereich kennengelernt|Jobs area explored|Uppdragsdelen utforskad
+Dokumentation kennengelernt|Documentation explored|Dokumentationen utforskad
+Team eingeladen (optional)|Team invited (optional)|Team inbjudet (valfritt)
+Einrichtung|Setup|Konfiguration
+Zu den Aufträgen|To the jobs|Till uppdragen
 Diese Nachricht löschen? Sie wird auch beim Kunden entfernt.|Delete this message? It will also be removed for the customer.|Radera meddelandet? Det tas även bort hos kunden.
 Diese Nachricht nur für dich ausblenden? Der Absender sieht sie weiterhin.|Hide this message just for you? The sender will still see it.|Dölja meddelandet bara för dig? Avsändaren ser det fortfarande.
 Nachricht gelöscht.|Message deleted.|Meddelandet raderat.
@@ -6409,6 +6636,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const I18N = new Map(I18N_SOURCE.trim().split('\n').map((line) => { const [de, en, sv] = line.split('|'); return [de, { en, sv }]; }));
     // Texte mit Zahlen
     const I18N_PATTERNS = [
+      [/^Schritt (\d+) von (\d+)$/, { en: 'Step $1 of $2', sv: 'Steg $1 av $2' }],
+      [/^Einrichtung: (\d+) von (\d+)(?: Schritten)?$/, { en: 'Setup: $1 of $2', sv: 'Konfiguration: $1 av $2' }],
+      [/^(\d+) von (\d+) wichtigen (?:Aufgaben|Schritten) erledigt$/, { en: '$1 of $2 key steps done', sv: '$1 av $2 viktiga steg klara' }],
+      [/^(\d+) von (\d+) Angaben ergänzt$/, { en: '$1 of $2 details added', sv: '$1 av $2 uppgifter ifyllda' }],
+      [/^(\d+) Leistung(?:en)? aktiv$/, { en: '$1 service(s) active', sv: '$1 tjänst(er) aktiva' }],
       [/^(\d+) offen$/, { en: '$1 open', sv: '$1 öppna' }],
       [/^Mehrkosten warten auf deine Freigabe \((\d+)\)$/, { en: 'Extra costs awaiting your approval ($1)', sv: 'Merkostnader väntar på ditt godkännande ($1)' }],
       [/^Freigabelimit je Anfrage \((\w+)\)$/, { en: 'Approval limit per request ($1)', sv: 'Godkännandegräns per förfrågan ($1)' }],
@@ -12918,7 +13150,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       updateProfileSummary();
       updateNotifyBadge();
       renderTabbar();
-      pageContent.innerHTML = (currentPage === 'dashboard' ? betaBannerHtml('owner') : '') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
+      pageContent.innerHTML = (currentPage === 'dashboard' ? betaBannerHtml('owner') + obChecklistHtml() : '') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
       if (currentPage === 'providers') trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `page:${localDateKey(new Date())}` });
       ensureBackButton();
       if (uiState) { uiRestore(pageContent, uiState); if (Math.abs(window.scrollY - uiScrollY) > 2) window.scrollTo(0, uiScrollY); }
@@ -12928,6 +13160,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (currentPage === 'house3d') fitHouseScene();
       if (currentPage === 'propertyDetail') initPropertyMap();
       try { roleSwitchRefresh(); } catch (error) { /* noch nicht bereit */ }
+      try { obAfterRender(); } catch (error) { /* Einrichtung noch nicht bereit */ }
     }
     // Jede Unterseite bekommt im Kopfbereich einen Zurück-Button, falls die Seite selbst keinen setzt.
     function ensureBackButton() {
@@ -16393,7 +16626,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function helpPage() {
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Hilfe & Support</h1><p class="subtitle">Antworten auf häufige Fragen, Erste Schritte und Kontakt.</p></div></div>
         <div class="help-actions">
-          <button type="button" class="help-action" data-onboarding-start>${icon('home')}<span><strong>Ersteinrichtung starten</strong><small>Haus, Nutzung und erste Schritte einrichten</small></span></button>
+          <button type="button" class="help-action" data-onboarding-start>${icon('home')}<span><strong>${obState('homeowner')?.status === 'in_progress' ? 'Einrichtung fortsetzen' : 'Ersteinrichtung starten'}</strong><small>Erstes Haus, Hausprofil, erste Aufgabe und wichtige Funktionen</small></span></button>
+          <button type="button" class="help-action" data-ob-tips>${icon('help')}<span><strong>Hilfe-Tipps ${obPrefs().help_tips_enabled === false ? 'einschalten' : 'ausschalten'}</strong><small>„Was kann ich hier tun?“ auf Aufgaben, Kontrolle, Partnern, Dokumenten und Kalender</small></span></button>
           <button type="button" class="help-action" data-support-mail="question">${icon('help')}<span><strong>Frage stellen</strong><small>E-Mail an den Husora-Support</small></span></button>
           <button type="button" class="help-action" data-support-mail="bug">${icon('alert')}<span><strong>Fehler melden</strong><small>mit Geräteinfos für eine schnelle Lösung</small></span></button>
           <button type="button" class="help-action" data-support-mail="feedback">${icon('note')}<span><strong>Idee oder Feedback</strong><small>Was sollen wir verbessern?</small></span></button>
@@ -18242,81 +18476,462 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const onboardingDraft = {};
     const REGION_LABELS = Object.keys(REGION_CENTERS).map((key) => key.replace(/(^|\s)\S/g, (letter) => letter.toLocaleUpperCase('sv')));
     function onboardingNeeded() {
+      // Begonnene, nicht pausierte Einrichtung beim nächsten Start fortsetzen
+      const ob = obState('homeowner');
+      if (ob && ob.status === 'in_progress' && !ob.paused && onboardingState?.status !== 'done' && onboardingState?.role !== 'partner') return true;
       if (onboardingState) return false;
       let stored = false;
       try { stored = Boolean(localStorage.getItem('stugliv-properties')); } catch (error) { stored = false; }
       if (stored) { onboardingState = { status: 'done', at: new Date().toISOString(), existing: true }; saveStore('stugliv-onboarding', onboardingState); return false; }
       return true;
     }
+    // ===== Onboarding (Spezifikation „Onboarding Architecture“) =====
+    // Konfigurationsgesteuerte Flows je Rolle; Fortschritt lokal (offline-fähig) und – mit Husora-Konto – serverseitig
+    // (Migration 4800: onboarding_sessions / onboarding_step_progress). Erledigt-Status wird aus echten Daten abgeleitet.
+    const OB_FLOWS = {
+      homeowner: { version: 'homeowner_v1', steps: [
+        { key: 'welcome', skippable: false, priority: 'high', rule: 'manual' },
+        { key: 'property', skippable: true, priority: 'critical', rule: 'entity_exists' },
+        { key: 'profile', skippable: true, priority: 'high', rule: 'entity_exists' },
+        { key: 'task', skippable: true, priority: 'critical', rule: 'entity_exists' },
+        { key: 'inspection', skippable: true, priority: 'high', rule: 'feature_viewed', page: 'inspections' },
+        { key: 'automation', skippable: true, priority: 'medium', rule: 'feature_viewed', page: 'automation' },
+        { key: 'partners', skippable: true, priority: 'high', rule: 'feature_viewed', page: 'providers' },
+        { key: 'organize', skippable: true, priority: 'medium', rule: 'feature_viewed' },
+        { key: 'done', skippable: false, priority: 'high', rule: 'manual' }
+      ] },
+      service_partner: { version: 'service_partner_v1', steps: [
+        { key: 'welcome', skippable: false, priority: 'high', rule: 'manual' },
+        { key: 'profile', skippable: true, priority: 'critical', rule: 'entity_exists', view: 'company' },
+        { key: 'area', skippable: true, priority: 'critical', rule: 'entity_exists', view: 'company' },
+        { key: 'services', skippable: true, priority: 'critical', rule: 'entity_exists', view: 'services' },
+        { key: 'orders', skippable: true, priority: 'high', rule: 'feature_viewed', view: 'orders' },
+        { key: 'workflow', skippable: true, priority: 'high', rule: 'feature_viewed' },
+        { key: 'documentation', skippable: true, priority: 'high', rule: 'feature_viewed' },
+        { key: 'finance', skippable: true, priority: 'medium', rule: 'feature_viewed', view: 'finance' },
+        { key: 'team', skippable: true, priority: 'medium', rule: 'feature_viewed', view: 'team' },
+        { key: 'done', skippable: false, priority: 'high', rule: 'manual' }
+      ] }
+    };
+    const obKey = (role) => `husora-onboarding-${role}`;
+    function obState(role) {
+      const flow = OB_FLOWS[role];
+      let s = null;
+      try { s = JSON.parse(localStorage.getItem(obKey(role)) || 'null'); } catch (error) { s = null; }
+      if (!s || s.version !== flow.version) return null;
+      s.steps = s.steps && typeof s.steps === 'object' ? s.steps : {};
+      return s;
+    }
+    function obWrite(role, s) { try { localStorage.setItem(obKey(role), JSON.stringify({ ...s, updatedAt: new Date().toISOString() })); } catch (error) { /* Fortschritt bleibt im Speicher */ } }
+    function obStepIndex(role, key) { return Math.max(0, OB_FLOWS[role].steps.findIndex((st) => st.key === key)); }
+    function obTrack(name, role, step, extra = {}) {
+      const flow = OB_FLOWS[role].version;
+      try { trackEvent(name, { entity_type: 'onboarding', entity_ref: step ? `${flow}:${step}:${name}` : `${flow}:${name}:${extra.n || 1}`, app_role: role === 'service_partner' ? 'partner' : 'owner', metadata: { flow, step: step || '', ...extra } }); } catch (error) { /* Analytics optional */ }
+    }
+    // Server-Abgleich (nur mit Konto; Fehler blockieren nie die Bedienung, Stand bleibt lokal und wird später nachgereicht)
+    function obServerReady(role) { return cloudSignedIn() && (role === 'homeowner' || Boolean(pp.ctx && ppOrg())); }
+    async function obPush(role, step, status, current, metadata, refs) {
+      if (!obServerReady(role)) return;
+      try {
+        await cloudFetch('/rest/v1/rpc/onboarding_save', { method: 'POST', body: { p_role: role, p_flow: OB_FLOWS[role].version, p_step: step || null, p_status: status || null, p_current: current || null, p_metadata: metadata || null, p_refs: refs || null } });
+        const s = obState(role); if (s?.pendingSync) { delete s.pendingSync; obWrite(role, s); }
+      } catch (error) { const s = obState(role); if (s) { s.pendingSync = true; obWrite(role, s); } }
+    }
+    async function obPull(role) {
+      if (!obServerReady(role)) return;
+      try {
+        const r = await cloudFetch('/rest/v1/rpc/onboarding_get', { method: 'POST', body: { p_role: role } });
+        const flow = OB_FLOWS[role];
+        const srv = r?.session; const local = obState(role);
+        if (r?.preferences) { obPrefsCache = { ...obPrefsCache, ...r.preferences }; obPrefsSave(); }
+        if (!srv || srv.flow_version !== flow.version) {
+          // lokalen Stand nachreichen (z. B. Einrichtung vor der Anmeldung begonnen)
+          if (local) Object.entries(local.steps).forEach(([k, st]) => obPush(role, k, st, local.current, null, { paused: Boolean(local.paused), primary_property_ref: local.propertyRef || undefined, organization_id: role === 'service_partner' ? ppOrg()?.id : undefined }));
+          if (local && ['completed', 'skipped'].includes(local.status)) cloudFetch('/rest/v1/rpc/onboarding_finish', { method: 'POST', body: { p_role: role, p_flow: flow.version, p_status: local.status } }).catch(() => {});
+          return;
+        }
+        // Server ist maßgeblich, erledigte Schritte beider Seiten bleiben erhalten (Geräte-Wechsel)
+        const steps = { ...(local?.steps || {}) };
+        Object.entries(r.steps || {}).forEach(([k, v]) => { if (steps[k] !== 'completed') steps[k] = v.status; });
+        const merged = { version: flow.version, status: srv.status === 'not_started' ? 'in_progress' : srv.status, current: srv.current_step_key || local?.current || 'welcome',
+          paused: Boolean(srv.paused), steps, propertyRef: srv.primary_property_ref || local?.propertyRef || '', startedAt: srv.started_at };
+        if (local && ['completed', 'skipped'].includes(local.status) && merged.status === 'in_progress') merged.status = local.status;
+        obWrite(role, merged);
+        if (local) Object.entries(local.steps).forEach(([k, st]) => { if (!r.steps?.[k] || (st === 'completed' && r.steps[k].status !== 'completed')) obPush(role, k, st); });
+      } catch (error) { /* offline: lokaler Stand gilt */ }
+    }
+    // Präferenzen (Checkliste ausgeblendet, Hilfe-Tipps, ausgeblendete Guides) – lokal + Server
+    const OB_PREFS_KEY = 'husora-onboarding-prefs';
+    let obPrefsCache = (() => { try { return JSON.parse(localStorage.getItem(OB_PREFS_KEY) || '{}') || {}; } catch (error) { return {}; } })();
+    function obPrefsSave() { try { localStorage.setItem(OB_PREFS_KEY, JSON.stringify(obPrefsCache)); } catch (error) { /* optional */ } }
+    function obPrefs() { return { help_tips_enabled: true, dismissed_guides: [], ...obPrefsCache }; }
+    function obSetPrefs(patch, server) {
+      obPrefsCache = { ...obPrefs(), ...patch }; obPrefsSave();
+      if (cloudSignedIn() && server) cloudFetch('/rest/v1/rpc/onboarding_preferences', { method: 'POST', body: server }).catch(() => {});
+    }
+    // Schritt-Status setzen (Übergänge wie serverseitig: erledigt bleibt erledigt)
+    function obMark(role, step, status, { current, metadata, refs } = {}) {
+      const flow = OB_FLOWS[role];
+      const s = obState(role) || { version: flow.version, status: 'in_progress', current: 'welcome', steps: {}, startedAt: new Date().toISOString() };
+      const prev = s.steps[step];
+      if (step && status && prev !== 'completed' && !(prev === 'skipped' && status === 'skipped')) {
+        s.steps[step] = status;
+        if (status === 'completed') obTrack('onboarding_step_completed', role, step);
+        if (status === 'skipped') obTrack('onboarding_step_skipped', role, step);
+      }
+      if (current) s.current = current;
+      if (refs?.primary_property_ref) s.propertyRef = refs.primary_property_ref;
+      if (refs && 'paused' in refs) s.paused = refs.paused;
+      if (s.status !== 'completed' && s.status !== 'skipped') s.status = 'in_progress';
+      obWrite(role, s);
+      obPush(role, step, status, current, metadata, refs);
+      return s;
+    }
+    function obStart(role, { restart = false } = {}) {
+      const flow = OB_FLOWS[role];
+      const s = restart ? null : obState(role);
+      if (s && s.status === 'in_progress') return s;
+      const fresh = { version: flow.version, status: 'in_progress', current: flow.steps[0].key, steps: {}, startedAt: new Date().toISOString(), paused: false };
+      obWrite(role, fresh);
+      obTrack(restart ? 'onboarding_resumed' : 'onboarding_started', role, null, { n: restart ? Date.now() % 100000 : 1 });
+      if (obServerReady(role)) cloudFetch(`/rest/v1/rpc/${restart ? 'onboarding_restart' : 'onboarding_save'}`, { method: 'POST', body: restart ? { p_role: role, p_flow: flow.version } : { p_role: role, p_flow: flow.version, p_step: null, p_status: null, p_current: flow.steps[0].key, p_metadata: null, p_refs: null } }).catch(() => {});
+      return fresh;
+    }
+    function obFinish(role, status = 'completed') {
+      const s = obState(role) || obStart(role);
+      s.status = status; s.paused = false; s.current = 'done';
+      if (status === 'completed') s.steps.done = 'completed';
+      obWrite(role, s);
+      obTrack(status === 'completed' ? 'onboarding_completed' : 'onboarding_dismissed', role, null);
+      if (obServerReady(role)) cloudFetch('/rest/v1/rpc/onboarding_finish', { method: 'POST', body: { p_role: role, p_flow: OB_FLOWS[role].version, p_status: status } }).catch(() => {});
+    }
+    // Fortschritt: Anzahl erledigter/übersprungener Schritte (ohne Willkommen/Abschluss)
+    function obProgress(role, s = obState(role)) {
+      const steps = OB_FLOWS[role].steps.filter((st) => !['welcome', 'done'].includes(st.key));
+      const done = steps.filter((st) => s?.steps?.[st.key] === 'completed').length;
+      return { done, total: steps.length };
+    }
+    // --- Hausbesitzer-Flow (homeowner_v1) im bestehenden Einrichtungsfenster ---
+    const obIsDemoHouse = (p) => p?.id === 'sunne' && p?.name === 'Stuga Björkbacken' && p?.address === 'Sunne, Värmland, Schweden';
+    const obRealHouses = () => properties.filter((p) => !obIsDemoHouse(p));
+    function obPrimaryHouse() { const s = obState('homeowner'); const real = obRealHouses(); return real.find((p) => p.id === s?.propertyRef) || real[0] || null; }
+    const OB_PROFILE_FIELDS = [['yearBuilt', 'Baujahr'], ['livingArea', 'Wohnfläche (m²)'], ['plotSize', 'Grundstück (m²)'], ['rooms', 'Zimmer'], ['heatingSystem', 'Heizung'], ['fireplace', 'Kamin / Feuerstätte'], ['condition', 'Zustand']];
+    const obProfileCount = (p) => OB_PROFILE_FIELDS.filter(([k]) => String(p?.[k] ?? '').trim()).length;
+    const obUserTasks = () => tasks.filter((t) => !initialTasks.some((d) => d.id === t.id && d.title === t.title));
+    const obHasInspection = () => Object.values(inspectionPlans || {}).some((pl) => pl && (Array.isArray(pl) ? pl.length : Object.keys(pl).length)) || Object.values(inspectionLog || {}).some((l) => Array.isArray(l) ? l.length : l && Object.keys(l).length);
+    const obHasPartner = () => Object.values(servicePartnerAssignments || {}).some((list) => Array.isArray(list) && list.length);
+    // Checkliste aus echten Daten (nicht aus angeklickten Häkchen)
+    function obOwnerChecklist() {
+      const house = obPrimaryHouse();
+      return [
+        ['property', 'Erstes Haus angelegt', Boolean(house), true],
+        ['profile', 'Hausprofil ergänzt', Boolean(house) && obProfileCount(house) >= 3, true],
+        ['task', 'Erste Aufgabe erstellt', obUserTasks().length > 0, true],
+        ['inspection', 'Hauskontrolle eingerichtet', obHasInspection(), false],
+        ['partners', 'Servicepartner gefunden/zugeordnet', obHasPartner(), false]
+      ];
+    }
+    const OB_TASK_TEMPLATES = ['Dach und Dachrinnen kontrollieren', 'Heizung prüfen', 'Wasserleitungen vor dem Winter kontrollieren', 'Rauchmelder prüfen', 'Fenster und Türen kontrollieren', 'Außenwasser abstellen'];
+    let obDraft = {};
     function openOnboarding(step = 0) {
-      const property = properties[0] || {};
-      const demoHouse = property.name === 'Stuga Björkbacken' && property.address === 'Sunne, Värmland, Schweden';
-      Object.assign(onboardingDraft, { name: profileData.name === 'Max Mustermann' ? '' : profileData.name, email: profileData.email || '', house: demoHouse ? '' : property.name || '', address: demoHouse ? '' : property.address || '', region: demoHouse ? '' : property.region || '', usage: profileData.usage === 'self' ? 'self' : 'rental' });
-      onboardingStep = step;
+      // Kompatibel zu bestehenden Einstiegen (Hilfe „Ersteinrichtung starten“, Demo-Banner, Erststart)
+      const s = obState('homeowner');
+      const key = typeof step === 'string' ? step : step === 1 ? 'property' : (s?.status === 'in_progress' ? s.current : 'welcome');
+      if (!s || s.status !== 'in_progress') obStart('homeowner', { restart: Boolean(s) });
+      if (onboardingState?.status !== 'demo') { onboardingState = { ...(onboardingState || {}), status: onboardingState?.status === 'done' ? 'done' : 'active', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); }
+      obDraft = {};
+      onboardingStep = obStepIndex('homeowner', key);
+      obMark('homeowner', null, null, { current: key, refs: { paused: false } });
+      obReturnPending = null;
+      document.querySelector('.ob-resume')?.remove();
       renderOnboarding();
       document.getElementById('onboarding-modal').classList.add('open');
-      if (step === 0) trackEvent('onboarding_started', { entity_ref: 'once' });
+      obTrack('onboarding_step_viewed', 'homeowner', key);
     }
-    function readOnboardingInputs() {
-      document.querySelectorAll('#onboarding-body [data-ob]').forEach((input) => { onboardingDraft[input.dataset.ob] = input.type === 'radio' ? (input.checked ? input.value : onboardingDraft[input.dataset.ob]) : input.value.trim(); });
+    function obGo(key) {
+      onboardingStep = obStepIndex('homeowner', key);
+      obMark('homeowner', null, null, { current: key });
+      obTrack('onboarding_step_viewed', 'homeowner', key);
+      renderOnboarding();
+      document.querySelector('#onboarding-modal .modal')?.scrollTo(0, 0);
     }
+    const obNext = (key) => { const steps = OB_FLOWS.homeowner.steps; const i = obStepIndex('homeowner', key); obGo(steps[Math.min(steps.length - 1, i + 1)].key); };
     function renderOnboarding() {
       const body = document.getElementById('onboarding-body');
-      const dots = `<div class="ob-dots" aria-hidden="true">${[0, 1, 2, 3].map((index) => `<i class="${index === onboardingStep ? 'on' : index < onboardingStep ? 'done' : ''}"></i>`).join('')}</div>`;
-      const steps = [
-        () => `<div class="ob-hero">${icon('home')}</div><h2 id="onboarding-title">Willkommen bei Husora</h2><p class="ob-lead">Dein Ferienhaus in Schweden – organisiert, kontrolliert und gut betreut, auch wenn du nicht vor Ort bist.</p>
-          <ul class="ob-points"><li>${icon('inspection')}<span><strong>Hauskontrolle</strong> mit Kontrollplan für deinen Servicepartner</span></li><li>${icon('users')}<span><strong>Servicepartner</strong> in der Nähe finden und beauftragen</span></li><li>${icon('alert')}<span><strong>Mängel & Reparaturen</strong> mit fertigem Auftrag per E-Mail</span></li><li>${icon('cost')}<span><strong>Kosten, Verträge und Fristen</strong> im Blick</span></li></ul>
+      const flow = OB_FLOWS.homeowner;
+      const step = flow.steps[onboardingStep] || flow.steps[0];
+      const s = obState('homeowner') || { steps: {} };
+      const n = onboardingStep + 1;
+      const head = `<div class="ob-shell-head"><div class="ob-progress" role="progressbar" aria-valuemin="1" aria-valuemax="${flow.steps.length}" aria-valuenow="${n}" aria-label="Schritt ${n} von ${flow.steps.length}"><span>Schritt ${n} von ${flow.steps.length}</span><i style="width:${Math.round(n / flow.steps.length * 100)}%"></i></div>${step.key !== 'welcome' ? '<button type="button" class="ob-later" data-ob-pause>Später fortsetzen</button>' : ''}</div>`;
+      const nav = (primary, { secondary = '', skip = step.skippable, back = onboardingStep > 0 } = {}) => `<div class="ob-actions ob-actions-shell">${back ? '<button type="button" class="secondary-btn" data-ob-prev>Zurück</button>' : '<span></span>'}<div class="ob-actions-main">${skip ? '<button type="button" class="text-btn ob-skip" data-ob-skip>Später erledigen</button>' : ''}${secondary}${primary}</div></div>`;
+      const house = obPrimaryHouse();
+      const doneBadge = s.steps[step.key] === 'completed' ? '<p class="ob-done-note">✓ Bereits erledigt – du kannst dir den Schritt erneut ansehen.</p>' : '';
+      const R = {
+        welcome: () => `<div class="ob-hero">${icon('home')}</div><h2 id="onboarding-title">Willkommen bei Husora</h2><p class="ob-lead">Dein Ferienhaus verdient gute Betreuung. Mit Husora verwaltest du dein Haus, planst Wartungsarbeiten, organisierst Kontrollen und findest passende Servicepartner – alles an einem Ort.</p>
+          <ul class="ob-points"><li>${icon('property')}<span><strong>Haus & Hausprofil</strong> in wenigen Minuten angelegt</span></li><li>${icon('task')}<span><strong>Aufgaben & Wartung</strong> mit Erinnerungen</span></li><li>${icon('inspection')}<span><strong>Hauskontrolle</strong> und Servicepartner in der Nähe</span></li></ul>
           <h3 class="ob-role-title">Wie möchtest du Husora nutzen?</h3>
-          <div class="ob-roles"><button type="button" data-ob-role="owner">${icon('home')}<span><strong>Hausbesitzer</strong><small>Eigenes Ferienhaus verwalten und Servicepartner beauftragen</small></span></button><button type="button" data-ob-role="partner">${icon('users')}<span><strong>Servicepartner</strong><small>Aufträge annehmen, Häuser kontrollieren, Rechnungen stellen</small></span></button><button type="button" data-ob-role="both">${icon('check')}<span><strong>Beide Rollen</strong><small>Eigenes Haus und Servicebetrieb – jederzeit umschaltbar</small></span></button></div>
-          ${relIsBeta() ? '' : '<div class="ob-actions"><button type="button" class="secondary-btn" data-ob-demo>Erst die Demo ansehen</button></div>'}`,
-        () => `<h2 id="onboarding-title">Wie heißt du?</h2><p class="ob-lead">Dein Name steht als Absender in Aufträgen an Servicepartner.</p>
-          <label><span class="form-label">Dein Name</span><input class="form-control" data-ob="name" maxlength="80" autocomplete="name" value="${escapeHtml(onboardingDraft.name)}" placeholder="Vor- und Nachname"></label>
-          <label style="margin-top:12px;display:block"><span class="form-label">E-Mail (optional)</span><input class="form-control" data-ob="email" type="email" maxlength="120" autocomplete="email" value="${escapeHtml(onboardingDraft.email)}" placeholder="du@beispiel.de"></label>
-          <div class="ob-actions"><button type="button" class="secondary-btn" data-ob-back>Zurück</button><button type="button" class="primary-btn" data-ob-next>Weiter</button></div>`,
-        () => `<h2 id="onboarding-title">Dein Ferienhaus</h2><p class="ob-lead">Mit Ort und Region schlägt Husora passende Servicepartner in der Nähe vor.</p>
-          <label><span class="form-label">Name des Hauses</span><input class="form-control" data-ob="house" maxlength="80" value="${escapeHtml(onboardingDraft.house)}" placeholder="z. B. Stuga am See"></label>
-          <label style="margin-top:12px;display:block"><span class="form-label">Adresse oder Ort</span><input class="form-control" data-ob="address" maxlength="160" value="${escapeHtml(onboardingDraft.address)}" placeholder="z. B. Sjövägen 4, Sunne"></label>
-          <label style="margin-top:12px;display:block"><span class="form-label">Region / Provinz</span><select class="form-control" data-ob="region"><option value="">Bitte wählen …</option>${REGION_LABELS.map((label) => `<option ${onboardingDraft.region.toLocaleLowerCase('sv') === label.toLocaleLowerCase('sv') ? 'selected' : ''}>${escapeHtml(label)}</option>`).join('')}<option value="Andere" ${onboardingDraft.region === 'Andere' ? 'selected' : ''}>Andere Region</option></select></label>
-          <span class="form-label" style="margin-top:14px;display:block">Wie nutzt du das Haus?</span>
-          <div class="ob-usage"><label class="${onboardingDraft.usage === 'self' ? 'on' : ''}"><input type="radio" name="ob-usage" data-ob="usage" value="self" ${onboardingDraft.usage === 'self' ? 'checked' : ''}><strong>Nur selbst</strong><small>Eigennutzung, keine Gäste</small></label><label class="${onboardingDraft.usage !== 'self' ? 'on' : ''}"><input type="radio" name="ob-usage" data-ob="usage" value="rental" ${onboardingDraft.usage !== 'self' ? 'checked' : ''}><strong>Auch Vermietung</strong><small>mit Buchungen und Gästewechsel</small></label></div>
-          <div class="ob-actions"><button type="button" class="secondary-btn" data-ob-back>Zurück</button><button type="button" class="primary-btn" data-ob-finish>Einrichtung abschließen</button></div>`,
-        () => `<div class="ob-hero done">${icon('check')}</div><h2 id="onboarding-title">Geschafft${onboardingDraft.name ? `, ${escapeHtml(onboardingDraft.name.split(/\s+/)[0])}` : ''}!</h2><p class="ob-lead">„${escapeHtml(onboardingDraft.house)}“ ist eingerichtet. Diese drei Schritte lohnen sich als Nächstes:</p>
-          <div class="ob-next"><button type="button" data-ob-goto="assignedProviders">${icon('users')}<span><strong>Servicepartner zuordnen</strong><small>Hausservice, Hauskontrolle und Handwerker in der Nähe</small></span>${icon('arrow')}</button><button type="button" data-ob-goto="inspections">${icon('inspection')}<span><strong>Kontrollplan anlegen</strong><small>Was bei deiner Abwesenheit geprüft wird</small></span>${icon('arrow')}</button><button type="button" data-ob-goto="emergency">${icon('key')}<span><strong>Notfall & Zugang eintragen</strong><small>Schlüssel, Haupthahn, Kontakte</small></span>${icon('arrow')}</button></div>
-          <div class="ob-actions"><button type="button" class="primary-btn" data-ob-close>Zur Übersicht</button></div>`
-      ];
-      body.innerHTML = dots + steps[onboardingStep]();
-      setTimeout(() => body.querySelector('input:not([type=radio]), select')?.focus(), 50);
+          <div class="ob-roles"><button type="button" data-ob-role="owner">${icon('home')}<span><strong>Hausbesitzer – jetzt starten</strong><small>Eigenes Ferienhaus verwalten und Servicepartner beauftragen</small></span></button><button type="button" data-ob-role="partner">${icon('users')}<span><strong>Servicepartner</strong><small>Aufträge von Hausbesitzern annehmen und erledigen</small></span></button></div>
+          <p class="ob-legal">Mit der Nutzung gelten die <button type="button" class="text-btn" data-legal-open="terms" data-legal-modal>Nutzungsbedingungen</button> und die <button type="button" class="text-btn" data-legal-open="privacy" data-legal-modal>Datenschutzerklärung</button> (Entwurf).</p>
+          ${relIsBeta() ? '' : '<div class="ob-actions"><button type="button" class="secondary-btn" data-ob-demo>Ich möchte mich erst umsehen (Demo)</button></div>'}`,
+        property: () => {
+          const real = obRealHouses();
+          if (real.length) return `<h2 id="onboarding-title">Dein erstes Haus</h2>${doneBadge}<p class="ob-lead">${real.length === 1 ? 'Dein Haus ist angelegt.' : 'Du hast mehrere Häuser. Welches richten wir zuerst ein?'}</p>
+            <div class="ob-house-pick">${real.map((p) => `<label class="${(house?.id === p.id) ? 'on' : ''}"><input type="radio" name="ob-house" value="${escapeHtml(p.id)}" ${house?.id === p.id ? 'checked' : ''}><span><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml([p.address, p.region].filter(Boolean).join(' · ') || 'ohne Adresse')}</small></span></label>`).join('')}</div>
+            ${nav('<button type="button" class="primary-btn" data-ob-house-use>Weiter</button>', { secondary: '<button type="button" class="secondary-btn" data-ob-house-add>Weiteres Haus</button>', skip: false })}`;
+          const d = { name: profileData.name === 'Max Mustermann' ? '' : profileData.name || '', house: '', address: '', region: '', usage: profileData.usage === 'self' ? 'self' : 'rental', ...obDraft };
+          return `<h2 id="onboarding-title">Dein erstes Haus</h2><p class="ob-lead">Beginne mit deinem Ferienhaus. Du kannst die Angaben selbst eintragen oder ein Immobilieninserat importieren.</p>
+            <form class="ob-form" data-ob-form="property" novalidate>
+              <label><span class="form-label">Name des Hauses *</span><input class="form-control" name="house" maxlength="80" required value="${escapeHtml(d.house)}" placeholder="z. B. Stuga am See" autocomplete="off"></label>
+              <label><span class="form-label">Adresse oder Ort</span><input class="form-control" name="address" maxlength="160" value="${escapeHtml(d.address)}" placeholder="z. B. Sjövägen 4, Sunne" autocomplete="street-address"></label>
+              <label><span class="form-label">Region / Provinz</span><select class="form-control" name="region"><option value="">Bitte wählen …</option>${REGION_LABELS.map((label) => `<option ${String(d.region).toLocaleLowerCase('sv') === label.toLocaleLowerCase('sv') ? 'selected' : ''}>${escapeHtml(label)}</option>`).join('')}<option>Andere</option></select></label>
+              <span class="form-label">Wie nutzt du das Haus?</span>
+              <div class="ob-usage"><label class="${d.usage === 'self' ? 'on' : ''}"><input type="radio" name="usage" value="self" ${d.usage === 'self' ? 'checked' : ''}><strong>Nur selbst</strong><small>Eigennutzung, keine Gäste</small></label><label class="${d.usage !== 'self' ? 'on' : ''}"><input type="radio" name="usage" value="rental" ${d.usage !== 'self' ? 'checked' : ''}><strong>Auch Vermietung</strong><small>Gäste, Reinigung, Gästewechsel</small></label></div>
+              ${profileData.name && profileData.name !== 'Max Mustermann' ? '' : `<label><span class="form-label">Dein Name (optional, Absender in Aufträgen)</span><input class="form-control" name="name" maxlength="80" autocomplete="name" value="${escapeHtml(d.name)}"></label>`}
+              <p class="ob-error" role="alert" hidden></p>
+            </form>
+            ${nav('<button type="button" class="primary-btn" data-ob-house-save>Haus speichern</button>', { secondary: '<button type="button" class="secondary-btn" data-ob-import>Inserat importieren</button>' })}`;
+        },
+        profile: () => {
+          if (!house) return `<h2 id="onboarding-title">Lerne dein Haus kennen</h2><p class="ob-lead">Lege zuerst ein Haus an – danach kannst du hier die wichtigsten Angaben ergänzen.</p>${nav('<button type="button" class="primary-btn" data-ob-goto-step="property">Haus anlegen</button>')}`;
+          const sel = (name) => document.querySelector(`#property-form [name="${name}"]`)?.innerHTML || '<option value="">–</option>';
+          const filled = obProfileCount(house);
+          return `<h2 id="onboarding-title">Lerne dein Haus kennen</h2>${doneBadge}<p class="ob-lead">Mit den wichtigsten Angaben kann Husora passende Aufgaben und Kontrollen vorschlagen. Alles ist freiwillig und später änderbar.</p>
+            <div class="ob-meter" aria-live="polite"><span><b>${filled}</b> von ${OB_PROFILE_FIELDS.length} Angaben ergänzt</span><i style="width:${Math.round(filled / OB_PROFILE_FIELDS.length * 100)}%"></i></div>
+            <form class="ob-form ob-grid" data-ob-form="profile">
+              <label><span class="form-label">Baujahr</span><input class="form-control" name="yearBuilt" inputmode="numeric" maxlength="4" value="${escapeHtml(house.yearBuilt || '')}"></label>
+              <label><span class="form-label">Wohnfläche (m²)</span><input class="form-control" name="livingArea" inputmode="decimal" maxlength="8" value="${escapeHtml(house.livingArea || '')}"></label>
+              <label><span class="form-label">Grundstück (m²)</span><input class="form-control" name="plotSize" inputmode="decimal" maxlength="10" value="${escapeHtml(house.plotSize || '')}"></label>
+              <label><span class="form-label">Zimmer</span><input class="form-control" name="rooms" inputmode="numeric" maxlength="3" value="${escapeHtml(house.rooms || '')}"></label>
+              <label><span class="form-label">Heizung</span><select class="form-control" name="heatingSystem" data-ob-value="${escapeHtml(house.heatingSystem || '')}">${sel('heatingSystem')}</select></label>
+              <label><span class="form-label">Kamin / Feuerstätte</span><select class="form-control" name="fireplace" data-ob-value="${escapeHtml(house.fireplace || '')}">${sel('fireplace')}</select></label>
+              <label class="full"><span class="form-label">Zustand des Gebäudes</span><select class="form-control" name="condition" data-ob-value="${escapeHtml(house.condition || '')}">${sel('condition')}</select></label>
+            </form>
+            <p class="settings-hint">Fotos, Sanierungen und Dokumente ergänzt du später im Hausprofil.</p>
+            ${nav('<button type="button" class="primary-btn" data-ob-profile-save>Speichern & weiter</button>')}`;
+        },
+        task: () => {
+          const repeat = document.querySelector('#task-form [name="repeat"]')?.innerHTML || '<option>Einmalig</option>';
+          const due = obDraft.date || localDateKey(new Date(Date.now() + 14 * 86400000));
+          return `<h2 id="onboarding-title">Deine erste Aufgabe</h2>${doneBadge}<p class="ob-lead">Lege eine Wartungsaufgabe an oder nutze eine passende Vorlage.</p>
+            <div class="ob-chips" role="group" aria-label="Vorlagen">${OB_TASK_TEMPLATES.map((t) => `<button type="button" class="${obDraft.title === t ? 'on' : ''}" data-ob-template="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}</div>
+            <form class="ob-form" data-ob-form="task">
+              <label><span class="form-label">Aufgabe *</span><input class="form-control" name="title" maxlength="120" required value="${escapeHtml(obDraft.title || '')}" placeholder="z. B. Rauchmelder prüfen"></label>
+              <div class="ob-grid"><label><span class="form-label">Fällig am</span><input class="form-control" type="date" name="date" value="${escapeHtml(due)}"></label>
+              <label><span class="form-label">Wiederholung</span><select class="form-control" name="repeat">${repeat}</select></label></div>
+              ${house ? `<p class="settings-hint">Für „${escapeHtml(house.name)}“. Erinnerungen siehst du in der Glocke oben.</p>` : ''}
+              <p class="ob-error" role="alert" hidden></p>
+            </form>
+            ${nav('<button type="button" class="primary-btn" data-ob-task-save>Aufgabe erstellen</button>', { secondary: '<button type="button" class="secondary-btn" data-ob-task-form>Ausführliches Formular</button>' })}`;
+        },
+        inspection: () => `<h2 id="onboarding-title">Behalte den Zustand deines Hauses im Blick</h2>${doneBadge}<p class="ob-lead">Mit einer Hauskontrolle prüfst du wichtige Bereiche regelmäßig und dokumentierst Auffälligkeiten.</p>
+          <ol class="ob-steps-list"><li><strong>Kontrollplan</strong> mit Prüfpositionen je Bereich (Dach, Wasser, Heizung …)</li><li><strong>Fotos und Notizen</strong> je Position, Mängel markieren</li><li><strong>Intervall</strong> festlegen – selbst oder durch einen Servicepartner</li><li><strong>Mangel → Reparatur:</strong> aus einem Mangel wird mit einem Klick eine Aufgabe</li></ol>
+          <p class="ob-note">Eine Hauskontrolle ersetzt keine fachliche Prüfung und ist keine Garantie für die technische Sicherheit des Gebäudes.</p>
+          ${nav('<button type="button" class="primary-btn" data-ob-open-page="inspections">Hauskontrolle öffnen</button>')}`,
+        automation: () => {
+          const locked = PAGE_GATES.automation && !entitlements.can(PAGE_GATES.automation);
+          return `<h2 id="onboarding-title">Wiederkehrende Aufgaben automatisch planen</h2>${doneBadge}<p class="ob-lead">Husora unterstützt dich bei wiederkehrenden Wartungs- und Saisonaufgaben.</p>
+            <ul class="ob-points small"><li>${icon('calendar')}<span><strong>Einmalig oder wiederkehrend</strong> – mit Startdatum und Intervall</span></li><li>${icon('snow')}<span><strong>Beispiel:</strong> jedes Jahr im Oktober „Ferienhaus winterfest machen“</span></li><li>${icon('bell')}<span><strong>Erinnerungen</strong> – erst wenn du sie einschaltest</span></li></ul>
+            <p class="ob-note">Nichts wird automatisch eingeschaltet: Intervall, Start und Wirkung siehst du, bevor du eine Automatik aktivierst.${locked ? ' Automatisierungen sind in deinem Tarif nicht enthalten – auf der Seite siehst du, ab welchem Tarif sie verfügbar sind.' : ''}</p>
+            ${nav(`<button type="button" class="primary-btn" data-ob-open-page="automation">${locked ? 'Mehr erfahren' : 'Automatik ansehen'}</button>`)}`;
+        },
+        partners: () => `<h2 id="onboarding-title">Unterstützung vor Ort finden</h2>${doneBadge}<p class="ob-lead">Finde passende Betriebe für Kontrollen, Wartung, Reparaturen und Sanierungen.</p>
+          <ul class="ob-points small"><li>${icon('search')}<span><strong>Suche nach Leistung und Entfernung</strong> zu deinem Haus</span></li><li>${icon('users')}<span><strong>Zuordnen</strong> und Aufgaben direkt an den Partner senden</span></li><li>${icon('note')}<span><strong>Anfragen und Nachrichten</strong> im Partner-Portal (ab PRO)</span></li></ul>
+          <p class="ob-note">Die Liste stammt aus öffentlichen Quellen und ist keine Empfehlung; Preise und Verfügbarkeit erfragst du beim Betrieb.</p>
+          ${nav('<button type="button" class="primary-btn" data-ob-open-page="providers">Servicepartner finden</button>')}`,
+        organize: () => `<h2 id="onboarding-title">Alles Wichtige an einem Ort</h2>${doneBadge}<p class="ob-lead">Behalte Termine, Unterlagen, Fristen und Kosten deines Hauses im Blick.</p>
+          <div class="ob-next">${[['calendar', 'calendar', 'Kalender', 'Termine, Buchungen und Fälligkeiten'], ['documents', 'document', 'Dokumente', 'Rechnungen, Verträge und Unterlagen je Haus'], ['costs', 'cost', 'Kosten', 'Jahreskosten und Ausgaben']].map(([page, ic, t, d]) => `<button type="button" data-ob-open-page="${page}">${icon(ic)}<span><strong>${t}</strong><small>${d}</small></span>${icon('arrow')}</button>`).join('')}</div>
+          ${nav('<button type="button" class="primary-btn" data-ob-continue>Weiter</button>', { skip: false })}`,
+        done: () => {
+          const list = obOwnerChecklist();
+          const core = list.filter((x) => x[3]); const coreDone = core.filter((x) => x[2]).length;
+          return `<div class="ob-hero done">${icon('check')}</div><h2 id="onboarding-title">Dein Husora-Start ist geschafft</h2><p class="ob-lead">${house ? `„${escapeHtml(house.name)}“ ist angelegt. ` : ''}Jetzt kannst du Aufgaben planen, Kontrollen organisieren und dein Ferienhaus Schritt für Schritt verwalten.</p>
+            <p class="ob-meter-text"><b>${coreDone} von ${core.length}</b> wichtige Aufgaben erledigt</p>
+            <ul class="ob-check">${list.map(([k, t, ok]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span>${escapeHtml(t)}${ok ? '' : ` <button type="button" class="text-btn" data-ob-goto-step="${k}">Jetzt erledigen</button>`}</li>`).join('')}</ul>
+            <div class="ob-actions"><button type="button" class="primary-btn" data-ob-close>Zur Übersicht</button></div>`;
+        }
+      };
+      body.innerHTML = head + R[step.key]();
+      body.querySelectorAll('select[data-ob-value]').forEach((sel) => { sel.value = sel.dataset.obValue; });
+      setTimeout(() => body.querySelector('.ob-form input:not([type=radio]), .ob-form select')?.focus({ preventScroll: true }), 60);
     }
-    function finishOnboarding() {
-      readOnboardingInputs();
-      if (!onboardingDraft.house) { showToast('Bitte gib deinem Ferienhaus einen Namen.'); document.querySelector('[data-ob="house"]')?.focus(); return; }
-      const wasDemo = !onboardingState || onboardingState.status === 'demo';
-      const name = onboardingDraft.name || profileData.name;
-      profileData = { ...profileData, name, username: (name.split(/\s+/)[0] || profileData.username), email: onboardingDraft.email, usage: onboardingDraft.usage === 'self' ? 'self' : 'rental' };
-      try { localStorage.setItem('stugliv-profile', JSON.stringify(profileData)); } catch (error) { /* siehe Toast beim Speichern */ }
-      const region = onboardingDraft.region === 'Andere' ? '' : onboardingDraft.region;
-      const first = properties[0];
-      if (first) {
-        const oldName = first.name;
-        Object.assign(first, { name: onboardingDraft.house, address: onboardingDraft.address, region });
-        if (wasDemo) { first.beds = ''; first.tasks = ''; }
-        tasks.forEach((task) => { if (task.propertyId === first.id || task.property === oldName) task.property = first.name; });
+    function obFormError(form, text) { const el = form?.querySelector('.ob-error'); if (el) { el.textContent = text; el.hidden = !text; } }
+    // Haus speichern: vorhandene Objektanlage (Demo-Haus wird zu deinem Haus, sonst neues Objekt) – keine Duplikate
+    function obSaveHouse() {
+      const form = document.querySelector('[data-ob-form="property"]');
+      const v = Object.fromEntries(new FormData(form));
+      const name = String(v.house || '').trim();
+      if (!name) { obFormError(form, 'Bitte gib deinem Haus einen Namen.'); form.elements.house.focus(); return; }
+      if (properties.some((p) => !obIsDemoHouse(p) && p.name.toLocaleLowerCase('sv') === name.toLocaleLowerCase('sv'))) { obFormError(form, 'Ein Haus mit diesem Namen gibt es schon.'); return; }
+      const region = v.region === 'Andere' ? '' : String(v.region || '');
+      const wasDemo = !onboardingState || ['demo', 'active'].includes(onboardingState.status);
+      if (v.name) profileData = { ...profileData, name: String(v.name).trim(), username: String(v.name).trim().split(/\s+/)[0] || profileData.username };
+      profileData = { ...profileData, usage: v.usage === 'self' ? 'self' : 'rental' };
+      try { localStorage.setItem('stugliv-profile', JSON.stringify(profileData)); } catch (error) { /* siehe Speichern */ }
+      const demo = properties.find(obIsDemoHouse);
+      let house;
+      if (demo) {
+        const oldName = demo.name;
+        Object.assign(demo, { name, address: String(v.address || '').trim(), region, beds: '', tasks: '' });
+        house = demo;
+        if (wasDemo) tasks = tasks.filter((task) => !initialTasks.some((d) => d.id === task.id && d.title === task.title));
+        tasks.forEach((task) => { if (task.property === oldName) task.property = name; });
+      } else {
+        if (!canAddProperty()) { obFormError(form, 'In deinem Tarif ist kein weiteres Haus enthalten.'); return; }
+        house = propertyWithDefaults({ id: `h${Date.now().toString(36)}`, name, address: String(v.address || '').trim(), region, beds: '', tasks: '' });
+        properties = [...properties, house];
       }
-      if (wasDemo) tasks = tasks.filter((task) => !initialTasks.some((demo) => demo.id === task.id && demo.title === task.title));
-      // Ohne Vermietung fallen Reinigung und Gästewechsel als Planwert weg.
-      if (wasDemo && first && profileData.usage === 'self') {
-        annualCosts = { ...annualCosts, [first.id]: { ...(initialCosts[first.id] || {}), ...(annualCosts[first.id] || {}), cleaning: 0 } };
-        try { localStorage.setItem('stugliv-costs', JSON.stringify(annualCosts)); } catch (error) { /* optional */ }
-      }
-      saveProperties();
+      if (wasDemo && profileData.usage === 'self') { annualCosts = { ...annualCosts, [house.id]: { ...(initialCosts[house.id] || {}), ...(annualCosts[house.id] || {}), cleaning: 0 } }; try { localStorage.setItem('stugliv-costs', JSON.stringify(annualCosts)); } catch (error) { /* optional */ } }
+      if (!saveProperties() && saveProperties !== undefined) { /* saveProperties meldet Fehler selbst */ }
       persistTasks();
-      onboardingState = { status: 'done', at: new Date().toISOString() };
-      saveStore('stugliv-onboarding', onboardingState);
-      trackEvent('onboarding_completed', { entity_ref: 'once', metadata: { usage: profileData.usage, demo_before: wasDemo } });
-      if (first) trackEvent('house_created', { entity_type: 'house', entity_ref: String(first.id), metadata: { houses: properties.length, onboarding: true } });
-      onboardingStep = 3;
-      renderOnboarding();
+      trackEvent('house_created', { entity_type: 'house', entity_ref: String(house.id), metadata: { houses: properties.length, onboarding: true } });
+      obTrack('activation_property_created', 'homeowner', 'property');
+      obMark('homeowner', 'property', 'completed', { refs: { primary_property_ref: house.id }, metadata: { houses: obRealHouses().length } });
       render();
+      obNext('property');
+      showToast(`„${name}“ ist angelegt.`);
+    }
+    function obSaveProfile() {
+      const house = obPrimaryHouse();
+      const form = document.querySelector('[data-ob-form="profile"]');
+      if (!house || !form) return;
+      const v = Object.fromEntries(new FormData(form));
+      OB_PROFILE_FIELDS.forEach(([k]) => { house[k] = String(v[k] ?? '').trim(); });
+      saveProperties();
+      const filled = obProfileCount(house);
+      obMark('homeowner', 'profile', filled >= 3 ? 'completed' : 'in_progress', { metadata: { fields: filled } });
+      render();
+      obNext('profile');
+      if (filled) showToast(`${filled} von ${OB_PROFILE_FIELDS.length} Angaben gespeichert.`);
+    }
+    function obSaveTask() {
+      const form = document.querySelector('[data-ob-form="task"]');
+      const v = Object.fromEntries(new FormData(form));
+      const title = String(v.title || '').trim();
+      if (!title) { obFormError(form, 'Bitte gib der Aufgabe einen Titel oder wähle eine Vorlage.'); form.elements.title.focus(); return; }
+      const house = obPrimaryHouse() || properties[0];
+      const active = tasks.filter((t) => !t.done && taskStatus(t) !== 'Erledigt').length;
+      if (!entitlements.within('tasks_active', active)) { obFormError(form, 'Dein Tarif erlaubt keine weitere offene Aufgabe.'); return; }
+      const task = { id: Date.now(), title, property: house?.name || '', date: String(v.date || localDateKey(new Date())), priority: 'normal', area: '', repeat: String(v.repeat || 'Einmalig'), description: '', partnerId: '', status: 'Offen', done: false };
+      const before = tasks;
+      tasks = [...tasks, task];
+      if (!persistTasks()) { tasks = before; obFormError(form, 'Die Aufgabe konnte nicht gespeichert werden.'); return; }
+      obTrack('activation_first_task_created', 'homeowner', 'task');
+      obMark('homeowner', 'task', 'completed', { metadata: { repeat: task.repeat !== 'Einmalig' } });
+      obDraft = {};
+      render();
+      obNext('task');
+      showToast('Aufgabe gespeichert.');
+    }
+    // Aus dem Flow in eine echte Funktion springen; danach führt ein Hinweis zurück in die Einrichtung
+    let obReturnPending = null;
+    function obOpenFeature(page, stepKey) {
+      if (stepKey) obMark('homeowner', stepKey, 'completed', { metadata: { page } });
+      if (stepKey === 'inspection') obTrack('activation_inspection_started', 'homeowner', 'inspection');
+      const steps = OB_FLOWS.homeowner.steps; const next = steps[Math.min(steps.length - 1, obStepIndex('homeowner', stepKey || 'organize') + 1)].key;
+      obMark('homeowner', null, null, { current: stepKey === 'organize' || !stepKey ? 'organize' : next });
+      obReturnPending = { role: 'homeowner' };
+      closeOnboarding();
+      currentPage = page; render(); window.scrollTo(0, 0);
+    }
+    function obResumeHtml() {
+      const s = obState('homeowner');
+      if (!obReturnPending || !s || s.status !== 'in_progress' || document.getElementById('onboarding-modal')?.classList.contains('open')) return '';
+      return `<div class="ob-resume" role="status"><span>${icon('home')} Einrichtung: ${obProgress('homeowner', s).done} von ${obProgress('homeowner', s).total} Schritten</span><button type="button" class="primary-btn" data-ob-resume>Weiter mit der Einrichtung</button><button type="button" class="close-btn" data-ob-resume-hide aria-label="Hinweis schließen">×</button></div>`;
+    }
+    // Dashboard-Checkliste „Dein Husora-Start“ (aus echten Daten, ausblendbar)
+    function obChecklistHtml() {
+      const s = obState('homeowner');
+      if (!s || obPrefs().onboarding_dismissed_at) return '';
+      const list = obOwnerChecklist();
+      if (list.every((x) => x[2]) && s.status !== 'in_progress') return '';
+      const core = list.filter((x) => x[3]); const coreDone = core.filter((x) => x[2]).length;
+      return `<section class="card ob-checklist" aria-labelledby="ob-check-title"><div class="ob-check-head"><div><h2 class="card-title" id="ob-check-title">Dein Husora-Start</h2><p class="card-caption">${coreDone} von ${core.length} wichtigen Aufgaben erledigt</p></div><button type="button" class="text-btn" data-ob-dismiss>Ausblenden</button></div>
+        <div class="ob-meter"><i style="width:${Math.round(list.filter((x) => x[2]).length / list.length * 100)}%"></i></div>
+        <ul class="ob-check">${list.map(([k, t, ok, crit]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span><span class="ob-check-text">${escapeHtml(t)}${crit ? '' : ' <small>(optional)</small>'}</span>${ok ? '' : `<button type="button" class="text-btn" data-ob-goto-step="${k}">Erledigen</button>`}</li>`).join('')}</ul>
+        ${s.status === 'in_progress' ? '<div class="settings-actions"><button type="button" class="primary-btn" data-ob-resume>Einrichtung fortsetzen</button></div>' : ''}</section>`;
+    }
+    function obOwnerClick(target) {
+      if (target.closest('[data-ob-pause]')) { obMark('homeowner', null, null, { refs: { paused: true } }); closeOnboarding(); render(); showToast('Du kannst die Einrichtung jederzeit über die Übersicht fortsetzen.'); return true; }
+      if (target.closest('[data-ob-prev]')) { obGo(OB_FLOWS.homeowner.steps[Math.max(0, onboardingStep - 1)].key); return true; }
+      if (target.closest('[data-ob-skip]')) { const st = OB_FLOWS.homeowner.steps[onboardingStep]; obMark('homeowner', st.key, 'skipped'); obNext(st.key); return true; }
+      if (target.closest('[data-ob-continue]')) { const st = OB_FLOWS.homeowner.steps[onboardingStep]; if (obState('homeowner')?.steps?.[st.key] !== 'completed') obMark('homeowner', st.key, 'skipped'); obNext(st.key); return true; }
+      if (target.closest('[data-ob-house-save]')) { obSaveHouse(); return true; }
+      if (target.closest('[data-ob-house-use]')) { const id = document.querySelector('[name="ob-house"]:checked')?.value; if (id) { obMark('homeowner', 'property', 'completed', { refs: { primary_property_ref: id } }); obNext('property'); } return true; }
+      if (target.closest('[data-ob-house-add]') || target.closest('[data-ob-import]')) {
+        const fromImport = Boolean(target.closest('[data-ob-import]'));
+        obMark('homeowner', null, null, { current: 'property' }); obReturnPending = { role: 'homeowner', watch: 'property', houses: obRealHouses().length };
+        closeOnboarding(); openAddChoice();
+        if (fromImport) setTimeout(() => document.querySelector('#add-choice-modal [data-add-choice="import"]')?.click(), 50);
+        return true;
+      }
+      if (target.closest('[data-ob-profile-save]')) { obSaveProfile(); return true; }
+      const tpl = target.closest('[data-ob-template]');
+      if (tpl) { obDraft.title = tpl.dataset.obTemplate; const input = document.querySelector('[data-ob-form="task"] [name="title"]'); if (input) input.value = obDraft.title; document.querySelectorAll('[data-ob-template]').forEach((b) => b.classList.toggle('on', b === tpl)); return true; }
+      if (target.closest('[data-ob-task-save]')) { obSaveTask(); return true; }
+      if (target.closest('[data-ob-task-form]')) { obMark('homeowner', null, null, { current: 'task' }); obReturnPending = { role: 'homeowner', watch: 'task', tasks: obUserTasks().length }; closeOnboarding(); openTaskModal(); return true; }
+      const page = target.closest('[data-ob-open-page]');
+      if (page) { const st = OB_FLOWS.homeowner.steps[onboardingStep]; obOpenFeature(page.dataset.obOpenPage, st?.key); return true; }
+      const go = target.closest('[data-ob-goto-step]');
+      if (go) { const open = document.getElementById('onboarding-modal')?.classList.contains('open'); if (open) obGo(go.dataset.obGotoStep); else openOnboarding(go.dataset.obGotoStep); return true; }
+      if (target.closest('[data-ob-resume]')) { const s = obState('homeowner'); openOnboarding(s?.status === 'in_progress' ? s.current : 'welcome'); return true; }
+      if (target.closest('[data-ob-resume-hide]')) { obReturnPending = null; document.querySelector('.ob-resume')?.remove(); return true; }
+      if (target.closest('[data-ob-dismiss]')) { obSetPrefs({ onboarding_dismissed_at: new Date().toISOString() }, { p_dismissed: true }); obTrack('onboarding_dismissed', 'homeowner', null, { n: 2 }); render(); showToast('Ausgeblendet – unter Hilfe → „Ersteinrichtung starten“ kommst du jederzeit zurück.'); return true; }
+      if (target.closest('[data-ob-close]')) { obFinish('homeowner', 'completed'); onboardingState = { status: 'done', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); closeOnboarding(); currentPage = 'dashboard'; render(); window.scrollTo(0, 0); return true; }
+      return false;
+    }
+    // --- Feature-Guides: „Was kann ich hier tun?“ je Seite (abschaltbar, je Guide ausblendbar) ---
+    const OB_GUIDES = {
+      tasks: ['Aufgaben', ['Wartung, Reparaturen und Erledigungen mit Fälligkeit anlegen', 'Wiederholung wählen (z. B. jährlich) – die nächste Fälligkeit entsteht automatisch', 'Aufgaben einem Servicepartner zuordnen oder selbst erledigen']],
+      inspections: ['Hauskontrolle', ['Kontrollplan mit Prüfpunkten je Bereich anlegen', 'Prüfpunkte abhaken, Fotos und Notizen ergänzen', 'Aus einem Mangel mit einem Klick eine Reparaturaufgabe machen']],
+      providers: ['Servicepartner', ['Betriebe nach Leistung und Entfernung zu deinem Haus suchen', 'Passende Partner deinem Haus zuordnen', 'Aufgaben direkt an zugeordnete Partner senden']],
+      documents: ['Dokumente', ['Rechnungen, Verträge, Pläne und Fotos je Haus ablegen', 'Nach Art und Haus filtern', 'Dokumente bleiben auf deinem Gerät bzw. in deinem Husora-Konto']],
+      calendar: ['Kalender', ['Fälligkeiten, Buchungen und Termine auf einen Blick', 'Zwischen Monat und Liste wechseln', 'Einen Termin antippen, um Details zu sehen']],
+      automation: ['Automatisierung', ['Wiederkehrende Wartung und Saisonaufgaben planen', 'Vor dem Aktivieren siehst du Intervall, Start und Wirkung', 'Nichts wird ohne deine Bestätigung eingeschaltet']]
+    };
+    function obGuidePaint() {
+      if (!OB_GUIDES[currentPage] || obPrefs().help_tips_enabled === false || (obPrefs().dismissed_guides || []).includes(currentPage)) return;
+      const host = document.getElementById('page-content'); if (!host || host.querySelector('.ob-guide-host')) return;
+      const [title, rows] = OB_GUIDES[currentPage]; const open = obGuideOpen === currentPage;
+      const html = `<div class="ob-guide-host">${open ? `<section class="ob-guide" aria-label="${escapeHtml(title)}: Was kann ich hier tun?"><h3>Was kann ich hier tun?</h3><ul>${rows.map((r) => `<li>${escapeHtml(r)}</li>`).join('')}</ul><div class="ob-guide-actions"><button type="button" class="text-btn" data-ob-guide="close">Schließen</button><button type="button" class="text-btn" data-ob-guide="hide">Nicht mehr anzeigen</button></div></section>` : `<button type="button" class="ob-guide-pill" data-ob-guide="open" aria-expanded="false">${icon('help')}<span>Was kann ich hier tun?</span></button>`}</div>`;
+      const anchor = host.querySelector('.welcome');
+      if (anchor) anchor.insertAdjacentHTML('afterend', html); else host.insertAdjacentHTML('afterbegin', html);
+    }
+    let obGuideOpen = '';
+    document.addEventListener('click', (event) => {
+      const g = event.target.closest('[data-ob-guide]');
+      const tips = event.target.closest('[data-ob-tips]');
+      if (tips) { const on = obPrefs().help_tips_enabled === false; obSetPrefs({ help_tips_enabled: on }, { p_help_tips: on }); render(); showToast(on ? 'Hilfe-Tipps sind eingeschaltet.' : 'Hilfe-Tipps sind ausgeschaltet.'); return; }
+      if (!g) return;
+      const a = g.dataset.obGuide;
+      if (a === 'open') { obGuideOpen = currentPage; try { trackEvent('feature_guide_opened', { entity_type: 'guide', entity_ref: `guide:${currentPage}`, metadata: { page: currentPage } }); } catch (error) { /* optional */ } }
+      if (a === 'close') obGuideOpen = '';
+      if (a === 'hide') { obGuideOpen = ''; obSetPrefs({ dismissed_guides: [...new Set([...(obPrefs().dismissed_guides || []), currentPage])] }, { p_guide: currentPage, p_guide_dismissed: true }); try { trackEvent('feature_guide_dismissed', { entity_type: 'guide', entity_ref: `guide:${currentPage}`, metadata: { page: currentPage } }); } catch (error) { /* optional */ } }
+      document.querySelector('#page-content .ob-guide-host')?.remove(); obGuidePaint();
+    });
+    // Nach jedem Zeichnen: über das ausführliche Formular / den Import angelegtes Haus bzw. Aufgabe erkennen und weiterführen
+    function obAfterRender() {
+      obGuidePaint();
+      const w = obReturnPending;
+      if (!w?.watch || document.getElementById('onboarding-modal')?.classList.contains('open')) { obPaintResume(); return; }
+      if (w.watch === 'property' && obRealHouses().length > w.houses) {
+        const house = obRealHouses()[obRealHouses().length - 1];
+        const demo = properties.find(obIsDemoHouse);
+        // importiertes/neues Haus ersetzt das unveränderte Demo-Haus samt Beispielaufgaben (keine Demo-Daten im echten Konto)
+        if (demo && ['active', 'demo'].includes(onboardingState?.status)) { properties = properties.filter((p) => p !== demo); tasks = tasks.filter((t) => t.property !== demo.name || !initialTasks.some((d) => d.id === t.id)); saveProperties(); persistTasks(); }
+        obMark('homeowner', 'property', 'completed', { refs: { primary_property_ref: house.id } });
+        obTrack('activation_property_created', 'homeowner', 'property');
+        obReturnPending = null; setTimeout(() => openOnboarding('profile'), 300); return;
+      }
+      if (w.watch === 'task' && obUserTasks().length > w.tasks) {
+        obMark('homeowner', 'task', 'completed'); obTrack('activation_first_task_created', 'homeowner', 'task');
+        obReturnPending = null; setTimeout(() => openOnboarding('inspection'), 300); return;
+      }
+      obPaintResume();
+    }
+    function obPaintResume() {
+      document.querySelector('.ob-resume')?.remove();
+      const html = obResumeHtml();
+      if (html) document.body.insertAdjacentHTML('beforeend', html);
     }
     const closeOnboarding = () => document.getElementById('onboarding-modal').classList.remove('open');
     function demoBannerHtml() {
@@ -18434,22 +19049,17 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const supportButton = target.closest('[data-support-mail]');
       if (supportButton) { openSupportMail(supportButton.dataset.supportMail); return; }
       const onboardingStart = target.closest('[data-onboarding-start]');
-      if (onboardingStart) { document.getElementById('main-menu')?.classList.remove('open'); openOnboarding(onboardingStart.dataset.onboardingStart === '1' ? 1 : 0); return; }
+      if (onboardingStart) { document.getElementById('main-menu')?.classList.remove('open'); if (obPrefs().onboarding_dismissed_at) obSetPrefs({ onboarding_dismissed_at: null }, { p_dismissed: false }); openOnboarding(onboardingStart.dataset.onboardingStart === '1' ? 1 : 0); return; }
       const obRole = target.closest('[data-ob-role]');
       if (obRole) {
         // Die Wahl legt nur den Einstieg fest – beide Ansichten bleiben jederzeit erreichbar
         const role = obRole.dataset.obRole;
         ppSetMode(role);
         if (role === 'partner') { onboardingState = { status: 'done', role: 'partner', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); closeOnboarding(); ppOpen('dashboard'); return; }
-        onboardingStep = 1; renderOnboarding(); return;
+        obMark('homeowner', 'welcome', 'completed'); obGo('property'); return;
       }
-      if (target.closest('[data-ob-next]')) { readOnboardingInputs(); onboardingStep = Math.min(2, onboardingStep + 1); renderOnboarding(); return; }
-      if (target.closest('[data-ob-back]')) { readOnboardingInputs(); onboardingStep = Math.max(0, onboardingStep - 1); renderOnboarding(); return; }
-      if (target.closest('[data-ob-finish]')) { finishOnboarding(); return; }
-      if (target.closest('[data-ob-demo]')) { onboardingState = { status: 'demo', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); closeOnboarding(); render(); return; }
-      const obGoto = target.closest('[data-ob-goto]');
-      if (obGoto) { closeOnboarding(); currentPage = obGoto.dataset.obGoto; render(); window.scrollTo(0, 0); return; }
-      if (target.closest('[data-ob-close]')) { closeOnboarding(); currentPage = 'dashboard'; render(); window.scrollTo(0, 0); return; }
+      if (target.closest('[data-ob-demo]')) { onboardingState = { status: 'demo', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); obMark('homeowner', null, null, { refs: { paused: true } }); closeOnboarding(); render(); return; }
+      if (obOwnerClick(target)) return;
       const usageLabel = target.closest('.ob-usage label');
       if (usageLabel) setTimeout(() => { document.querySelectorAll('.ob-usage label').forEach((label) => label.classList.toggle('on', label.querySelector('input').checked)); }, 0);
       const anchor = target.closest('[data-settings-anchor]');
@@ -18487,7 +19097,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') { document.getElementById('notify-panel')?.classList.remove('open'); msgTogglePanel(false); if (document.getElementById('onboarding-modal')?.classList.contains('open') && onboardingStep === 3) closeOnboarding(); }
       if (event.key === 'Enter' && event.target.matches('[data-meter-value]')) { event.preventDefault(); addMeterReading(event.target.dataset.meterValue); }
-      if (event.key === 'Enter' && event.target.closest('#onboarding-body') && event.target.matches('input:not([type=radio])')) { event.preventDefault(); document.querySelector('#onboarding-body [data-ob-next], #onboarding-body [data-ob-finish]')?.click(); }
+      if (event.key === 'Enter' && event.target.closest('#onboarding-body') && event.target.matches('input:not([type=radio])')) { event.preventDefault(); document.querySelector('#onboarding-body .ob-actions-main .primary-btn')?.click(); }
     });
     // ===== Schritt 2: gegliedertes Menü, Leiste unten am Handy, einklappbare Bereiche der Startseite =====
     const NAV_GROUPS = [
@@ -20092,6 +20702,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       cloudState.pendingConfirm = '';
       cloudSetSession(data);
       await cloudLoadOrg();
+      obPull('homeowner').catch(() => {});
       await cloudLoadSummary();
       await cloudLoadUsage().catch(() => {});
       cloudState.notice = cloudState.summary?.count ? 'Angemeldet. In der Cloud liegen bereits Daten – wähle unten, welche gelten sollen.' : 'Angemeldet. Lade jetzt deine Daten hoch.';
@@ -20975,6 +21586,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           ]);
           pp.data = { orders, inspections, quotes, invoices, messages: ppWithoutHidden(messages), customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items };
           pp.access = {};
+          if (!pp.obPulled) { pp.obPulled = true; obPull('service_partner').then(() => { obPartnerSync(); if (pp.view === 'setup' || pp.view === 'dashboard') ppRender(); }); }
         } else {
           pp.data = null;
         }
@@ -21069,7 +21681,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const PP_VIEW_TITLES = { orders: ['Arbeit', 'Aufträge'], calendar: ['Arbeit', 'Kalender'], messages: ['Kunden', 'Nachrichten'], more: ['Servicepartner', 'Mehr'],
       customers: ['Kunden', 'Kunden & Objekte'], inspections: ['Arbeit', 'Kontrollen'], defects: ['Arbeit', 'Mängel'], documents: ['Kunden', 'Dokumente'],
       agreements: ['Finanzen', 'Jahresverträge'], finance: ['Finanzen', 'Angebote & Rechnungen'], services: ['Betrieb', 'Leistungen'], team: ['Betrieb', 'Mitarbeiter'],
-      company: ['Betrieb', 'Firma'], settings: ['App', 'Einstellungen'] };
+      company: ['Betrieb', 'Firma'], settings: ['App', 'Einstellungen'], setup: ['Servicepartner', 'Einrichtung'] };
     function ppTopTitle() {
       const d = pp.detail;
       if (d?.type === 'order') { const o = ppD('orders').find((x) => x.id === d.id); return ['Auftrag', o?.title || 'Auftrag']; }
@@ -21107,7 +21719,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const navActive = (id) => pp.view === id || (id === 'more' && !navItems.some(([v]) => v === pp.view));
       const navBadge = (id) => { const n = id === 'orders' ? ppD('orders').filter((o) => o.status === 'offered').length : id === 'messages' ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : id === 'more' ? ppD('inspections').filter((i) => i.status === 'in_progress').length : 0; return n ? `<b class="pp-dot">${n > 9 ? '9+' : n}</b>` : ''; };
       const nav = signedIn && org ? `<nav class="pp-nav" aria-label="Partner-Navigation">${navItems.map(([id, label, ic, short]) => `<button type="button" class="${navActive(id) ? 'active' : ''}" data-pp-view="${id}" aria-label="${label}" aria-current="${navActive(id) ? 'page' : 'false'}">${icon(ic)}<span class="${short ? 'pp-nav-long' : ''}">${label}</span>${short ? `<span class="pp-nav-short">${short}</span>` : ''}${navBadge(id)}</button>`).join('')}</nav>` : '';
-      root.innerHTML = `${head}<main class="pp-main" id="pp-main">${sub ? '' : betaBannerHtml('partner')}${messages}${body}</main>${nav}`;
+      root.innerHTML = `${head}<main class="pp-main" id="pp-main">${sub ? '' : betaBannerHtml('partner')}${messages}${signedIn && org ? obPpResumeHtml() : ''}${body}</main>${nav}`;
       try { roleSwitchRefresh(); } catch (error) { /* noch nicht bereit */ }
       const main = root.querySelector('.pp-main');
       // gleiche Ansicht neu gezeichnet (z. B. nach dem Senden): Position halten; Wechsel der Ansicht scrollt der Aufrufer selbst
@@ -21170,12 +21782,181 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const PP_PRICE_UNITS = [['job', 'je Arbeitspaket'], ['hour', 'je Stunde'], ['visit', 'je Einsatz'], ['month', 'je Monat'], ['year', 'je Jahr'], ['m2', 'je m²']];
     const PP_DEFAULT_TYPES = [['inspection', 'Hauskontrolle'], ['holiday_home_inspection', 'Ferienhauskontrolle'], ['cleaning', 'Reinigung'], ['gardening', 'Gartenpflege'], ['snow_removal', 'Winterdienst'], ['repair', 'Reparatur'], ['plumbing', 'Sanitär'], ['heating', 'Heizung'], ['electrician', 'Elektro'], ['roofing', 'Dach'], ['facade', 'Fassade'], ['windows', 'Fenster'], ['key_service', 'Schlüsselservice'], ['general_maintenance', 'Technische Wartung']].map(([code, name]) => ({ code, name }));
 
+    // --- Servicepartner-Flow (service_partner_v1): eigene Ansicht „Einrichtung“ im Partner-Portal ---
+    function obPartnerFacts() {
+      const o = ppOrg() || {};
+      return {
+        profile: Boolean(o.name && o.contact_name && (o.phone || o.email) && (o.street || o.city)),
+        // das bei der Anlage erzeugte leere Standardgebiet (ohne Ort/Umkreis) zählt nicht
+        area: ppD('areas').some((a) => a.active !== false && (a.city || a.postal_code_prefix || a.postal_code || a.region || (Number(a.radius_km) > 0 && o.city))) || Boolean(Number(o.service_radius_km) > 0 && o.city),
+        services: ppD('services').some((s) => s.active !== false)
+      };
+    }
+    function obPartnerChecklist() {
+      const f = obPartnerFacts(); const s = obState('service_partner');
+      const seen = (k) => s?.steps?.[k] === 'completed';
+      return [
+        ['profile', 'Firmenprofil vollständig', f.profile, true],
+        ['area', 'Servicegebiet festgelegt', f.area, true],
+        ['services', 'Leistungen angelegt', f.services, true],
+        ['orders', 'Auftragsbereich kennengelernt', seen('orders'), false],
+        ['documentation', 'Dokumentation kennengelernt', seen('documentation'), false],
+        ['team', 'Team eingeladen (optional)', ppD('members').length > 1 || ppD('invites').length > 0, false]
+      ];
+    }
+    // Erledigt-Status aus echten Daten nachziehen (z. B. Profil über „Firma“ vervollständigt)
+    function obPartnerSync() {
+      const s = obState('service_partner'); if (!s || !ppOrg()) return;
+      const f = obPartnerFacts();
+      ['profile', 'area', 'services'].forEach((k) => { if (f[k] && s.steps[k] !== 'completed') { obMark('service_partner', k, 'completed', { refs: { organization_id: ppOrg().id } }); if (k === 'profile') obTrack('activation_partner_profile_completed', 'service_partner', k); if (k === 'services') obTrack('activation_service_added', 'service_partner', k); } });
+    }
+    const obPpCanSetup = () => Boolean(ppOrg() && ppIsLead());
+    function obPpStep() { const s = obState('service_partner'); return OB_FLOWS.service_partner.steps[obStepIndex('service_partner', s?.current || 'welcome')]; }
+    function obPpGo(key) {
+      obMark('service_partner', null, null, { current: key, refs: { paused: false } });
+      obTrack('onboarding_step_viewed', 'service_partner', key);
+      pp.view = 'setup'; pp.detail = null; pp.form = null; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo(0, 0);
+    }
+    const obPpNext = (key) => { const steps = OB_FLOWS.service_partner.steps; obPpGo(steps[Math.min(steps.length - 1, obStepIndex('service_partner', key) + 1)].key); };
+    function obPpStart() {
+      const s = obState('service_partner');
+      if (!s || !['in_progress'].includes(s.status)) obStart('service_partner', { restart: Boolean(s) });
+      obPpGo(obState('service_partner').current || 'welcome');
+    }
+    function ppSetupHtml() {
+      if (!obPpCanSetup()) return ppEmpty('Einrichtung', 'Die Einrichtung des Betriebs übernimmt die Leitung. Du kannst direkt mit deinen Aufträgen starten.', '<div class="pp-actions" style="justify-content:center"><button type="button" class="primary-btn" data-pp-view="orders">Zu den Aufträgen</button></div>');
+      if (!obState('service_partner')) obStart('service_partner');
+      obPartnerSync();
+      const s = obState('service_partner'); const flow = OB_FLOWS.service_partner;
+      const step = obPpStep(); const i = obStepIndex('service_partner', step.key); const n = i + 1;
+      const o = ppOrg(); const f = obPartnerFacts();
+      const done = s.steps[step.key] === 'completed' ? '<p class="ob-done-note">✓ Bereits erledigt</p>' : '';
+      const head = `<div class="ob-shell-head"><div class="ob-progress" role="progressbar" aria-valuemin="1" aria-valuemax="${flow.steps.length}" aria-valuenow="${n}" aria-label="Schritt ${n} von ${flow.steps.length}"><span>Schritt ${n} von ${flow.steps.length}</span><i style="width:${Math.round(n / flow.steps.length * 100)}%"></i></div>${step.key !== 'done' ? '<button type="button" class="ob-later" data-ob-pp="pause">Später fortsetzen</button>' : ''}</div>`;
+      const nav = (primary, { skip = step.skippable, back = i > 0 } = {}) => `<div class="ob-actions ob-actions-shell">${back ? '<button type="button" class="secondary-btn" data-ob-pp="prev">Zurück</button>' : '<span></span>'}<div class="ob-actions-main">${skip ? '<button type="button" class="text-btn ob-skip" data-ob-pp="skip">Später erledigen</button>' : ''}${primary}</div></div>`;
+      const feature = (view, label) => `<button type="button" class="primary-btn" data-ob-pp-open="${view}">${label}</button>`;
+      const okNext = '<button type="button" class="primary-btn" data-ob-pp="next">Weiter</button>';
+      const pts = (rows) => `<ul class="ob-points small">${rows.map(([ic, strong, text]) => `<li>${icon(ic)}<span><strong>${strong}</strong> ${text}</span></li>`).join('')}</ul>`;
+      const R = {
+        welcome: () => `<div class="ob-hero">${icon('users')}</div><h1 class="ob-pp-title">Willkommen bei Husora für Servicepartner</h1><p class="ob-lead">Richte dein Unternehmensprofil ein und verwalte Aufträge, Termine, Dokumentation und Abrechnung an einem Ort.</p>
+          ${pts([['property', 'Firmenprofil', 'mit Kontakt und Adresse'], ['map', 'Servicegebiet', 'für passende Anfragen in deiner Region'], ['task', 'Leistungen', 'mit Preisen je Einsatz, Stunde oder Paket']])}
+          <p class="ob-meter-text">Dauer: etwa 5 Minuten · jederzeit unterbrechbar</p>${nav('<button type="button" class="primary-btn" data-ob-pp="next">Einrichtung starten</button>', { skip: false })}`,
+        profile: () => `<h1 class="ob-pp-title">Dein Unternehmensprofil</h1>${done}<p class="ob-lead">Diese Angaben sehen Hausbesitzer, wenn sie dich als Servicepartner finden oder beauftragen.</p>
+          <form class="pp-card pp-form ob-form" data-pp-form="ob-profile"><div class="pp-grid">
+            <label><span class="form-label">Ansprechpartner *</span><input class="form-control" name="contact_name" maxlength="80" required value="${escapeHtml(o.contact_name || '')}"></label>
+            <label><span class="form-label">Telefon</span><input class="form-control" name="phone" type="tel" maxlength="40" value="${escapeHtml(o.phone || '')}"></label>
+            <label class="full"><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120" value="${escapeHtml(o.email || '')}"></label>
+            <label class="full"><span class="form-label">Straße und Hausnummer</span><input class="form-control" name="street" maxlength="120" value="${escapeHtml(o.street || '')}"></label>
+            <label><span class="form-label">PLZ</span><input class="form-control" name="postal_code" maxlength="12" value="${escapeHtml(o.postal_code || '')}"></label>
+            <label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" value="${escapeHtml(o.city || '')}"></label>
+            <label class="full"><span class="form-label">Kurzbeschreibung</span><textarea class="form-control" name="description" rows="3" maxlength="600" placeholder="z. B. Hauskontrollen und Hausservice rund um Sunne seit 2010">${escapeHtml(o.description || '')}</textarea></label>
+          </div><p class="pp-hint">Pflicht: Ansprechpartner, Telefon oder E-Mail sowie Straße oder Ort. Logo, Bank und Öffnungszeiten ergänzt du später unter Mehr → Firma.</p>
+          <p class="ob-error" role="alert" hidden></p></form>
+          ${nav('<button type="button" class="primary-btn" data-ob-pp="profile-save">Speichern & weiter</button>')}`,
+        area: () => `<h1 class="ob-pp-title">Wo bist du im Einsatz?</h1>${done}<p class="ob-lead">Lege fest, in welchen Orten oder Regionen du Aufträge annehmen möchtest. Husora schlägt dich Hausbesitzern in diesen Gebieten vor.</p>
+          ${o.city && Number(o.service_radius_km) > 0 ? `<p class="pp-hint">${icon('map')} Bereits hinterlegt: ${escapeHtml(String(o.service_radius_km))} km um ${escapeHtml(o.city)}. Weitere Gebiete kannst du hier ergänzen.</p>` : ''}
+          ${ppAreasHtml()}
+          ${nav(f.area ? okNext : '<button type="button" class="primary-btn" data-ob-pp="next" disabled title="Bitte zuerst ein Gebiet hinzufügen">Weiter</button>')}`,
+        services: () => {
+          const active = ppD('services').filter((x) => x.active !== false).length;
+          return `<h1 class="ob-pp-title">Was bietest du an?</h1>${done}<p class="ob-lead">Wähle die Leistungen, die du für Ferienhäuser anbietest – mit Preis je Einsatz, Stunde oder Paket.</p>
+          <div class="pp-card"><strong>${active ? `${active} Leistung${active === 1 ? '' : 'en'} aktiv` : 'Noch keine Leistung aktiv'}</strong><p class="pp-hint">Beispiele: Hauskontrolle monatlich, Winterdienst, Reinigung nach Gästewechsel, Heizungsservice.</p></div>
+          ${nav(active ? `<button type="button" class="secondary-btn" data-ob-pp-open="services">Leistungen & Preise bearbeiten</button>${okNext}` : feature('services', 'Leistungen anlegen'))}`;
+        },
+        orders: () => `<h1 class="ob-pp-title">So erhältst du Aufträge</h1>${done}<p class="ob-lead">Hausbesitzer können dir Aufgaben oder Kontrollen schicken. Du siehst neue Anfragen, kannst sie annehmen und planen.</p>
+          ${pts([['bell', 'Neu', '– Anfrage eines Hausbesitzers'], ['check', 'Annehmen oder ablehnen', '– mit Rückmeldung an den Kunden'], ['calendar', 'Planen', '– Termin und Mitarbeiter festlegen'], ['clock', 'In Arbeit → Erledigt', '– der Kunde sieht jeden Schritt']])}
+          ${ppD('orders').length ? '' : '<p class="ob-note">Noch keine Aufträge: Hausbesitzer verbinden sich über einen Einladungscode mit dir. Den Code findest du unter Mehr → Kunden.</p>'}
+          ${nav(feature('orders', 'Auftragsbereich öffnen'))}`,
+        workflow: () => `<h1 class="ob-pp-title">Vom Termin bis zum Abschluss</h1>${done}<p class="ob-lead">Husora führt dich durch jeden Einsatz – mit Checklisten, Fotos und Rückmeldungen für den Hausbesitzer.</p>
+          <ol class="ob-steps-list"><li><strong>Auftrag annehmen</strong> und Termin planen</li><li><strong>Vor Ort:</strong> Checkliste abarbeiten, Zeit und Material erfassen</li><li><strong>Fotos und Notizen</strong> hinzufügen, Mängel markieren</li><li><strong>Abschließen</strong> – der Kunde erhält Bericht und Rechnung</li></ol>
+          ${nav('<button type="button" class="primary-btn" data-ob-pp="seen">Verstanden</button>')}`,
+        documentation: () => `<h1 class="ob-pp-title">Arbeiten nachvollziehbar dokumentieren</h1>${done}<p class="ob-lead">Füge Fotos, Notizen, Prüfpunkte und Ergebnisse hinzu. So sieht der Hausbesitzer, was erledigt wurde.</p>
+          ${pts([['camera', 'Fotos', 'je Prüfpunkt, direkt mit dem Handy'], ['alert', 'Mängel', '– daraus wird mit einem Klick ein Reparaturangebot'], ['document', 'Berichte', 'landen automatisch beim Kunden']])}
+          <p class="ob-note">Dokumentation ersetzt keine fachliche Prüfung oder Abnahme nach den geltenden Vorschriften.</p>
+          ${nav('<button type="button" class="primary-btn" data-ob-pp="seen">Verstanden</button>')}`,
+        finance: () => `<h1 class="ob-pp-title">Angebote, Rechnungen und Zahlungen</h1>${done}<p class="ob-lead">Erstelle Angebote, rechne erledigte Arbeiten ab und behalte offene Zahlungen im Blick.</p>
+          ${pts([['contract', 'Angebote', 'zu Anfragen und Mängeln'], ['cost', 'Rechnungen', 'aus erledigten Aufträgen – einzeln oder als Sammelrechnung'], ['clock', 'Offene Posten', 'auf einen Blick']])}
+          <p class="ob-note">Steuerliche und rechtliche Anforderungen an Rechnungen prüfst du bitte selbst bzw. mit deiner Steuerberatung.</p>
+          ${nav(feature('finance', 'Finanzen ansehen'))}`,
+        team: () => `<h1 class="ob-pp-title">Mitarbeitende hinzufügen</h1>${done}<p class="ob-lead">Lade Mitarbeitende ein und weise ihnen Aufträge zu. Jede Person sieht nur, was ihre Rolle erlaubt.</p>
+          ${pts([['users', 'Rollen', '– Leitung, Disposition, Techniker, Buchhaltung'], ['calendar', 'Einteilung', 'je Auftrag'], ['shield', 'Rechte', 'gelten serverseitig']])}
+          ${nav(feature('team', 'Team verwalten'))}`,
+        done: () => {
+          const list = obPartnerChecklist(); const core = list.filter((x) => x[3]); const coreDone = core.filter((x) => x[2]).length;
+          return `<div class="ob-hero done">${icon('check')}</div><h1 class="ob-pp-title">Dein Unternehmen ist startklar</h1><p class="ob-lead">Du kannst jetzt Aufträge empfangen, planen, dokumentieren und abrechnen.</p>
+          <p class="ob-meter-text"><b>${coreDone} von ${core.length}</b> wichtige Schritte erledigt</p>
+          <ul class="ob-check">${list.map(([k, t, ok]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span><span class="ob-check-text">${escapeHtml(t)}</span>${ok ? '' : `<button type="button" class="text-btn" data-ob-pp-step="${k}">Jetzt erledigen</button>`}</li>`).join('')}</ul>
+          <div class="ob-actions"><button type="button" class="primary-btn" data-ob-pp="finish">Zur Startseite</button></div>`;
+        }
+      };
+      return `<div class="ob-pp">${head}${R[step.key]()}</div>`;
+    }
+    // Startseite: Checkliste „Dein Unternehmen ist bereit?“ (aus echten Daten, ausblendbar)
+    function obPpChecklistHtml() {
+      if (!obPpCanSetup() || obPrefs().partner_dismissed || (obPrefs().dismissed_guides || []).includes('partner_checklist')) return '';
+      const s = obState('service_partner'); const list = obPartnerChecklist();
+      const core = list.filter((x) => x[3]); const coreDone = core.filter((x) => x[2]).length;
+      if (coreDone === core.length && (!s || s.status !== 'in_progress')) return '';
+      return `<section class="pp-card ob-checklist" aria-labelledby="ob-pp-check-title"><div class="ob-check-head"><div><h2 id="ob-pp-check-title">Dein Unternehmen ist bereit?</h2><p class="pp-hint">${coreDone} von ${core.length} wichtigen Schritten erledigt</p></div><button type="button" class="text-btn" data-ob-pp="dismiss">Ausblenden</button></div>
+        <div class="ob-meter"><i style="width:${Math.round(list.filter((x) => x[2]).length / list.length * 100)}%"></i></div>
+        <ul class="ob-check">${list.map(([k, t, ok]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span><span class="ob-check-text">${escapeHtml(t)}</span>${ok ? '' : `<button type="button" class="text-btn" data-ob-pp-step="${k}">Erledigen</button>`}</li>`).join('')}</ul>
+        <div class="pp-actions"><button type="button" class="primary-btn" data-ob-pp="resume">${s?.status === 'in_progress' ? 'Einrichtung fortsetzen' : 'Einrichtung starten'}</button></div></section>`;
+    }
+    // Hinweis in anderen Ansichten, wenn man aus der Einrichtung dorthin gesprungen ist
+    function obPpResumeHtml() {
+      const s = obState('service_partner');
+      if (!pp.obReturn || pp.view === 'setup' || pp.detail || !s || s.status !== 'in_progress') return '';
+      const pr = obProgress('service_partner', s);
+      return `<div class="ob-pp-resume" role="status">${icon('check')}<span>Einrichtung: ${pr.done} von ${pr.total}</span><button type="button" class="primary-btn" data-ob-pp="resume">Weiter mit der Einrichtung</button></div>`;
+    }
+    document.addEventListener('click', (event) => {
+      const el = event.target.closest('#partner-portal [data-ob-pp], #partner-portal [data-ob-pp-open], #partner-portal [data-ob-pp-step]');
+      if (!el) return;
+      const step = obPpStep();
+      if (el.dataset.obPpOpen) {
+        const view = el.dataset.obPpOpen;
+        obMark('service_partner', step.key, ['services'].includes(step.key) ? null : 'completed', { metadata: { view } });
+        if (step.key === 'orders') obTrack('activation_first_order_viewed', 'service_partner', 'orders');
+        const steps = OB_FLOWS.service_partner.steps;
+        obMark('service_partner', null, null, { current: step.key === 'services' ? 'services' : steps[Math.min(steps.length - 1, obStepIndex('service_partner', step.key) + 1)].key });
+        pp.obReturn = true; pp.view = view; pp.detail = null; pp.form = null; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo(0, 0); return;
+      }
+      if (el.dataset.obPpStep) { if (!obState('service_partner') || obState('service_partner').status !== 'in_progress') obStart('service_partner', { restart: Boolean(obState('service_partner')) }); obPpGo(el.dataset.obPpStep); return; }
+      const a = el.dataset.obPp;
+      if (a === 'next') { if (step.key === 'welcome') obMark('service_partner', 'welcome', 'completed'); obPpNext(step.key); return; }
+      if (a === 'prev') { obPpGo(OB_FLOWS.service_partner.steps[Math.max(0, obStepIndex('service_partner', step.key) - 1)].key); return; }
+      if (a === 'skip') { obMark('service_partner', step.key, 'skipped'); obPpNext(step.key); return; }
+      if (a === 'seen') { obMark('service_partner', step.key, 'completed'); obPpNext(step.key); return; }
+      if (a === 'pause') { obMark('service_partner', null, null, { refs: { paused: true } }); pp.obReturn = false; pp.view = 'dashboard'; ppRender(); showToast('Du kannst die Einrichtung jederzeit auf der Startseite fortsetzen.'); return; }
+      if (a === 'resume') { pp.obReturn = false; obPpStart(); return; }
+      if (a === 'dismiss') { obSetPrefs({ partner_dismissed: true }, { p_guide: 'partner_checklist', p_guide_dismissed: true }); obTrack('onboarding_dismissed', 'service_partner', null, { n: 2 }); ppRender(); showToast('Ausgeblendet – unter Einstellungen → Hilfe kannst du die Einrichtung erneut starten.'); return; }
+      if (a === 'finish') { obFinish('service_partner', 'completed'); pp.obReturn = false; pp.view = 'dashboard'; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo(0, 0); return; }
+      if (a === 'profile-save') { document.querySelector('#partner-portal [data-pp-form="ob-profile"]')?.requestSubmit(); }
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('#partner-portal [data-pp-form="ob-profile"]');
+      if (!form) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(form));
+      const t = (x) => String(x || '').trim() || null;
+      const body = { contact_name: t(v.contact_name), phone: t(v.phone), email: t(v.email), street: t(v.street), postal_code: t(v.postal_code), city: t(v.city), description: t(v.description) };
+      const err = !body.contact_name ? 'Bitte gib einen Ansprechpartner an.' : !(body.phone || body.email) ? 'Bitte gib Telefon oder E-Mail an, damit Kunden dich erreichen.' : !(body.street || body.city) ? 'Bitte gib Straße oder Ort an.' : '';
+      const box = form.querySelector('.ob-error');
+      if (err) { if (box) { box.textContent = err; box.hidden = false; } return; }
+      ppRun('ob-profile', async () => {
+        await ppPatch('organizations', ppOrg().id, body);
+        if (pp.ctx.self_partner_id) await ppPatch('service_partners', pp.ctx.self_partner_id, body);
+        Object.assign(ppOrg(), body);
+        obMark('service_partner', 'profile', 'completed', { refs: { organization_id: ppOrg().id } });
+        obTrack('activation_partner_profile_completed', 'service_partner', 'profile');
+        obMark('service_partner', null, null, { current: 'area' });
+      }, { notice: 'Unternehmensprofil gespeichert.' });
+    });
     function ppViewHtml() {
       if (pp.detail?.type === 'order') return ppOrderDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'inspection') return ppInspectionDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'customer') return ppCustomerDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'chat') return ppChatHtml(pp.detail.id);
-      return ({ dashboard: ppDashboardHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, agreements: ppAgreementsHtml, defects: ppDefectsHtml, settings: ppSettingsHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
+      return ({ dashboard: ppDashboardHtml, setup: ppSetupHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, agreements: ppAgreementsHtml, defects: ppDefectsHtml, settings: ppSettingsHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
     }
     function ppOrderCard(o) {
       const prio = PP_PRIORITY[o.priority] && o.priority !== 'normal' ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : '';
@@ -21249,6 +22030,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const org = ppOrg();
       const initials = String(org?.name || '?').split(/\s+/).filter((w) => /[\p{L}\d]/u.test(w)).slice(0, 2).map((w) => [...w][0]).join('').toUpperCase();
       return `<div class="pp-company"><span class="pp-company-mark" aria-hidden="true">${escapeHtml(initials)}</span><div><h1 data-no-i18n>${escapeHtml(org?.name || '')}</h1><p><b>${escapeHtml(PP_ROLE_LABELS[ppRole()] || ppRole())}</b>${pp.loadedAt ? ` · <span>Stand</span> ${escapeHtml(fmtDateTime(pp.loadedAt))}` : ''}</p></div></div>
+        ${obPpChecklistHtml()}
         ${ppKpisHtml(todayItems)}
         ${ppTilesHtml()}
         ${offered.length && ppHomePrefs().showOffered ? ppFoldSection('offered', 'Neue Anfragen', offered.map(ppOrderCard)) : ''}
@@ -23162,7 +23944,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const kind = form.dataset.ppForm;
       const clean = (obj) => Object.fromEntries(Object.entries(obj).map(([k, val]) => [k, typeof val === 'string' ? (val.trim() || null) : val]));
       if (kind === 'login') { cloudState.draftEmail = v.email; ppRun('login', async () => { let data; try { data = await cloudFetch('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: v.email.trim(), password: v.password }, auth: false }); } catch (error) { if (/bestätige zuerst/.test(error.message)) cloudState.pendingConfirm = v.email.trim(); throw error; } cloudState.pendingConfirm = ''; cloudSetSession(data); }); }
-      if (kind === 'company') ppRun('company', () => ppRpc('create_partner_organization', { p_profile: { ...clean(v), services: fd.getAll('services') } }), { notice: 'Dein Betrieb ist angelegt. Willkommen bei Husora!' });
+      if (kind === 'company') ppRun('company', async () => { await ppRpc('create_partner_organization', { p_profile: { ...clean(v), services: fd.getAll('services') } }); obStart('service_partner', { restart: Boolean(obState('service_partner')) }); obMark('service_partner', 'welcome', 'completed', { current: 'profile' }); pp.view = 'setup'; pp.detail = null; }, { notice: 'Dein Betrieb ist angelegt. Willkommen bei Husora!' });
       if (kind === 'join') ppRun('join', async () => { const r = await ppRpc('accept_member_invite', { p_code: v.code }); pp.notice = `Du bist jetzt im Team von ${r.organization_name}.`; });
       if (kind === 'invite-code') ppRun('invite', async () => { const r = await ppRpc('accept_service_partner_invite', { p_code: v.code }); showToast(`Verbunden mit ${r.organization_name}.`); });
       if (kind === 'customer-edit') {
@@ -24846,6 +25628,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     updateOnlineState();
     loadPlanCatalog();
     setTimeout(loadOrgPlan, 600);
+    setTimeout(() => { if (cloudSignedIn()) obPull('homeowner').then(() => { if (currentPage === 'dashboard') render(); }); }, 900);
     setInterval(() => { if (document.visibilityState === 'visible') loadOrgPlan(); }, 10 * 60 * 1000);
     runAutoTasks(false);
     removePropertiesBeyondProfileCount();
