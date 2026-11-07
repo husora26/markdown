@@ -63,8 +63,12 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await P.$eval('[data-pp-form=company] [value=service_work]', (e) => { e.checked = true; });
     await P.$eval('[data-pp-form=company] button[type=submit]', (e) => e.click()); await idle(P); await P.waitForTimeout(500);
     const org = await P.evaluate(() => ppOrg()?.name); if (!org) throw new Error(await P.evaluate(() => pp.error));
+    // neu angelegter Betrieb landet in der geführten Einrichtung; „Später fortsetzen“ führt zur Startseite
+    const setup = await P.evaluate(() => pp.view);
+    if (setup !== 'setup') throw new Error(`Einrichtung nicht geöffnet (${setup})`);
+    await P.click('[data-ob-pp=pause]'); await P.waitForTimeout(300);
     await shot(P, 'dashboard-leer');
-    return `${org} · Rolle ${await P.evaluate(() => ppRole())} · ${await P.evaluate(() => ppD('templates').length)} Vorlagen · ${await P.evaluate(() => ppD('services').length)} Leistungen`;
+    return `${org} · Einrichtung → Später fortsetzen · Rolle ${await P.evaluate(() => ppRole())} · ${await P.evaluate(() => ppD('templates').length)} Vorlagen · ${await P.evaluate(() => ppD('services').length)} Leistungen`;
   });
   await step('Partner: Einladungscode eingeben → Kunde verbunden', async () => {
     await P.$eval('[data-pp-view=customers]', (e) => e.click()); await P.waitForTimeout(200);
