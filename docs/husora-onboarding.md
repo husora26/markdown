@@ -1,6 +1,7 @@
 # Husora · Onboarding (Hausbesitzer & Servicepartner)
 
-Stand: Migration **4800** (`20261030004800_onboarding.sql`), App `index.html`.
+Stand: Migration **4800** (`20261030004800_onboarding.sql`, live seit 07.11.2026), App `index.html`.
+Plan und Bestandsaufnahme: [husora-onboarding-plan.md](husora-onboarding-plan.md).
 Grundlage: *Husora Onboarding Architecture Specification*.
 
 ## Ziel

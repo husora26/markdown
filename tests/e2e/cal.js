@@ -84,7 +84,9 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await P.evaluate(() => { pp.calMode = 'week'; pp.calDay = ppToday(); ppRender(); }); await P.waitForTimeout(150);
     await P.selectOption('[data-pp-cal-filter=member]', techId); await P.waitForTimeout(200);
     const onlyTech = await P.$$eval('.pp-cal-dayblock .pp-item strong', (e, t) => e.map((x) => x.textContent).filter((x) => x.startsWith(t)), TITLE);
-    await P.selectOption('[data-pp-cal-filter=member]', ''); await P.selectOption('[data-pp-cal-filter=type]', 'repair'); await P.waitForTimeout(200);
+    // „wartet“ liegt 2 Tage in der Zukunft – am Wochenende ist das schon die nächste Kalenderwoche: dorthin springen
+    await P.selectOption('[data-pp-cal-filter=member]', ''); await P.selectOption('[data-pp-cal-filter=type]', 'repair'); await P.waitForTimeout(100);
+    await P.evaluate(() => { const d = new Date(); d.setDate(d.getDate() + 2); pp.calDay = localDateKey(d); pp.calMonth = pp.calDay.slice(0, 7); ppRender(); }); await P.waitForTimeout(200);
     const onlyRepair = await P.$$eval('.pp-cal-dayblock .pp-item strong', (e, t) => e.map((x) => x.textContent).filter((x) => x.startsWith(t)), TITLE);
     await P.selectOption('[data-pp-cal-filter=type]', '');
     if (onlyTech.join() !== `${TITLE} heute` || onlyRepair.join() !== `${TITLE} wartet`) throw new Error(`${onlyTech} / ${onlyRepair}`);

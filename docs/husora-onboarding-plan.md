@@ -66,7 +66,7 @@ Grundlage: *Husora Onboarding Architecture Specification* v1.0, alle 22 Kapitel 
 - [x] **Runde 2:** Unit-Suite für Flow-Auswahl, Reihenfolge, Übergänge, Fortschritt, Versionierung und Checkliste
 - [x] **Runde 2:** E2E Hausbesitzer mit Konto: Fortschritt am Server, neues Gerät setzt fort
 - [x] **Runde 2:** vollständige Regression aller E2E-Suiten
-- [ ] Migration 4800 live einspielen (Bestätigung im Tool) und Bericht – siehe Abschlussbericht
+- [x] Migration 4800 live eingespielt am 07.11.2026 (Projekt ggsoygxmcsmrsrbmplrz). Geprüft: 3 Tabellen, 5 RPCs, RLS aktiv, 3 Policies, anon ohne Ausführungsrecht, kein direktes INSERT für `authenticated`.
 
 ## 4. Prüfung nach jeder Phase
 
@@ -81,3 +81,15 @@ Grundlage: *Husora Onboarding Architecture Specification* v1.0, alle 22 Kapitel 
 - **Abgeschlossenen Flow nicht wieder öffnen.** `obStart()` ohne ausdrücklichen Neustart hätte einen abgeschlossenen Flow wieder geöffnet. Abschluss bleibt jetzt bestehen, bis der Nutzer selbst neu startet (Unit-Test).
 - **Reihenfolge der Server-Aufrufe.** Parallele Server-Aufrufe konnten in falscher Reihenfolge ankommen, dann zeigte der aktuelle Schritt am Server einen älteren Stand. Alle Onboarding-Aufrufe laufen jetzt nacheinander (`obQueue`). Der Integrationstest prüft das.
 - **Standard-Servicegebiet.** Das bei der Betriebsanlage erzeugte leere Gebiet zählte als „Servicegebiet festgelegt“. Es zählt jetzt nicht mehr (E2E).
+
+## 6. Testergebnis Runde 2 (lokaler Supabase-Stack)
+
+- **SQL** `onboarding_test.sql`: bestanden.
+- **E2E gesamt:** alle Suiten grün, darunter:
+  - `onboarding_unit`: 14/14
+  - `onboarding`: 24/24
+  - `onboarding_partner`: 14/14
+- **Angepasste Bestandstests:**
+  - `partner`: Ein neuer Betrieb startet jetzt in der Einrichtung, der Test geht über „Später fortsetzen“ weiter.
+  - `back`: Unterseiten zeigen den Zurück-Pfeil.
+  - `cal`: Der Test war datumsabhängig. Am Wochenende lag der Auftrag „in 2 Tagen“ in der nächsten Kalenderwoche.
