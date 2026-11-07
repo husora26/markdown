@@ -51,6 +51,15 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     if (!dis || r.dis || r.s !== 'completed' || r.view !== 'setup') throw new Error(JSON.stringify(r)); await P.click('.ob-pp [data-ob-pp=next]'); await P.waitForTimeout(200);
     return `weiter zu ${await cur()}`;
   });
+  await step('Leistungen: Mehrfachauswahl der Leistungsbereiche speichert in service_partner_services', async () => {
+    if ((await cur()) !== 'services') throw new Error(await cur());
+    const pre = await P.$$eval('[data-pp-form=ob-services] input[name=group]:checked', (e) => e.map((x) => x.value));
+    await P.check('[data-pp-form=ob-services] input[value=service_work]');
+    await P.$eval('[data-pp-form=ob-services] button[type=submit]', (e) => e.click()); await wait();
+    const n = sql(`select count(*) from service_partner_services s join service_types t on t.id=s.service_type_id join service_partners sp on sp.id=s.service_partner_id join organizations o on o.id=sp.partner_organization_id where o.name='${FIRM}' and s.active and t.code in ('inspection','service_work','renovation')`);
+    const after = await P.$$eval('[data-pp-form=ob-services] input[name=group]:checked', (e) => e.map((x) => x.value));
+    if (n !== '2' || !after.includes('service_work') || (await cur()) !== 'services') throw new Error(`${n} ${after}`); return `${pre.join('+')} → ${after.join('+')}`;
+  });
   await step('Leistungen bearbeiten öffnet die Ansicht mit Rückweg in die Einrichtung', async () => {
     await P.click('[data-ob-pp-open=services]'); await P.waitForTimeout(250);
     const r = await P.evaluate(() => ({ view: pp.view, pill: Boolean(document.querySelector('.ob-pp-resume')) }));
@@ -96,6 +105,13 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const r = await P.evaluate(() => ({ view: pp.view, st: obState('service_partner').status, list: Boolean(document.querySelector('#partner-portal .ob-checklist')) }));
     const db = sql(`select s.status from onboarding_sessions s join users u on u.id=s.user_id join auth.users a on a.id=u.auth_user_id where a.email='${P_EMAIL}' and s.role_key='service_partner'`);
     if (r.view !== 'dashboard' || r.st !== 'completed' || r.list || db !== 'completed') throw new Error(`${JSON.stringify(r)} ${db}`); return 'completed (Server)';
+  });
+  await step('Partner-Einstellungen: „Einrichtung erneut starten“ beginnt bei Schritt 1, Daten bleiben', async () => {
+    await P.evaluate(() => { pp.view = 'settings'; ppRender(); }); await P.waitForTimeout(200);
+    await P.click('#partner-portal [data-ob-pp=restart]'); await P.waitForTimeout(300);
+    const r = await P.evaluate(() => ({ view: pp.view, k: obPpStep().key, st: obState('service_partner').status, prof: obPartnerFacts().profile }));
+    if (r.view !== 'setup' || r.k !== 'welcome' || r.st !== 'in_progress' || !r.prof) throw new Error(JSON.stringify(r));
+    await P.evaluate(() => { obFinish('service_partner', 'completed'); pp.view = 'dashboard'; ppRender(); }); return 'Schritt 1, Profil bleibt vollständig';
   });
   await step('Mitarbeiter (kein Lead) sehen keine Einrichtung', async () => {
     const r = await P.evaluate(() => { const real = ppRole; window.__r = ppRole; return null; });

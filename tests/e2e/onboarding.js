@@ -61,9 +61,10 @@ const { chromium } = require('playwright');
     await p.click('.ob-checklist [data-ob-resume]'); await p.waitForTimeout(200);
     if ((await cur()) !== 'task') throw new Error(await cur());
     await p.click('[data-ob-template="Rauchmelder prüfen"]');
+    await p.selectOption('[data-ob-form=task] [name=priority]', 'soon');
     await p.click('[data-ob-task-save]'); await p.waitForTimeout(250);
-    const r = await p.evaluate(() => ({ n: obUserTasks().length, t: obUserTasks()[0]?.title, s: obState('homeowner').steps.task, prop: obUserTasks()[0]?.property }));
-    if (r.n !== 1 || r.t !== 'Rauchmelder prüfen' || r.s !== 'completed' || r.prop !== 'Stuga am Fryken' || (await cur()) !== 'inspection') throw new Error(JSON.stringify(r)); return r.t;
+    const r = await p.evaluate(() => ({ n: obUserTasks().length, t: obUserTasks()[0]?.title, s: obState('homeowner').steps.task, prop: obUserTasks()[0]?.property, prio: obUserTasks()[0]?.priority }));
+    if (r.n !== 1 || r.t !== 'Rauchmelder prüfen' || r.s !== 'completed' || r.prop !== 'Stuga am Fryken' || r.prio !== 'soon' || (await cur()) !== 'inspection') throw new Error(JSON.stringify(r)); return `${r.t} (Wichtig)`;
   });
   await step('Nicht pausiert: Neuladen setzt am aktuellen Schritt fort', async () => {
     await p.reload(); await p.waitForTimeout(800);
@@ -124,6 +125,26 @@ const { chromium } = require('playwright');
     await p.click('[data-ob-tips]'); await p.waitForTimeout(150);
     await p.evaluate(() => { currentPage = 'inspections'; render(); }); await p.waitForTimeout(150);
     const pill = await p.$('.ob-guide-pill'); if (pill) throw new Error('noch sichtbar'); return 'aus';
+  });
+  await step('Einstellungen: Karte „Einrichtung & Hilfe“ holt Hilfen zurück und startet die Einrichtung', async () => {
+    await p.evaluate(() => { currentPage = 'settings'; settingsView = 'settings-data'; render(); }); await p.waitForTimeout(250);
+    const cap = await p.textContent('#settings-onboarding .card-caption');
+    await p.click('#settings-onboarding [data-ob-tips]'); await p.waitForTimeout(150);
+    await p.click('#settings-onboarding [data-ob-guides-reset]'); await p.waitForTimeout(150);
+    const prefs = await p.evaluate(() => obPrefs());
+    await p.evaluate(() => { currentPage = 'tasks'; render(); }); await p.waitForTimeout(150);
+    const pill = await p.$('.ob-guide-pill');
+    await p.evaluate(() => { currentPage = 'settings'; settingsView = 'settings-data'; render(); }); await p.waitForTimeout(200);
+    await p.click('#settings-onboarding [data-onboarding-start]'); await p.waitForTimeout(250);
+    const open = await p.$eval('#onboarding-modal', (e) => e.classList.contains('open'));
+    if (!pill || (prefs.dismissed_guides || []).length || prefs.help_tips_enabled === false || !open) throw new Error(`${cap} ${JSON.stringify(prefs)} ${Boolean(pill)} ${open}`);
+    await p.evaluate(() => closeOnboarding()); return cap.trim();
+  });
+  await step('Guide „Meine Häuser“ mit Link zur Hilfe', async () => {
+    await p.evaluate(() => { currentPage = 'properties'; render(); }); await p.waitForTimeout(150);
+    await p.click('[data-ob-guide=open]'); await p.waitForTimeout(150);
+    await p.click('.ob-guide [data-page=help]'); await p.waitForTimeout(200);
+    const page = await p.evaluate(() => currentPage); if (page !== 'help') throw new Error(page); return 'Hilfe geöffnet';
   });
   await step('Demo-Weg: „Erst umsehen“ öffnet nicht erneut', async () => {
     const q = await b.newPage({ viewport: { width: 1280, height: 900 } }); q.on('pageerror', (e) => errs.push(e.message));

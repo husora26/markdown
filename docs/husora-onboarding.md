@@ -51,8 +51,8 @@ OB_FLOWS (Konfiguration je Rolle, versioniert)
 |---|---|---|---|
 | 1 | welcome | Nutzen, Rollenwahl, Rechtstexte (Entwurf), optional Demo | Rolle „Hausbesitzer“ gewählt |
 | 2 | property | Name\*, Adresse, Region, Nutzung, ggf. Name; oder Inserat-Import / ausführliches Formular | Haus gespeichert (Demo-Haus wird umgewandelt, keine Duplikate) |
-| 3 | profile | Baujahr, Wohnfläche, Grundstück, Zimmer, Heizung, Kamin, Zustand (Fortschrittsanzeige) | ≥ 3 Angaben |
-| 4 | task | Vorlagen-Chips oder eigener Titel, Fälligkeit, Wiederholung; ausführliches Formular möglich | Aufgabe gespeichert (Tariflimit geprüft) |
+| 3 | profile | Baujahr, Wohnfläche, Grundstück, Zimmer, Heizung, Kamin, Zustand; aufklappbar: bekannte Reparaturen, geplante Sanierungen („x von 9 Angaben“) | ≥ 3 Angaben |
+| 4 | task | Vorlagen-Chips oder eigener Titel, Fälligkeit, Wiederholung, Priorität; ausführliches Formular möglich | Aufgabe gespeichert (Tariflimit geprüft, Aufgaben-ID als `task_ref` am Schritt) |
 | 5 | inspection | Ablauf Kontrollplan → Fotos → Intervall → Mangel→Aufgabe, Haftungshinweis | Seite geöffnet |
 | 6 | automation | Einmalig/wiederkehrend, Beispiel, „nichts automatisch eingeschaltet“, Tarifhinweis | Seite geöffnet |
 | 7 | partners | Suche, Zuordnen, Partner-Portal; Hinweis „keine Empfehlung“ | Seite geöffnet |
@@ -63,16 +63,16 @@ OB_FLOWS (Konfiguration je Rolle, versioniert)
 
 | # | Schlüssel | Inhalt | Erledigt wenn |
 |---|---|---|---|
-| 1 | welcome | Nutzen, Dauer | „Einrichtung starten“ (folgt direkt auf „Betrieb anlegen“) |
-| 2 | profile | Ansprechpartner\*, Telefon/E-Mail, Adresse, Kurzbeschreibung (schreibt `organizations` und `service_partners`) | Pflichtfelder vorhanden |
+| 1 | welcome | „Willkommen bei Husora Partner“, Nutzen, Dauer | „Unternehmensprofil einrichten“ (folgt direkt auf „Betrieb anlegen“) |
+| 2 | profile | Ansprechpartner\*, Telefon/E-Mail, Webseite, Adresse, Kurzbeschreibung (schreibt `organizations` und `service_partners`) | Pflichtfelder vorhanden |
 | 3 | area | eingebettete Servicegebiete (`service_partner_areas`), „Weiter“ erst mit Gebiet | echtes Gebiet vorhanden |
-| 4 | services | Anzahl aktiver Leistungen, Sprung zu Leistungen & Preise | aktives Paket |
+| 4 | services | Mehrfachauswahl der Leistungsbereiche (Hauskontrolle, Servicearbeiten, Sanierungen) → `service_partner_services`, Preise unverändert; Sprung zu „Preise & Pakete“ | mindestens ein aktives Paket |
 | 5 | orders | Statusablauf Neu → Annehmen → Planen → Erledigt | Auftragsansicht geöffnet |
 | 6 | workflow | Ablauf vor Ort | „Verstanden“ |
 | 7 | documentation | Fotos, Mängel, Berichte, Haftungshinweis | „Verstanden“ |
 | 8 | finance | Angebote, Rechnungen, offene Posten, Steuerhinweis | Finanzen geöffnet |
 | 9 | team | Rollen, Einteilung, Rechte | Team geöffnet |
-| 10 | done | Checkliste | „Zur Startseite“ |
+| 10 | done | „Dein Husora-Partnerprofil ist startklar“, Checkliste | „Zur Startseite“ |
 
 Die Partner-Einrichtung sehen nur die Leitungsrollen (`ppIsLead()`). Mitarbeitende, die per Einladungscode beitreten, starten direkt bei ihren Aufträgen.
 
@@ -92,9 +92,14 @@ Die Partner-Einrichtung sehen nur die Leitungsrollen (`ppIsLead()`). Mitarbeiten
 - **Checkliste ausblenden** speichert die Präferenz lokal und am Server:
   - Hausbesitzer: `onboarding_dismissed_at`;
   - Partner: Guide-Schlüssel `partner_checklist`.
-- **Feature-Guides** gibt es auf Aufgaben, Hauskontrolle, Servicepartner, Dokumente, Kalender und Automatisierung:
+- **Feature-Guides** gibt es auf Meine Häuser, Aufgaben, Hauskontrolle, Servicepartner, Dokumente, Kalender und Automatisierung, jeweils mit Link „Zur Hilfe“:
   - Pille „Was kann ich hier tun?“, darunter die Karte mit „Nicht mehr anzeigen“ (pro Seite);
   - global ein- und ausschaltbar unter Hilfe → „Hilfe-Tipps aus-/einschalten“.
+- **Einstellungen:**
+  - Hausbesitzer: Daten & App → „Einrichtung & Hilfe“ mit Status, „Einrichtung erneut starten / fortsetzen“, Hilfe-Tipps und „Ausgeblendete Hilfen wieder anzeigen“.
+  - Partner: Einstellungen → „Einrichtung“.
+- **Verbindungsabbruch:** Schritte werden lokal mit `pendingSync` gepuffert und beim `online`-Ereignis nachgereicht. Alle Server-Aufrufe laufen der Reihe nach.
+- **Abmelden** entfernt den Partner-Einrichtungsstand vom Gerät. Der Hausbesitzer-Stand beschreibt die lokal gespeicherten Häuser und bleibt deshalb wie diese erhalten.
 - **Bestandsnutzer** mit Daten oder dem Stand `stugliv-onboarding = done` sehen weder Fenster noch Checkliste.
 - **„Erst die Demo ansehen“** (nur außerhalb der Beta) bleibt erhalten. Der Demo-Hinweis führt direkt zu „Erstes Haus“.
 
@@ -148,12 +153,15 @@ Alle neuen Texte sind in `I18N_SOURCE` auf DE, EN und SV hinterlegt. Zahlenhalti
 | Test | Inhalt |
 |---|---|
 | `supabase/tests/onboarding_test.sql` | Sitzung, Übergänge, Metadatenfilter, ungültige Werte, Partner-Gating, Pause, Abschluss, Neustart, Präferenzen, Mandantentrennung, anonym, Cascade |
-| `tests/e2e/onboarding.js` (22 Schritte) | kompletter Hausbesitzer-Flow, Pflichtfeld, Demo-Haus-Umwandlung ohne Duplikat, Zurück, Pause und Neuladen, Fortsetzen, Funktionssprung mit Rückweg, Überspringen, Abschluss, Checkliste aus echten Daten, Ausblenden, Neustart, ausführliches Formular, Feature-Guides, Hilfe-Tipps, Demo-Weg, Bestandsnutzer |
-| `tests/e2e/onboarding_partner.js` (12 Schritte) | Betrieb anlegen → Einrichtung, Profil-Pflichtfelder und DB, Gebiet (leeres Standardgebiet zählt nicht), Leistungen mit Rückweg, Pause, Serverstand, neues Gerät setzt am Serverstand fort, Funktionsschritte, Abschluss (Server), Mitarbeiter ohne Einrichtung |
+| `tests/e2e/onboarding_unit.js` (14) | Flow-Auswahl, Reihenfolge (Client = Server), Überspringbarkeit, Übergänge, Fortschritt, Wiederaufnahme, Versionierung, Abschluss/Neustart, Checkliste aus Daten; Integration Hausbesitzer mit Konto: Server-Stand, neues Gerät, Offline-Nachreichen, Abmelden |
+| `tests/e2e/onboarding.js` (24 Schritte) | kompletter Hausbesitzer-Flow, Pflichtfeld, Demo-Haus-Umwandlung ohne Duplikat, Zurück, Pause und Neuladen, Fortsetzen, Funktionssprung mit Rückweg, Überspringen, Abschluss, Checkliste aus echten Daten, Ausblenden, Neustart, ausführliches Formular, Feature-Guides inkl. „Meine Häuser“ und Hilfe-Link, Hilfe-Tipps, Einstellungen-Karte, Demo-Weg, Bestandsnutzer |
+| `tests/e2e/onboarding_partner.js` (14 Schritte) | Betrieb anlegen → Einrichtung, Profil-Pflichtfelder und DB, Gebiet (leeres Standardgebiet zählt nicht), Mehrfachauswahl der Leistungsbereiche (DB), Leistungen mit Rückweg, Neustart über die Einstellungen, Pause, Serverstand, neues Gerät setzt am Serverstand fort, Funktionsschritte, Abschluss (Server), Mitarbeiter ohne Einrichtung |
 
 ## Offene Punkte
 
 - **Rechtstexte:** Die Texte und Hinweise im Flow sind Entwürfe. Sie sind technisch umgesetzt, die juristische Prüfung ist offen.
 - **Feature-Guides im Partner-Portal** gibt es noch nicht. Dort übernehmen die Einrichtungsschritte diese Rolle.
+- **Felder ohne Datenmodell:** Logo des Betriebs, Haustyp und Wasser/Abwasser gibt es im Datenmodell nicht. Sie werden deshalb nicht abgefragt.
+- **P6 „Auftrag bearbeiten“:** Der Schritt erklärt den Ablauf. Isolierte Demo-Aufträge gibt es nicht, und echte werden nicht angelegt.
 - **Fotos im Hausprofil-Schritt:** Hier gibt es nur einen Hinweis. Fotos bleiben im Hausprofil, damit der Schritt kurz bleibt.
 - **Hausbesitzer ohne Konto:** Der Fortschritt bleibt lokal. Mit der ersten Anmeldung wird er an den Server übertragen.
