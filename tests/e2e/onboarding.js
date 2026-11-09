@@ -17,9 +17,18 @@ const { chromium } = require('playwright');
     const t = await p.textContent('#onboarding-body'); if (!/Willkommen bei Husora/.test(t) || !/Schritt 1 von 9/.test(t)) throw new Error(t.slice(0, 120));
     return 'Schritt 1 von 9';
   });
-  await step('Hausbesitzer wählen → Schritt „Erstes Haus“', async () => {
+  await step('Hausbesitzer wählen → Versionswahl mit FREE, PLUS, PRO, ULTIMATE', async () => {
     await p.click('[data-ob-role=owner]'); await p.waitForTimeout(200);
-    const k = await cur(); const s = await st(); if (k !== 'property' || s.steps.welcome !== 'completed') throw new Error(`${k}/${JSON.stringify(s.steps)}`); return k;
+    const r = await p.evaluate(() => ({ plans: [...document.querySelectorAll('[data-ob-plan]')].map((b) => b.dataset.obPlan).join(','), on: document.querySelector('.ob-plan.on')?.dataset.obPlan, t: document.getElementById('onboarding-title')?.textContent, k: OB_FLOWS.homeowner.steps[onboardingStep].key }));
+    if (r.plans !== 'free,plus,pro,ultimate' || r.on !== 'free' || r.k !== 'welcome' || !/Version/.test(r.t)) throw new Error(JSON.stringify(r)); return r.plans;
+  });
+  await step('Version wählen (PLUS ansehen, mit FREE weiter) → Schritt „Erstes Haus“', async () => {
+    await p.click('[data-ob-plan=plus]'); await p.waitForTimeout(100);
+    const btn = await p.textContent('[data-ob-plan-next]'); if (!/PLUS/.test(btn)) throw new Error(btn);
+    await p.click('[data-ob-plan=free]'); await p.waitForTimeout(100);
+    await p.click('[data-ob-plan-next]'); await p.waitForTimeout(250);
+    const k = await cur(); const s = await st(); const plan = await p.evaluate(() => currentPlanId());
+    if (k !== 'property' || s.steps.welcome !== 'completed' || plan !== 'free') throw new Error(`${k}/${plan}/${JSON.stringify(s.steps)}`); return `${k}, ${plan}`;
   });
   await step('Pflichtfeld wird geprüft (Fehlermeldung statt Speichern)', async () => {
     await p.click('[data-ob-house-save]'); await p.waitForTimeout(150);
@@ -64,6 +73,9 @@ const { chromium } = require('playwright');
   await step('Fortsetzen über die Checkliste → Aufgabe mit Vorlage erstellen', async () => {
     await p.click('.ob-checklist [data-ob-resume]'); await p.waitForTimeout(200);
     if ((await cur()) !== 'task') throw new Error(await cur());
+    const pk = await p.evaluate(() => ({ n: document.querySelectorAll('[data-ob-pkg]').length, apply: Boolean(document.querySelector('[data-ob-pkg-apply]')) })); // FREE: Pakete sichtbar, Übernehmen erst ab PLUS
+    if (pk.n < 4 || pk.apply) throw new Error(`Pakete ${JSON.stringify(pk)}`);
+    await p.click('[data-ob-task-mode=single]'); await p.waitForTimeout(100);
     await p.click('[data-ob-template="Rauchmelder prüfen"]');
     await p.selectOption('[data-ob-form=task] [name=priority]', 'soon');
     await p.click('[data-ob-task-save]'); await p.waitForTimeout(250);
@@ -110,6 +122,7 @@ const { chromium } = require('playwright');
   });
   await step('Ausführliches Formular: angelegte Aufgabe wird erkannt', async () => {
     await p.evaluate(() => obGo('task')); await p.waitForTimeout(100);
+    await p.click('[data-ob-task-mode=single]'); await p.waitForTimeout(100);
     await p.click('[data-ob-task-form]'); await p.waitForTimeout(250);
     await p.fill('#task-form [name=title]', 'Heizung warten'); await p.click('#task-form [type=submit]'); await p.waitForTimeout(700);
     const r = await p.evaluate(() => ({ s: obState('homeowner').steps.task, open: document.getElementById('onboarding-modal').classList.contains('open'), k: OB_FLOWS.homeowner.steps[onboardingStep].key }));
@@ -167,6 +180,24 @@ const { chromium } = require('playwright');
     await q.goto('http://127.0.0.1:8081/index.html'); await q.evaluate(() => { localStorage.clear(); localStorage.setItem('stugliv-onboarding', '{"status":"done"}'); }); await q.reload(); await q.waitForTimeout(700);
     const open = await q.$eval('#onboarding-modal', (e) => e.classList.contains('open')); const list = await q.$('.ob-checklist');
     await q.close(); if (open || list) throw new Error(`${open}/${Boolean(list)}`); return 'ok';
+  });
+  await step('Aufgabenpaket: FREE zeigt Hinweis, mit PLUS „Paket übernehmen“ legt Aufgaben an', async () => {
+    const q = await b.newPage({ viewport: { width: 390, height: 844 } }); q.on('pageerror', (e) => errs.push(e.message));
+    await q.route(/unpkg|cdnjs|openstreetmap|nominatim|paypal|open-meteo|frankfurter|er-api|allorigins|cors\.lol|google|jsdelivr/, (r) => r.abort());
+    await q.goto('http://127.0.0.1:8081/index.html'); await q.evaluate(() => localStorage.clear()); await q.reload(); await q.waitForSelector('#onboarding-modal.open', { timeout: 4000 });
+    await q.click('[data-ob-role=owner]'); await q.waitForTimeout(150); await q.click('[data-ob-plan-next]'); await q.waitForTimeout(200);
+    await q.fill('[data-ob-form=property] [name=house]', 'Paket-Stuga'); await q.click('[data-ob-house-save]'); await q.waitForTimeout(250);
+    await q.evaluate(() => obGo('task')); await q.waitForTimeout(150);
+    const free = await q.evaluate(() => ({ plan: currentPlanId(), apply: Boolean(document.querySelector('[data-ob-pkg-apply]')), change: Boolean(document.querySelector('[data-ob-plan-change]')) }));
+    if (free.plan !== 'free' || free.apply || !free.change) throw new Error(`FREE ${JSON.stringify(free)}`);
+    await q.click('[data-ob-plan-change]'); await q.waitForTimeout(150); await q.click('[data-ob-plan=plus]'); await q.click('[data-ob-plan-next]'); await q.waitForTimeout(250);
+    const back = await q.evaluate(() => ({ k: OB_FLOWS.homeowner.steps[onboardingStep].key, plan: currentPlanId() }));
+    if (back.k !== 'task' || back.plan !== 'plus') throw new Error(`zurück: ${JSON.stringify(back)}`);
+    await q.click('[data-ob-pkg=basis]'); await q.waitForTimeout(100);
+    await q.click('[data-ob-pkg-apply=basis]'); await q.waitForTimeout(300);
+    const r = await q.evaluate(() => ({ pkg: autoTasks.packageId, on: autoTasks.enabled, n: obUserTasks().length, s: obState('homeowner').steps.task, k: OB_FLOWS.homeowner.steps[onboardingStep].key }));
+    await q.close();
+    if (r.pkg !== 'basis' || !r.on || !r.n || r.s !== 'completed' || r.k !== 'inspection') throw new Error(JSON.stringify(r)); return `Paket Basis, ${r.n} Aufgaben angelegt`;
   });
   console.log(res.join('\n')); if (errs.length) console.log('JS-Fehler:\n' + errs.join('\n'));
   await b.close();

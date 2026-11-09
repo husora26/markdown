@@ -3673,6 +3673,26 @@
     .ob-meter:not(:has(span))::after, .ob-meter:not(:has(span)) i { grid-row: 1; }
     .ob-meter-text { margin: 0 0 8px; font-size: 14px; }
     .ob-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+    /* Einrichtung: Versionswahl und Aufgabenpakete */
+    .ob-plans, .ob-pkgs { display: grid; gap: 8px; margin: 4px 0 6px; }
+    .ob-plans { grid-template-columns: 1fr 1fr; }
+    .ob-plan, .ob-pkg { position: relative; display: grid; gap: 3px; align-content: start; width: 100%; padding: 12px; border: 1.5px solid var(--line); border-radius: 13px; background: var(--paper); color: var(--ink); text-align: left; font: inherit; cursor: pointer; }
+    .ob-plan:hover, .ob-pkg:hover, .ob-plan:focus-visible, .ob-pkg:focus-visible { border-color: var(--green); }
+    .ob-plan.on, .ob-pkg.on { border-color: var(--green); background: var(--green-soft); box-shadow: inset 0 0 0 1px var(--green); }
+    .ob-plan strong, .ob-pkg strong { font-size: 15px; }
+    .ob-plan .ob-plan-price { font-size: 13px; font-weight: 700; color: var(--green); }
+    .ob-plan small, .ob-pkg small { color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+    .ob-plan ul { margin: 4px 0 0; padding-left: 16px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .ob-plan-tag { position: absolute; top: -9px; right: 10px; padding: 1px 8px; border-radius: 999px; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; }
+    .ob-pkg-meta { color: var(--green); font-size: 12.5px; font-weight: 700; }
+    .ob-pkg-list { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .ob-more-box { margin-top: 10px; }
+    .ob-more-box > summary { cursor: pointer; color: var(--green); font-size: 13.5px; font-weight: 700; }
+    .ob-more-box .plan-matrix { margin: 10px 0 0; box-shadow: none; }
+    .ob-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 0 0 14px; padding: 4px; border-radius: 12px; background: var(--line); }
+    .ob-seg button { min-height: 40px; border: 0; border-radius: 9px; background: transparent; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .ob-seg button.on { background: var(--paper); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+    @media (max-width: 420px) { .ob-plans { grid-template-columns: 1fr; } }
     .ob-chips button { min-height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 13px; cursor: pointer; }
     .ob-chips button.on, .ob-chips button:hover { border-color: var(--green); background: var(--green-soft); }
     .ob-house-pick { display: grid; gap: 8px; }
@@ -18723,6 +18743,52 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     const OB_TASK_TEMPLATES = ['Dach und Dachrinnen kontrollieren', 'Heizung prüfen', 'Wasserleitungen vor dem Winter kontrollieren', 'Rauchmelder prüfen', 'Fenster und Türen kontrollieren', 'Außenwasser abstellen'];
     let obDraft = {};
+    // Versionswahl am Anfang der Einrichtung (gleiches Verhalten wie auf der Seite „Versionen“)
+    const OB_PLAN_TAGLINES = { free: 'Für dein erstes Ferienhaus', plus: 'Für Eigentümer mit mehr Überblick', pro: 'Mit Servicepartner-Portal', ultimate: 'Für Portfolios und Profis' };
+    function obPlanPrice(plan) {
+      if (!(Array.isArray(planCatalog) && planCatalog.length)) return plan.id === 'free' ? 'Kostenlos' : '';
+      return plan.price_monthly_cents ? `${(plan.price_monthly_cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2 })} ${plan.currency === 'EUR' ? '€' : plan.currency || '€'} / Monat` : 'Kostenlos';
+    }
+    function obPlanLimits(plan) {
+      const v = (key, one, many) => { const n = (plan.limits || {})[key]; return n === null || n === undefined ? `unbegrenzt ${many}` : `${n} ${Number(n) === 1 ? one : many}`; };
+      return `${v('properties', 'Haus', 'Häuser')} · ${v('tasks_active', 'Aufgabe', 'Aufgaben')}`;
+    }
+    function obChoosePlan(id) {
+      const plan = planDef(id);
+      if (id === currentPlanId()) return '';
+      if (id === 'free' && !planOverride) return '';
+      // Echte Bezahlung nur, wenn Stripe eingerichtet ist; in der Beta wird nur das Interesse vorgemerkt
+      if (plan.stripe_price_id && cloudReady()) {
+        if (paymentsDisabled()) { trackEvent('subscription_interest', { entity_type: 'plan', entity_ref: `plan:${id}`, metadata: { feature: `plan_${id}`.slice(0, 40), onboarding: true } }); return `Während der Beta gibt es keine Zahlungen – dein Interesse an ${plan.name} ist vorgemerkt. Du startest mit ${entitlements.plan().name}.`; }
+        setTimeout(() => openCheckoutConsent(id), 400);
+        return '';
+      }
+      planOverride = id === 'free' ? null : id;
+      try {
+        if (planOverride) { localStorage.setItem('stugliv-dev', '1'); localStorage.setItem('stugliv-test-plan', planOverride); }
+        else localStorage.removeItem('stugliv-test-plan');
+      } catch (error) { /* optional */ }
+      return `${plan.name} ist jetzt aktiv – ändern kannst du die Version jederzeit unter „Versionen“.`;
+    }
+    // Aufgabenpakete im Schritt „Aufgaben“
+    function obPackageInfo(item) {
+      const list = item.templates.map((id) => defaultAutoTemplates.find((t) => t.id === id) || item.snapshot?.find((t) => t.id === id)).filter(Boolean);
+      return { list, perYear: list.reduce((sum, t) => sum + templateYearlyCount(t), 0) };
+    }
+    function obApplyPackage(id) {
+      const item = SERVICE_PACKAGES.find((x) => x.id === id);
+      if (!item) return;
+      if (!entitlements.can('automation_basic')) { showToast(`Aufgabenpakete sind ab ${entitlements.minPlanFor('automation_basic').name} enthalten.`); return; }
+      const before = obUserTasks().length;
+      const created = applyServicePackage(id);
+      obTrack('activation_first_task_created', 'homeowner', 'task');
+      obMark('homeowner', 'task', 'completed', { metadata: { package: id, created: Math.max(created, obUserTasks().length - before) } });
+      obMark('homeowner', 'automation', 'completed', { metadata: { package: id } });
+      obDraft = {};
+      render();
+      obNext('task');
+      showToast(`Paket „${item.name}“ übernommen${created ? ` – ${created} ${created === 1 ? 'Aufgabe' : 'Aufgaben'} angelegt` : ''}. Weitere folgen automatisch zur passenden Jahreszeit.`);
+    }
     function openOnboarding(step = 0) {
       // Kompatibel zu bestehenden Einstiegen (Hilfe „Ersteinrichtung starten“, Demo-Banner, Erststart)
       const s = obState('homeowner');
@@ -18746,6 +18812,16 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       document.querySelector('#onboarding-modal .modal')?.scrollTo(0, 0);
     }
     const obNext = (key) => { const steps = OB_FLOWS.homeowner.steps; const i = obStepIndex('homeowner', key); obGo(steps[Math.min(steps.length - 1, i + 1)].key); };
+    function obPlanStep() {
+      const current = currentPlanId();
+      const chosen = PLAN_ORDER.includes(obDraft.plan) ? obDraft.plan : current;
+      const cards = PLAN_ORDER.map((id) => planDef(id)).map((plan) => `<button type="button" role="radio" aria-checked="${plan.id === chosen}" class="ob-plan ${plan.id === chosen ? 'on' : ''}" data-ob-plan="${escapeHtml(plan.id)}">${plan.id === current ? '<span class="ob-plan-tag">Aktuell</span>' : plan.highlight ? '<span class="ob-plan-tag">Beliebt</span>' : ''}<strong>${escapeHtml(plan.name)}</strong><span class="ob-plan-price">${escapeHtml(obPlanPrice(plan))}</span><small>${escapeHtml(plan.tagline || OB_PLAN_TAGLINES[plan.id] || '')}</small><small>${escapeHtml(obPlanLimits(plan))}</small>${(plan.highlights || []).length ? `<ul>${plan.highlights.slice(1, 4).map((h) => `<li>${escapeHtml(h)}</li>`).join('')}</ul>` : ''}</button>`).join('');
+      return `<h2 id="onboarding-title">Welche Version passt zu dir?</h2><p class="ob-lead">Husora gibt es in vier Versionen. Starte kostenlos mit FREE oder wähle mehr Umfang – wechseln kannst du jederzeit unter „Versionen“.</p>
+        <div class="ob-plans" role="radiogroup" aria-label="Versionen">${cards}</div>
+        <details class="ob-more-box"><summary>Alle Funktionen vergleichen</summary>${planMatrixHtml(chosen)}</details>
+        ${paymentsDisabled() && PLAN_ORDER.some((id) => planDef(id).stripe_price_id) ? '<p class="settings-hint">Während der Beta fallen keine Kosten an.</p>' : ''}
+        <div class="ob-actions ob-actions-shell"><button type="button" class="secondary-btn" data-ob-plan-back>Zurück</button><div class="ob-actions-main"><button type="button" class="primary-btn" data-ob-plan-next>Weiter mit ${escapeHtml(planDef(chosen).name)}</button></div></div>`;
+    }
     function renderOnboarding() {
       const body = document.getElementById('onboarding-body');
       const flow = OB_FLOWS.homeowner;
@@ -18757,7 +18833,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const house = obPrimaryHouse();
       const doneBadge = s.steps[step.key] === 'completed' ? '<p class="ob-done-note">✓ Bereits erledigt – du kannst dir den Schritt erneut ansehen.</p>' : '';
       const R = {
-        welcome: () => `<div class="ob-hero">${icon('home')}</div><h2 id="onboarding-title">Willkommen bei Husora</h2><p class="ob-lead">Dein Ferienhaus verdient gute Betreuung. Mit Husora verwaltest du dein Haus, planst Wartungsarbeiten, organisierst Kontrollen und findest passende Servicepartner – alles an einem Ort.</p>
+        welcome: () => obDraft.phase === 'plan' ? obPlanStep() : `<div class="ob-hero">${icon('home')}</div><h2 id="onboarding-title">Willkommen bei Husora</h2><p class="ob-lead">Dein Ferienhaus verdient gute Betreuung. Mit Husora verwaltest du dein Haus, planst Wartungsarbeiten, organisierst Kontrollen und findest passende Servicepartner – alles an einem Ort.</p>
           <ul class="ob-points"><li>${icon('property')}<span><strong>Haus & Hausprofil</strong> in wenigen Minuten angelegt</span></li><li>${icon('task')}<span><strong>Aufgaben & Wartung</strong> mit Erinnerungen</span></li><li>${icon('inspection')}<span><strong>Hauskontrolle</strong> und Servicepartner in der Nähe</span></li></ul>
           <h3 class="ob-role-title">Wie möchtest du Husora nutzen?</h3>
           <div class="ob-roles"><button type="button" data-ob-role="owner">${icon('home')}<span><strong>Hausbesitzer – jetzt starten</strong><small>Eigenes Ferienhaus verwalten und Servicepartner beauftragen</small></span></button><button type="button" data-ob-role="partner">${icon('users')}<span><strong>Servicepartner</strong><small>Aufträge von Hausbesitzern annehmen und erledigen</small></span></button></div>
@@ -18803,9 +18879,21 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             ${nav('<button type="button" class="primary-btn" data-ob-profile-save>Speichern & weiter</button>')}`;
         },
         task: () => {
+          if ((obDraft.taskMode || 'package') === 'package') {
+            const canAuto = entitlements.can('automation_basic');
+            const pick = SERVICE_PACKAGES.find((x) => x.id === obDraft.pkg) || SERVICE_PACKAGES.find((x) => x.id === autoTasks.packageId) || SERVICE_PACKAGES.find((x) => x.id === (profileData.usage === 'self' ? 'komfort' : 'vermietung')) || SERVICE_PACKAGES[0];
+            const info = obPackageInfo(pick);
+            return `<h2 id="onboarding-title">Deine Aufgaben</h2>${doneBadge}<p class="ob-lead">Starte mit einem Aufgabenpaket: typische Jahresaufgaben für dein Ferienhaus, die Husora automatisch zur passenden Zeit anlegt.</p>
+              <div class="ob-seg" role="tablist" aria-label="Art der Aufgaben"><button type="button" role="tab" aria-selected="true" class="on" data-ob-task-mode="package">Aufgabenpaket</button><button type="button" role="tab" aria-selected="false" data-ob-task-mode="single">Einzelne Aufgabe</button></div>
+              <div class="ob-pkgs" role="radiogroup" aria-label="Aufgabenpakete">${SERVICE_PACKAGES.map((item) => { const i = obPackageInfo(item); return `<button type="button" role="radio" aria-checked="${item === pick}" class="ob-pkg ${item === pick ? 'on' : ''}" data-ob-pkg="${escapeHtml(item.id)}"><strong>${escapeHtml(item.name)}${item.custom ? ' · Eigenes' : ''}</strong><small>${escapeHtml(item.tagline || '')}</small><span class="ob-pkg-meta">${i.list.length} Aufgaben · ≈ ${i.perYear} Einsätze pro Jahr</span></button>`; }).join('')}</div>
+              <details class="ob-more-box"><summary>Aufgaben im Paket „${escapeHtml(pick.name)}“ ansehen</summary><ul class="ob-pkg-list">${info.list.map((t) => `<li>${escapeHtml(t.title)} <small>· ${escapeHtml(templateSeasonLabel(t))}</small></li>`).join('')}</ul></details>
+              ${canAuto ? `<p class="settings-hint">Gilt für alle deine Häuser. Unter „Anpassen“ wählst du einzelne Aufgaben ab oder ergänzt eigene.</p>` : `<p class="ob-note">Aufgabenpakete legen Aufgaben automatisch an – das ist ab ${escapeHtml(entitlements.minPlanFor('automation_basic').name)} enthalten. Du nutzt gerade ${escapeHtml(entitlements.plan().name)}. Wähle eine andere Version oder lege eine einzelne Aufgabe an.</p>`}
+              ${nav(canAuto ? `<button type="button" class="primary-btn" data-ob-pkg-apply="${escapeHtml(pick.id)}">Paket übernehmen</button>` : '<button type="button" class="primary-btn" data-ob-plan-change>Version wählen</button>', { secondary: canAuto ? `<button type="button" class="secondary-btn" data-ob-pkg-edit="${escapeHtml(pick.id)}">Anpassen</button>` : '<button type="button" class="secondary-btn" data-ob-task-mode="single">Einzelne Aufgabe</button>' })}`;
+          }
           const repeat = document.querySelector('#task-form [name="repeat"]')?.innerHTML || '<option>Einmalig</option>';
           const due = obDraft.date || localDateKey(new Date(Date.now() + 14 * 86400000));
-          return `<h2 id="onboarding-title">Deine erste Aufgabe</h2>${doneBadge}<p class="ob-lead">Lege eine Wartungsaufgabe an oder nutze eine passende Vorlage.</p>
+          return `<h2 id="onboarding-title">Deine Aufgaben</h2>${doneBadge}<p class="ob-lead">Lege eine Wartungsaufgabe an oder nutze eine passende Vorlage.</p>
+            <div class="ob-seg" role="tablist" aria-label="Art der Aufgaben"><button type="button" role="tab" aria-selected="false" data-ob-task-mode="package">Aufgabenpaket</button><button type="button" role="tab" aria-selected="true" class="on" data-ob-task-mode="single">Einzelne Aufgabe</button></div>
             <div class="ob-chips" role="group" aria-label="Vorlagen">${OB_TASK_TEMPLATES.map((t) => `<button type="button" class="${obDraft.title === t ? 'on' : ''}" data-ob-template="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}</div>
             <form class="ob-form" data-ob-form="task">
               <label><span class="form-label">Aufgabe *</span><input class="form-control" name="title" maxlength="120" required value="${escapeHtml(obDraft.title || '')}" placeholder="z. B. Rauchmelder prüfen"></label>
@@ -18969,6 +19057,34 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const tpl = target.closest('[data-ob-template]');
       if (tpl) { obDraft.title = tpl.dataset.obTemplate; const input = document.querySelector('[data-ob-form="task"] [name="title"]'); if (input) input.value = obDraft.title; document.querySelectorAll('[data-ob-template]').forEach((b) => b.classList.toggle('on', b === tpl)); return true; }
       if (target.closest('[data-ob-task-save]')) { obSaveTask(); return true; }
+      const planBtn = target.closest('[data-ob-plan]');
+      if (planBtn) { obDraft.plan = planBtn.dataset.obPlan; renderOnboarding(); return true; }
+      if (target.closest('[data-ob-plan-back]')) { const back = obDraft.back; obDraft = {}; if (back) obGo(back); else renderOnboarding(); return true; }
+      if (target.closest('[data-ob-plan-next]')) {
+        const id = PLAN_ORDER.includes(obDraft.plan) ? obDraft.plan : currentPlanId();
+        const note = obChoosePlan(id);
+        const back = obDraft.back;
+        obMark('homeowner', 'welcome', 'completed', { metadata: { plan: id } });
+        obDraft = {};
+        render();
+        obGo(back || 'property');
+        if (note) showToast(note);
+        return true;
+      }
+      if (target.closest('[data-ob-plan-change]')) { obDraft = { phase: 'plan', back: 'task' }; obGo('welcome'); return true; }
+      const mode = target.closest('[data-ob-task-mode]');
+      if (mode) { obDraft.taskMode = mode.dataset.obTaskMode; renderOnboarding(); return true; }
+      const pkg = target.closest('[data-ob-pkg]');
+      if (pkg) { obDraft.pkg = pkg.dataset.obPkg; renderOnboarding(); return true; }
+      const pkgApply = target.closest('[data-ob-pkg-apply]');
+      if (pkgApply) { obApplyPackage(pkgApply.dataset.obPkgApply); return true; }
+      const pkgEdit = target.closest('[data-ob-pkg-edit]');
+      if (pkgEdit) {
+        obMark('homeowner', null, null, { current: 'task' }); obReturnPending = { role: 'homeowner', watch: 'task', tasks: obUserTasks().length };
+        closeOnboarding(); openTemplatePicker();
+        document.querySelector(`#package-modal [data-pkg-choose="${CSS.escape(pkgEdit.dataset.obPkgEdit)}"]`)?.click();
+        return true;
+      }
       if (target.closest('[data-ob-task-form]')) { obMark('homeowner', null, null, { current: 'task' }); obReturnPending = { role: 'homeowner', watch: 'task', tasks: obUserTasks().length }; closeOnboarding(); openTaskModal(); return true; }
       const page = target.closest('[data-ob-open-page]');
       if (page) { const st = OB_FLOWS.homeowner.steps[onboardingStep]; obOpenFeature(page.dataset.obOpenPage, st?.key); return true; }
@@ -19177,7 +19293,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const role = obRole.dataset.obRole;
         ppSetMode(role);
         if (role === 'partner') { onboardingState = { status: 'done', role: 'partner', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); closeOnboarding(); ppOpen('dashboard'); return; }
-        obMark('homeowner', 'welcome', 'completed'); obGo('property'); return;
+        obDraft.phase = 'plan'; renderOnboarding(); document.querySelector('#onboarding-modal .modal')?.scrollTo(0, 0); return;
       }
       if (target.closest('[data-ob-demo]')) { onboardingState = { status: 'demo', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); obMark('homeowner', null, null, { refs: { paused: true } }); closeOnboarding(); render(); return; }
       if (obOwnerClick(target)) return;
