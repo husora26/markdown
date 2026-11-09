@@ -7850,6 +7850,13 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       { id: 'outdoor', label: 'Grundstück & Garten' },
       { id: 'season', label: 'Saison & Winter' },
       { id: 'admin', label: 'Verwaltung & Inventar' },
+      { id: 'k-outdoor', label: 'Kontrolle: Außenbereich' },
+      { id: 'k-roof', label: 'Kontrolle: Dach und Fassade' },
+      { id: 'k-windows', label: 'Kontrolle: Fenster und Türen' },
+      { id: 'k-indoor', label: 'Kontrolle: Innenräume' },
+      { id: 'k-water', label: 'Kontrolle: Wasser und Sanitär' },
+      { id: 'k-tech', label: 'Kontrolle: Heizung und Elektrik' },
+      { id: 'k-security', label: 'Kontrolle: Sicherheit und Dokumentation' },
       { id: 'custom', label: 'Eigene Aufgaben' }
     ];
     const SEASONS = { all: { label: 'Ganzjährig', months: null }, spring: { label: 'Frühling (Apr–Mai)', months: [3, 4] }, summer: { label: 'Sommer (Jun–Aug)', months: [5, 6, 7] }, autumn: { label: 'Herbst (Sep–Nov)', months: [8, 9, 10] }, winter: { label: 'Winter (Dez–Mär)', months: [11, 0, 1, 2] } };
@@ -7878,15 +7885,54 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       { id: 'tpl-inventory', title: 'Inventar prüfen und Verbrauchsmaterial auffüllen', priority: 'normal', interval: 90, category: 'admin' },
       { id: 'tpl-firstaid', title: 'Erste-Hilfe-Set und Notfallnummern aktualisieren', priority: 'normal', interval: 365, category: 'admin' },
       { id: 'tpl-contracts', title: 'Versicherung, Strom-, Wasser- und Abfallverträge prüfen', priority: 'normal', interval: 365, category: 'admin', months: [0] },
-      { id: 'tpl-meter', title: 'Zählerstände ablesen und Verbrauch dokumentieren', priority: 'normal', interval: 90, category: 'admin' }
+      { id: 'tpl-meter', title: 'Zählerstände ablesen und Verbrauch dokumentieren', priority: 'normal', interval: 90, category: 'admin' },
+      // Ferienhauskontrolle: 35 Kontrollaufgaben (Sichtkontrolle und einfache Funktionstests, keine fachtechnische Prüfung)
+      { id: 'tpl-k01', title: 'Zustand von Grundstück und Garten kontrollieren', priority: 'normal', interval: 90, category: 'k-outdoor', control: true },
+      { id: 'tpl-k02', title: 'Bäume und Äste auf erkennbare Gefahren prüfen', priority: 'normal', interval: 180, category: 'k-outdoor', control: true },
+      { id: 'tpl-k03', title: 'Regenrinnen auf sichtbare Verstopfungen prüfen', priority: 'normal', interval: 180, category: 'k-outdoor', control: true },
+      { id: 'tpl-k04', title: 'Außenfassade auf sichtbare Schäden prüfen', priority: 'normal', interval: 90, category: 'k-outdoor', control: true },
+      { id: 'tpl-k05', title: 'Terrasse und Holzflächen kontrollieren', priority: 'normal', interval: 90, category: 'k-outdoor', control: true },
+      { id: 'tpl-k06', title: 'Auf sichtbare Schädlingsspuren achten', priority: 'normal', interval: 90, category: 'k-outdoor', control: true },
+      { id: 'tpl-k07', title: 'Dachziegel vom Boden aus auf sichtbare Schäden prüfen', priority: 'normal', interval: 90, category: 'k-roof', control: true },
+      { id: 'tpl-k08', title: 'Dachüberstände kontrollieren', priority: 'normal', interval: 180, category: 'k-roof', control: true },
+      { id: 'tpl-k09', title: 'Regenfallrohre kontrollieren', priority: 'normal', interval: 180, category: 'k-roof', control: true },
+      { id: 'tpl-k10', title: 'Holzfassade auf Anzeichen von Fäulnis prüfen', priority: 'normal', interval: 180, category: 'k-roof', control: true },
+      { id: 'tpl-k11', title: 'Sockelbereich auf sichtbare Feuchtigkeit prüfen', priority: 'normal', interval: 90, category: 'k-roof', control: true },
+      { id: 'tpl-k12', title: 'Fenster auf Beschädigungen prüfen', priority: 'normal', interval: 90, category: 'k-windows', control: true },
+      { id: 'tpl-k13', title: 'Außentüren kontrollieren', priority: 'normal', interval: 90, category: 'k-windows', control: true },
+      { id: 'tpl-k14', title: 'Schlösser und Verriegelungen testen', priority: 'soon', interval: 90, category: 'k-windows', control: true },
+      { id: 'tpl-k15', title: 'Fenster- und Türdichtungen sichtprüfen', priority: 'normal', interval: 180, category: 'k-windows', control: true },
+      { id: 'tpl-k16', title: 'Wände und Decken auf Feuchtigkeitsspuren prüfen', priority: 'soon', interval: 90, category: 'k-indoor', control: true },
+      { id: 'tpl-k17', title: 'Böden kontrollieren', priority: 'normal', interval: 90, category: 'k-indoor', control: true },
+      { id: 'tpl-k18', title: 'Auf sichtbare Schimmelspuren achten', priority: 'soon', interval: 90, category: 'k-indoor', control: true },
+      { id: 'tpl-k19', title: 'Möbel und Einrichtung auf erkennbare Schäden kontrollieren', priority: 'normal', interval: 90, category: 'k-indoor', control: true },
+      { id: 'tpl-k20', title: 'Raumtemperatur dokumentieren', priority: 'normal', interval: 30, category: 'k-indoor', control: true },
+      { id: 'tpl-k21', title: 'Hauptwasserleitung und zugängliche Anschlüsse auf sichtbare Lecks prüfen', priority: 'soon', interval: 30, category: 'k-water', control: true },
+      { id: 'tpl-k22', title: 'Wasserhähne auf Funktion prüfen', priority: 'normal', interval: 90, category: 'k-water', control: true },
+      { id: 'tpl-k23', title: 'Toiletten auf Funktion und sichtbare Undichtigkeiten prüfen', priority: 'normal', interval: 90, category: 'k-water', control: true },
+      { id: 'tpl-k24', title: 'Abflüsse auf freien Ablauf prüfen', priority: 'normal', interval: 90, category: 'k-water', control: true },
+      { id: 'tpl-k25', title: 'Warmwasserfunktion prüfen', priority: 'normal', interval: 90, category: 'k-water', control: true },
+      { id: 'tpl-k26', title: 'Heizungsanlage auf angezeigte Fehlermeldungen prüfen', priority: 'soon', interval: 30, category: 'k-tech', control: true },
+      { id: 'tpl-k27', title: 'Thermostate kontrollieren', priority: 'normal', interval: 90, category: 'k-tech', control: true },
+      { id: 'tpl-k28', title: 'Elektrische Anlagen äußerlich auf erkennbare Schäden prüfen', priority: 'normal', interval: 90, category: 'k-tech', control: true, detail: 'Nur Sichtprüfung – Arbeiten an elektrischen Anlagen nur durch Elektrofachkräfte.' },
+      { id: 'tpl-k29', title: 'Rauchmelder nach Herstellerangaben testen', priority: 'urgent', interval: 180, category: 'k-tech', control: true },
+      { id: 'tpl-k30', title: 'CO-Melder nach Herstellerangaben testen', priority: 'urgent', interval: 180, category: 'k-tech', control: true },
+      { id: 'tpl-k31', title: 'Sicherungen und Verteiler äußerlich prüfen', priority: 'normal', interval: 180, category: 'k-tech', control: true, detail: 'Nur Sichtprüfung – Arbeiten an elektrischen Anlagen nur durch Elektrofachkräfte.' },
+      { id: 'tpl-k32', title: 'Türen und Fenster auf ordnungsgemäßen Verschluss prüfen', priority: 'soon', interval: 30, category: 'k-security', control: true },
+      { id: 'tpl-k33', title: 'Schlüsselbestand kontrollieren', priority: 'normal', interval: 90, category: 'k-security', control: true },
+      { id: 'tpl-k34', title: 'Innen- und Außenfotos zur Dokumentation erstellen', priority: 'normal', interval: 90, category: 'k-security', control: true },
+      { id: 'tpl-k35', title: 'Kontrollbericht vollständig ausfüllen und übermitteln', priority: 'normal', interval: 90, category: 'k-security', control: true }
     ].map((template) => ({ selected: false, ...template, builtin: true }));
     // Diese früheren Vorlagen sind in der Abwesenheitskontrolle bzw. der Wintercheckliste enthalten und entfallen daher.
     const COVERED_BY_INSPECTION = ['tpl-water', 'tpl-frost', 'tpl-furniture'];
+    // Ferienhauskontrolle (35 Punkte) als Grundlage der Pakete; ersetzt die früheren Sammelvorlagen für Rauchmelder, Schlösser und Dachrinnen
+    const KONTROLLE_IDS = defaultAutoTemplates.filter((template) => template.control).map((template) => template.id);
+    const PKG_BASIS = ['tpl-k03', 'tpl-k07', 'tpl-k14', 'tpl-k16', 'tpl-k21', 'tpl-k26', 'tpl-k29', 'tpl-k30', 'tpl-k32', 'tpl-chimney', 'tpl-electric', 'tpl-boiler'];
     const SERVICE_PACKAGES = [
-      { id: 'basis', name: 'Basis', tagline: 'Sicherheit und Pflichttermine', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-boiler', 'tpl-gutter'] },
-      { id: 'komfort', name: 'Komfort', tagline: 'Basis plus Technik und Pflege', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-boiler', 'tpl-gutter', 'tpl-heatpump', 'tpl-ventilation', 'tpl-pests', 'tpl-windows', 'tpl-garden', 'tpl-deck', 'tpl-inventory'] },
-      { id: 'vermietung', name: 'Vermietung', tagline: 'Für Häuser mit wechselnden Gästen', templates: ['tpl-smoke', 'tpl-chimney', 'tpl-locks', 'tpl-electric', 'tpl-boiler', 'tpl-gutter', 'tpl-windows', 'tpl-pests', 'tpl-lawn', 'tpl-garden', 'tpl-inventory', 'tpl-firstaid', 'tpl-meter', 'tpl-contracts'] },
-      { id: 'premium', name: 'Rundum-sorglos', tagline: 'Alle typischen Jahresaufgaben', templates: defaultAutoTemplates.filter((template) => template.id !== 'tpl-boat').map((template) => template.id) }
+      { id: 'basis', name: 'Basis', tagline: 'Sicherheit, Wasser, Heizung und Pflichttermine', templates: PKG_BASIS },
+      { id: 'komfort', name: 'Komfort', tagline: 'Basis plus Haus, Technik und Pflege', templates: [...PKG_BASIS, 'tpl-k01', 'tpl-k04', 'tpl-k05', 'tpl-k06', 'tpl-k10', 'tpl-k11', 'tpl-k12', 'tpl-k15', 'tpl-k18', 'tpl-k20', 'tpl-k25', 'tpl-k27', 'tpl-heatpump', 'tpl-ventilation', 'tpl-deck', 'tpl-garden'] },
+      { id: 'vermietung', name: 'Vermietung', tagline: 'Basis plus alles, was Gäste merken', templates: [...PKG_BASIS, 'tpl-k13', 'tpl-k17', 'tpl-k18', 'tpl-k19', 'tpl-k22', 'tpl-k23', 'tpl-k24', 'tpl-k25', 'tpl-k33', 'tpl-k34', 'tpl-windows', 'tpl-lawn', 'tpl-garden', 'tpl-inventory', 'tpl-firstaid', 'tpl-meter', 'tpl-contracts'] },
+      { id: 'premium', name: 'Rundum-sorglos', tagline: 'Komplette Ferienhauskontrolle (35 Punkte) plus alle Jahresaufgaben', templates: [...KONTROLLE_IDS, ...defaultAutoTemplates.filter((template) => !template.control && !['tpl-boat', 'tpl-smoke', 'tpl-locks', 'tpl-gutter'].includes(template.id)).map((template) => template.id)] }
     ];
     const templateMonths = (template) => (Array.isArray(template.months) ? template.months : SEASONS[template.season]?.months || null);
     const templateCategory = (template) => TASK_CATEGORIES.find((item) => item.id === (template.builtin ? template.category : 'custom')) || TASK_CATEGORIES[TASK_CATEGORIES.length - 1];
@@ -7951,7 +7997,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           const spread = !last && !months && Number(template.interval) >= 90 ? (index % 8) * 7 : 0;
           const date = spread ? localIsoDate(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7 + spread)) : dueDate;
           const fromPackage = servicePackage && servicePackage.templates.includes(template.id);
-          added.push({ id: Date.now() + added.length, partnerId: suggestPartner(property.id, ['outdoor', 'season'].includes(templateCategory(template).id) ? 'outdoor' : 'maintenance'), title: template.title, property: property.name, date, priority: template.priority, area: templateCategory(template).label, description: fromPackage ? `Aus dem Servicepaket „${servicePackage.name}“.` : 'Wiederkehrende Aufgabe (individuell ergänzt).', done: false, status: 'Offen', repeat: 'Einmalig', auto: 'maintenance' });
+          added.push({ id: Date.now() + added.length, partnerId: suggestPartner(property.id, template.control ? 'inspection' : ['outdoor', 'season'].includes(templateCategory(template).id) ? 'outdoor' : 'maintenance'), title: template.title, property: property.name, date, priority: template.priority, area: templateCategory(template).label, description: [fromPackage ? `Aus dem Servicepaket „${servicePackage.name}“.` : 'Wiederkehrende Aufgabe (individuell ergänzt).', template.control ? 'Ferienhauskontrolle: Sichtkontrolle bzw. einfacher Funktionstest, ersetzt keine fachtechnische Prüfung. Nicht zugängliche oder nicht sicher prüfbare Punkte als „nicht geprüft“ vermerken.' : '', template.detail || ''].filter(Boolean).join(' '), done: false, status: 'Offen', repeat: 'Einmalig', auto: 'maintenance' });
           autoTasks.created[key] = todayIso;
         });
       });
