@@ -2511,8 +2511,6 @@
     .care-steps small { color: var(--muted); font-size: 12px; white-space: nowrap; }
     .care-progress { height: 5px; overflow: hidden; border-radius: 5px; background: #e4e9e3; }
     .care-progress span { display: block; height: 100%; border-radius: inherit; background: var(--green); }
-    .care-package summary { cursor: pointer; color: var(--green); font-size: 12.5px; font-weight: 700; }
-    .care-package[open] summary { margin-bottom: 6px; }
     .automation-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
     .automation-summary > div { display: flex; align-items: baseline; gap: 8px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); box-shadow: var(--shadow); }
     .automation-summary strong { color: var(--green); font-size: 26px; line-height: 1; }
@@ -7424,7 +7422,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const carePlanId = (value) => (CARE_PACKAGES.some((item) => item.id === value) ? value : '');
     function careControlHtml({ enabled, plan, form, bookingId, owner = false }) {
       const toggleAttrs = form ? 'name="careEnabled"' : `data-care-toggle="${escapeHtml(bookingId)}"`;
-      const planAttrs = form ? 'name="carePlan"' : `data-care-plan="${escapeHtml(bookingId)}"`;
       const steps = turnoverSteps().filter((step) => step.on && !(owner && step.id === 'welcome'));
       const linked = bookingId ? bookingTasks(bookingId) : [];
       const doneCount = linked.filter((task) => task.done).length;
@@ -7440,7 +7437,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }).join('')}</ul>`;
       return `<div class="care-box"><div class="care-head"><strong>${owner ? 'Vorbereitung & Reinigung automatisch planen' : 'Gästewechsel automatisch planen'}</strong><label class="currency-switch care-switch"><span class="${enabled ? '' : 'on'}">Aus</span><input type="checkbox" ${toggleAttrs} role="switch" aria-label="Gästewechsel automatisch planen" ${enabled ? 'checked' : ''}><span class="currency-track"></span><span class="${enabled ? 'on' : ''}">An</span></label></div>
         <div class="care-plan" data-care-plan-wrap ${enabled ? '' : 'hidden'}>${steps.length ? stepList : '<p class="care-note">In der Automatisierung sind alle Schritte ausgeschaltet.</p>'}${progress}
-        <details class="care-package"><summary>Husora Care Paket (optional)</summary><label><span class="form-label">Husora Care Paket</span><select class="form-control" ${planAttrs} aria-label="Husora Care Paket"><option value="">Kein Paket</option>${CARE_PACKAGES.map((item) => `<option value="${item.id}" ${item.id === plan ? 'selected' : ''}>${escapeHtml(item.name)} · in Planung</option>`).join('')}</select></label><p class="care-note">Mit einem Paket übernimmt künftig ein Husora-Servicepartner diese Schritte. Die Pakete werden noch festgelegt.</p></details>
         <p class="care-note">Husora legt die Schritte als Serviceaufgaben an und verschiebt sie, wenn sich die Buchung ändert. <button type="button" class="text-btn inline" data-page="automation">Schritte anpassen →</button></p></div></div>`;
     }
     const PORTAL_API = 'https://api.repull.dev';
