@@ -3690,7 +3690,19 @@
     .ob-check-text { flex: 1 1 auto; }
     .ob-check-text small { color: var(--muted); }
     .ob-check .text-btn { margin-left: auto; font-weight: 700; }
-    .ob-checklist { margin-bottom: 16px; border: 1.5px solid #cfe1d4; }
+    .ob-checklist { margin: 0 0 16px; border: 1.5px solid #cfe1d4; padding: 0; }
+    .ob-check-sum { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 16px; cursor: pointer; list-style: none; }
+    .ob-check-sum::-webkit-details-marker { display: none; }
+    .ob-check-sum-text { flex: 1 1 auto; display: grid; gap: 2px; min-width: 0; }
+    .ob-check-sum-text strong { font-size: 15px; }
+    .ob-check-sum-text small { color: var(--muted); font-size: 12.5px; }
+    .ob-ring { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; background: conic-gradient(var(--green) calc(var(--p) * 1%), #e3e1d9 0); -webkit-mask: radial-gradient(circle, transparent 9px, #000 10px); mask: radial-gradient(circle, transparent 9px, #000 10px); }
+    .ob-sum-btn { min-height: 38px !important; padding: 0 14px !important; font-size: 13px !important; }
+    .ob-sum-chev { color: var(--muted); transition: transform .2s; }
+    .ob-checklist[open] .ob-sum-chev { transform: rotate(180deg); }
+    .ob-checklist .ob-check { padding: 0 16px; }
+    .ob-check-foot { display: flex; justify-content: flex-end; padding: 4px 16px 12px; }
+    @media (prefers-reduced-motion: reduce) { .ob-sum-chev { transition: none; } }
     .ob-check-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
     .ob-check-head .card-caption { margin: 2px 0 0; }
     .ob-resume { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 60; display: flex; align-items: center; gap: 10px; width: max-content; max-width: calc(100vw - 24px); padding: 8px 8px 8px 14px; transform: translateX(-50%); border: 1px solid var(--line); border-radius: 999px; background: var(--paper, white); box-shadow: 0 10px 30px rgba(20, 30, 24, .18); font-size: 13px; }
@@ -5093,6 +5105,7 @@ html.dark .ob-note { background: #3a3320; color: #f0dfa8; }
 html.dark .ob-error { background: #4a2420; color: #f6c9c3; }
 html.dark .ob-next button { background: var(--paper); color: var(--ink); }
 html.dark .ob-checklist, html.dark .ob-guide { border-color: #3d5446; }
+html.dark .ob-ring { background: conic-gradient(var(--green) calc(var(--p) * 1%), #3a423d 0); }
 html.dark .ob-next button { background: #1c1c1c; }
 html.dark .demo-banner { border: 1px solid #675e37; color: #f9e5af; background: #312b13; }
 @media (max-width: 760px) {
@@ -5670,6 +5683,7 @@ Disposition – alle Aufträge, Mitarbeiter einteilen|Dispatch – all orders, a
 Dokument|Document|Dokument
 Dokumente|Documents|Dokument
 Dringende Mängel|Urgent defects|Akuta brister
+Checkliste ausblenden|Hide checklist|Dölj checklistan
 Reparaturen und Sanierungen (optional)|Repairs and renovations (optional)|Reparationer och renoveringar (valfritt)
 Bekannte Reparaturen / letzte Sanierungen|Known repairs / recent renovations|Kända reparationer / senaste renoveringar
 Geplante Sanierungen|Planned renovations|Planerade renoveringar
@@ -13218,7 +13232,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       updateProfileSummary();
       updateNotifyBadge();
       renderTabbar();
-      pageContent.innerHTML = (currentPage === 'dashboard' ? betaBannerHtml('owner') + obChecklistHtml() : '') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
+      pageContent.innerHTML = (currentPage === 'dashboard' ? betaBannerHtml('owner') : '') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
       if (currentPage === 'providers') trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `page:${localDateKey(new Date())}` });
       ensureBackButton();
       if (uiState) { uiRestore(pageContent, uiState); if (Math.abs(window.scrollY - uiScrollY) > 2) window.scrollTo(0, uiScrollY); }
@@ -18925,11 +18939,18 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const list = obOwnerChecklist();
       if (list.every((x) => x[2]) && s.status !== 'in_progress') return '';
       const core = list.filter((x) => x[3]); const coreDone = core.filter((x) => x[2]).length;
-      return `<section class="card ob-checklist" aria-labelledby="ob-check-title"><div class="ob-check-head"><div><h2 class="card-title" id="ob-check-title">Dein Husora-Start</h2><p class="card-caption">${coreDone} von ${core.length} wichtigen Aufgaben erledigt</p></div><button type="button" class="text-btn" data-ob-dismiss>Ausblenden</button></div>
-        <div class="ob-meter"><i style="width:${Math.round(list.filter((x) => x[2]).length / list.length * 100)}%"></i></div>
+      const pct = Math.round(list.filter((x) => x[2]).length / list.length * 100);
+      return `<details class="card ob-checklist" ${obChecklistOpen ? 'open' : ''}><summary class="ob-check-sum" aria-label="Dein Husora-Start: ${coreDone} von ${core.length} wichtigen Aufgaben erledigt">
+          <span class="ob-check-sum-text"><strong>Dein Husora-Start</strong><small>${coreDone} von ${core.length} wichtigen Aufgaben erledigt</small></span>
+          <span class="ob-ring" style="--p:${pct}" aria-hidden="true"></span>
+          ${s.status === 'in_progress' ? '<button type="button" class="primary-btn ob-sum-btn" data-ob-resume>Fortsetzen</button>' : ''}<span class="ob-sum-chev" aria-hidden="true">▾</span></summary>
         <ul class="ob-check">${list.map(([k, t, ok, crit]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span><span class="ob-check-text">${escapeHtml(t)}${crit ? '' : ' <small>(optional)</small>'}</span>${ok ? '' : `<button type="button" class="text-btn" data-ob-goto-step="${k}">Erledigen</button>`}</li>`).join('')}</ul>
-        ${s.status === 'in_progress' ? '<div class="settings-actions"><button type="button" class="primary-btn" data-ob-resume>Einrichtung fortsetzen</button></div>' : ''}</section>`;
+        <div class="ob-check-foot"><button type="button" class="text-btn" data-ob-dismiss>Checkliste ausblenden</button></div></details>`;
     }
+    let obChecklistOpen = false;
+    // Knöpfe in der Zusammenfassungszeile sollen nicht gleichzeitig auf-/zuklappen; Zustand merken
+    document.addEventListener('click', (event) => { if (event.target.closest('.ob-check-sum [data-ob-resume]')) event.preventDefault(); }, true);
+    document.addEventListener('toggle', (event) => { if (event.target.classList?.contains('ob-checklist')) obChecklistOpen = event.target.open; }, true);
     function obOwnerClick(target) {
       if (target.closest('[data-ob-pause]')) { obMark('homeowner', null, null, { refs: { paused: true } }); closeOnboarding(); render(); showToast('Du kannst die Einrichtung jederzeit über die Übersicht fortsetzen.'); return true; }
       if (target.closest('[data-ob-prev]')) { obGo(OB_FLOWS.homeowner.steps[Math.max(0, onboardingStep - 1)].key); return true; }
@@ -19057,7 +19078,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       };
     }
 
-    const dashboardExtrasHtml = () => demoBannerHtml();
+    // Einrichtungs-Checkliste unter den Kacheln (kompakt), damit die Bildkacheln oben sichtbar bleiben
+    const dashboardExtrasHtml = () => demoBannerHtml() + obChecklistHtml();
 
     // --- Ereignisse ---
     document.addEventListener('click', (event) => {

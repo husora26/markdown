@@ -53,6 +53,10 @@ const { chromium } = require('playwright');
   await step('Dashboard-Checkliste aus echten Daten (2 von 3)', async () => {
     const t = await p.textContent('.ob-checklist'); if (!/2 von 3 wichtigen/.test(t)) throw new Error(t.slice(0, 160)); return '2 von 3';
   });
+  await step('Bildkacheln bleiben oben sichtbar, Checkliste kompakt darunter', async () => {
+    const r = await p.evaluate(() => { const tile = document.querySelector('#page-content .stat'); const list = document.querySelector('.ob-checklist'); return { tileTop: Math.round(tile.getBoundingClientRect().top), art: tile.querySelector('.stat-art')?.naturalWidth || 0, below: Boolean(tile.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING), open: list.open, h: Math.round(list.getBoundingClientRect().height) }; });
+    if (r.tileTop > 400 || !r.art || !r.below || r.open || r.h > 90) throw new Error(JSON.stringify(r)); return `erste Kachel bei ${r.tileTop}px, Checkliste ${r.h}px hoch`;
+  });
   await step('Pausiert: nach Neuladen kein automatisches Öffnen', async () => {
     await p.reload(); await p.waitForTimeout(700);
     if (await p.$eval('#onboarding-modal', (e) => e.classList.contains('open'))) throw new Error('offen'); return 'bleibt zu';
@@ -94,6 +98,7 @@ const { chromium } = require('playwright');
     if (await p.$eval('#onboarding-modal', (e) => e.classList.contains('open'))) throw new Error('offen'); return 'ok';
   });
   await step('Checkliste ausblenden bleibt ausgeblendet', async () => {
+    await p.click('.ob-checklist > summary .ob-check-sum-text'); await p.waitForTimeout(150);
     await p.click('.ob-checklist [data-ob-dismiss]'); await p.waitForTimeout(200);
     await p.reload(); await p.waitForTimeout(600);
     if (await p.$('.ob-checklist')) throw new Error('sichtbar'); return 'ok';
