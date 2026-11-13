@@ -3325,6 +3325,46 @@
     .pp-chart-bar { fill: #2f6b4f; }
     .pp-chart-axis { stroke: var(--line); stroke-width: 1; }
     .pp-chart-label { fill: var(--muted); font-size: 7px; text-anchor: middle; }
+    /* Rechnungen: Filter, Einnahmen-Diagramm, Detailansicht */
+    .pp-inv-filter { padding: 12px; }
+    .pp-inv-filter-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 10px; }
+    .pp-inv-filter-grid .form-control { min-height: 38px; padding: 6px 10px; font-size: 13.5px; }
+    @media (max-width: 560px) { .pp-inv-filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pp-inv-filter-grid label:first-child { grid-column: 1 / -1; } }
+    .pp-inv-filter-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-top: 10px; color: var(--muted); font-size: 12.5px; }
+    .pp-rev { margin: 0 0 16px; }
+    .pp-rev-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+    .pp-rev-head figcaption strong { display: block; font-size: 15px; }
+    .pp-rev-head figcaption small { color: var(--muted); font-size: 12.5px; }
+    .pp-rev-plot { position: relative; padding-top: 16px; }
+    .pp-rev-max { position: absolute; top: 0; left: 0; color: var(--muted); font-size: 11px; }
+    .pp-rev-bars { display: flex; align-items: stretch; gap: 2px; height: 150px; border-top: 1px dashed var(--line); }
+    .pp-rev-col { position: relative; display: flex; flex: 1 1 0; flex-direction: column; min-width: 0; outline: none; }
+    .pp-rev-stack { display: flex; flex: 1; flex-direction: column; justify-content: flex-end; gap: 2px; border-bottom: 1px solid var(--line); padding: 0 12%; }
+    .pp-rev-stack span { display: block; min-height: 2px; }
+    .pp-rev-stack span:first-child { border-radius: 4px 4px 0 0; }
+    .pp-rev-col small { display: block; height: 16px; margin-top: 4px; overflow: hidden; color: var(--muted); font-size: 10.5px; text-align: center; white-space: nowrap; }
+    .pp-rev-paid { background: #2a7a52; }
+    .pp-rev-open { background: #b9862a; }
+    .pp-rev-col:hover .pp-rev-stack, .pp-rev-col:focus-visible .pp-rev-stack { background: rgba(47, 107, 79, .07); border-radius: 4px 4px 0 0; }
+    .pp-rev-tip { position: absolute; bottom: calc(100% - 8px); left: 50%; z-index: 5; display: none; width: max-content; max-width: 220px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); box-shadow: 0 8px 22px rgba(35, 48, 39, .16); color: var(--ink); font-size: 12px; line-height: 1.4; transform: translateX(-50%); pointer-events: none; white-space: normal; }
+    .pp-rev-col:first-child .pp-rev-tip, .pp-rev-col:nth-child(2) .pp-rev-tip { left: 0; transform: none; }
+    .pp-rev-col:last-child .pp-rev-tip, .pp-rev-col:nth-last-child(2) .pp-rev-tip { left: auto; right: 0; transform: none; }
+    .pp-rev-col:hover .pp-rev-tip, .pp-rev-col:focus-visible .pp-rev-tip { display: block; }
+    .pp-rev-legend { margin-top: 8px; }
+    .pp-rev-legend i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 3px; vertical-align: -1px; }
+    .pp-rev-split { margin-top: 14px; }
+    .pp-rev-split h4 { margin: 0 0 6px; color: var(--muted); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; }
+    .pp-rev-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; min-height: 36px; padding: 4px 6px; border: 0; border-radius: 8px; background: none; color: var(--ink); font-size: 13px; text-align: left; cursor: pointer; }
+    .pp-rev-row.static { cursor: default; color: var(--muted); }
+    .pp-rev-row:not(.static):hover { background: var(--green-soft); }
+    .pp-rev-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pp-rev-row i { display: block; height: 8px; border-radius: 4px; background: #eeeae1; overflow: hidden; }
+    .pp-rev-row em { display: block; height: 100%; border-radius: 4px; background: #2a7a52; }
+    .pp-rev-row b { font-size: 12.5px; white-space: nowrap; }
+    .pp-facts .pp-inv-gross { font-size: 18px; }
+    .pp-facts strong .pp-badge { display: inline-block; margin-left: 6px; vertical-align: 1px; }
+    .pp-inv-doc-row { display: flex; align-items: center; gap: 10px; }
+    .pp-inv-preview { display: block; width: 100%; height: min(70vh, 640px); margin-top: 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
     .pp-prop-rows { display: grid; }
     .pp-prop-row { display: flex; justify-content: space-between; gap: 10px; align-items: center; width: 100%; padding: 9px 0; border: 0; border-top: 1px solid var(--line); background: none; color: inherit; text-align: left; cursor: pointer; }
     .pp-prop-row > span:first-child { display: grid; gap: 1px; min-width: 0; }
@@ -5067,6 +5107,10 @@ html.dark .pp-prio-text { color: #f7d9a1; }
 html.dark .pp-prio-text.urgent, html.dark .pp-prio-text.emergency { color: #e3a297; }
 html.dark .pp-statlegend b { color: var(--ink, #d9e4de); }
 html.dark .pp-chart-bar { fill: #b6dac9; }
+html.dark .pp-rev-paid, html.dark .pp-rev-row em { background: #3fa274; }
+html.dark .pp-rev-open { background: #c0841f; }
+html.dark .pp-rev-row i { background: rgba(148, 163, 184, .2); }
+html.dark .pp-rev-col:hover .pp-rev-stack, html.dark .pp-rev-col:focus-visible .pp-rev-stack { background: rgba(143, 196, 170, .1); }
 html.dark .pp-prop-row-side small { color: var(--ink, #d9e4de); }
 html.dark .issue-offer { border: 1px solid #736241; background: #332a16; }
 html.dark .issue-card.in_progress .issue-status { color: #9ebfe0; }
@@ -21968,6 +22012,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (d?.type === 'order') { const o = ppD('orders').find((x) => x.id === d.id); return ['Auftrag', o?.title || 'Auftrag']; }
       if (d?.type === 'inspection') { const i = ppD('inspections').find((x) => x.id === d.id); return ['Kontrolle', i?.property?.name || ppPropertyName(i?.property_id) || 'Kontrolle']; }
       if (d?.type === 'customer') return ['Kunde', (pp.ctx?.links || []).find((l) => l.organization_id === d.id)?.organization_name || ppCustomerLabel(ppD('customers').find((c) => c.id === d.id)) || 'Kunde'];
+      if (d?.type === 'invoice') return ['Rechnung', ppD('invoices').find((x) => x.id === d.id)?.invoice_number || 'Rechnung'];
       if (d?.type === 'chat') return ['Nachrichten', (pp.ctx?.links || []).find((l) => l.service_partner_id === d.id || l.organization_id === d.id)?.organization_name || 'Gespräch'];
       if (!pp.view || pp.view === 'dashboard') return null;
       return PP_VIEW_TITLES[pp.view] || ['Servicepartner', pp.view];
@@ -22258,6 +22303,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (pp.detail?.type === 'inspection') return ppInspectionDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'customer') return ppCustomerDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'chat') return ppChatHtml(pp.detail.id);
+      if (pp.detail?.type === 'invoice') return ppInvoiceDetailHtml(pp.detail.id);
       return ({ dashboard: ppDashboardHtml, setup: ppSetupHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, agreements: ppAgreementsHtml, defects: ppDefectsHtml, settings: ppSettingsHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
     }
     function ppOrderCard(o) {
@@ -22527,7 +22573,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ${ppSection('Nachrichten', `<div class="pp-thread">${thread.map((m) => `<div class="pp-bubble ${m.sender_user_id === ppMe() ? 'me' : ''}">${(m.document_id || m.photo_id) && /^📎/.test(m.message || '') ? '' : `<p>${escapeHtml(m.message)}</p>`}${chatAttachmentHtml(m, 'partner')}<small>${escapeHtml(m.sender_user_id === ppMe() ? 'Du' : ppMemberName(m.sender_user_id) || 'Kunde')} · ${escapeHtml(fmtDateTime(m.created_at))}${ppMsgDelBtn(m)}</small></div>`).join('') || '<p class="pp-muted">Noch keine Nachrichten.</p>'}</div>
           <form class="pp-send" data-pp-form="message" data-order="${o.id}" data-org="${o.organization_id}"><label class="secondary-btn pp-file chat-attach-pick" title="Foto oder Datei anhängen" aria-label="Foto oder Datei anhängen">📎<input type="file" accept="application/pdf,image/*,.doc,.docx,.xls,.xlsx" hidden data-pp-chat-attach="${o.id}"></label><input class="form-control" name="message" placeholder="Nachricht an den Kunden …" maxlength="2000" required><button class="primary-btn" type="submit" aria-label="Senden" ${ppDisabled()}>Senden</button></form>`)}
         ${ppSection('Verlauf', `<div class="order-events" data-order-events="${o.id}" data-side="partner">${orderEventsHtml(o, 'partner')}</div>`)}
-        ${[...ORDER_RUNNING, 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span>Rechnung ${escapeHtml(i.invoice_number || '')}${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
+        ${[...ORDER_RUNNING, 'completed'].includes(o.status) && (ppIsLead() || ppRole() === 'accounting') ? ppSection('Angebot & Rechnung', `${[...quotes.map((q) => `<div class="pp-row"><span>Angebot ${escapeHtml(q.quote_number || '')}</span><b>${escapeHtml(ppMoney(q.amount_gross, q.currency))}</b>${ppBadge(PP_QUOTE_STATUS, q.status)}</div>`), ...invoices.map((i) => `<div class="pp-row"><span><button type="button" class="text-btn" data-pp-open="invoice:${i.id}">Rechnung ${escapeHtml(i.invoice_number || '')}</button>${i.document_id ? ` <button type="button" class="text-btn" data-pp-action="invoice-pdf" data-id="${i.id}">${icon('document')} PDF</button>` : ''}</span><b>${escapeHtml(ppMoney(i.amount_gross, i.currency))}</b>${ppBadge(PP_INVOICE_STATUS, i.status)}</div>`)].join('')}
           ${pp.form === `finance:${o.id}` ? ppFinanceForm(o) : o.agreement_id ? `<p class="pp-hint">${icon('calendar')} Im Jahresvertrag – Abrechnung einmal jährlich unter „Mehr → Jahresverträge“.</p>` : `${ppOrderBilled(o) ? '<p class="pp-hint">Dieser Auftrag ist bereits abgerechnet – eine weitere Rechnung nur für Korrekturen oder Zusatzleistungen.</p>' : ''}<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="quote">Angebot</button><button type="button" class="primary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice">Rechnung erstellen</button><button type="button" class="secondary-btn" data-pp-action="finance-form" data-id="${o.id}" data-kind="invoice" data-mode="upload">${icon('document')} PDF-Rechnung hochladen</button></div>`}`) : ''}`;
     }
     // ----- Phase 8: Arbeitszeit, Material und Anfahrt je Auftrag, Mehrkosten zur Freigabe -----
@@ -23669,15 +23715,347 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const filter = event.target.closest('#partner-portal [data-pp-insp-filter]');
       if (filter) { pp.inspFilter = filter.dataset.ppInspFilter; pp.keepScroll = true; ppRender(); }
     });
-    function ppFinanceHtml() {
-      const row = (x, isInvoice) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); return `<button type="button" class="pp-item" ${o ? `data-pp-open="order:${o.id}"` : ''}><span class="pp-item-main"><strong>${isInvoice ? 'Rechnung' : 'Angebot'} ${escapeHtml((isInvoice ? x.invoice_number : x.quote_number) || '')}</strong><small>${escapeHtml([o?.title, ppPropertyName(x.property_id, o?.property?.name || ''), ppOwnerName(x.organization_id, x.property_id)].filter(Boolean).join(' · '))}</small><small>${isInvoice ? `${escapeHtml(x.invoice_date ? fmtDate(x.invoice_date) : '')}${x.due_date ? ` · fällig ${escapeHtml(fmtDate(x.due_date))}` : ''}` : x.valid_until ? `gültig bis ${escapeHtml(fmtDate(x.valid_until))}` : ''}</small></span><span class="pp-amount"><b>${escapeHtml(ppMoney(x.amount_gross, x.currency))}</b>${ppBadge(isInvoice ? PP_INVOICE_STATUS : PP_QUOTE_STATUS, x.status)}</span></button>`; };
-      const unpaid = ppD('invoices').filter((i) => ['received', 'approved', 'overdue'].includes(i.status));
-      const sum = (list) => list.reduce((s, x) => s + Number(x.amount_gross || 0), 0);
-      return `${ppBack()}<div class="pp-page-head"><h1>Angebote & Rechnungen</h1></div>
-        <div class="pp-tiles"><div class="pp-tile"><b>${escapeHtml(ppMoney(sum(unpaid)))}</b><span>offen (${unpaid.length})</span></div><div class="pp-tile"><b>${escapeHtml(ppMoney(sum(ppD('invoices').filter((i) => i.status === 'paid'))))}</b><span>bezahlt</span></div></div>
-        ${ppSection('Rechnungen', `<div class="pp-list">${ppSortFinance(ppD('invoices'), 'invoices').map((x) => row(x, true)).join('') || '<p class="pp-muted">Rechnungen erstellst du im jeweiligen Auftrag.</p>'}</div>`, ppSortSelect('invoices', ppD('invoices').length))}
-        ${ppSection('Angebote', `<div class="pp-list">${ppSortFinance(ppD('quotes'), 'quotes').map((x) => row(x, false)).join('') || '<p class="pp-muted">Noch keine Angebote.</p>'}</div>`, ppSortSelect('quotes', ppD('quotes').length))}`;
+    // ----- Rechnungen: Filter (Zeitraum, Haus, Kunde, Status), Einnahmen-Diagramm, Detailansicht mit Bearbeiten -----
+    pp.invFilter = pp.invFilter || { range: 'all', from: '', to: '', property: '', customer: '', status: '', currency: '' };
+    const PP_INV_RANGES = [['all', 'Gesamter Zeitraum'], ['month', 'Dieser Monat'], ['lastmonth', 'Letzter Monat'], ['quarter', 'Dieses Quartal'], ['year', 'Dieses Jahr'], ['lastyear', 'Letztes Jahr'], ['12m', 'Letzte 12 Monate'], ['custom', 'Eigener Zeitraum']];
+    const PP_INV_STATUS_FILTER = [['', 'Alle Status'], ['open', 'Offen'], ['paid', 'Bezahlt'], ['overdue', 'Überfällig'], ['cancelled', 'Storniert']];
+    const PP_INV_OPEN = ['received', 'approved', 'overdue'];
+    const ppInvDate = (i) => String(i.invoice_date || i.created_at || '').slice(0, 10);
+    const ppInvCounts = (i) => !['cancelled', 'draft'].includes(i.status);
+    function ppInvRange(f = pp.invFilter) {
+      const d = new Date(); const y = d.getFullYear(); const m = d.getMonth();
+      const key = (date) => localDateKey(date);
+      switch (f.range) {
+        case 'month': return [key(new Date(y, m, 1)), key(new Date(y, m + 1, 0))];
+        case 'lastmonth': return [key(new Date(y, m - 1, 1)), key(new Date(y, m, 0))];
+        case 'quarter': { const q = Math.floor(m / 3) * 3; return [key(new Date(y, q, 1)), key(new Date(y, q + 3, 0))]; }
+        case 'year': return [`${y}-01-01`, `${y}-12-31`];
+        case 'lastyear': return [`${y - 1}-01-01`, `${y - 1}-12-31`];
+        case '12m': return [key(new Date(y, m - 11, 1)), key(new Date(y, m + 1, 0))];
+        case 'custom': return [f.from || '', f.to || ''];
+        default: return ['', ''];
+      }
     }
+    const ppInvProperty = (i) => ppD('properties').find((p) => p.id === i.property_id);
+    const ppInvCustomerKey = (i) => (i.organization_id !== ppOrg()?.id ? `org:${i.organization_id}` : `own:${ppOwnCustomer(ppInvProperty(i))?.id || ''}`);
+    const ppInvCustomerLabel = (i) => ppOwnerName(i.organization_id, i.property_id);
+    const ppInvHouseLabel = (i) => ppPropertyName(i.property_id, ppD('orders').find((o) => o.id === i.service_order_id)?.property?.name || 'Objekt');
+    function ppInvFiltered({ ignoreStatus = false } = {}) {
+      const f = pp.invFilter;
+      const [from, to] = ppInvRange(f);
+      return ppD('invoices').filter((i) => {
+        const day = ppInvDate(i);
+        if (from && day < from) return false;
+        if (to && day > to) return false;
+        if (f.property && i.property_id !== f.property) return false;
+        if (f.customer && ppInvCustomerKey(i) !== f.customer) return false;
+        if (!ignoreStatus && f.status) {
+          if (f.status === 'open' && !PP_INV_OPEN.includes(i.status)) return false;
+          if (f.status !== 'open' && i.status !== f.status) return false;
+        }
+        return true;
+      });
+    }
+    const ppInvActive = () => { const f = pp.invFilter; return f.range !== 'all' || f.property || f.customer || f.status; };
+    function ppInvFilterHtml() {
+      const f = pp.invFilter;
+      const all = ppD('invoices');
+      const houses = [...new Map(all.map((i) => [i.property_id, ppInvHouseLabel(i)])).entries()].sort((a, b) => ppNaturalCompare(a[1], b[1]));
+      const customers = [...new Map(all.map((i) => [ppInvCustomerKey(i), ppInvCustomerLabel(i)])).entries()].sort((a, b) => ppNaturalCompare(a[1], b[1]));
+      const [from, to] = ppInvRange(f);
+      const opt = (list, current) => list.map(([v, l]) => `<option value="${escapeHtml(v)}" ${current === v ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('');
+      return `<div class="pp-card pp-inv-filter" role="search" aria-label="Rechnungen filtern"><div class="pp-inv-filter-grid">
+        <label><span class="form-label">Zeitraum</span><select class="form-control" data-pp-invf="range">${opt(PP_INV_RANGES, f.range)}</select></label>
+        <label><span class="form-label">Von</span><input class="form-control" type="date" data-pp-invf="from" value="${escapeHtml(from)}"></label>
+        <label><span class="form-label">Bis</span><input class="form-control" type="date" data-pp-invf="to" value="${escapeHtml(to)}"></label>
+        <label><span class="form-label">Haus</span><select class="form-control" data-pp-invf="property"><option value="">Alle Häuser</option>${opt(houses, f.property)}</select></label>
+        <label><span class="form-label">Kunde</span><select class="form-control" data-pp-invf="customer"><option value="">Alle Kunden</option>${opt(customers, f.customer)}</select></label>
+        <label><span class="form-label">Status</span><select class="form-control" data-pp-invf="status">${opt(PP_INV_STATUS_FILTER, f.status)}</select></label>
+      </div>${ppInvActive() ? `<div class="pp-inv-filter-foot"><small>${escapeHtml([from || to ? `${from ? fmtDateFull(from) : 'Anfang'} – ${to ? fmtDateFull(to) : 'heute'}` : '', f.property ? houses.find(([v]) => v === f.property)?.[1] : '', f.customer ? customers.find(([v]) => v === f.customer)?.[1] : ''].filter(Boolean).join(' · '))}</small><button type="button" class="text-btn" data-pp-invf-reset>Filter zurücksetzen</button></div>` : ''}</div>`;
+    }
+    // Einnahmen je Zeitabschnitt: bezahlt (unten) und offen (oben) gestapelt, in einer Währung
+    function ppInvChartHtml(list) {
+      const counted = list.filter(ppInvCounts);
+      if (!counted.length) return '';
+      const curCount = {}; counted.forEach((i) => { curCount[i.currency || 'EUR'] = (curCount[i.currency || 'EUR'] || 0) + 1; });
+      const currencies = Object.keys(curCount).sort((a, b) => curCount[b] - curCount[a]);
+      const cur = currencies.includes(pp.invFilter.currency) ? pp.invFilter.currency : currencies[0];
+      const rows = counted.filter((i) => (i.currency || 'EUR') === cur);
+      let [from, to] = ppInvRange();
+      const days = rows.map(ppInvDate).filter(Boolean).sort();
+      if (!from) from = days[0] || ppToday();
+      if (!to) to = ppToday() > (days[days.length - 1] || '') ? ppToday() : days[days.length - 1];
+      const start = new Date(`${from}T12:00:00`); const end = new Date(`${to}T12:00:00`);
+      const spanDays = Math.round((end - start) / 86400000) + 1;
+      const unit = spanDays <= 31 ? 'day' : spanDays <= 92 ? 'week' : spanDays <= 1100 ? 'month' : 'year';
+      const bucketKey = (day) => {
+        const d = new Date(`${day}T12:00:00`);
+        if (unit === 'day') return day;
+        if (unit === 'week') { const monday = new Date(d); monday.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return localDateKey(monday); }
+        if (unit === 'month') return day.slice(0, 7);
+        return day.slice(0, 4);
+      };
+      const buckets = [];
+      const cursor = new Date(start);
+      if (unit === 'week') cursor.setDate(cursor.getDate() - ((cursor.getDay() + 6) % 7));
+      if (unit === 'month') cursor.setDate(1);
+      if (unit === 'year') cursor.setMonth(0, 1);
+      for (let guard = 0; cursor <= end && guard < 400; guard += 1) {
+        buckets.push(bucketKey(localDateKey(cursor)));
+        if (unit === 'day') cursor.setDate(cursor.getDate() + 1);
+        else if (unit === 'week') cursor.setDate(cursor.getDate() + 7);
+        else if (unit === 'month') cursor.setMonth(cursor.getMonth() + 1);
+        else cursor.setFullYear(cursor.getFullYear() + 1);
+      }
+      const sums = buckets.map((b) => {
+        const inB = rows.filter((i) => bucketKey(ppInvDate(i)) === b);
+        const paid = inB.filter((i) => i.status === 'paid').reduce((s, i) => s + Number(i.amount_gross || 0), 0);
+        const open = inB.filter((i) => i.status !== 'paid').reduce((s, i) => s + Number(i.amount_gross || 0), 0);
+        return { b, paid, open, n: inB.length };
+      });
+      const max = Math.max(...sums.map((s) => s.paid + s.open), 0);
+      if (!max) return '';
+      const label = (b, long = false) => {
+        if (unit === 'day') return new Date(`${b}T12:00:00`).toLocaleDateString('de-DE', long ? { weekday: 'short', day: '2-digit', month: 'long', year: 'numeric' } : { day: 'numeric' });
+        if (unit === 'week') { const d = new Date(`${b}T12:00:00`); const e = new Date(d); e.setDate(d.getDate() + 6); return long ? `Woche ${fmtDateFull(b)} – ${fmtDateFull(localDateKey(e))}` : d.toLocaleDateString('de-DE', { day: 'numeric', month: 'numeric' }); }
+        if (unit === 'month') return new Date(`${b}-15T12:00:00`).toLocaleDateString('de-DE', long ? { month: 'long', year: 'numeric' } : { month: 'short' }).replace('.', '');
+        return b;
+      };
+      const step = Math.ceil(buckets.length / 12);
+      const unitText = { day: 'Tag', week: 'Woche', month: 'Monat', year: 'Jahr' }[unit];
+      const total = sums.reduce((s, x) => s + x.paid + x.open, 0);
+      const paidTotal = sums.reduce((s, x) => s + x.paid, 0);
+      const bars = sums.map((s, n) => {
+        const tip = `${label(s.b, true)}: ${ppMoney(s.paid + s.open, cur)}${s.n ? ` (${s.n} ${s.n === 1 ? 'Rechnung' : 'Rechnungen'}) · bezahlt ${ppMoney(s.paid, cur)} · offen ${ppMoney(s.open, cur)}` : ''}`;
+        return `<div class="pp-rev-col" tabindex="0" aria-label="${escapeHtml(tip)}"><div class="pp-rev-stack">${s.open ? `<span class="pp-rev-open" style="height:${(s.open / max) * 100}%"></span>` : ''}${s.paid ? `<span class="pp-rev-paid" style="height:${(s.paid / max) * 100}%"></span>` : ''}</div><small>${n % step === 0 ? escapeHtml(label(s.b)) : ''}</small><span class="pp-rev-tip" role="tooltip">${escapeHtml(tip)}</span></div>`;
+      }).join('');
+      // Verteilung nach Haus bzw. Kunde (nur wenn nicht schon danach gefiltert)
+      const breakdown = (keyOf, labelOf, field, title) => {
+        const map = new Map(); rows.forEach((i) => { const k = keyOf(i); const e = map.get(k) || { k, label: labelOf(i), sum: 0 }; e.sum += Number(i.amount_gross || 0); map.set(k, e); });
+        const list = [...map.values()].sort((a, b) => b.sum - a.sum);
+        if (list.length < 2) return '';
+        const top = list[0].sum || 1;
+        const shown = list.slice(0, 6); const rest = list.slice(6).reduce((s, e) => s + e.sum, 0);
+        return `<div class="pp-rev-split"><h4>${title}</h4>${shown.map((e) => `<button type="button" class="pp-rev-row" data-pp-invf-set="${field}" data-value="${escapeHtml(e.k)}" title="Nur ${escapeHtml(e.label)} anzeigen"><span>${escapeHtml(e.label)}</span><i><em style="width:${Math.max(2, (e.sum / top) * 100)}%"></em></i><b>${escapeHtml(ppMoney(e.sum, cur))}</b></button>`).join('')}${rest ? `<div class="pp-rev-row static"><span>Weitere (${list.length - 6})</span><i></i><b>${escapeHtml(ppMoney(rest, cur))}</b></div>` : ''}</div>`;
+      };
+      return `<figure class="pp-card pp-rev"><div class="pp-rev-head"><figcaption><strong>Einnahmen je ${unitText}</strong><small>${escapeHtml(ppMoney(total, cur))} gesamt · ${escapeHtml(ppMoney(paidTotal, cur))} bezahlt</small></figcaption>
+        ${currencies.length > 1 ? `<label class="pp-sort"><span>Währung</span><select class="form-control" data-pp-invf="currency">${currencies.map((c) => `<option value="${c}" ${c === cur ? 'selected' : ''}>${c}</option>`).join('')}</select></label>` : ''}</div>
+        <div class="pp-rev-plot"><span class="pp-rev-max">${escapeHtml(ppMoney(max, cur))}</span><div class="pp-rev-bars" role="img" aria-label="Einnahmen je ${unitText} in ${escapeHtml(cur)}">${bars}</div></div>
+        <div class="pp-statlegend pp-rev-legend"><span><i class="pp-rev-paid"></i>Bezahlt</span><span><i class="pp-rev-open"></i>Offen</span>${currencies.length > 1 ? `<span class="pp-muted">Nur Rechnungen in ${escapeHtml(cur)}</span>` : ''}</div>
+        ${pp.invFilter.property ? '' : breakdown((i) => i.property_id, ppInvHouseLabel, 'property', 'Nach Haus')}
+        ${pp.invFilter.customer ? '' : breakdown(ppInvCustomerKey, ppInvCustomerLabel, 'customer', 'Nach Kunde')}</figure>`;
+    }
+    function ppInvoiceRowHtml(x) {
+      const o = ppD('orders').find((y) => y.id === x.service_order_id);
+      return `<button type="button" class="pp-item" data-pp-open="invoice:${x.id}"><span class="pp-item-main"><strong>Rechnung ${escapeHtml(x.invoice_number || '')}</strong><small>${escapeHtml([o?.title || (ppD('invoiceLines').some((l) => l.invoice_id === x.id) ? 'Sammelrechnung' : x.agreement_id ? 'Jahresvertrag' : ''), ppInvHouseLabel(x), ppInvCustomerLabel(x)].filter(Boolean).join(' · '))}</small><small>${escapeHtml(x.invoice_date ? fmtDate(x.invoice_date) : '')}${x.due_date ? ` · fällig ${escapeHtml(fmtDate(x.due_date))}` : ''}</small></span><span class="pp-amount"><b>${escapeHtml(ppMoney(x.amount_gross, x.currency))}</b>${ppBadge(PP_INVOICE_STATUS, x.status)}</span></button>`;
+    }
+    function ppFinanceHtml() {
+      const quoteRow = (x) => { const o = ppD('orders').find((y) => y.id === x.service_order_id); return `<button type="button" class="pp-item" ${o ? `data-pp-open="order:${o.id}"` : ''}><span class="pp-item-main"><strong>Angebot ${escapeHtml(x.quote_number || '')}</strong><small>${escapeHtml([o?.title, ppPropertyName(x.property_id, o?.property?.name || ''), ppOwnerName(x.organization_id, x.property_id)].filter(Boolean).join(' · '))}</small><small>${x.valid_until ? `gültig bis ${escapeHtml(fmtDate(x.valid_until))}` : ''}</small></span><span class="pp-amount"><b>${escapeHtml(ppMoney(x.amount_gross, x.currency))}</b>${ppBadge(PP_QUOTE_STATUS, x.status)}</span></button>`; };
+      const list = ppInvFiltered();
+      const counted = list.filter(ppInvCounts);
+      const sumText = (rows) => { const t = {}; rows.forEach((x) => { t[x.currency || 'EUR'] = (t[x.currency || 'EUR'] || 0) + Number(x.amount_gross || 0); }); const parts = Object.entries(t).sort((a, b) => b[1] - a[1]).map(([c, v]) => ppMoney(v, c)); return parts.length ? parts.join(' · ') : ppMoney(0); };
+      const unpaid = counted.filter((i) => PP_INV_OPEN.includes(i.status));
+      const overdue = counted.filter((i) => i.status === 'overdue' || (PP_INV_OPEN.includes(i.status) && i.due_date && i.due_date < ppToday()));
+      const all = ppD('invoices');
+      return `${ppBack()}<div class="pp-page-head"><h1>Angebote & Rechnungen</h1></div>
+        <div class="pp-tiles"><div class="pp-tile"><b>${escapeHtml(sumText(counted))}</b><span>Einnahmen (${counted.length})</span></div><div class="pp-tile"><b>${escapeHtml(sumText(counted.filter((i) => i.status === 'paid')))}</b><span>bezahlt</span></div><div class="pp-tile"><b>${escapeHtml(sumText(unpaid))}</b><span>offen (${unpaid.length})</span></div><div class="pp-tile"><b>${overdue.length}</b><span>überfällig</span></div></div>
+        ${all.length ? ppInvFilterHtml() : ''}
+        ${ppInvChartHtml(pp.invFilter.status ? list : ppInvFiltered({ ignoreStatus: true }))}
+        ${ppSection(`Rechnungen${all.length ? ` (${list.length}${list.length !== all.length ? ` von ${all.length}` : ''})` : ''}`, `<div class="pp-list">${ppSortFinance(list, 'invoices').map(ppInvoiceRowHtml).join('') || `<p class="pp-muted">${all.length ? 'Keine Rechnungen für diese Filter.' : 'Rechnungen erstellst du im jeweiligen Auftrag.'}</p>`}</div>`, ppSortSelect('invoices', list.length))}
+        ${ppSection('Angebote', `<div class="pp-list">${ppSortFinance(ppD('quotes'), 'quotes').map(quoteRow).join('') || '<p class="pp-muted">Noch keine Angebote.</p>'}</div>`, ppSortSelect('quotes', ppD('quotes').length))}`;
+    }
+    document.addEventListener('change', (event) => {
+      const input = event.target.closest?.('#partner-portal [data-pp-invf]');
+      if (!input) return;
+      const field = input.dataset.ppInvf;
+      const f = pp.invFilter;
+      if (field === 'from' || field === 'to') { const [from, to] = ppInvRange(f); f.range = 'custom'; f.from = from; f.to = to; f[field] = input.value; if (f.from && f.to && f.from > f.to) { if (field === 'from') f.to = f.from; else f.from = f.to; } }
+      else if (field === 'range') { if (input.value === 'custom') { const [from, to] = ppInvRange(f); f.from = from; f.to = to; } f.range = input.value; }
+      else f[field] = input.value;
+      pp.uiKey = ''; pp.keepScroll = true; ppRender();
+    });
+    document.addEventListener('click', (event) => {
+      const reset = event.target.closest('#partner-portal [data-pp-invf-reset]');
+      const set = event.target.closest('#partner-portal [data-pp-invf-set]');
+      if (!reset && !set) return;
+      if (reset) pp.invFilter = { range: 'all', from: '', to: '', property: '', customer: '', status: '', currency: pp.invFilter.currency };
+      else pp.invFilter[set.dataset.ppInvfSet] = set.dataset.value;
+      pp.uiKey = ''; pp.keepScroll = true; ppRender();
+    });
+    // Detailansicht einer Rechnung
+    const ppInvLines = (inv) => ppD('invoiceLines').filter((l) => l.invoice_id === inv.id);
+    const ppInvDoc = (inv) => ppD('documents').find((d) => d.id === inv.document_id);
+    const ppInvGenerated = (inv, doc = ppInvDoc(inv)) => !!doc && doc.file_name === `Rechnung-${String(inv.invoice_number || '').replace(/[^\w-]+/g, '_')}.pdf`;
+    const ppInvOwn = (inv) => inv.organization_id === ppOrg()?.id;
+    const ppInvEditable = (inv) => ppCanBill() && (ppInvOwn(inv) || ['draft', 'received'].includes(inv.status));
+    const ppInvVat = (inv) => (Number(inv.amount_net) ? Math.round((Number(inv.tax_amount || 0) / Number(inv.amount_net)) * 1000) / 10 : 0);
+    function ppInvoiceDetailHtml(id) {
+      const inv = ppD('invoices').find((x) => x.id === id);
+      if (!inv) return `${ppBack()}${ppEmpty('Rechnung nicht gefunden', 'Die Rechnung wurde entfernt oder ist nicht mehr freigegeben.')}`;
+      const doc = ppInvDoc(inv);
+      const lines = ppInvLines(inv);
+      const order = ppD('orders').find((o) => o.id === inv.service_order_id);
+      const agreement = inv.agreement_id ? ppD('agreements').find((a) => a.id === inv.agreement_id) : null;
+      const money = (v) => ppMoney(v, inv.currency);
+      const bill = ppCanBill();
+      const editing = pp.form === `inv-edit:${inv.id}`;
+      const fact = (label, value, sub = '') => `<div><span>${escapeHtml(label)}</span><strong>${value}</strong>${sub ? `<small>${sub}</small>` : ''}</div>`;
+      const overdue = PP_INV_OPEN.includes(inv.status) && inv.due_date && inv.due_date < ppToday();
+      const ref = lines.length ? `Sammelrechnung · ${lines.length} Aufträge` : agreement ? `Jahresvertrag „${escapeHtml(agreement.title)}“` : order ? `<button type="button" class="text-btn" data-pp-open="order:${order.id}">${escapeHtml(order.title)}</button>` : '–';
+      const actions = !bill || editing ? '' : `<div class="pp-actions">
+        ${ppInvEditable(inv) && inv.status !== 'cancelled' ? `<button type="button" class="secondary-btn" data-pp-inv="edit" data-id="${inv.id}">${icon('edit')} Bearbeiten</button>` : ''}
+        ${PP_INV_OPEN.includes(inv.status) ? `<button type="button" class="primary-btn" data-pp-inv="paid" data-id="${inv.id}" ${ppDisabled()}>${icon('check')} Als bezahlt markieren</button>` : ''}
+        ${inv.status === 'paid' ? `<button type="button" class="secondary-btn" data-pp-inv="unpaid" data-id="${inv.id}" ${ppDisabled()}>Zahlung zurücknehmen</button>` : ''}
+        ${ppInvEditable(inv) && !['cancelled', 'paid'].includes(inv.status) ? `<button type="button" class="secondary-btn danger" data-pp-inv="cancel" data-id="${inv.id}" ${ppDisabled()}>Stornieren</button>` : ''}</div>
+        ${!ppInvEditable(inv) && !['cancelled', 'paid'].includes(inv.status) ? '<p class="pp-hint">Der Kunde hat diese Rechnung bereits freigegeben – Änderungen sind nur noch per Storno und neuer Rechnung möglich. Den Zahlungseingang kannst du weiterhin vermerken.</p>' : ''}`;
+      const preview = pp.invPreview?.id === inv.id && pp.invPreview.url ? `<iframe class="pp-inv-preview" src="${escapeHtml(pp.invPreview.url)}#view=FitH" title="Vorschau Rechnung ${escapeHtml(inv.invoice_number || '')}"></iframe>` : '';
+      return `${ppBack()}<div class="pp-detail-head"><div><span class="pp-eyebrow">Rechnung · ${escapeHtml(ppInvCustomerLabel(inv))}</span><h1>${escapeHtml(inv.invoice_number || 'Rechnung')}</h1></div>${ppBadge(PP_INVOICE_STATUS, inv.status)}</div>
+        ${editing ? ppInvoiceEditForm(inv) : ''}
+        <div class="pp-card"><div class="pp-facts">
+          ${fact('Kunde', escapeHtml(ppInvCustomerLabel(inv)))}${fact('Haus', escapeHtml(ppInvHouseLabel(inv)), escapeHtml(ppAddress(ppInvProperty(inv) || {}) || ''))}
+          ${fact('Rechnungsdatum', escapeHtml(inv.invoice_date ? fmtDateFull(inv.invoice_date) : '–'))}${fact('Fällig am', `${escapeHtml(inv.due_date ? fmtDateFull(inv.due_date) : '–')}${overdue ? ' <span class="pp-badge red">überfällig</span>' : ''}`)}
+          ${fact('Netto', escapeHtml(money(inv.amount_net)))}${fact(`MwSt. (${ppInvVat(inv).toLocaleString('de-DE')} %)`, escapeHtml(money(inv.tax_amount)))}
+          ${fact('Brutto', `<b class="pp-inv-gross">${escapeHtml(money(inv.amount_gross))}</b>`)}${fact('Bezug', ref)}
+          ${inv.paid_at ? fact('Bezahlt am', escapeHtml(fmtDateFull(inv.paid_at))) : ''}${inv.approved_at ? fact('Freigegeben am', escapeHtml(fmtDateFull(inv.approved_at))) : ''}
+          ${fact('Erstellt', escapeHtml(fmtDateTime(inv.created_at)))}${inv.updated_at && inv.updated_at.slice(0, 16) !== String(inv.created_at || '').slice(0, 16) ? fact('Zuletzt geändert', escapeHtml(fmtDateTime(inv.updated_at))) : ''}
+        </div>${actions}</div>
+        ${lines.length ? ppSection(`Positionen (${lines.length})`, `<div class="pp-list">${lines.map((l) => { const o = ppD('orders').find((x) => x.id === l.service_order_id); return `<button type="button" class="pp-item" ${o ? `data-pp-open="order:${o.id}"` : ''}><span class="pp-item-main"><strong>${escapeHtml(o?.title || 'Auftrag')}</strong><small>${escapeHtml([o?.order_number, o?.property?.name, o?.scheduled_at ? fmtDate(o.scheduled_at) : ''].filter(Boolean).join(' · '))}</small></span><span class="pp-amount"><b>${escapeHtml(money(l.amount_gross))}</b></span></button>`; }).join('')}</div>`) : ''}
+        ${ppSection('Dokument', doc ? `<div class="pp-card pp-inv-doc"><div class="pp-inv-doc-row"><span class="pp-item-icon">${icon('document')}</span><span class="pp-item-main"><strong>${escapeHtml(doc.file_name)}</strong><small>${escapeHtml([ppInvGenerated(inv, doc) ? 'von Husora erstellt' : 'eigenes PDF', doc.file_size ? `${Math.max(1, Math.round(doc.file_size / 1024))} KB` : '', doc.created_at ? fmtDate(doc.created_at) : ''].filter(Boolean).join(' · '))}</small></span></div>
+          <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-inv="preview" data-id="${inv.id}">${preview ? 'Vorschau schließen' : `${icon('search')} Vorschau`}</button><button type="button" class="primary-btn" data-pp-action="invoice-pdf" data-id="${inv.id}">${icon('document')} PDF öffnen</button></div>${preview}</div>` : '<p class="pp-muted">Zu dieser Rechnung liegt kein PDF vor.</p>')}`;
+    }
+    function ppInvoiceEditForm(inv) {
+      const lines = ppInvLines(inv);
+      const generated = ppInvGenerated(inv);
+      const amounts = !lines.length;
+      return `<form class="pp-card pp-form" data-pp-form="inv-edit" data-id="${inv.id}"><h3>Rechnung bearbeiten</h3><div class="pp-grid">
+        <label><span class="form-label">Rechnungsnummer</span><input class="form-control" name="number" required maxlength="40" value="${escapeHtml(inv.invoice_number || '')}"></label>
+        ${amounts ? ppCurrencySelect(inv.currency) : `<label><span class="form-label">Währung</span><input class="form-control" value="${escapeHtml(inv.currency)}" disabled></label>`}
+        <label><span class="form-label">Rechnungsdatum</span><input class="form-control" name="date" type="date" required value="${escapeHtml(inv.invoice_date || ppToday())}"></label>
+        <label><span class="form-label">Fällig am</span><input class="form-control" name="due" type="date" value="${escapeHtml(inv.due_date || '')}"></label>
+        ${amounts ? `<label><span class="form-label">Netto</span><input class="form-control" name="net" type="number" min="0" step="0.01" required value="${inv.amount_net ?? ''}"></label>
+        <label><span class="form-label">MwSt. %</span><input class="form-control" name="vat" type="number" min="0" max="50" step="0.5" required value="${ppInvVat(inv)}"></label>` : ''}
+        ${generated ? '' : `<label class="full pp-pdf-pick">${icon('document')}<span><strong>Korrigiertes PDF (optional)</strong><small>Ersetzt das bisherige PDF beim Kunden.</small><input class="form-control" type="file" name="pdf" accept="application/pdf,.pdf" style="margin-top:8px"></span></label>`}
+        ${ppInvOwn(inv) ? '' : '<label class="full"><span class="form-label">Hinweis an den Kunden</span><input class="form-control" name="note" maxlength="300" placeholder="z. B. Betrag korrigiert, Anfahrt war doppelt berechnet"></label>'}
+        </div><p class="pp-hint">${amounts ? 'Brutto wird automatisch berechnet. ' : 'Die Beträge einer Sammelrechnung ergeben sich aus den Aufträgen. '}${generated ? 'Husora erstellt das PDF mit den neuen Angaben neu.' : 'Ohne neues PDF bleibt das bisherige Dokument bestehen.'}${ppInvOwn(inv) ? '' : ' Dein Kunde bekommt eine Nachricht über die Korrektur.'}</p>
+        <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="cancel-form">Abbrechen</button><button class="primary-btn" type="submit" ${ppDisabled()}>${icon('check')} Änderungen speichern</button></div></form>`;
+    }
+    // Neues PDF ablegen, Rechnung darauf umstellen, altes Dokument entfernen
+    async function ppInvReplacePdf(inv, next, file) {
+      const old = ppInvDoc(inv);
+      const lines = ppInvLines(inv);
+      const anchorOrder = ppD('orders').find((o) => o.id === (inv.service_order_id || old?.service_order_id || lines[0]?.service_order_id)) || ppD('orders').find((o) => inv.agreement_id && o.agreement_id === inv.agreement_id);
+      if (!anchorOrder) throw new Error('Zum PDF fehlt der Auftrag – bitte neu laden.');
+      let dataUrl, name, size;
+      if (file) {
+        if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) throw new Error(`„${file.name}“ ist kein PDF.`);
+        if (file.size > 10 * 1024 * 1024) throw new Error(`„${file.name}“ ist größer als 10 MB.`);
+        dataUrl = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).replace(/^data:[^;,]*/, 'data:application/pdf')); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
+        name = file.name; size = file.size;
+      } else {
+        const agreement = inv.agreement_id ? ppD('agreements').find((a) => a.id === inv.agreement_id) : null;
+        const anchor = agreement ? { ...anchorOrder, title: agreement.title, scheduled_at: null } : anchorOrder;
+        const extra = lines.length ? { _lines: lines.map((l) => { const o = ppD('orders').find((x) => x.id === l.service_order_id); const vat = Number(next.amount_net) ? Number(next.tax_amount) / Number(next.amount_net) : 0; return { title: o?.title || 'Auftrag', house: o?.property?.name || '', date: o?.scheduled_at ? ppDayKey(o.scheduled_at) : '', net: Math.round((Number(l.amount_gross) / (1 + vat)) * 100) / 100 }; }) }
+          : agreement ? { _agreement: agreement.title, _period: `Laufzeit ${fmtDate(agreement.starts_on)} – ${fmtDate(agreement.ends_on)}` } : {};
+        const bytes = ppInvoicePdf(anchor, { ...inv, ...next, ...extra });
+        dataUrl = ppBytesToDataUrl(bytes, 'application/pdf');
+        name = `Rechnung-${String(next.invoice_number).replace(/[^\w-]+/g, '_')}.pdf`; size = bytes.length;
+      }
+      const path = `organization/${inv.organization_id}/property/${inv.property_id}/documents/${window.crypto?.randomUUID ? crypto.randomUUID() : Date.now()}.pdf`;
+      await cloudPutFile('husora-documents', path, dataUrl, 'application/pdf');
+      const [doc] = await ppInsert('documents', { organization_id: inv.organization_id, property_id: inv.property_id, service_order_id: anchorOrder.id, file_name: name, file_type: 'application/pdf', file_size: size, storage_bucket: 'husora-documents', storage_path: path, document_type: 'invoice' });
+      return { doc, old };
+    }
+    async function ppInvSaveEdit(inv, form) {
+      const fd = new FormData(form);
+      const v = Object.fromEntries(fd);
+      const lines = ppInvLines(inv);
+      const next = { invoice_number: String(v.number || '').trim(), invoice_date: v.date || null, due_date: v.due || null };
+      if (!next.invoice_number) throw new Error('Bitte eine Rechnungsnummer angeben.');
+      if (next.due_date && next.invoice_date && next.due_date < next.invoice_date) throw new Error('Das Fälligkeitsdatum liegt vor dem Rechnungsdatum.');
+      if (!lines.length) {
+        const net = Math.round(Number(v.net) * 100) / 100;
+        if (!(net >= 0) || v.net === '') throw new Error('Bitte einen gültigen Nettobetrag angeben.');
+        const tax = Math.round(net * Number(v.vat || 0)) / 100;
+        Object.assign(next, { amount_net: net, tax_amount: tax, amount_gross: Math.round((net + tax) * 100) / 100, currency: ['EUR', 'SEK'].includes(v.currency) ? v.currency : inv.currency });
+      }
+      if (next.invoice_number !== inv.invoice_number) {
+        const taken = (await cloudFetch(`/rest/v1/invoices?organization_id=eq.${inv.organization_id}&service_partner_id=eq.${inv.service_partner_id}&id=neq.${inv.id}&select=invoice_number&limit=1000`)).map((row) => row.invoice_number);
+        if (taken.includes(next.invoice_number)) throw new Error(`Die Rechnungsnummer „${next.invoice_number}“ hast du diesem Kunden schon gestellt.`);
+      }
+      const file = fd.get('pdf');
+      const hasFile = file && typeof file === 'object' && file.size > 0;
+      const changed = Object.keys(next).filter((k) => String(next[k] ?? '') !== String(inv[k] ?? ''));
+      if (!changed.length && !hasFile) return false;
+      const generated = ppInvGenerated(inv);
+      let replaced = null;
+      if (hasFile || (generated && changed.length)) replaced = await ppInvReplacePdf(inv, next, hasFile ? file : null);
+      try {
+        await ppPatch('invoices', inv.id, { ...next, ...(replaced ? { document_id: replaced.doc.id } : {}) });
+      } catch (error) {
+        if (replaced) {
+          await cloudFetch(`/rest/v1/documents?id=eq.${replaced.doc.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }).catch(() => {});
+          await cloudFetch('/storage/v1/object/husora-documents', { method: 'DELETE', body: { prefixes: [replaced.doc.storage_path] } }).catch(() => {});
+        }
+        if (/duplicate|unique|409/i.test(error.message)) throw new Error(`Die Rechnungsnummer „${next.invoice_number}“ ist bei diesem Kunden schon vergeben.`);
+        throw error;
+      }
+      if (replaced?.old) {
+        await cloudFetch(`/rest/v1/documents?id=eq.${replaced.old.id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }).catch(() => {});
+        await cloudFetch('/storage/v1/object/husora-documents', { method: 'DELETE', body: { prefixes: [replaced.old.storage_path] } }).catch(() => {});
+      }
+      if (!ppInvOwn(inv)) {
+        const orderId = inv.service_order_id || replaced?.doc?.service_order_id || lines[0]?.service_order_id || ppD('orders').find((o) => inv.agreement_id && o.agreement_id === inv.agreement_id)?.id;
+        const what = [changed.includes('amount_gross') ? `neuer Betrag ${ppMoney(next.amount_gross, next.currency)}` : '', changed.includes('invoice_number') ? `neue Nummer ${next.invoice_number}` : '', changed.includes('due_date') && next.due_date ? `zahlbar bis ${fmtDate(next.due_date)}` : '', replaced ? 'neues PDF' : ''].filter(Boolean).join(', ');
+        if (orderId) await ppInsert('messages', { organization_id: inv.organization_id, service_order_id: orderId, message: `Rechnung ${inv.invoice_number}${next.invoice_number !== inv.invoice_number ? ` → ${next.invoice_number}` : ''} wurde korrigiert${what ? ` (${what})` : ''}.${String(v.note || '').trim() ? ` ${String(v.note).trim()}` : ''}` }).catch(() => {});
+      }
+      return true;
+    }
+    async function ppInvSetStatus(inv, status) {
+      if (ppInvOwn(inv)) {
+        const body = status === 'paid' ? { status: 'paid', paid_at: new Date().toISOString() } : status === 'unpaid' ? { status: inv.approved_at || ppInvOwn(inv) ? 'approved' : 'received', paid_at: null } : { status: 'cancelled' };
+        await ppPatch('invoices', inv.id, body);
+        return;
+      }
+      await ppRpc('partner_set_invoice_status', { p_invoice_id: inv.id, p_status: status });
+    }
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('#partner-portal [data-pp-inv]');
+      if (!btn) return;
+      const inv = ppD('invoices').find((x) => x.id === btn.dataset.id);
+      if (!inv) return;
+      const kind = btn.dataset.ppInv;
+      if (kind === 'edit') { pp.form = `inv-edit:${inv.id}`; ppRender(); document.querySelector('#partner-portal .pp-main')?.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+      if (kind === 'preview') {
+        if (pp.invPreview?.id === inv.id) { URL.revokeObjectURL(pp.invPreview.url); pp.invPreview = null; pp.keepScroll = true; ppRender(); return; }
+        const doc = ppInvDoc(inv);
+        if (!doc) return;
+        cloudGetFile(`${CLOUD_FILE_PREFIX}${doc.storage_bucket}/${doc.storage_path}`).then((dataUrl) => fetch(String(dataUrl).replace(/^data:[^;,]*/, 'data:application/pdf'))).then((r) => r.blob()).then((blob) => {
+          if (pp.invPreview?.url) URL.revokeObjectURL(pp.invPreview.url);
+          pp.invPreview = { id: inv.id, url: URL.createObjectURL(blob) }; pp.keepScroll = true; ppRender();
+        }).catch((error) => showToast(`PDF nicht geladen: ${error.message}`));
+        return;
+      }
+      if (kind === 'cancel' && !confirm(`Rechnung ${inv.invoice_number || ''} stornieren? Sie bleibt zur Nachweisführung erhalten und zählt nicht mehr zu den Einnahmen.`)) return;
+      const status = kind === 'cancel' ? 'cancelled' : kind;
+      pp.keepScroll = true;
+      ppRun('invoice-status', async () => {
+        await ppInvSetStatus(inv, status);
+        if (status === 'cancelled' && !ppInvOwn(inv)) {
+          const orderId = inv.service_order_id || ppInvDoc(inv)?.service_order_id || ppInvLines(inv)[0]?.service_order_id;
+          if (orderId) await ppInsert('messages', { organization_id: inv.organization_id, service_order_id: orderId, message: `Rechnung ${inv.invoice_number} über ${ppMoney(inv.amount_gross, inv.currency)} wurde storniert.` }).catch(() => {});
+        }
+      }, { notice: status === 'paid' ? 'Zahlungseingang vermerkt.' : status === 'unpaid' ? 'Zahlung zurückgenommen.' : 'Rechnung storniert.' });
+    });
+    document.addEventListener('submit', (event) => {
+      const form = event.target.closest('#partner-portal [data-pp-form="inv-edit"]');
+      if (!form) return;
+      event.preventDefault();
+      const inv = ppD('invoices').find((x) => x.id === form.dataset.id);
+      if (!inv) return;
+      let saved = false;
+      ppRun('invoice-edit', async () => { saved = await ppInvSaveEdit(inv, form); pp.form = null; if (pp.invPreview?.url) { URL.revokeObjectURL(pp.invPreview.url); pp.invPreview = null; } })
+        .then(() => { if (!pp.error) showToast(saved ? 'Rechnung gespeichert.' : 'Keine Änderungen.'); });
+    });
     // Leistungspakete: Standard-Bereiche (Hauskontrolle, Servicearbeiten, Sanierungen) und eigene Pakete
     function ppPackages() {
       const org = ppOrg();
@@ -24638,9 +25016,33 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     function ownerBookInvoices(localProperty) {
       const isBooked = (inv) => expenses.some((e) => e.id === `expense-cloud-invoice-${inv.id}` || e.id.startsWith(`expense-cloud-invoice-${inv.id}-`));
+      const toLocal = (inv, gross) => Math.round((inv.currency === 'EUR' ? gross / (fxRate.rate || 0.09) : gross) * 100) / 100;
+      // Vom Partner korrigierte oder stornierte Rechnungen: bereits gebuchte Ist-Kosten nachziehen
+      let corrected = 0;
+      (ownerSide.invoices || []).forEach((inv) => {
+        if (inv.status === 'cancelled') {
+          const before = expenses.length;
+          expenses = expenses.filter((e) => e.id !== `expense-cloud-invoice-${inv.id}` && !e.id.startsWith(`expense-cloud-invoice-${inv.id}-`));
+          corrected += before - expenses.length;
+          return;
+        }
+        if (inv.lines?.length) return; // Sammelrechnung: Beträge je Auftrag
+        const idx = expenses.findIndex((e) => e.id === `expense-cloud-invoice-${inv.id}`);
+        if (idx < 0) return;
+        const e = expenses[idx];
+        const gross = Number(inv.amount_gross);
+        const next = { invoiceNo: inv.invoice_number || '', date: inv.invoice_date || e.date, originalAmount: gross, originalCurrency: inv.currency || 'SEK' };
+        if (e.invoiceNo !== next.invoiceNo || e.date !== next.date || Number(e.originalAmount) !== gross || e.originalCurrency !== next.originalCurrency) {
+          expenses[idx] = { ...e, ...next, amount: toLocal(inv, gross) };
+          corrected += 1;
+        }
+      });
+      if (corrected && persistExpenses()) {
+        showToast(corrected === 1 ? 'Eine Rechnung deines Servicepartners wurde korrigiert – Ist-Kosten aktualisiert.' : `${corrected} Rechnungen deiner Servicepartner wurden korrigiert – Ist-Kosten aktualisiert.`);
+        if (['costs', 'propertyDetail', 'dashboard'].includes(currentPage)) render();
+      }
       const fresh = (ownerSide.invoices || []).filter((inv) => ['received', 'approved', 'paid', 'overdue'].includes(inv.status) && Number(inv.amount_gross) > 0 && !isBooked(inv) && localProperty(inv));
       if (!fresh.length) return;
-      const toLocal = (inv, gross) => Math.round((inv.currency === 'EUR' ? gross / (fxRate.rate || 0.09) : gross) * 100) / 100;
       const booked = fresh.flatMap((inv) => {
         // Sammelrechnung: je Auftrag eine Buchung beim jeweiligen Haus
         if (inv.lines?.length) return inv.lines.map((line) => {
@@ -24674,7 +25076,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (ownerImporting) return;
       const localProperty = (inv) => properties.find((pr) => pr.id === inv.property?.app_ref) || properties.find((pr) => pr.name.trim().toLowerCase() === String(inv.property?.name || '').trim().toLowerCase());
       ownerBookInvoices(localProperty);
-      const fresh = (ownerSide.invoices || []).filter((inv) => inv.document && !documents.some((d) => d.id === `cloud-invoice-${inv.id}`) && localProperty(inv));
+      // neues PDF beim Partner (Korrektur): lokale Kopie ersetzen
+      const stale = (inv) => { const d = documents.find((x) => x.id === `cloud-invoice-${inv.id}`); return d && (d.cloudDocId ? d.cloudDocId !== inv.document.id : d.name !== inv.document.file_name); };
+      const fresh = (ownerSide.invoices || []).filter((inv) => inv.document && (!documents.some((d) => d.id === `cloud-invoice-${inv.id}`) || stale(inv)) && localProperty(inv));
       if (!fresh.length) return;
       ownerImporting = true;
       const added = [];
@@ -24683,10 +25087,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           try {
             let dataUrl = await cloudGetFile(`${CLOUD_FILE_PREFIX}${inv.document.storage_bucket}/${inv.document.storage_path}`);
             dataUrl = String(dataUrl).replace(/^data:[^;,]*/, 'data:application/pdf');
-            added.push({ id: `cloud-invoice-${inv.id}`, propertyId: localProperty(inv).id, name: inv.document.file_name, type: 'application/pdf', size: inv.document.file_size || Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75), dataUrl, category: 'invoice', createdIso: inv.invoice_date || localDateKey(new Date()), createdAt: new Intl.DateTimeFormat('de-DE').format(inv.invoice_date ? new Date(`${inv.invoice_date}T12:00:00`) : new Date()), partnerName: inv.partner?.company_name || '' });
+            added.push({ id: `cloud-invoice-${inv.id}`, cloudDocId: inv.document.id, propertyId: localProperty(inv).id, name: inv.document.file_name, type: 'application/pdf', size: inv.document.file_size || Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75), dataUrl, category: 'invoice', createdIso: inv.invoice_date || localDateKey(new Date()), createdAt: new Intl.DateTimeFormat('de-DE').format(inv.invoice_date ? new Date(`${inv.invoice_date}T12:00:00`) : new Date()), partnerName: inv.partner?.company_name || '' });
           } catch (error) { console.warn('Rechnungs-PDF nicht geladen:', error); }
         }
-        if (added.length) persistDocuments([...documents, ...added]);
+        if (added.length) persistDocuments([...documents.filter((d) => !added.some((a) => a.id === d.id)), ...added]);
         if (added.length) {
           showToast(added.length === 1 ? `Rechnung von ${added[0].partnerName || 'deinem Servicepartner'} erhalten – unter Dokumente beim Ferienhaus abgelegt.` : `${added.length} Rechnungen erhalten – unter Dokumente bei den Ferienhäusern abgelegt.`);
           if (currentPage === 'partnerHub') hubRerender(); else if (['documents', 'propertyDetail'].includes(currentPage)) render();
