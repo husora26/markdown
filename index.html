@@ -3171,12 +3171,10 @@
     .beta-stars input { position: absolute; opacity: 0; }
     .beta-stars span { font-size: 34px; line-height: 1; color: var(--line); cursor: pointer; transition: color .1s; }
     .beta-stars label:hover span, .beta-stars label:hover ~ label span, .beta-stars input:checked ~ span, .beta-stars label:has(input:checked) ~ label span { color: var(--amber); }
+    .welcome-compact { margin-bottom: 12px; }
+    .dash-hello { font-size: 22px; margin: 0; }
     .beta-auto { margin: 0; color: var(--muted); font-size: 12px; }
     .beta-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
-    .beta-premium-list { display: grid; gap: 8px; margin: 8px 0 12px; }
-    .beta-premium-item { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
-    .beta-premium-item > span { display: grid; gap: 2px; flex: 1 1 220px; }
-    .beta-premium-item small { color: var(--muted); }
     .beta-dash-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .beta-dash-head .card-title { display: flex; align-items: center; gap: 8px; }
     .beta-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
@@ -5277,7 +5275,7 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
           <div class="nav-menu-label">Menü</div>
           <nav class="nav" aria-label="Hauptnavigation">
             <button data-page="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/></svg><span>Benutzerprofil</span></button>
-            <button data-page="plans"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span>Versionen</span></button>
+            <button data-page="plans"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span>Tarife</span></button>
           <button class="active" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg><span>Übersicht</span></button>
             <button data-page="properties"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 21V5l8-2 8 2v16"/><path d="M8 8h2m4 0h2M8 12h2m4 0h2M10 21v-5h4v5"/></svg><span>Objektverwaltung</span></button>
             <button data-page="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h2m4 0h2m-8 3h2"/></svg><span>Kalender</span></button>
@@ -5341,12 +5339,6 @@ html.dark .house-tile-head { color: color-mix(in srgb, var(--tone) 72%, #f2f2f2)
       <p class="import-hint import-legal">Quelle: Die Daten stammen vom jeweiligen Maklerportal. Texte und Fotos können urheberrechtlich geschützt sein – Husora übernimmt sie nur zur privaten Verwaltung deines eigenen Objekts, nennt die Quelle und speichert sie nur auf deinem Gerät bzw. in deiner Cloud. Für den Abruf werden Daten an das Portal und ggf. an Weiterleitungs- und Übersetzungsdienste übertragen (Einwilligung „Externe Inhalte“).</p>
       <label class="consent-row"><input type="checkbox" id="import-rights"><span>Ich übernehme nur Daten zu meinem eigenen bzw. von mir verwalteten Objekt und nutze sie nicht öffentlich weiter.</span></label>
       <div class="form-actions"><button type="button" class="secondary-btn" id="import-cancel">Abbrechen</button><button type="button" class="primary-btn" id="import-run">Daten einlesen</button></div>
-    </section>
-  </div>
-  <div class="modal-backdrop" id="pro-modal" role="dialog" aria-modal="true" aria-labelledby="pro-modal-title">
-    <section class="modal pro-modal">
-      <div class="modal-head"><div><h2 id="pro-modal-title">Husora Pro erwerben</h2><p id="pro-modal-subtitle"></p></div><button class="close-btn" type="button" id="close-pro-modal" aria-label="Schließen">✕</button></div>
-      <div id="pro-modal-body"></div>
     </section>
   </div>
   <div class="modal-backdrop" id="control-positions-modal" role="dialog" aria-modal="true" aria-labelledby="control-positions-title">
@@ -6253,7 +6245,8 @@ Servicepartner finden|Find service partners|Hitta servicepartner
 Zugeordnete Servicepartner|Assigned service partners|Tilldelade servicepartner
 Notfall & Zugang|Emergency & access|Nödfall & åtkomst
 Benutzerprofil|User profile|Användarprofil
-Versionen|Plans|Abonnemang
+Versionen|Versions|Versioner
+Tarife|Plans|Abonnemang
 Hilfe & Support|Help & support|Hjälp & support
 Rechtliches|Legal|Juridiskt
 Hausmodell|House model|Husmodell
@@ -6439,6 +6432,8 @@ Standard wiederherstellen|Restore default|Återställ standard
 Startseite gestalten|Customise home screen|Anpassa startsidan
 Darstellung & Erinnerungen|Appearance & reminders|Utseende & påminnelser
 Cloud-Speicher (Supabase)|Cloud storage (Supabase)|Molnlagring (Supabase)
+Husora-Konto|Husora account|Husora-konto
+Sichert deine Daten und gleicht sie zwischen Handy, Tablet und Computer ab.|Backs up your data and keeps it in sync across phone, tablet and computer.|Säkerhetskopierar dina data och synkar dem mellan mobil, surfplatta och dator.
 Wiederkehrende Aufgaben (z. B. Rasen mähen, monatliche Kontrolle) zum festen Jahrespreis – einmal im Jahr abrechnen statt jeden Einsatz einzeln.|Recurring tasks (e.g. mowing, monthly inspection) at a fixed annual price – invoice once a year instead of every visit.|Återkommande uppgifter (t.ex. gräsklippning, månatlig tillsyn) till fast årspris – fakturera en gång per år istället för varje besök.
 Offene Mängel aus deinen Kontrollen – tippe einen Mangel an, um die Kontrolle zu öffnen.|Open defects from your inspections – tap a defect to open the inspection.|Öppna brister från dina tillsyner – tryck på en brist för att öppna tillsynen.
 Gilt für die ganze App (Hausbesitzer- und Partner-Ansicht) auf diesem Gerät. Eigene Einträge wie Namen, Adressen und Notizen werden nicht übersetzt.|Applies to the whole app (homeowner and partner view) on this device. Your own entries such as names, addresses and notes are not translated.|Gäller hela appen (husägar- och partnervy) på denna enhet. Egna uppgifter som namn, adresser och anteckningar översätts inte.
@@ -8377,15 +8372,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const visibleStays = () => (bookingsEnabled() ? bookings : bookings.filter(isOwnerStay));
     const staysLabel = () => (bookingsEnabled() ? 'Buchungen' : 'Eigennutzung');
     const singleHouse = () => Number(profileData.houseCount) === 1;
-    // Konfiguration für Husora Pro. Mit client-id "sb" läuft PayPal im Testmodus (Sandbox).
-    const PAYPAL_CONFIG = { clientId: 'sb', currency: 'EUR', supportEmail: '' };
-    // Weitere Versionen: einfach einen Eintrag ergänzen. Unterstützt werden Einmalzahlungen (billing: 'once').
-    const PLANS = [
-      { id: 'free', name: 'Husora Free', tagline: 'Für dein erstes Ferienhaus', price: '0', billing: 'free', houseLimit: 1, paid: false, features: ['1 Ferienhaus verwalten', 'Objektverwaltung, Kalender und Aufgaben', 'Hauskontrolle und Dokumente', 'Servicepartner finden und zuordnen'] },
-      { id: 'pro', name: 'Husora Pro', tagline: 'Für mehrere Ferienhäuser', price: '29.00', billing: 'once', houseLimit: 50, paid: true, highlight: true, features: ['Mehrere Ferienhäuser verwalten (bis zu 50)', 'Alle Funktionen der kostenlosen Version je Haus', 'Objektverwaltung, Hauskontrolle und Servicepartner je Haus', 'Interaktives 3D-Hausmodell (nur in Pro)', 'Einmalige Zahlung, kein Abo'] }
-    ];
-    const planById = (id) => PLANS.find((plan) => plan.id === id) || PLANS[0];
-    const FREE_HOUSE_LIMIT = PLANS.find((plan) => !plan.paid).houseLimit;
+    // Früher gekaufte Pro-Lizenzen (Einmalkauf, localStorage 'stugliv-pro') zählen weiter als Tarif PRO.
+    const FREE_HOUSE_LIMIT = 1;
     let proState = null;
     try { proState = JSON.parse(localStorage.getItem('stugliv-pro') || 'null'); } catch (error) { proState = null; }
     // Free/Pro-Testschalter nur im Testmodus: lokal oder einmalig per ?test=1 aktivieren (?test=0 schaltet ihn wieder ab).
@@ -8460,19 +8448,22 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       showToast(limitKey ? `Dein Tarif ${entitlements.plan().name} umfasst ${max} ${max === 1 ? one : many}. Für mehr wechsle zu ${plan.name} – vorhandene Daten bleiben erhalten.` : `${FEATURE_LABELS[feature] || 'Diese Funktion'} ist ab dem Tarif ${plan.name} verfügbar.`);
     }
     // Tarife aus der Cloud laden (öffentlich lesbar, auch ohne Anmeldung)
+    let planCatalogFailed = false;
     async function loadPlanCatalog() {
+      const failed = () => { if (!planCatalogFailed) { planCatalogFailed = true; if (currentPage === 'plans') render(); } };
       try {
         const base = cloud.url || CLOUD_DEFAULT.url;
         const key = cloud.key || CLOUD_DEFAULT.key;
         const response = await fetch(`${base.replace(/\/$/, '')}/rest/v1/plans?select=id,name,tagline,price_monthly_cents,currency,sort,highlight,limits,features,highlights,stripe_price_id&order=sort.asc`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
-        if (!response.ok) return;
+        if (!response.ok) { failed(); return; }
         const rows = await response.json();
-        if (!Array.isArray(rows) || !rows.length) return;
+        if (!Array.isArray(rows) || !rows.length) { failed(); return; }
+        planCatalogFailed = false;
         const changed = JSON.stringify(rows) !== JSON.stringify(planCatalog);
         planCatalog = rows;
         try { localStorage.setItem(PLANS_CACHE_KEY, JSON.stringify(rows)); } catch (error) { /* optional */ }
         if (changed && currentPage === 'plans') render();
-      } catch (error) { /* offline: Fallback bzw. letzter Stand */ }
+      } catch (error) { failed(); /* offline: Fallback bzw. letzter Stand */ }
     }
     // Tarif der eigenen Organisation (serverseitig ermittelt, nicht vom Browser behauptet)
     async function loadOrgPlan() {
@@ -9114,7 +9105,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }, 0);
       const formattedCost = formatCost(plannedAnnualCost);
       const firstName = profileData.name.trim().split(/\s+/)[0] || 'Willkommen';
-      return `<div class="welcome"><div><p class="eyebrow eyebrow-lg">Husora · Das Managementsystem für deine Stuga</p><p class="subtitle">${bookingsEnabled() ? 'Buchungen, Stugapflege' : 'Stugapflege'} und Serviceeinsätze für ${singleHouse() ? 'dein Ferienhaus' : 'deine Ferienhäuser'}.</p></div></div>
+      return `<div class="welcome welcome-compact"><div><h1 class="dash-hello">${firstName === 'Willkommen' ? 'Willkommen' : `Hallo ${escapeHtml(firstName)}`}</h1></div></div>
         <section class="stats" aria-label="Kennzahlen">${(() => {
         const weekEnd = shiftDateKey(today, 7);
         const weekItems = tasks.filter((task) => !task.done && task.date && task.date >= today && task.date <= weekEnd).length + (bookingsEnabled() ? bookings.filter((booking) => booking.startDate >= today && booking.startDate <= weekEnd).length : 0);
@@ -9135,7 +9126,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           renovations: `<button class="stat" data-page="renovations"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Sanierung & Renovierung</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">${openProjects.length} <span class="stat-open-word">${openProjects.length === 1 ? 'Projekt' : 'Projekte'}</span></div><div class="stat-note">${openProjects.length ? `<em>Budget</em> ${escapeHtml(formatCost(openProjects.reduce((sum, project) => sum + (Number(project.budget) || 0), 0)))}` : '<em>Kein Projekt</em> geplant'}</div></button>`,
           providers: `<button class="stat" data-page="providers"><img class="stat-art" src="assets/schweden-landschaft.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Servicepartner finden</span><span class="stat-icon">${icon('search')}</span></div><div class="stat-value">${providers.length} <span class="stat-open-word">Betriebe</span></div><div class="stat-note"><em>Datenbank</em> mit Karte · ${favorites.length} Favoriten</div></button>`,
           documents: `<button class="stat" data-page="documents"><img class="stat-art" src="assets/dokumente.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Dokumente</span><span class="stat-icon">${icon('document')}</span></div><div class="stat-value">${documents.length}</div><div class="stat-note"><em>${documents.length === 1 ? 'Datei' : 'Dateien'}</em> gespeichert</div></button>`,
-          plans: `<button class="stat" data-page="plans"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Versionen</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${escapeHtml(entitlements.plan().name)}</div><div class="stat-note"><em>${currentPlanId() === 'ultimate' ? 'Alle Funktionen' : 'Mehr Funktionen'}</em> ${currentPlanId() === 'ultimate' ? 'freigeschaltet' : 'ansehen'}</div></button>`,
+          plans: `<button class="stat" data-page="plans"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Tarife</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${escapeHtml(entitlements.plan().name)}</div><div class="stat-note"><em>${currentPlanId() === 'ultimate' ? 'Alle Funktionen' : 'Mehr Funktionen'}</em> ${currentPlanId() === 'ultimate' ? 'freigeschaltet' : 'ansehen'}</div></button>`,
           profile: `<button class="stat" data-page="profile"><img class="stat-art" src="assets/meine-haeuser.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Benutzerprofil</span><span class="stat-icon">${icon('users')}</span></div><div class="stat-value stat-value-sm">${escapeHtml(profileData.name || 'Profil')}</div><div class="stat-note">${profileData.mailAccount ? '<em>Mailkonto</em> verbunden' : '<em>Mailkonto</em> noch nicht verbunden'}</div></button>`
           , ...extraDashboardTiles()
         };
@@ -9577,7 +9568,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           : plan.stripe_price_id && cloudReady() ? `<button type="button" class="${higher ? 'primary-btn' : 'secondary-btn'}" data-plan-checkout="${escapeHtml(plan.id)}">${higher ? `Upgrade auf ${escapeHtml(plan.name)}` : `Zu ${escapeHtml(plan.name)} wechseln`}</button>`
           : `<button type="button" class="${higher ? 'primary-btn' : 'secondary-btn'}" data-plan-test="${escapeHtml(plan.id)}">${higher ? `Upgrade auf ${escapeHtml(plan.name)}` : `Zu ${escapeHtml(plan.name)} wechseln`}</button>`;
         return `<article class="card plan-card ${plan.highlight ? 'highlight' : ''} ${isCurrent ? 'current' : ''}">${isCurrent ? '<span class="plan-current-tag">Dein Tarif</span>' : plan.highlight ? '<span class="plan-current-tag plan-reco">Beliebt</span>' : ''}<h2>${escapeHtml(plan.name)}</h2><p class="plan-tagline">${escapeHtml(plan.tagline || '')}</p>
-          <div class="plan-price"><strong>${escapeHtml(price(plan))}</strong><span>${loaded && plan.price_monthly_cents ? 'pro Monat · inkl. MwSt.' : loaded ? 'für immer' : 'Preise werden geladen …'}</span></div>
+          <div class="plan-price"><strong>${escapeHtml(price(plan))}</strong><span>${loaded && plan.price_monthly_cents ? 'pro Monat · inkl. MwSt.' : loaded ? 'für immer' : planCatalogFailed ? 'Preise gerade nicht abrufbar – Internetverbindung prüfen' : 'Preise werden geladen …'}</span></div>
           <dl class="plan-limits"><div><dt>Häuser</dt><dd>${limitText(plan, 'properties')}</dd></div><div><dt>Benutzer</dt><dd>${limitText(plan, 'users')}</dd></div><div><dt>Aufgaben</dt><dd>${limitText(plan, 'tasks_active')}</dd></div><div><dt>Partner</dt><dd>${limitText(plan, 'service_partners')}</dd></div><div><dt>Dokumente</dt><dd>${limitText(plan, 'documents')}</dd></div></dl>
           <ul class="pro-features">${(plan.highlights || []).map((feature) => `<li>${escapeHtml(feature)}</li>`).join('')}</ul><div class="plan-action">${action}</div></article>`;
       }).join('');
@@ -9588,7 +9579,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         return `<div class="plan-usage-row ${Number.isFinite(max) && used >= max ? 'full' : ''}"><span>${LIMIT_LABELS[key][0]}</span><b>${used} / ${Number.isFinite(max) ? max : '∞'}</b>${Number.isFinite(max) ? `<i style="--pct:${pct}%"></i>` : '<i class="unlimited"></i>'}</div>`;
       }).join('');
       const status = orgPlan && cloudReady() && orgPlan.organization_id === cloud.org?.id ? (orgPlan.status === 'none' ? 'ohne Abo (kostenlos)' : `${orgPlan.status === 'active' ? 'aktiv' : orgPlan.status === 'trialing' ? 'Testphase' : orgPlan.status}${orgPlan.current_period_end ? ` · bis ${fmtDateFull(new Date(orgPlan.current_period_end))}` : ''}${orgPlan.cancel_at_period_end ? ' · gekündigt zum Laufzeitende' : ''}`) : cloudReady() ? 'wird geladen …' : 'ohne Cloud-Anmeldung – Tarif gilt für dieses Gerät';
-      return `<div class="welcome"><div><p class="eyebrow">Husora</p><h1>Versionen</h1><p class="subtitle">FREE, PLUS, PRO oder ULTIMATE – wähle den Umfang, der zu deinen Ferienhäusern passt. Monatlich kündbar.</p></div></div>
+      return `<div class="welcome"><div><p class="eyebrow">Husora</p><h1>Tarife</h1><p class="subtitle">FREE, PLUS, PRO oder ULTIMATE – wähle den Umfang, der zu deinen Ferienhäusern passt. Monatlich kündbar.</p></div></div>
         <section class="card plan-usage"><div class="card-head"><div><h2 class="card-title">Dein Tarif: ${escapeHtml(entitlements.plan().name)}</h2><p class="card-caption">${escapeHtml(status)}${proState?.orderId && currentId === 'pro' ? ' · frühere Pro-Lizenz' : ''}</p></div>${cloudReady() && orgPlan?.status && !['none', 'canceled'].includes(orgPlan.status) && planList().some((plan) => plan.stripe_price_id) ? '<button type="button" class="secondary-btn" data-plan-portal>Abo verwalten</button>' : ''}</div><div class="plan-usage-grid">${usage}</div></section>
         <div class="plan-grid plan-grid-4">${cards}</div>
         ${planMatrixHtml(currentId)}
@@ -9687,7 +9678,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       ['inspections', 'Hauskontrolle', null, '', 'Kontrolle & Pflege'], ['seasons', 'Saison-Checklisten', null, '', 'Kontrolle & Pflege'], ['repairs', 'Reparatur & Instandhaltung', null, '', 'Kontrolle & Pflege'], ['renovations', 'Sanierung & Renovierung', null, '', 'Kontrolle & Pflege'], ['house3d', 'Hausmodell (3D)', () => entitlements.can('house_model'), 'ab PLUS', 'Kontrolle & Pflege'],
       ['partnerHub', 'Partner-Portal & Messenger', () => entitlements.can('service_portal'), 'ab PRO', 'Servicepartner'], ['partners', 'Zugeordnete Servicepartner', null, '', 'Servicepartner'], ['providers', 'Servicepartner finden', null, '', 'Servicepartner'],
       ['documents', 'Dokumente', null, '', 'Verwaltung & Kosten'], ['emergency', 'Notfall & Zugang', null, '', 'Verwaltung & Kosten'], ['contracts', 'Verträge & Fristen', null, '', 'Verwaltung & Kosten'], ['meters', 'Zählerstände', null, '', 'Verwaltung & Kosten'], ['costs', 'Kosten', null, '', 'Verwaltung & Kosten'], ['portfolio', 'Portfolio', () => entitlements.can('portfolio'), 'ab ULTIMATE', 'Verwaltung & Kosten'],
-      ['plans', 'Versionen', null, '', 'Konto & App'], ['profile', 'Benutzerprofil', null, '', 'Konto & App'], ['settings', 'Einstellungen', null, '', 'Konto & App'], ['help', 'Hilfe & Support', null, '', 'Konto & App']
+      ['plans', 'Tarife', null, '', 'Konto & App'], ['profile', 'Benutzerprofil', null, '', 'Konto & App'], ['settings', 'Einstellungen', null, '', 'Konto & App'], ['help', 'Hilfe & Support', null, '', 'Konto & App']
     ];
     const DASHBOARD_TILE_LIMIT = 10;
     const DEFAULT_DASHBOARD_TILES = ['properties', 'tasks', 'bookings', 'inspections', 'partners', 'costs', 'automation', 'house3d'];
@@ -9923,7 +9914,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const openCount = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length;
       const workCount = tasks.filter((task) => taskStatus(task) === 'In Bearbeitung').length;
       const archivedCount = tasks.filter(isArchivedTask).length;
-      return `<div class="welcome"><div><p class="eyebrow">Buchungen & Instandhaltung</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
+      return `<div class="welcome"><div><p class="eyebrow">Pflege & Service</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
         ${typeof mtTasksHintHtml === 'function' ? mtTasksHintHtml() : ''}
         <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-template-picker>${icon('task')} Aufgabenpaket aus Vorlage wählen</button></div></section>
         <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount - workCount} offen${workCount ? ` · <span class="ptask-work-count">${workCount} in Bearbeitung</span>` : ''} · ${tasks.length - openCount - archivedCount} erledigt${archivedCount ? ` · ${archivedCount} im Archiv` : ''}</p></div></div>
@@ -10233,7 +10224,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const year = new Date().getFullYear();
       const yearActual = expenses.filter((expense) => expenseYear(expense) === String(year) && properties.some((property) => property.id === expense.propertyId)).reduce((sum, expense) => sum + Number(expense.amount), 0);
       const portfolio = singleHouse() ? '' : `<section class="automation-summary portfolio-kpis"><div><strong>${properties.length}</strong><span>Ferienhäuser</span></div>${bookingsEnabled() ? `<div><strong>${properties.filter((property) => statuses[property.id].busy).length}</strong><span>heute belegt</span></div>` : ''}<div><strong>${properties.reduce((sum, property) => sum + statuses[property.id].overdue, 0)}</strong><span>überfällige Aufgaben</span></div><div><strong>${properties.reduce((sum, property) => sum + statuses[property.id].issues, 0)}</strong><span>offene Mängel</span></div><div><strong>${escapeHtml(formatCost(yearActual))}</strong><span>Ist-Kosten ${year}</span></div></section>`;
-      return `<div class="welcome"><div><p class="eyebrow">Schweden · Värmland · Dalarna · Bohuslän</p><h1>${singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser'}</h1><p class="subtitle">${singleHouse() ? 'Dein Ferienhaus' : 'Alle Häuser'} mit Belegung, offenen Aufgaben, Kontrollen, Mängeln und Kosten auf einen Blick.</p></div>${isPro() ? `<button class="primary-btn" data-action="add-property">${icon('plus')} Ferienhaus hinzufügen</button>` : ''}</div>
+      return `<div class="welcome"><div><p class="eyebrow">${escapeHtml([...new Set(properties.map((item) => item.region).filter(Boolean))].slice(0, 3).join(' · ') || 'Schweden')}</p><h1>${singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser'}</h1><p class="subtitle">${singleHouse() ? 'Dein Ferienhaus' : 'Alle Häuser'} mit Belegung, offenen Aufgaben, Kontrollen, Mängeln und Kosten auf einen Blick.</p></div>${isPro() ? `<button class="primary-btn" data-action="add-property">${icon('plus')} Ferienhaus hinzufügen</button>` : ''}</div>
         ${portfolio}
         <div class="house-grid ${singleHouse() ? 'single' : ''}">${properties.map((rawProperty) => {
           const property = propertyWithDefaults(rawProperty);
@@ -13315,7 +13306,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         showToast(`${prefix}${plannedCount} ${plannedCount === 1 ? 'Aufgabe' : 'Aufgaben'} automatisch geplant.`);
       }, 0);
       const pages = { dashboard, portfolio: portfolioPage, partnerHub: partnerHubPage, automation: automationPage, repairs: repairsPage, renovations: renovationsPage, tasks: tasksPage, properties: propertiesPage, propertyDetail: propertyDetailPage, plans: plansPage, house3d: house3dPage, assignedProviders: assignedProvidersPage, providers: providersPage, documents: documentsPage, costs: costsPageNew, inspections: inspectionsPage, calendar: calendarPage, bookings: bookingsPage, profile: profilePage, settings: settingsPage, legal: legalPage, emergency: emergencyPage, contracts: contractsPage, meters: metersPage, help: helpPage, seasons: seasonsPage, betaAdmin: () => betaAdminPage() + relAdminHtml(), adminCompliance: complianceAdminPage };
-      const labels = { dashboard: 'Übersicht', portfolio: 'Portfolio', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Versionen', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' , betaAdmin: 'Husora Beta Dashboard' , adminCompliance: 'Husora Admin' };
+      const labels = { dashboard: 'Übersicht', portfolio: 'Portfolio', partnerHub: 'Partner-Portal', automation: 'Automatisierung', repairs: 'Reparatur & Instandhaltung', renovations: 'Sanierung & Renovierung', tasks: 'Serviceaufgaben', properties: singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser', propertyDetail: 'Objektübersicht', plans: 'Tarife', house3d: 'Hausmodell', assignedProviders: 'Zugeordnete Servicepartner', providers: 'Servicepartner finden', documents: 'Dokumente', costs: 'Ferienhaus-Kosten', inspections: 'Hauskontrolle', calendar: 'Kalender', bookings: bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung', profile: 'Benutzerprofil', settings: 'Einstellungen', legal: 'Rechtliches', emergency: 'Notfall & Zugang', contracts: 'Verträge & Fristen', meters: 'Zählerstände', help: 'Hilfe & Support', seasons: 'Saison-Checklisten' , betaAdmin: 'Husora Beta Dashboard' , adminCompliance: 'Husora Admin' };
       if (currentPage !== lastRenderedPage) {
         if (returningToPreviousPage) {
           returningToPreviousPage = false;
@@ -13997,7 +13988,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         return;
       }
       if (action === 'add-property') openAddChoice();
-      if (action === 'open-pro') openProModal(Number(document.getElementById('house-count-input')?.value) || profileData.desiredHouseCount || 2, event.target.closest('[data-action]').dataset.plan || 'pro');
+      if (action === 'open-pro') { currentPage = 'plans'; render(); }
       if (action === 'edit-property') {
         const property = properties.find((item) => item.id === event.target.closest('[data-action]').dataset.property);
         if (property) openPropertyModal(property);
@@ -14635,125 +14626,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const body = 'Die Verbindung zwischen Husora und diesem Mailkonto funktioniert.';
       openMailUrl(webmailUrl(profileData.mailProvider || 'default', to, 'Husora: Test der Mailverbindung', body), body);
     });
-    let proDesiredCount = 2;
-    let paypalSdkPromise = null;
-    function loadPaypalSdk() {
-      if (window.paypal?.Buttons) return Promise.resolve(window.paypal);
-      if (paypalSdkPromise) return paypalSdkPromise;
-      paypalSdkPromise = new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CONFIG.clientId)}&currency=${PAYPAL_CONFIG.currency}&intent=capture&components=buttons&locale=de_DE`;
-        script.onload = () => (window.paypal?.Buttons ? resolve(window.paypal) : reject(new Error('PayPal-SDK ohne Buttons')));
-        script.onerror = () => reject(new Error('PayPal-SDK konnte nicht geladen werden'));
-        document.head.appendChild(script);
-      }).catch((error) => { paypalSdkPromise = null; throw error; });
-      return paypalSdkPromise;
-    }
-    const formatMoney = (value) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: PAYPAL_CONFIG.currency }).format(Number(value));
-    let purchasePlanId = 'pro';
-    function openProModal(desiredCount, planId = 'pro') {
-      const plan = planById(planId);
-      purchasePlanId = plan.id;
-      proDesiredCount = Math.min(plan.houseLimit, Math.max(2, Math.floor(Number(desiredCount)) || 2));
-      const testMode = PAYPAL_CONFIG.clientId === 'sb';
-      document.getElementById('pro-modal-title').textContent = `${plan.name} erwerben`;
-      document.getElementById('pro-modal-subtitle').textContent = plan.tagline;
-      document.getElementById('pro-modal-body').innerHTML = `${testMode ? '<div class="pro-test-note"><strong>Testmodus:</strong> Die Zahlung läuft über die PayPal-Sandbox. Es wird kein echtes Geld bewegt. Zum Testen meldest du dich mit einem PayPal-Sandbox-Käuferkonto an.</div>' : ''}
-        <div class="pro-box"><h3>Produkt</h3><div class="pro-price"><strong>${formatMoney(plan.price)}</strong><span>einmalig · inkl. gesetzlicher MwSt.</span></div>
-          <ul class="pro-features" style="margin-top:12px">${plan.features.map((feature) => `<li>${escapeHtml(feature)}</li>`).join('')}</ul></div>
-        <div class="pro-box"><h3>Deine Angaben</h3><div class="profile-grid" style="padding:0">
-          <label><span class="form-label">Name *</span><input class="form-control" id="pro-name" maxlength="80" autocomplete="name" value="${escapeHtml(profileData.name || '')}"></label>
-          <label><span class="form-label">E-Mail für den Beleg *</span><input class="form-control" id="pro-email" type="email" maxlength="120" autocomplete="email" value="${escapeHtml(profileData.email || '')}"></label>
-          <label class="full"><span class="form-label">Gewünschte Anzahl Ferienhäuser</span><input class="form-control" id="pro-count" type="number" min="2" max="${plan.houseLimit}" value="${proDesiredCount}"></label></div></div>
-        <div class="pro-box"><h3>Bestellübersicht</h3><dl class="pro-summary"><div><dt>Produkt</dt><dd>${escapeHtml(plan.name)}</dd></div><div><dt>Zahlungsart</dt><dd>PayPal (auch Karte oder Lastschrift über PayPal)</dd></div><div><dt>Lieferung</dt><dd>Sofortige Freischaltung nach Zahlung</dd></div><div class="pro-total"><dt>Gesamtpreis</dt><dd>${formatMoney(plan.price)}</dd></div></dl></div>
-        <div class="pro-legal"><label><input type="checkbox" id="pro-terms"><span>Ich habe die <button type="button" class="text-btn inline-link" data-legal-open="terms" data-legal-modal>Allgemeinen Geschäftsbedingungen</button> und die <button type="button" class="text-btn inline-link" data-legal-open="privacy" data-legal-modal>Datenschutzerklärung</button> gelesen und akzeptiere sie.</span></label>
-          <label><input type="checkbox" id="pro-withdrawal"><span>Ich stimme ausdrücklich zu, dass die Freischaltung sofort beginnt, und weiß, dass ich dadurch mein Widerrufsrecht bei digitalen Inhalten verliere.</span></label></div>
-        <div class="pro-paypal" id="paypal-button-container"><p class="pro-fineprint">PayPal wird geladen …</p></div>
-        <p class="pro-fineprint">Die Zahlung wird von PayPal abgewickelt. Zahlungsdaten gibst du nur bei PayPal ein und sie werden nicht in Husora gespeichert. Die Freischaltung gilt für diesen Browser${PAYPAL_CONFIG.supportEmail ? `. Fragen: ${escapeHtml(PAYPAL_CONFIG.supportEmail)}` : ''}.</p>`;
-      document.getElementById('pro-modal').classList.add('open');
-      renderPaypalButtons();
-    }
-    function proFormValues() {
-      const name = document.getElementById('pro-name')?.value.trim() || '';
-      const email = document.getElementById('pro-email')?.value.trim() || '';
-      const count = Math.min(planById(purchasePlanId).houseLimit, Math.max(2, Math.floor(Number(document.getElementById('pro-count')?.value)) || 2));
-      const errors = [];
-      if (!name) errors.push('Bitte deinen Namen angeben.');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Bitte eine gültige E-Mail-Adresse angeben.');
-      if (!document.getElementById('pro-terms')?.checked) errors.push('Bitte AGB und Datenschutzhinweise akzeptieren.');
-      if (!document.getElementById('pro-withdrawal')?.checked) errors.push('Bitte der sofortigen Freischaltung zustimmen.');
-      return { name, email, count, errors };
-    }
-    function renderPaypalButtons() {
-      const container = document.getElementById('paypal-button-container');
-      loadPaypalSdk().then((paypal) => {
-        if (!container.isConnected) return;
-        container.innerHTML = '';
-        paypal.Buttons({
-          style: { layout: 'vertical', shape: 'rect', label: 'pay', height: 44 },
-          onClick: (data, actions) => {
-            const { errors } = proFormValues();
-            if (errors.length) { showToast(errors[0]); return actions.reject(); }
-            return actions.resolve();
-          },
-          createOrder: (data, actions) => actions.order.create({
-            purchase_units: [{ description: planById(purchasePlanId).name, amount: { currency_code: PAYPAL_CONFIG.currency, value: planById(purchasePlanId).price } }]
-          }),
-          onApprove: (data, actions) => actions.order.capture().then((details) => completeProPurchase(details, proFormValues())),
-          onCancel: () => showToast('Der Kauf wurde abgebrochen.'),
-          onError: (error) => { console.error('PayPal-Fehler:', error); showToast('Die Zahlung konnte nicht abgeschlossen werden. Es wurde nichts berechnet.'); }
-        }).render('#paypal-button-container');
-      }).catch((error) => {
-        console.error(error);
-        if (container.isConnected) container.innerHTML = '<p class="pro-fineprint" style="color:#a84437">PayPal konnte nicht geladen werden. Bitte Internetverbindung und Werbeblocker prüfen.</p><button type="button" class="secondary-btn" id="pro-retry">Erneut versuchen</button>';
-      });
-    }
-    function completeProPurchase(details, form) {
-      const capture = details?.purchase_units?.[0]?.payments?.captures?.[0];
-      if (details?.status !== 'COMPLETED' || !details?.id) { showToast('Die Zahlung wurde von PayPal nicht bestätigt.'); return; }
-      const plan = planById(purchasePlanId);
-      proState = {
-        planId: plan.id,
-        orderId: details.id,
-        captureId: capture?.id || '',
-        amount: capture?.amount?.value || plan.price,
-        currency: capture?.amount?.currency_code || PAYPAL_CONFIG.currency,
-        payerEmail: details.payer?.email_address || form.email,
-        name: form.name,
-        email: form.email,
-        testMode: PAYPAL_CONFIG.clientId === 'sb',
-        purchasedAt: new Date().toISOString()
-      };
-      const nextProfile = { ...profileData, name: profileData.name || form.name, email: profileData.email || form.email, houseCount: form.count };
-      delete nextProfile.desiredHouseCount;
-      try {
-        localStorage.setItem('stugliv-pro', JSON.stringify(proState));
-        localStorage.setItem('stugliv-profile', JSON.stringify(nextProfile));
-        profileData = nextProfile;
-      } catch (error) {
-        console.error('Pro-Freischaltung konnte nicht gespeichert werden:', error);
-        showToast('Zahlung erfolgreich, aber die Freischaltung konnte nicht gespeichert werden. Bestellnummer: ' + details.id);
-      }
-      document.getElementById('pro-modal-title').textContent = 'Vielen Dank!';
-      document.getElementById('pro-modal-subtitle').textContent = `${plan.name} ist freigeschaltet`;
-      document.getElementById('pro-modal-body').innerHTML = `<div class="pro-success"><div class="pro-check">✓</div><p style="font-size:13px;line-height:1.6;margin:0 0 14px">Deine Zahlung ist eingegangen. Du kannst jetzt bis zu <strong>${profileData.houseCount}</strong> Ferienhäuser verwalten.</p></div>
-        <div class="pro-box"><h3>Beleg</h3><dl class="pro-summary"><div><dt>Bestellnummer</dt><dd>${escapeHtml(proState.orderId)}</dd></div><div><dt>Betrag</dt><dd>${escapeHtml(formatMoney(proState.amount))}</dd></div><div><dt>Datum</dt><dd>${escapeHtml(fmtDateFull(new Date(proState.purchasedAt)))}</dd></div><div><dt>PayPal-Konto</dt><dd>${escapeHtml(proState.payerEmail)}</dd></div>${proState.testMode ? '<div><dt>Modus</dt><dd>Test (kein echtes Geld)</dd></div>' : ''}</dl></div>
-        <div class="form-actions"><button type="button" class="secondary-btn" id="pro-done">Schließen</button><button type="button" class="primary-btn" id="pro-add-house">Weiteres Ferienhaus hinzufügen</button></div>`;
-      render();
-    }
-    function closeProModal() { document.getElementById('pro-modal').classList.remove('open'); }
     document.addEventListener('change', (event) => {
       if (event.target.id !== 'assigned-property') return;
       selectedPropertyId = event.target.value;
       render();
       document.getElementById('assigned-property')?.focus();
-    });
-    document.getElementById('close-pro-modal').addEventListener('click', closeProModal);
-    document.getElementById('pro-modal').addEventListener('click', (event) => {
-      if (event.target.id === 'pro-modal') closeProModal();
-      if (event.target.id === 'pro-retry') renderPaypalButtons();
-      if (event.target.id === 'pro-done') closeProModal();
-      if (event.target.id === 'pro-add-house') { closeProModal(); openAddChoice(); }
     });
     document.addEventListener('input', (event) => {
       if (event.target.id !== 'house-count-input') return;
@@ -15973,7 +15850,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         document.getElementById('issue-modal')?.classList.remove('open');
         closeInspectionPlan();
         closeControlPositions();
-        closeProModal();
         closeImportModal();
         closeAddChoice();
         autoModal.classList.remove('open');
@@ -16799,14 +16675,14 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
 
     // --- Hilfe & Support ---
     const FAQ = [
-      ['Wo werden meine Daten gespeichert?', 'Zunächst nur auf diesem Gerät im Speicher des Browsers bzw. der App. Optional verbindest du Husora unter Einstellungen → Daten & App mit deinem eigenen Supabase-Projekt: Dann liegen alle Daten zusätzlich in deiner Cloud und lassen sich auf Handy, Tablet und Computer abgleichen. Eine Sicherungsdatei kannst du jederzeit zusätzlich erstellen.'],
+      ['Wo werden meine Daten gespeichert?', 'Ohne Anmeldung nur auf diesem Gerät im Speicher des Browsers bzw. der App. Mit deinem Husora-Konto (Einstellungen → Daten & App) liegen alle Daten zusätzlich in der Husora Cloud und lassen sich auf Handy, Tablet und Computer abgleichen. Eine Sicherungsdatei kannst du jederzeit zusätzlich erstellen.'],
       ['Wie übertrage ich meine Daten auf ein anderes Gerät?', 'Unter Einstellungen → „Daten sichern (Datei)“ eine Sicherung erstellen, die Datei z. B. per AirDrop, E-Mail oder Cloud-Speicher auf das neue Gerät bringen und dort unter Einstellungen → „Sicherung wiederherstellen“ einlesen.'],
       ['Wie beauftrage ich eine Hauskontrolle?', 'Unter Hauskontrolle in Schritt 1 die Prüfpositionen festlegen, in Schritt 2 „Service beauftragen“ wählen. Husora erstellt den Kontrollplan als PDF und öffnet eine vorbereitete E-Mail an deinen Servicepartner. Den ausgefüllten Plan liest du danach in Schritt 3 wieder ein.'],
       ['Was passiert mit Mängeln aus der Kontrolle?', 'Auffällige Positionen werden automatisch als Mangel unter „Reparatur & Instandhaltung“ angelegt. Dort beauftragst du einen Handwerker per E-Mail mit PDF-Auftrag. Sind alle Mängel behoben, kannst du das Prüfprotokoll im Archiv ablegen.'],
       ['Wie finde ich passende Servicepartner?', 'Unter „Servicepartner finden“ siehst du Betriebe in der Nähe deines Hauses, gefiltert nach Hausservice, Hauskontrolle und Sanierung. Mit „Zuordnen“ übernimmst du sie für dein Haus. Die Angaben stammen aus öffentlichen Quellen – bitte vor der Beauftragung prüfen.'],
       ['Warum bekomme ich keine Erinnerungen, wenn die App geschlossen ist?', 'In der Web-Version kann Husora nur Erinnerungen zeigen, solange die App geöffnet ist. Echte Push-Mitteilungen kommen mit der App für iPhone und Android.'],
       ['In welcher Sprache gehen Aufträge an Servicepartner?', 'Das stellst du unter Einstellungen → Darstellung & Sprache ein: Deutsch, Schwedisch oder Englisch. Deine eigenen Beschreibungen werden nicht automatisch übersetzt.'],
-      ['Was kostet Husora Pro?', 'Husora Free ist kostenlos und umfasst ein Ferienhaus. Husora Pro schaltet bis zu 50 Ferienhäuser und das 3D-Hausmodell frei – einmalig, ohne Abo. Details unter „Versionen“.']
+      ['Was kostet Husora?', 'Husora FREE ist kostenlos und umfasst ein Ferienhaus. PLUS, PRO und ULTIMATE schalten mehr Häuser und Funktionen frei (z. B. Reparaturen, Verträge, Hausmodell, Partner-Portal) und sind monatlich kündbar. Preise und Vergleich findest du unter „Tarife“.']
     ];
     function helpPage() {
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Hilfe & Support</h1><p class="subtitle">Antworten auf häufige Fragen, Erste Schritte und Kontakt.</p></div></div>
@@ -17173,14 +17049,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         betaSave('husora-beta-survey', st); betaCloseModal(); return;
       }
       if (event.target.closest('[data-beta-hide-banner]')) { betaSave('husora-beta-banner', Date.now() + 7 * 86400000); document.querySelectorAll('.beta-banner').forEach((el) => el.remove()); return; }
-      const premium = event.target.closest('[data-beta-premium]');
-      if (premium) {
-        const feature = premium.dataset.betaPremium;
-        trackEvent('subscription_interest', { entity_type: 'feature', entity_ref: feature, metadata: { feature } });
-        const list = betaStore('husora-beta-premium', []); if (!list.includes(feature)) betaSave('husora-beta-premium', [...list, feature]);
-        premium.disabled = true; premium.textContent = 'Vorgemerkt ✓';
-        showToast('Vorgemerkt – wir melden uns, sobald diese Premium-Funktion verfügbar ist. Es entstehen keine Kosten.');
-      }
     });
     document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && betaS().modal) betaCloseModal(); });
     document.addEventListener('submit', (event) => {
@@ -17208,13 +17076,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (button) button.disabled = false;
       });
     });
-    // Premium-Vorschau: Interesse vormerken (keine Zahlung)
-    const BETA_PREMIUM = [['automation', 'Automatisierungen', 'Wiederkehrende Aufgaben und Kontrollen planen sich selbst.'], ['multi_house', 'Mehrere Häuser', 'Alle Ferienhäuser in einer Übersicht verwalten.'], ['inspections_plus', 'Erweiterte Hauskontrollen', 'Eigene Prüfpunkte, Fotos und Nachkontrollen.'], ['archive', 'Dokumentenarchiv', 'Rechnungen, Verträge und Belege dauerhaft ablegen.'], ['analytics', 'Erweiterte Auswertungen', 'Kosten, Zustand und Prognosen je Haus.']];
+    // Beta: Schalter für die Nutzungsstatistik (früher mit Premium-Vorschau)
     function betaPremiumHtml() {
       if (!betaOn()) return '';
-      const marked = betaStore('husora-beta-premium', []);
-      return `<section class="card beta-premium"><h2 class="card-title"><span class="beta-chip">Beta</span> Premium-Vorschau</h2><p class="card-caption">Welche Funktionen wären dir ein Premium-Abo wert? Vormerken ist kostenlos und unverbindlich.</p>
-        <div class="beta-premium-list">${BETA_PREMIUM.map(([id, title, text]) => `<div class="beta-premium-item"><span><strong>${title}</strong><small>${text}</small></span><button type="button" class="secondary-btn" data-beta-premium="${id}" ${marked.includes(id) ? 'disabled' : ''}>${marked.includes(id) ? 'Vorgemerkt ✓' : 'Premium vormerken'}</button></div>`).join('')}</div>
+      return `<section class="card beta-premium"><h2 class="card-title"><span class="beta-chip">Beta</span> Nutzungsstatistik</h2>
         <label class="settings-switch"><span><strong>Nutzungsstatistik für die Beta</strong><small>Husora zählt anonymisiert, welche Funktionen genutzt werden (z. B. „Aufgabe erstellt“) – ohne Inhalte, Texte, Fotos oder Zugangsdaten. Gesendet wird nur mit Husora-Konto.</small></span><span class="switch"><input type="checkbox" data-beta-analytics ${betaAnalyticsAllowed() ? 'checked' : ''} ${betaOn('analytics') ? '' : 'disabled'}><span></span></span></label>
         ${betaS().admin?.is_super_admin ? `<div class="settings-actions"><button type="button" class="primary-btn" data-page="betaAdmin">${icon('meter')} Husora Beta Dashboard öffnen</button></div>` : ''}</section>`;
     }
@@ -18867,7 +18732,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     const OB_TASK_TEMPLATES = ['Dach und Dachrinnen kontrollieren', 'Heizung prüfen', 'Wasserleitungen vor dem Winter kontrollieren', 'Rauchmelder prüfen', 'Fenster und Türen kontrollieren', 'Außenwasser abstellen'];
     let obDraft = {};
-    // Versionswahl am Anfang der Einrichtung (gleiches Verhalten wie auf der Seite „Versionen“)
+    // Tarifwahl am Anfang der Einrichtung (gleiches Verhalten wie auf der Seite „Tarife“)
     const OB_PLAN_TAGLINES = { free: 'Für dein erstes Ferienhaus', plus: 'Für Eigentümer mit mehr Überblick', pro: 'Mit Servicepartner-Portal', ultimate: 'Für Portfolios und Profis' };
     function obPlanPrice(plan) {
       if (!(Array.isArray(planCatalog) && planCatalog.length)) return plan.id === 'free' ? 'Kostenlos' : '';
@@ -18892,7 +18757,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (planOverride) { localStorage.setItem('stugliv-dev', '1'); localStorage.setItem('stugliv-test-plan', planOverride); }
         else localStorage.removeItem('stugliv-test-plan');
       } catch (error) { /* optional */ }
-      return `${plan.name} ist jetzt aktiv – ändern kannst du die Version jederzeit unter „Versionen“.`;
+      return `${plan.name} ist jetzt aktiv – ändern kannst du den Tarif jederzeit unter „Tarife“.`;
     }
     // Aufgabenpakete im Schritt „Aufgaben“
     function obPackageInfo(item) {
@@ -18940,8 +18805,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const current = currentPlanId();
       const chosen = PLAN_ORDER.includes(obDraft.plan) ? obDraft.plan : current;
       const cards = PLAN_ORDER.map((id) => planDef(id)).map((plan) => `<button type="button" role="radio" aria-checked="${plan.id === chosen}" class="ob-plan ${plan.id === chosen ? 'on' : ''}" data-ob-plan="${escapeHtml(plan.id)}">${plan.id === current ? '<span class="ob-plan-tag">Aktuell</span>' : plan.highlight ? '<span class="ob-plan-tag">Beliebt</span>' : ''}<strong>${escapeHtml(plan.name)}</strong><span class="ob-plan-price">${escapeHtml(obPlanPrice(plan))}</span><small>${escapeHtml(plan.tagline || OB_PLAN_TAGLINES[plan.id] || '')}</small><small>${escapeHtml(obPlanLimits(plan))}</small>${(plan.highlights || []).length ? `<ul>${plan.highlights.slice(1, 4).map((h) => `<li>${escapeHtml(h)}</li>`).join('')}</ul>` : ''}</button>`).join('');
-      return `<h2 id="onboarding-title">Welche Version passt zu dir?</h2><p class="ob-lead">Husora gibt es in vier Versionen. Starte kostenlos mit FREE oder wähle mehr Umfang – wechseln kannst du jederzeit unter „Versionen“.</p>
-        <div class="ob-plans" role="radiogroup" aria-label="Versionen">${cards}</div>
+      return `<h2 id="onboarding-title">Welcher Tarif passt zu dir?</h2><p class="ob-lead">Husora gibt es in vier Tarifen. Starte kostenlos mit FREE oder wähle mehr Umfang – wechseln kannst du jederzeit unter „Tarife“.</p>
+        <div class="ob-plans" role="radiogroup" aria-label="Tarife">${cards}</div>
         <details class="ob-more-box"><summary>Alle Funktionen vergleichen</summary>${planMatrixHtml(chosen)}</details>
         ${paymentsDisabled() && PLAN_ORDER.some((id) => planDef(id).stripe_price_id) ? '<p class="settings-hint">Während der Beta fallen keine Kosten an.</p>' : ''}
         <div class="ob-actions ob-actions-shell"><button type="button" class="secondary-btn" data-ob-plan-back>Zurück</button><div class="ob-actions-main"><button type="button" class="primary-btn" data-ob-plan-next>Weiter mit ${escapeHtml(planDef(chosen).name)}</button></div></div>`;
@@ -20301,7 +20166,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       properties: ['properties', () => (singleHouse() ? 'Mein Haus' : 'Ferienhäuser'), 'property'], tasks: ['tasks', 'Serviceaufgaben', 'task'], bookings: ['bookings', 'Buchungen', 'calendar'], calendar: ['calendar', 'Kalender', 'calendar'],
       inspections: ['inspections', 'Hauskontrolle', 'inspection'], repairs: ['repairs', 'Reparatur & Instandhaltung', 'alert'], renovations: ['renovations', 'Sanierung & Renovierung', 'cube'], partners: ['assignedProviders', 'Servicepartner', 'users'],
       providers: ['providers', 'Servicepartner finden', 'search'], documents: ['documents', 'Dokumente', 'document'], costs: ['costs', 'Kosten', 'cost'], automation: ['automation', 'Automatisierung', 'bolt'], house3d: ['house3d', 'Hausmodell', 'cube'],
-      plans: ['plans', 'Versionen', 'bolt'], profile: ['profile', 'Benutzerprofil', 'users'], seasons: ['seasons', 'Saison-Checklisten', 'snow'], emergency: ['emergency', 'Notfall & Zugang', 'key'], contracts: ['contracts', 'Verträge & Fristen', 'contract'], meters: ['meters', 'Zählerstände', 'meter'], settings: ['settings', 'Einstellungen', 'gear'], help: ['help', 'Hilfe & Support', 'help']
+      plans: ['plans', 'Tarife', 'bolt'], profile: ['profile', 'Benutzerprofil', 'users'], seasons: ['seasons', 'Saison-Checklisten', 'snow'], emergency: ['emergency', 'Notfall & Zugang', 'key'], contracts: ['contracts', 'Verträge & Fristen', 'contract'], meters: ['meters', 'Zählerstände', 'meter'], settings: ['settings', 'Einstellungen', 'gear'], help: ['help', 'Hilfe & Support', 'help']
     };
     function simpleTileStatus(id) {
       const today = localDateKey(new Date());
@@ -21449,8 +21314,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <p class="settings-hint" style="margin-top:4px">Grenzen des kostenlosen Supabase-Plans. Bei einem bezahlten Plan steht mehr Platz zur Verfügung.</p>
       </div>`;
     }
+    // Technische Angaben (Projekt-URL, Trennen, Speicherverbrauch) nur im Testmodus oder bei einem eigenen Supabase-Projekt
+    const cloudTech = () => { try { return SHOW_PLAN_TEST_SWITCH || (cloudConnected() && cloudBase() !== CLOUD_DEFAULT.url); } catch (error) { return false; } };
     function cloudCardHtml() {
-      const head = `<div class="settings-card-head"><span class="settings-icon">${icon('cloud')}</span><div><h2 class="card-title">Cloud-Speicher (Supabase)</h2><p class="card-caption">Alle Husora-Daten in deinem eigenen Supabase-Projekt – als Sicherung und zum Abgleich zwischen Handy, Tablet und Computer.</p></div></div>`;
+      const head = `<div class="settings-card-head"><span class="settings-icon">${icon('cloud')}</span><div><h2 class="card-title">${cloudTech() ? 'Cloud-Speicher (Supabase)' : 'Husora-Konto'}</h2><p class="card-caption">${cloudTech() ? 'Alle Husora-Daten in deinem eigenen Supabase-Projekt – als Sicherung und zum Abgleich zwischen Handy, Tablet und Computer.' : 'Sichert deine Daten und gleicht sie zwischen Handy, Tablet und Computer ab.'}</p></div></div>`;
       const busy = (label) => cloudState.busy === label;
       const messages = `${cloudState.error ? `<p class="cloud-message error" role="alert">${icon('alert')}<span>${escapeHtml(cloudState.error)}</span></p>` : ''}${cloudState.notice ? `<p class="cloud-message">${icon('check')}<span>${escapeHtml(cloudState.notice)}</span></p>` : ''}`;
       if (!cloudConnected()) {
@@ -21474,7 +21341,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }
       if (!cloudReady()) {
         return `<section class="card settings-card cloud-card" id="settings-cloud">${head}
-          <div class="cloud-project">${icon('check')}<span>Verbunden mit <strong>${host}</strong></span></div>
+          ${cloudTech() ? `<div class="cloud-project">${icon('check')}<span>Verbunden mit <strong>${host}</strong></span></div>` : ''}
           <form class="cloud-form" data-cloud-form="signin">
             <label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" autocomplete="username" inputmode="email" value="${escapeHtml(cloudState.draftEmail || profileData?.email || '')}" required></label>
             <label><span class="form-label">Passwort</span><input class="form-control" name="password" type="password" autocomplete="current-password" minlength="6" required></label>
@@ -21482,7 +21349,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             <div class="cloud-links"><button type="button" class="text-btn" data-cloud-action="recover" ${cloudState.busy ? 'disabled' : ''}>Passwort vergessen?</button>${cloudState.pendingConfirm ? `<button type="button" class="text-btn" data-cloud-action="resend" ${cloudState.busy ? 'disabled' : ''}>Bestätigungs-Mail erneut senden</button>` : ''}</div>
           </form>${messages}
           <p class="settings-hint">Ein Konto für alles: Mit derselben E-Mail nutzt du Husora als Hausbesitzer und im Partner-Portal als Servicepartner.</p>
-          <div class="settings-danger"><div><strong>Verbindung trennen</strong><small>Entfernt Projekt-URL und Schlüssel von diesem Gerät. Die Daten in der Cloud bleiben erhalten.</small></div><button type="button" class="secondary-btn" data-cloud-action="disconnect">Trennen</button></div>
+          ${cloudTech() ? `<div class="settings-danger"><div><strong>Verbindung trennen</strong><small>Entfernt Projekt-URL und Schlüssel von diesem Gerät. Die Daten in der Cloud bleiben erhalten.</small></div><button type="button" class="secondary-btn" data-cloud-action="disconnect">Trennen</button></div>` : ''}
         </section>`;
       }
       const summary = cloudState.summary;
@@ -21491,12 +21358,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const local = cloudLocalEntries();
       const localBytes = local.reduce((sum, [key, value]) => sum + (key.length + value.length) * 2, 0);
       return `<section class="card settings-card cloud-card" id="settings-cloud">${head}
-        <div class="cloud-account"><div><strong>${escapeHtml(cloud.session.email || 'Angemeldet')}</strong><small>${escapeHtml(cloud.org.name)} · ${escapeHtml({ admin: 'Admin', property_manager: 'Hausverwaltung', service_manager: 'Serviceleitung', owner: 'Eigentümer', viewer: 'Nur lesen' }[cloud.org.role] || cloud.org.role)} · ${host}</small></div><button type="button" class="text-btn" data-cloud-action="signout">Abmelden</button></div>
+        <div class="cloud-account"><div><strong>${escapeHtml(cloud.session.email || 'Angemeldet')}</strong><small>${escapeHtml(cloud.org.name)} · ${escapeHtml({ admin: 'Admin', property_manager: 'Hausverwaltung', service_manager: 'Serviceleitung', owner: 'Eigentümer', viewer: 'Nur lesen' }[cloud.org.role] || cloud.org.role)}${cloudTech() ? ` · ${host}` : ''}</small></div><button type="button" class="text-btn" data-cloud-action="signout">Abmelden</button></div>
         <div class="cloud-compare">
           <div><span>Dieses Gerät</span><strong>${local.length} Bereiche</strong><small>${formatBytes(localBytes)}</small></div>
           <div><span>Cloud</span><strong>${summary ? `${summary.count} Bereiche` : '–'}</strong><small>${summary?.count ? `${formatBytes(summary.bytes)} · ${escapeHtml(fmtDateTime(summary.updatedAt))}${summary.fromThisDevice ? '' : ' · anderes Gerät'}` : 'noch leer'}</small></div>
         </div>
-        ${cloudUsageHtml()}
+        ${cloudTech() ? cloudUsageHtml() : ''}
         <p class="cloud-status ${cloudState.error || cloudState.remoteNewer ? 'warn' : cloudDirty.size || cloudState.busy ? 'pending' : 'ok'}" data-cloud-status aria-live="polite">${escapeHtml(cloudStatusText())}</p>
         ${firstSync ? `<p class="cloud-message">${icon('alert')}<span>${summary?.count ? 'Erster Abgleich: Lege fest, welcher Stand gilt – die Daten dieses Geräts oder die aus der Cloud.' : 'Lade jetzt alle Daten dieses Geräts in die Cloud.'}</span></p>` : ''}
         <div class="settings-actions">
@@ -24847,7 +24714,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (!m) return message;
       const real = orgPlan?.plan_id || orgPlan?.id || 'free';
       const account = cloud.session?.email ? ` (Konto ${cloud.session.email}, Organisation „${cloud.org?.name || ''}“)` : '';
-      return `${message} Der echte Tarif dieser Organisation ist ${String(real).toUpperCase()}${account}.${planOverride ? ' Der Test-Schalter für Versionen gilt nur in der App – der Server prüft immer den echten Tarif.' : ''} Melde dich mit dem Konto an, das den Tarif ${m[1].toUpperCase()} oder höher hat (Einstellungen → Daten & App → Cloud-Speicher).`;
+      return `${message} Der echte Tarif dieser Organisation ist ${String(real).toUpperCase()}${account}.${planOverride ? ' Der Test-Schalter für Tarife gilt nur in der App – der Server prüft immer den echten Tarif.' : ''} Melde dich mit dem Konto an, das den Tarif ${m[1].toUpperCase()} oder höher hat (Einstellungen → Daten & App → Cloud-Speicher).`;
     }
     // ===== Mitglieder der Hausbesitzer-Organisation (Familie, Miteigentümer, Verwaltung) =====
     const OWNER_ROLES = [['admin', 'Admin', 'alles, inkl. Tarif und Mitglieder'], ['property_manager', 'Hausverwaltung', 'darf alles bearbeiten'], ['accounting', 'Buchhaltung', 'sieht alles, Kosten im Blick'], ['viewer', 'Nur lesen', 'sieht alles, ändert nichts']];
@@ -25755,7 +25622,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function partnerHubPage() {
       const tabs = [['partners', 'Partner & Codes'], ['chat', 'Messenger'], ['orders', 'Aufträge'], ['maintenance', 'Wartung'], ['agreements', 'Jahresverträge']];
       const head = `<div class="welcome"><div><p class="eyebrow">Servicepartner</p><h1>Partner-Portal</h1><p class="subtitle">Servicepartner einladen, Aufträge senden und direkt mit ihnen schreiben.</p></div></div>`;
-      if (!cloudReady()) return `${head}<div class="hub-login"><p class="settings-hint" style="margin:0 0 12px">Das Partner-Portal nutzt deinen Husora Cloud-Speicher. Melde dich einmal an – deine Daten auf diesem Gerät bleiben erhalten.</p>${cloudCardHtml()}</div>`;
+      if (!cloudReady()) return `${head}<div class="hub-login"><p class="settings-hint" style="margin:0 0 12px">Für das Partner-Portal brauchst du ein Husora-Konto. Melde dich einmal an – deine Daten auf diesem Gerät bleiben erhalten.</p>${cloudCardHtml()}</div>`;
       if (ownerSide.partners === null && !ownerSide.busy) hubRefresh();
       const unread = hubTotalUnread();
       const body = hub.tab === 'chat' ? (hub.thread ? hubThreadHtml() : hubChatListHtml()) : hub.tab === 'orders' ? hubOrdersHtml() : hub.tab === 'agreements' ? hubAgreementsHtml() : hub.tab === 'maintenance' ? hubMaintenanceHtml() : hubPartnersHtml();
