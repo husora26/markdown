@@ -7725,7 +7725,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <div class="portal-actions" style="display:flex;flex-wrap:wrap;gap:8px"><button type="submit" class="primary-btn" ${icalBusy ? 'disabled' : ''}>${icalBusy ? 'Abgleich läuft …' : 'Speichern und abgleichen'}</button></div></form>
         <p class="portal-hint">Airbnb liefert im Kalender-Link nur Zeitraum und Buchungscode, keinen Gastnamen und keine Personenzahl. Diese Angaben bleiben leer. Blockierte Tage („nicht verfügbar“) werden nicht als Buchung übernommen.</p>${message}</section>`;
     }
-    let costListOpen = false;
+    // Auf- und zugeklappte Bereiche der Ferienhaus-Kosten bleiben beim Seitenwechsel und nach dem Neuladen erhalten
+    const COST_OPEN_KEY = 'husora-cost-open';
+    const costOpenSaved = (() => { try { return JSON.parse(localStorage.getItem(COST_OPEN_KEY) || '{}') || {}; } catch (error) { return {}; } })();
+    function costOpenSave() { try { localStorage.setItem(COST_OPEN_KEY, JSON.stringify({ list: costListOpen, fin: costFinOpen, bars: costBarsOpen, actual: costActualOpen, extras: costExtrasOpen })); } catch (error) { /* optional */ } }
+    let costListOpen = Boolean(costOpenSaved.list);
     let costSources = {};
     try { const savedSources = JSON.parse(localStorage.getItem('stugliv-cost-sources') || '{}'); if (savedSources && typeof savedSources === 'object') costSources = savedSources; } catch (error) { costSources = {}; }
     let costCurrency = 'SEK';
@@ -13929,14 +13933,14 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         render();
       }
       if (action === 'show-imported-costs') {
-        costListOpen = true;
+        costListOpen = true; costOpenSave();
         document.getElementById('cost-toggle')?.setAttribute('aria-expanded', 'true');
         const list = document.getElementById('cost-list');
         if (list) { list.hidden = false; list.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         return;
       }
       if (action === 'toggle-cost-list') {
-        costListOpen = !costListOpen;
+        costListOpen = !costListOpen; costOpenSave();
         document.getElementById('cost-toggle')?.setAttribute('aria-expanded', String(costListOpen));
         document.getElementById('cost-toggle')?.setAttribute('aria-label', `Planwerte ${costListOpen ? 'zuklappen' : 'aufklappen'}`);
         const list = document.getElementById('cost-list');
@@ -16929,6 +16933,47 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       } catch (error) { /* offline: letzte bekannte Einstellung */ }
     }
     // ----- Ereignisse: lokal puffern, nach erfolgreicher Aktion senden, Doppelte vermeiden -----
+    // Aufklappbare Abschnitte (<details>) merken: Zustand je Seite und Überschrift, auch nach Seitenwechsel und Neuladen.
+    // Abschnitte, deren Zustand die Seite selbst verwaltet (data-*-Attribut am Element), bleiben unberührt.
+    const DETAILS_MEM_KEY = 'husora-open-details';
+    let detailsMem = (() => { try { return JSON.parse(localStorage.getItem(DETAILS_MEM_KEY) || '{}') || {}; } catch (error) { return {}; } })();
+    const detailsSeen = new WeakSet();
+    let detailsApplying = false;
+    function detailsMemKey(el) {
+      if (el.closest('.modal-backdrop, #onboarding-modal') || [...el.attributes].some((a) => a.name.startsWith('data-') || a.name === 'hidden') || el.classList.contains('ob-checklist')) return '';
+      const summary = el.querySelector(':scope > summary');
+      if (!summary) return '';
+      const text = (summary.textContent || '').replace(/\(?\d[\d.,\s]*\)?/g, '').replace(/\s+/g, ' ').trim().slice(0, 60);
+      const inPortal = el.closest('#partner-portal');
+      const page = inPortal ? `pp:${pp.view || ''}` : `${currentPage}:${selectedPropertyId || ''}`;
+      return `${page}|${el.className}|${text}`;
+    }
+    function detailsMemApply() {
+      detailsApplying = true;
+      document.querySelectorAll('details').forEach((el) => {
+        if (detailsSeen.has(el)) return;
+        detailsSeen.add(el);
+        const key = detailsMemKey(el);
+        if (key && Object.prototype.hasOwnProperty.call(detailsMem, key)) el.open = detailsMem[key];
+      });
+      setTimeout(() => { detailsApplying = false; }, 0);
+    }
+    document.addEventListener('toggle', (event) => {
+      const el = event.target;
+      if (detailsApplying || el.tagName !== 'DETAILS') return;
+      const key = detailsMemKey(el);
+      if (!key) return;
+      detailsMem[key] = el.open;
+      const keys = Object.keys(detailsMem);
+      if (keys.length > 300) keys.slice(0, keys.length - 300).forEach((k) => delete detailsMem[k]);
+      try { localStorage.setItem(DETAILS_MEM_KEY, JSON.stringify(detailsMem)); } catch (error) { /* optional */ }
+    }, true);
+    let detailsMemQueued = false;
+    new MutationObserver(() => {
+      if (detailsMemQueued) return;
+      detailsMemQueued = true;
+      requestAnimationFrame(() => { detailsMemQueued = false; detailsMemApply(); });
+    }).observe(document.body, { childList: true, subtree: true });
     function trackEvent(eventName, payload = {}) {
       try {
         if (!betaAnalyticsAllowed() || !/^[a-z][a-z0-9_]{2,40}$/.test(eventName)) return;
@@ -20312,10 +20357,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     let costSort = loadStore('stugliv-cost-sort', 'default');
     let costView = 'overview';
     let costChartMode = 'plan';
-    let costFinOpen = false;
-    let costBarsOpen = false;
-    let costActualOpen = false;
-    let costExtrasOpen = false;
+    let costFinOpen = Boolean(costOpenSaved.fin);
+    let costBarsOpen = Boolean(costOpenSaved.bars);
+    let costActualOpen = Boolean(costOpenSaved.actual);
+    let costExtrasOpen = Boolean(costOpenSaved.extras);
     const costMobile = () => window.matchMedia?.('(max-width: 760px)').matches;
     document.addEventListener('keydown', (event) => { if ((event.key === 'Enter' || event.key === ' ') && event.target.matches?.('[data-cost-mode]')) { event.preventDefault(); setCostChartMode(event.target.dataset.costMode); } });
     function setCostChartMode(mode) {
@@ -20762,7 +20807,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const headToggle = !target.closest('button, a, input, select, label') && target.closest('.cost-collapsible > .card-head');
       const collapse = target.closest('[data-cost-collapse]') || (headToggle && { dataset: { costCollapse: headToggle.parentElement.dataset.costSection } });
       if (collapse && collapse.dataset.costCollapse === 'plan') { document.getElementById('cost-toggle')?.click(); return; }
-      if (collapse) { const key = collapse.dataset.costCollapse; if (key === 'fin') costFinOpen = !costFinOpen; else if (key === 'bars') costBarsOpen = !costBarsOpen; else if (key === 'actual') costActualOpen = !costActualOpen; else costExtrasOpen = !costExtrasOpen; const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
+      if (collapse) { const key = collapse.dataset.costCollapse; if (key === 'fin') costFinOpen = !costFinOpen; else if (key === 'bars') costBarsOpen = !costBarsOpen; else if (key === 'actual') costActualOpen = !costActualOpen; else costExtrasOpen = !costExtrasOpen; costOpenSave(); const scroll = window.scrollY; render(); window.scrollTo(0, scroll); return; }
       const modeTile = target.closest('[data-cost-mode]');
       if (modeTile) { setCostChartMode(modeTile.dataset.costMode); return; }
       const paneTab = target.closest('[data-cost-view]');
