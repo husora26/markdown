@@ -17,12 +17,12 @@ const { chromium } = require('playwright');
     const t = await p.textContent('#onboarding-body'); if (!/Willkommen bei Husora/.test(t) || !/Schritt 1 von 9/.test(t)) throw new Error(t.slice(0, 120));
     return 'Schritt 1 von 9';
   });
-  await step('Hausbesitzer wählen → Versionswahl mit FREE, PLUS, PRO, ULTIMATE', async () => {
+  await step('Hausbesitzer wählen → Tarifwahl mit FREE, PLUS, PRO, ULTIMATE', async () => {
     await p.click('[data-ob-role=owner]'); await p.waitForTimeout(200);
     const r = await p.evaluate(() => ({ plans: [...document.querySelectorAll('[data-ob-plan]')].map((b) => b.dataset.obPlan).join(','), on: document.querySelector('.ob-plan.on')?.dataset.obPlan, t: document.getElementById('onboarding-title')?.textContent, k: OB_FLOWS.homeowner.steps[onboardingStep].key }));
-    if (r.plans !== 'free,plus,pro,ultimate' || r.on !== 'free' || r.k !== 'welcome' || !/Version/.test(r.t)) throw new Error(JSON.stringify(r)); return r.plans;
+    if (r.plans !== 'free,plus,pro,ultimate' || r.on !== 'free' || r.k !== 'welcome' || !/Tarif/.test(r.t)) throw new Error(JSON.stringify(r)); return r.plans;
   });
-  await step('Version wählen (PLUS ansehen, mit FREE weiter) → Schritt „Erstes Haus“', async () => {
+  await step('Tarif wählen (PLUS ansehen, mit FREE weiter) → Schritt „Erstes Haus“', async () => {
     await p.click('[data-ob-plan=plus]'); await p.waitForTimeout(100);
     const btn = await p.textContent('[data-ob-plan-next]'); if (!/PLUS/.test(btn)) throw new Error(btn);
     await p.click('[data-ob-plan=free]'); await p.waitForTimeout(100);
