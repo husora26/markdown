@@ -1404,6 +1404,7 @@
     .inspection-findings[hidden] { display: none; }
     .automation-links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
     .welcome-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .plan-tag-mini { margin-left: 2px; padding: 1px 6px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: 10.5px; font-weight: 800; letter-spacing: .02em; }
     .back-link { display: inline-flex; align-items: center; gap: 4px; margin: 0 0 10px; padding: 3px 9px 3px 7px; border: 1px solid var(--line); border-radius: 20px; color: var(--muted); background: rgba(255,255,255,.7); font: inherit; font-size: 12.5px; font-weight: 650; cursor: pointer; }
     .back-link:hover { color: var(--green); border-color: var(--green); background: white; }
     .back-link:focus-visible { outline: 2px solid #9db9a5; outline-offset: 2px; }
@@ -10251,6 +10252,39 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         }).join('')}</div>
         <details class="card house-settings-details"><summary><span><strong>Nutzung & Anzahl der Ferienhäuser</strong><small>${profileData.usage === 'self' ? 'Nur Eigennutzung' : 'Eigennutzung und Vermietung'} · ${properties.length} ${properties.length === 1 ? 'Haus' : 'Häuser'}</small></span>${icon('edit')}</summary>${houseSettingsCard()}</details>`;
     }
+    // Automatische Zuordnung (ULTIMATE): je Bereich, der noch keinen Partner hat, den nächstgelegenen Servicepartner im Umkreis wählen
+    const AUTO_ASSIGN_RADIUS_KM = 150;
+    const AUTO_ASSIGN_CATEGORIES = [['house', 'Hausservice'], ['inspection', 'Hauskontrolle'], ['renovation', 'Sanierung']];
+    function autoAssignPicks(property) {
+      const current = servicePartnerAssignments[property.id] || [];
+      return AUTO_ASSIGN_CATEGORIES.filter(([category]) => !current.some((id) => providerById(id)?.category === category)).map(([category, label]) => {
+        const best = providers.filter((provider) => provider.category === category)
+          .map((provider) => ({ provider, km: providerDistanceKm(provider, property) }))
+          .filter((item) => Number.isFinite(item.km) && item.km <= AUTO_ASSIGN_RADIUS_KM)
+          .sort((a, b) => a.km - b.km || (a.provider.priority === 'A' ? -1 : 0) - (b.provider.priority === 'A' ? -1 : 0))[0];
+        return { category, label, ...(best || {}) };
+      });
+    }
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-auto-assign]');
+      if (!button) return;
+      if (!entitlements.can('partner_auto_assign')) { upgradeNotice('partner_auto_assign'); return; }
+      const property = properties.find((item) => item.id === button.dataset.autoAssign);
+      if (!property) return;
+      if (!propertyOrigin(property)) { ensurePropertyGeocode(property); showToast('Für die Entfernung braucht das Haus eine Adresse oder Region. Bitte im Hausprofil ergänzen.'); return; }
+      const picks = autoAssignPicks(property);
+      if (!picks.length) { showToast('Hausservice, Hauskontrolle und Sanierung sind bereits zugeordnet.'); return; }
+      const found = picks.filter((pick) => pick.provider);
+      const missing = picks.filter((pick) => !pick.provider).map((pick) => pick.label);
+      if (!found.length) { showToast(`Kein passender Servicepartner im Umkreis von ${AUTO_ASSIGN_RADIUS_KM} km gefunden (${missing.join(', ')}).`); return; }
+      const nextMapping = { ...servicePartnerAssignments, [property.id]: [...(servicePartnerAssignments[property.id] || []), ...found.map((pick) => pick.provider.id)] };
+      try {
+        localStorage.setItem('stugliv-provider-assignments', JSON.stringify(nextMapping));
+        servicePartnerAssignments = nextMapping;
+      } catch (error) { showToast('Zuordnung konnte nicht gespeichert werden. Browser-Speicher prüfen.'); return; }
+      render();
+      showToast(`Automatisch zugeordnet: ${found.map((pick) => `${pick.provider.name} (${pick.label}, ${pick.km} km)`).join(', ')}${missing.length ? ` · Kein Partner im Umkreis für ${missing.join(', ')}` : ''}.`);
+    });
     function partnerCategoryLabel(provider) {
       return provider.category === 'renovation' ? 'Sanierung' : provider.category === 'inspection' ? 'Hauskontrolle' : 'Hausservice';
     }
@@ -10291,7 +10325,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           ${controlInfo}
           <div class="assigned-provider-documents"><div class="ap-docs-head"><strong>Dokumente${providerDocuments.length ? ` (${providerDocuments.length})` : ''}</strong>${uploadButton}</div>${providerDocuments.length ? `<div class="document-list">${providerDocuments.map((document) => `<article class="document-row"><span class="document-icon">${icon('document')}</span><span class="document-info"><strong title="${escapeHtml(document.name)}">${escapeHtml(document.name)}</strong><small>${fileSize(document.size)} · hinzugefügt am ${escapeHtml(document.createdAt)}</small></span><span class="document-actions"><a href="${escapeHtml(document.dataUrl)}" target="_blank" rel="noopener noreferrer">Öffnen</a><button class="danger-btn" data-delete-document="${escapeHtml(document.id)}" type="button">Löschen</button></span></article>`).join('')}</div>` : '<p class="ap-empty">Noch keine Dokumente – Angebote, Rechnungen oder Protokolle hier ablegen.</p>'}</div></article>`;
       }).join('');
-      return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>Zugeordnete Servicepartner</h1><p class="subtitle">Dokumente je Servicepartner verwalten.</p></div><button class="primary-btn" data-action="open-provider-search" data-property="${escapeHtml(property.id)}">Servicepartner finden</button></div>
+      return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>Zugeordnete Servicepartner</h1><p class="subtitle">Dokumente je Servicepartner verwalten.</p></div><div class="welcome-actions"><button type="button" class="secondary-btn" data-auto-assign="${escapeHtml(property.id)}" title="Wählt je Bereich (Hausservice, Hauskontrolle, Sanierung) den nächstgelegenen Servicepartner im Umkreis von ${AUTO_ASSIGN_RADIUS_KM} km">${icon('bolt')} Automatisch zuordnen${entitlements.can('partner_auto_assign') ? '' : ` <span class="plan-tag-mini">${escapeHtml(entitlements.minPlanFor('partner_auto_assign').name)}</span>`}</button><button class="primary-btn" data-action="open-provider-search" data-property="${escapeHtml(property.id)}">Servicepartner finden</button></div></div>
         <section class="assigned-house-bar"><div class="assigned-house-name"><span>Ferienhaus</span><strong>${escapeHtml(property.name)}</strong>${property.address ? `<small>${escapeHtml(property.address)}</small>` : ''}</div>
           ${`<label class="assigned-house-switch"><span class="form-label">Ferienhaus wechseln</span><select id="assigned-property" class="filter-select" aria-label="Ferienhaus wechseln">${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === property.id ? 'selected' : ''}>${escapeHtml(item.name)}${item.region ? ` · ${escapeHtml(item.region)}` : ''}</option>`).join('')}</select></label>`}</section>
         ${assignedPairs.length ? `<div class="assigned-provider-list ap-grid">${providerCards}</div>` : `<section class="card empty custom-provider-empty"><strong>Diesem Ferienhaus sind noch keine Servicepartner zugeordnet.</strong><p>Über „Servicepartner finden“ wählst du einen Betrieb aus dem Verzeichnis oder legst deinen eigenen Handwerker, Hausmeister oder Reinigungsservice an.</p></section>`}`;
