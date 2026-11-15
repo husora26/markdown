@@ -8,7 +8,7 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # Playwright 1.56 unterstützt ubuntu-latest (26.04) noch nicht
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
