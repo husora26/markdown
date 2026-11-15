@@ -2666,21 +2666,22 @@
     .pp-cal-day { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px; min-height: 46px; padding: 6px 0 4px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
     .pp-cal-day.other { color: var(--muted); opacity: .45; }
     .pp-cal-day.today { border-color: var(--green); }
-    .pp-cal-day.sel { background: var(--green-dark); color: #fff; }
+    .pp-cal-day.sel { z-index: 1; background: var(--green-dark); color: #fff; font-weight: 800; box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--green); transform: scale(1.06); }
     .pp-cal-day.has:not(.sel) { background: var(--green-soft); }
     .pp-cal-dots { display: flex; gap: 3px; }
-    .pp-cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
-    .pp-cal-dots i.insp { background: #3b7bbf; }
-    .pp-cal-dots i.new { background: #c48a1d; }
+    .pp-cal-dots i { width: 7px; height: 7px; border-radius: 50%; background: #2f8a57; }
+    .pp-cal-dots i.insp { background: #2f6fd0; }
+    .pp-cal-dots i.new { background: #d4900f; }
     .pp-cal-dots i.done { background: #9aa59e; }
-    .pp-cal-dots i.away, .pp-cal-legend i.away { background: #b5523f; }
+    .pp-cal-dots i.away, .pp-cal-legend i.away { background: #d0392b; }
+    .pp-cal-legend i.done { background: #9aa59e; }
     .pp-away { cursor: default; border-left: 3px solid #b5523f; }
-    .pp-cal-day.sel .pp-cal-dots i { background: #fff; }
+    .pp-cal-day.sel .pp-cal-dots i { box-shadow: 0 0 0 1.5px #fff; }
     .pp-cal-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; color: var(--muted); font-size: 12px; }
     .pp-cal-legend span { display: inline-flex; align-items: center; gap: 5px; }
-    .pp-cal-legend i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
-    .pp-cal-legend i.insp { background: #3b7bbf; }
-    .pp-cal-legend i.new { background: #c48a1d; }
+    .pp-cal-legend i { width: 9px; height: 9px; border-radius: 50%; background: #2f8a57; }
+    .pp-cal-legend i.insp { background: #2f6fd0; }
+    .pp-cal-legend i.new { background: #d4900f; }
     .pp-svc-price { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; margin-top: 10px; }
     .pp-svc-desc { margin: 4px 0 0 30px; color: var(--muted); font-size: 13px; line-height: 1.4; }
     .pp-pdf-pick { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px dashed var(--line); border-radius: 12px; }
@@ -5019,9 +5020,11 @@ html.dark .pp-brand-btn:hover, html.dark .pp-brand-btn:focus-visible { backgroun
 html.dark .pp-logo { background: rgba(255, 255, 255, 0.02); }
 html.dark .pp-icon-btn, html.dark .pp-switch { border: 1px solid rgba(255, 255, 255, 0.05); }
 html.dark .pp-cal-day.sel { background: var(--green-solid-dark); }
-html.dark .pp-cal-dots i { background: var(--green-solid); }
-html.dark .pp-cal-day.sel .pp-cal-dots i { background: #1c1c1c; }
-html.dark .pp-cal-legend i { background: var(--green-solid); }
+html.dark .pp-cal-dots i.order, html.dark .pp-cal-legend i:not([class]) { background: #4cb07a; }
+html.dark .pp-cal-dots i.insp, html.dark .pp-cal-legend i.insp { background: #5b9cf0; }
+html.dark .pp-cal-dots i.away, html.dark .pp-cal-legend i.away { background: #ef6a5a; }
+html.dark .pp-cal-dots i.new, html.dark .pp-cal-legend i.new { background: #f0b03c; }
+html.dark .pp-cal-day.sel .pp-cal-dots i { box-shadow: 0 0 0 1.5px #fff; }
 html.dark .pp-dot { background: var(--red-solid); }
 html.dark .pp-actions.sticky { box-shadow: 0 -8px 18px rgba(0, 0, 0, 0.18); }
 html.dark .pp-tile.amber { border-color: #5d503a; }
@@ -22964,7 +22967,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <div class="pp-card pp-cal">
           <div class="pp-cal-head"><strong>${escapeHtml(first.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' }))}</strong><div class="pp-cal-nav"><button type="button" data-pp-cal-nav="-1" aria-label="Vorheriger Monat">‹</button><button type="button" data-pp-cal-nav="0">Heute</button><button type="button" data-pp-cal-nav="1" aria-label="Nächster Monat">›</button></div></div>
           <div class="pp-cal-grid">${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((w) => `<span class="pp-cal-wd">${w}</span>`).join('')}${cells.join('')}</div>
-          <div class="pp-cal-legend"><span><i></i>Auftrag</span><span><i class="new"></i>Neue Anfrage</span><span><i class="insp"></i>Kontrolle</span><span><i class="away"></i>Abwesend</span></div>
+          <div class="pp-cal-legend"><span><i></i>Auftrag</span><span><i class="new"></i>Neue Anfrage</span><span><i class="insp"></i>Kontrolle</span><span><i class="away"></i>Abwesend</span><span><i class="done"></i>Erledigt</span></div>
         </div>
         ${ppSection(`${selected === today ? 'Heute · ' : ''}${label}`, dayList.length ? `<div class="pp-list">${dayList.map((e) => e.html).join('')}</div>` : '<p class="pp-muted">An diesem Tag sind keine Aufträge oder Kontrollen geplant.</p>')}
         ${overdue.length ? ppSection(`Überfällig (${overdue.length})`, `<div class="pp-list">${overdue.map((e) => e.html).join('')}</div>`) : ''}
