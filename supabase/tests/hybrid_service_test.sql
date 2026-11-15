@@ -72,13 +72,15 @@ values ('cccccccc-0000-4000-8000-000000000001', 'dddddddd-0000-4000-8000-0000000
 
 \echo '=== Eigentümer erledigt selbst: Fälligkeiten, Idempotenz, Erledigen/Überspringen/Verschieben ==='
 select ht_test.login('admin@husora.test');
+-- Fälligkeiten rechnen in Europe/Stockholm; zwischen 23 und 24 Uhr UTC ist dort schon der nächste Tag
+select ht_test.set('today', (now() at time zone 'Europe/Stockholm')::date::text);
 select ht_test.set('p_self', public.save_maintenance_plan(jsonb_build_object('property_id', 'dddddddd-0000-4000-8000-000000000001', 'title', 'HT Rauchmelder testen',
-  'category', 'Sicherheit', 'interval_type', 'weekly', 'start_date', current_date, 'automation_mode', 'owner_self_service', 'timezone', 'Europe/Stockholm'))::text);
+  'category', 'Sicherheit', 'interval_type', 'weekly', 'start_date', ht_test.get('today')::date, 'automation_mode', 'owner_self_service', 'timezone', 'Europe/Stockholm'))::text);
 select ht_test.ok('Plan ohne Partner: Zuständigkeit Eigentümer', (select assigned_type = 'owner' and organization_id = 'cccccccc-0000-4000-8000-000000000001' from maintenance where id = ht_test.get('p_self')::uuid));
 select ht_test.set('n_self', (select count(*)::text from service_tasks where maintenance_id = ht_test.get('p_self')::uuid));
 select ht_test.ok('Fälligkeiten für 60 Tage erzeugt (wöchentlich ≈ 9)', ht_test.get('n_self')::int between 8 and 10);
 select ht_test.ok('Fälligkeiten im Vorlauf: „selbst erledigen“, kein Auftrag',
-  (select bool_and(owner_action = 'self_service') from service_tasks where maintenance_id = ht_test.get('p_self')::uuid and local_scheduled_date <= current_date + 14)
+  (select bool_and(owner_action = 'self_service') from service_tasks where maintenance_id = ht_test.get('p_self')::uuid and local_scheduled_date <= ht_test.get('today')::date + 14)
   and not exists (select 1 from service_orders o join service_tasks t on t.id = o.service_task_id where t.maintenance_id = ht_test.get('p_self')::uuid));
 select ht_test.ok('Erneutes Planen erzeugt nichts doppelt', (public.refresh_maintenance_plan(ht_test.get('p_self')::uuid) ->> 'created')::int = 0
   and (select count(*) from service_tasks where maintenance_id = ht_test.get('p_self')::uuid) = ht_test.get('n_self')::int);
@@ -92,9 +94,9 @@ select ht_test.ok('Erledigt markiert', ht_test.get('r') = 'completed'
   and (select last_performed_at is not null from maintenance where id = ht_test.get('p_self')::uuid));
 select ht_test.denied('Überspringen ohne Grund', format($$ select public.skip_maintenance_task(%L, '  ') $$, ht_test.get('t2')));
 select ht_test.ok('Übersprungen mit Grund', public.skip_maintenance_task(ht_test.get('t2')::uuid, 'Im Urlaub') = 'skipped');
-select ht_test.set('r', public.reschedule_maintenance_task(ht_test.get('t3')::uuid, current_date + 20)::text);
+select ht_test.set('r', public.reschedule_maintenance_task(ht_test.get('t3')::uuid, ht_test.get('today')::date + 20)::text);
 select ht_test.ok('Einzeltermin verschoben, Serie unverändert',
-  (select local_scheduled_date = current_date + 14 and (scheduled_start at time zone 'Europe/Stockholm')::date = current_date + 20 from service_tasks where id = ht_test.get('t3')::uuid));
+  (select local_scheduled_date = ht_test.get('today')::date + 14 and (scheduled_start at time zone 'Europe/Stockholm')::date = ht_test.get('today')::date + 20 from service_tasks where id = ht_test.get('t3')::uuid));
 select ht_test.attempt(format($$ delete from service_tasks where id = %L $$, ht_test.get('t3')));
 select ht_test.ok('Fälligkeiten aus Plänen werden nicht gelöscht', exists (select 1 from service_tasks where id = ht_test.get('t3')::uuid));
 select ht_test.ok('Abgeschlossene Fälligkeit bleibt abgeschlossen', (select status = 'completed' from service_tasks where id = ht_test.get('t1')::uuid));
