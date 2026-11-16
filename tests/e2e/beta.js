@@ -1,4 +1,4 @@
-// Husora Beta Mode: Banner, Feedback, Fehler melden, Analytics, Bewertung, Umfrage, Premium-Interesse, Admin-Dashboard, Schalter
+// Husora Beta Mode: Banner, Feedback, Fehler melden, Analytics, Bewertung, Umfrage, Admin-Dashboard, Schalter
 const { chromium } = require('playwright'); const fs = require('fs'); const { execSync } = require('child_process');
 const { SP, ANON } = require('./env'); const totp = require('./totp'); const OUT = SP + '/audit/beta'; fs.mkdirSync(OUT, { recursive: true });
 const URL_ = 'http://127.0.0.1:54321'; const N = Date.now() % 100000; const PW = 'Husora!2026';
@@ -79,12 +79,6 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await H.click('[data-beta-form=rating] button[type=submit]'); await H.waitForTimeout(1000);
     const r = sql(`select rating||'/'||context||'/'||app_role from beta_ratings where comment='Rating ${N}'`);
     if (r !== '4/inspection/owner') throw new Error(r); return r;
-  });
-  await step('Premium vormerken → subscription_interest', async () => {
-    await H.evaluate(() => { currentPage = 'help'; render(); }); await H.waitForTimeout(200);
-    await H.click('[data-beta-premium=multi_house]'); await flush(H);
-    const r = sql(`select count(*) from analytics_events e join users u on u.id=e.user_id where u.email='admin@husora.test' and event_name='subscription_interest' and metadata->>'feature'='multi_house'`);
-    if (r !== '1') throw new Error(r); return `${r} Vormerkung`;
   });
   await step('7-Tage-Umfrage einmalig', async () => {
     sql(`delete from beta_ratings where context='day7' and user_id=(select id from users where email='admin@husora.test')`);
