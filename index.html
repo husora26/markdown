@@ -3800,6 +3800,27 @@
       .nav-menu { position: fixed; top: 74px; right: 10px; left: 10px; bottom: calc(76px + env(safe-area-inset-bottom)); width: auto; max-height: none; }
       .nav button { min-height: 46px; font-size: 15px; }
     }
+    /* „Mehr“ im Stil der Servicepartner-App: Karten mit Symbolkachel, Unterzeile und Pfeil */
+    .nav-group:not(.nav-group-sub) { grid-column: 1 / -1; gap: 8px; }
+    .nav-group > button[data-page] { min-height: 0; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 13px; color: var(--ink); background: var(--paper); font-weight: 400; flex-wrap: wrap; }
+    .nav-group > button[data-page] > span { flex: 1 1 0; min-width: 0; font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
+    .nav-group > button[data-page]:hover, .nav-group > button[data-page].active { color: var(--ink); background: var(--paper); border-color: var(--green); }
+    .nav-group > button[data-page].active { box-shadow: inset 3px 0 0 var(--green); }
+    .nav-ic { display: grid; place-items: center; flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px; background: var(--green-soft); color: var(--green); font-style: normal; }
+    .nav-ic svg { width: 18px; height: 18px; }
+    .nav-cap { order: 5; flex: 1 0 100%; margin: -8px 0 0 46px; padding-right: 26px; color: var(--muted); font-size: 12.5px; font-style: normal; line-height: 1.35; }
+    .nav-cap:empty { display: none; }
+    .nav-arrow { order: 4; display: inline-flex; flex: 0 0 auto; color: var(--muted); font-style: normal; }
+    .nav-arrow svg { width: 16px; height: 16px; }
+    .nav-group > button[data-page] > .nav-count, .nav-group > button[data-page] > .hub-nav-count { order: 3; margin-left: auto; }
+    .nav-group > button.in-bar, .nav-group.all-in-bar { display: none !important; }
+    .nav-group-label { margin: 8px 2px 0; }
+    @media (max-width: 760px) {
+      .nav-menu { top: 65px; right: 0; left: 0; padding: 16px 16px 24px; border: 0; border-radius: 0; background: var(--canvas); box-shadow: none; }
+      .nav-menu-label { margin: 0 0 12px; color: var(--ink); font-size: 21px; font-weight: 800; letter-spacing: 0; text-transform: none; }
+      .nav { gap: 12px; }
+      .nav button { font-size: 14px; }
+    }
     /* Leiste unten am Handy */
     .tabbar { display: none; }
     @media (max-width: 760px) {
@@ -19444,6 +19465,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         // Portfolio erst ab zwei Häusern
         const portfolio = nav.querySelector('[data-page="portfolio"]');
         if (portfolio) portfolio.style.display = properties.length < 2 ? 'none' : '';
+        applyMoreMenu(nav);
         // Ungelesene Partner-Nachrichten auch am Eintrag „Servicepartner“
         const unread = nav.querySelector('[data-page="partnerHub"] .hub-nav-count')?.textContent || '';
         const partners = nav.querySelector('[data-page="assignedProviders"]');
@@ -19466,6 +19488,25 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         return `<button type="button" class="${active === id ? 'active' : ''}" data-page="${id}" ${active === id ? 'aria-current="page"' : ''}>${escapeHtml(label)}${locked ? `<i class="section-tab-plan">${escapeHtml(entitlements.minPlanFor(PAGE_GATES[id]).name)}</i>` : ''}</button>`;
       }).join('')}</nav>`;
     }
+    // Unterzeilen der Menüeinträge unter „Mehr“
+    const NAV_CAPTIONS = { dashboard: 'Startseite mit allem, was ansteht', portfolio: 'Alle Häuser im Vergleich', plans: 'FREE, PLUS, PRO und ULTIMATE', profile: 'Name, Kontakt und Husora-Konto', settings: 'Startseite, Darstellung, Daten & App', help: 'Fragen, Anleitungen und Kontakt', legal: 'Datenschutz, AGB und Impressum' };
+    // Was schon in der unteren Leiste steht, erscheint unter „Mehr“ nicht noch einmal
+    function applyMoreMenu(nav) {
+      const inBar = new Set(TABBAR_ITEMS.map(([page]) => page));
+      nav.querySelectorAll('.nav-group:not(.nav-group-sub) > button[data-page]').forEach((button) => {
+        const page = button.dataset.page;
+        const section = NAV_SECTIONS.find((entry) => entry.page === page);
+        button.classList.toggle('in-bar', inBar.has(page));
+        const cap = button.querySelector('.nav-cap');
+        if (!cap) return;
+        const rest = section ? section.pages.filter(([id]) => id !== page && !inBar.has(id) && (id !== 'bookings' || bookingsEnabled()))
+          .map(([id, label]) => label || TAB_OPTIONS.find(([key]) => key === id)?.[1] || id) : [];
+        cap.textContent = section ? rest.join(' · ') : (NAV_CAPTIONS[page] || '');
+      });
+      nav.querySelectorAll('.nav-group:not(.nav-group-sub)').forEach((group) => {
+        group.classList.toggle('all-in-bar', ![...group.querySelectorAll(':scope > button[data-page]')].some((button) => !button.classList.contains('in-bar') && button.style.display !== 'none'));
+      });
+    }
     function buildGroupedNav() {
       const nav = document.querySelector('#main-menu .nav');
       if (!nav || nav.dataset.grouped) return;
@@ -19480,10 +19521,17 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         nav.appendChild(wrap);
       });
       buttons.forEach((button) => nav.lastElementChild.appendChild(button));
+      // Einträge wie in der Servicepartner-App: Symbol in einer Kachel, Unterzeile, Pfeil rechts
+      nav.querySelectorAll('button[data-page]').forEach((button) => {
+        const svg = button.querySelector(':scope > svg');
+        if (svg) { const tile = document.createElement('i'); tile.className = 'nav-ic'; svg.replaceWith(tile); tile.appendChild(svg); }
+        const cap = document.createElement('em'); cap.className = 'nav-cap'; button.querySelector(':scope > span')?.after(cap);
+        const arrow = document.createElement('i'); arrow.className = 'nav-arrow'; arrow.innerHTML = icon('arrow'); button.appendChild(arrow);
+      });
       nav.dataset.grouped = '1';
       applyNavSections();
       const label = document.querySelector('#main-menu .nav-menu-label');
-      if (label) label.textContent = 'Menü';
+      if (label) label.textContent = 'Mehr';
     }
     buildGroupedNav();
     // Symbole der unteren Leiste: unter Einstellungen → Startseite gestalten wählbar (vier Plätze plus „Mehr“).
@@ -19592,6 +19640,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const html = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab ${active === page ? 'active' : ''}" data-page="${page}" ${active === page ? 'aria-current="page"' : ''}>${icon(iconName)}<span>${label}</span>${page === 'tasks' && openCount ? `<i class="tab-badge">${openCount > 99 ? '99+' : openCount}</i>` : ''}</button>`).join('')
         + `<button type="button" class="tab ${!active || menuOpen ? 'active-more' : ''}" data-tab-more aria-haspopup="true" aria-expanded="${menuOpen ? 'true' : 'false'}" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
       bars.forEach((bar) => { bar.innerHTML = html; });
+      const nav = document.querySelector('#main-menu .nav');
+      if (nav?.dataset.grouped) applyMoreMenu(nav);
     }
 
     // --- Bereiche der Startseite ---
