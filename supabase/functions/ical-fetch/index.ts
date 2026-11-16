@@ -36,9 +36,19 @@ Deno.serve(async (req) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 10000);
   try {
-    const response = await fetch(url, { redirect: 'follow', signal: controller.signal, headers: { Accept: 'text/calendar, text/plain;q=0.8', 'User-Agent': 'Husora-Kalender/1.0' } });
-    // Nach Weiterleitungen muss das Ziel weiterhin ein erlaubter Anbieter sein
-    if (!allowedUrl(response.url)) return json(400, { error: 'Der Link leitet zu einer nicht erlaubten Adresse weiter.' });
+    // Weiterleitungen einzeln prüfen: jedes Ziel muss ein erlaubter Anbieter sein (höchstens 5 Sprünge)
+    let target: URL = url;
+    let response: Response | null = null;
+    for (let hop = 0; hop <= 5; hop++) {
+      response = await fetch(target, { redirect: 'manual', signal: controller.signal, headers: { Accept: 'text/calendar, text/plain;q=0.8', 'User-Agent': 'Husora-Kalender/1.0' } });
+      if (response.status < 300 || response.status >= 400) break;
+      const next = allowedUrl(new URL(response.headers.get('Location') || '', target).toString());
+      await response.body?.cancel();
+      if (!next) return json(400, { error: 'Der Link leitet zu einer nicht erlaubten Adresse weiter.' });
+      if (hop === 5) return json(508, { error: 'Zu viele Weiterleitungen.' });
+      target = next;
+    }
+    if (!response) return json(502, { error: 'Der Kalender konnte nicht geladen werden.' });
     if (!response.ok) return json(502, { error: `Der Anbieter antwortet mit Fehler ${response.status}.` });
     const reader = response.body?.getReader();
     const chunks: Uint8Array[] = [];
