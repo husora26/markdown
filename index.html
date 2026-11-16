@@ -3171,6 +3171,11 @@
     .beta-stars input { position: absolute; opacity: 0; }
     .beta-stars span { font-size: 34px; line-height: 1; color: var(--line); cursor: pointer; transition: color .1s; }
     .beta-stars label:hover span, .beta-stars label:hover ~ label span, .beta-stars input:checked ~ span, .beta-stars label:has(input:checked) ~ label span { color: var(--amber); }
+    .portal-fold { margin: 0 0 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--card, #fff); }
+    .portal-fold > summary { display: flex; align-items: center; gap: 8px; padding: 12px 14px; cursor: pointer; font-weight: 600; list-style: none; }
+    .portal-fold > summary::-webkit-details-marker { display: none; }
+    .portal-fold > summary svg { width: 18px; height: 18px; flex: none; }
+    .portal-fold-body { padding: 0 10px 10px; }
     .welcome-compact { margin-bottom: 12px; }
     .dash-hello { font-size: 22px; margin: 0; }
     .beta-auto { margin: 0; color: var(--muted); font-size: 12px; }
@@ -7456,15 +7461,21 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     function showPortalState() {
       const card = document.getElementById('portal-card');
-      if (currentPage === 'profile' && card) card.outerHTML = portalCardHtml();
+      if (card) card.outerHTML = portalCardHtml();
       else if (currentPage === 'bookings' && bookingView === 'list') render();
     }
+    // Buchungsportale (Kalender-Links, ggf. Repull) direkt auf der Seite Buchungen – aufklappbar
     function portalHintHtml() {
-      const text = portalConnected() || icalLinkCount()
+      const connected = portalConnected() || icalLinkCount();
+      const text = connected
         ? `Buchungsportale verbunden · letzter Abgleich: ${(portalSync.lastSync || icalSync.lastSync) ? fmtDateTime(new Date(portalSync.lastSync || icalSync.lastSync)) : 'noch nie'}`
-        : 'Airbnb, Booking.com und Vrbo lassen sich automatisch in den Kalender übernehmen.';
-      return `<p class="portal-link-note">${escapeHtml(text)} <button type="button" class="text-btn" data-page="profile">Buchungsportale im Benutzerprofil verwalten →</button></p>`;
+        : 'Airbnb, Booking.com und Vrbo automatisch in den Kalender übernehmen';
+      return `<details class="portal-fold" id="portal-fold" ${portalFoldOpen ? 'open' : ''}><summary>${icon('calendar')}<span>${escapeHtml(text)}</span></summary>
+        <div class="portal-fold-body">${icalCardHtml()}${portalConnected() || portalSync.apiKey ? `<div style="height:12px"></div>${portalCardHtml()}` : ''}</div></details>`;
     }
+    let portalFoldOpen = false;
+    document.addEventListener('toggle', (event) => { if (event.target.id === 'portal-fold') portalFoldOpen = event.target.open; }, true);
+    document.addEventListener('click', (event) => { if (event.target.closest?.('[data-open-portals]')) portalFoldOpen = true; }, true);
     async function portalRequest(path, { method = 'GET', body } = {}) {
       let response;
       try {
@@ -7598,7 +7609,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <div class="portal-body portal-actions"><button type="button" class="primary-btn" data-action="portal-sync" ${portalBusy ? 'disabled' : ''}>${portalBusy ? 'Abgleich läuft …' : 'Jetzt abgleichen'}</button><button type="button" class="secondary-btn" data-action="portal-connect" ${portalBusy ? 'disabled' : ''}>Portal-Konto verknüpfen</button><button type="button" class="secondary-btn" data-action="portal-disconnect">Trennen</button></div>
         <div class="portal-body">${connections}${mapping}<label class="portal-auto"><input type="checkbox" id="portal-auto-toggle" ${portalSync.auto ? 'checked' : ''}> Automatisch alle 15 Minuten abgleichen, solange die App geöffnet ist</label></div>${message}</section>`;
     }
-    let icalSync = { links: {}, status: {}, allowProxy: false, auto: true, lastSync: '' };
+    let icalSync = { links: {}, status: {}, auto: true, lastSync: '' };
     try {
       const savedIcal = JSON.parse(localStorage.getItem('stugliv-ical-sync') || 'null');
       if (savedIcal && typeof savedIcal === 'object') icalSync = { ...icalSync, ...savedIcal, links: { ...(savedIcal.links || {}) }, status: { ...(savedIcal.status || {}) } };
@@ -7613,7 +7624,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     function showIcalState() {
       const card = document.getElementById('ical-card');
-      if (currentPage === 'profile' && card) card.outerHTML = icalCardHtml();
+      if (card) card.outerHTML = icalCardHtml();
       else if (currentPage === 'bookings' && bookingView === 'list') render();
     }
     function parseIcs(text) {
@@ -7642,19 +7653,22 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       });
     }
     async function fetchIcalText(url) {
-      const attempts = [url, ...(icalSync.allowProxy && externalAllowed('listing_import') ? [`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, `https://api.cors.lol/?url=${encodeURIComponent(url)}`] : [])];
+      // 1. direkt (manche Anbieter erlauben das), 2. über die eigene Husora-Funktion „ical-fetch“ (nur mit Konto).
+      // Fremde Weiterleitungsdienste werden nicht mehr genutzt – sie hätten den Kalender-Link gesehen.
       let reachedInvalid = false;
-      for (const target of attempts) {
-        try {
-          const response = await fetch(target, { cache: 'no-store' });
-          if (!response.ok) continue;
-          const text = await response.text();
-          if (/BEGIN:VCALENDAR/i.test(text)) return text;
-          reachedInvalid = true;
-        } catch (error) { /* nächster Weg */ }
+      try {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (response.ok) { const text = await response.text(); if (/BEGIN:VCALENDAR/i.test(text)) return text; reachedInvalid = true; }
+      } catch (error) { /* vom Anbieter blockiert – weiter mit der Husora-Funktion */ }
+      if (cloudSignedIn()) {
+        let text = '';
+        try { text = await cloudFetch('/functions/v1/ical-fetch', { method: 'POST', body: { url } }); }
+        catch (error) { throw importError(error.message || 'Der Kalender konnte nicht geladen werden. Bitte Link und Internetverbindung prüfen.'); }
+        if (typeof text === 'string' && /BEGIN:VCALENDAR/i.test(text)) return text;
+        reachedInvalid = true;
       }
       if (reachedInvalid) throw importError('Der Link liefert keinen gültigen Kalender. Bitte den Export-Link („.ics“) aus Airbnb neu kopieren.');
-      throw importError(icalSync.allowProxy ? 'Der Kalender konnte nicht geladen werden. Bitte Link und Internetverbindung prüfen.' : 'Der Anbieter blockiert den direkten Abruf im Browser. Bitte „Abruf über Hilfsdienst erlauben“ aktivieren.');
+      throw importError('Der Anbieter blockiert den direkten Abruf im Browser. Melde dich mit deinem Husora-Konto an – dann ruft Husora den Kalender über den eigenen Server ab.');
     }
     async function syncIcalBookings() {
       if (icalBusy) return;
@@ -7718,7 +7732,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const message = icalMessage ? `<p class="portal-message ${icalMessage.error ? 'error' : ''}" role="status">${escapeHtml(icalMessage.text)}</p>` : '';
       return `<section class="card portal-card" id="ical-card"><div class="card-head"><div><h2 class="card-title">Airbnb verbinden</h2><p class="card-caption">Buchungen per Kalender-Link automatisch im Kalender eintragen · kostenlos, ohne Zusatzkonto${icalSync.lastSync ? ` · letzter Abgleich: ${escapeHtml(stamp(icalSync.lastSync))}` : ''}</p></div><span class="status ${icalLinkCount() ? '' : 'pending'}">${icalLinkCount() ? 'Verbunden' : 'Nicht verbunden'}</span></div>
         <form id="ical-form" class="portal-body"><ol class="ical-steps"><li>In Airbnb: <strong>Kalender → Verfügbarkeit → Kalender verbinden → Kalender exportieren</strong>.</li><li>Den Link kopieren und hier beim passenden Ferienhaus einfügen (Links von Booking.com und Vrbo funktionieren ebenso).</li></ol>${rows || '<p class="portal-hint">Lege zuerst ein Ferienhaus an.</p>'}
-          <label class="portal-auto"><input type="checkbox" id="ical-proxy" ${icalSync.allowProxy ? 'checked' : ''}> Abruf über Hilfsdienst erlauben (nötig, weil Airbnb den direkten Abruf im Browser blockiert). Der Dienst sieht dabei den Kalender-Link.</label>
+          ${cloudSignedIn() ? '' : '<p class="portal-hint" style="margin:0">Airbnb blockiert den Abruf direkt im Browser. Mit deinem Husora-Konto ruft Husora den Kalender über den eigenen Server ab – ohne fremde Dienste.</p>'}
           <label class="portal-auto"><input type="checkbox" id="ical-auto" ${icalSync.auto ? 'checked' : ''}> Automatisch alle 15 Minuten abgleichen, solange die App geöffnet ist</label>
           <div class="portal-actions" style="display:flex;flex-wrap:wrap;gap:8px"><button type="submit" class="primary-btn" ${icalBusy ? 'disabled' : ''}>${icalBusy ? 'Abgleich läuft …' : 'Speichern und abgleichen'}</button></div></form>
         <p class="portal-hint">Airbnb liefert im Kalender-Link nur Zeitraum und Buchungscode, keinen Gastnamen und keine Personenzahl. Diese Angaben bleiben leer. Blockierte Tage („nicht verfügbar“) werden nicht als Buchung übernommen.</p>${message}</section>`;
@@ -8392,8 +8406,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     // Der Fallback unten enthält nur Grenzwerte/Funktionen für den Offline-Start – keine Preise.
     // Freischaltungen werden ausschließlich über entitlements.can()/limit() geprüft.
     const PLAN_ORDER = ['free', 'plus', 'pro', 'ultimate'];
-    const PLAN_BASE_FEATURES = ['calendar', 'tasks', 'inspection', 'seasons', 'costs_basic', 'emergency', 'bookings'];
-    const PLAN_PLUS_FEATURES = [...PLAN_BASE_FEATURES, 'repairs', 'renovations', 'contracts', 'meters', 'costs_annual', 'automation_basic', 'house_model', 'listing_import', 'invoice_ai', 'pdf_reports', 'ai_basic'];
+    const PLAN_BASE_FEATURES = ['calendar', 'tasks', 'inspection', 'seasons', 'costs_basic', 'emergency', 'bookings', 'repairs'];
+    const PLAN_PLUS_FEATURES = [...PLAN_BASE_FEATURES, 'renovations', 'contracts', 'meters', 'costs_annual', 'automation_basic', 'house_model', 'listing_import', 'invoice_ai', 'pdf_reports', 'ai_basic'];
     const PLAN_PRO_FEATURES = [...PLAN_PLUS_FEATURES, 'service_portal', 'service_orders', 'repair_orders_auto', 'renovations_full', 'budget', 'automation_advanced', 'ai_advanced', 'cost_trends', 'annual_report', 'priority_support'];
     const PLAN_FALLBACK = [
       { id: 'free', name: 'FREE', limits: { properties: 1, users: 1, tasks_active: 5, service_partners: 2, documents: 25 }, features: PLAN_BASE_FEATURES },
@@ -9779,7 +9793,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             <label><span class="form-label">Ort</span><input class="form-control" name="city" maxlength="80" autocomplete="address-level2" value="${escapeHtml(profileData.city || '')}"></label>
             <label class="full"><span class="form-label">Land</span><input class="form-control" name="country" maxlength="60" autocomplete="country-name" list="profile-countries" placeholder="Deutschland" value="${escapeHtml(profileData.country || '')}"><datalist id="profile-countries"><option value="Deutschland"><option value="Schweden"><option value="Österreich"><option value="Schweiz"><option value="Niederlande"><option value="Dänemark"><option value="Norwegen"></datalist></label>
             <div class="full profile-notice" style="margin-top:0">Nutzung der Immobilie und Anzahl der Ferienhäuser stellst du jetzt unter <button type="button" class="text-btn" data-page="properties" style="padding:0">Mein Ferienhaus</button> ein.</div>
-</div><div class="profile-notice">Diese App speichert ihre Daten nur lokal auf diesem Gerät. Sichere sie regelmäßig unter <button type="button" class="text-btn" data-page="settings" style="padding:0">Einstellungen → Datensicherung</button>.</div><div class="form-actions"><button type="submit" class="primary-btn">Benutzerprofil speichern</button></div></form>
+</div><div class="profile-notice">${cloudSignedIn() ? 'Deine Daten werden mit deinem Husora-Konto in der Cloud gesichert.' : 'Ohne Husora-Konto liegen deine Daten nur auf diesem Gerät. Melde dich an oder sichere sie regelmäßig unter <button type="button" class="text-btn" data-page="settings" style="padding:0">Einstellungen → Daten & App</button>.'}</div><div class="form-actions"><button type="submit" class="primary-btn">Benutzerprofil speichern</button></div></form>
         </section>
         <div style="height:16px"></div>
         <button type="button" class="card settings-teaser" data-page="settings" data-settings-anchor="settings-home">${icon('home')}<span><strong>Startseite gestalten</strong><small>Kacheln und Bereiche der Übersicht stellst du jetzt unter Einstellungen ein.</small></span>${icon('arrow')}</button>
@@ -9792,10 +9806,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             <div class="full profile-notice" style="margin-top:0">Es wird nur die Absender-Adresse lokal gespeichert, keine Zugangsdaten. Der Versand läuft über dein eigenes Mailprogramm oder Mailkonto.</div>
           </div></form>
         </section>
-        <div style="height:16px"></div>
-        ${icalCardHtml()}
-        <div style="height:16px"></div>
-        ${portalCardHtml()}
         <div style="height:16px"></div>
         ${proProfileCard()}`;
     }
@@ -10021,7 +10031,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <section class="card automation-card wide"><div class="automation-head"><span class="automation-icon">${icon('task')}</span><div><h2 class="card-title">Jahresaufgaben</h2><p class="card-caption">Wiederkehrende Aufgaben aus Vorlagen und Servicepaketen – Husora legt sie zur passenden Jahreszeit automatisch an.</p></div></div>
             <div class="automation-body">${sw('auto-task-toggle', autoTasks.enabled, 'Jahresaufgaben automatisch erstellen')}<p class="package-summary">${(() => { const { servicePackage } = packageExtras(); const selected = autoTasks.templates.filter((template) => template.selected); return `${servicePackage ? `Paket <strong>${escapeHtml(servicePackage.name)}</strong> · ` : ''}${selected.length} Aufgaben ausgewählt · ≈ ${selected.reduce((sum, template) => sum + templateYearlyCount(template), 0)} Einsätze pro Jahr${singleHouse() ? '' : ' je Haus'}`; })()}</p><div class="automation-actions"><button type="button" class="primary-btn" data-template-picker>${icon('task')} Aufgabenpaket aus Vorlage wählen</button></div></div></section>
           ${bookingsEnabled() ? `<section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('clock')}</span><div><h2 class="card-title">Kalender-Synchronisierung</h2><p class="card-caption">Buchungen von Airbnb, Booking.com und Vrbo laufen automatisch alle 15 Minuten ein.</p></div></div>
-            <div class="automation-body"><p class="automation-state ${syncOn ? 'on' : ''}">${syncOn ? 'Aktiv' : 'Nicht eingerichtet'}</p><p class="card-caption">${icalCount} ${icalCount === 1 ? 'Kalenderlink' : 'Kalenderlinks'}${portalConnected() ? ' · Repull verbunden' : ''}${lastSync ? ` · zuletzt ${escapeHtml(timeFmt(lastSync))}` : ''}</p><button type="button" class="secondary-btn" data-page="profile">Buchungsportale verwalten</button></div></section>` : ''}
+            <div class="automation-body"><p class="automation-state ${syncOn ? 'on' : ''}">${syncOn ? 'Aktiv' : 'Nicht eingerichtet'}</p><p class="card-caption">${icalCount} ${icalCount === 1 ? 'Kalenderlink' : 'Kalenderlinks'}${portalConnected() ? ' · Repull verbunden' : ''}${lastSync ? ` · zuletzt ${escapeHtml(timeFmt(lastSync))}` : ''}</p><button type="button" class="secondary-btn" data-page="bookings" data-open-portals>Buchungsportale verwalten</button></div></section>` : ''}
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('clock')}</span><div><h2 class="card-title">Nächste automatische Schritte</h2><p class="card-caption">Offene Aufgaben, die Husora geplant hat.</p></div></div>
             <div class="dash-tile-list">${nextSteps.length ? nextSteps.map(autoStepTile).join('') : '<div class="empty">Aktuell sind keine automatischen Aufgaben offen.</div>'}</div>${tasks.filter((task) => task.auto && !task.done).length > nextSteps.length ? `<button type="button" class="dash-tasks-more" data-page="tasks">Alle ${tasks.filter((task) => task.auto && !task.done).length} automatischen Aufgaben ansehen</button>` : ''}</section>
           <section class="card automation-card"><div class="automation-head"><span class="automation-icon">${icon('note')}</span><div><h2 class="card-title">Protokoll</h2><p class="card-caption">Was die Automatik zuletzt erledigt hat.</p></div></div>
@@ -11381,7 +11391,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <label class="doc-upload-type"><span class="form-label">Art der Dokumente</span><select class="form-control" id="doc-upload-category"><option value="auto" ${docUploadCategory === 'auto' ? 'selected' : ''}>Automatisch erkennen (Dateiname)</option>${DOC_CATEGORIES.map((category) => `<option value="${category.id}" ${docUploadCategory === category.id ? 'selected' : ''}>${escapeHtml(category.single)}</option>`).join('')}</select></label></section>
         <div class="doc-filters" role="tablist" aria-label="Dokumente filtern"><button type="button" class="doc-filter ${docFilter === 'all' ? 'active' : ''}" data-doc-filter="all">Alle <i>${all.length}</i></button>${DOC_CATEGORIES.filter((category) => counts[category.id] || docFilter === category.id || category.id === 'invoice' || category.id === 'protocol').map((category) => `<button type="button" class="doc-filter ${docFilter === category.id ? 'active' : ''}" data-doc-filter="${category.id}">${escapeHtml(category.label)} <i>${counts[category.id]}</i></button>`).join('')}</div>
         <div class="doc-grid">${visible.length ? visible.map(card).join('') : `<div class="empty card">${docFilter === 'all' ? 'Für dieses Ferienhaus sind noch keine Dokumente gespeichert.' : `Keine ${escapeHtml(docCategory(docFilter).label)} vorhanden.`}</div>`}</div>
-        <p class="source-note">Die Dateien werden lokal in diesem Browser gespeichert (insgesamt ca. 5 MB). Zum Auslesen werden pdf.js bzw. die Texterkennung Tesseract geladen; der Inhalt der Rechnung verlässt dabei dein Gerät nicht.</p>`;
+        <p class="source-note">${cloudSignedIn() ? 'Die Dateien liegen auf diesem Gerät und werden mit deinem Husora-Konto in der Cloud gesichert.' : 'Ohne Husora-Konto werden die Dateien nur in diesem Browser gespeichert (insgesamt ca. 5 MB).'} Zum Auslesen werden pdf.js bzw. die Texterkennung Tesseract geladen; der Inhalt der Rechnung verlässt dabei dein Gerät nicht.</p>`;
     }
     // Hauskontrolle: Details je Prüfposition (mögliche Auffälligkeiten, Bauteile für die Reparaturhistorie, passende Wartung im Servicepaket).
     const POSITION_DETAILS = {
@@ -14457,7 +14467,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (invalid) { icalMessage = { text: invalid, error: true }; showIcalState(); return; }
         icalSync.links = links;
         icalSync.status = Object.fromEntries(Object.entries(icalSync.status).filter(([propertyId]) => links[propertyId]));
-        icalSync.allowProxy = document.getElementById('ical-proxy').checked;
         icalSync.auto = document.getElementById('ical-auto').checked;
         if (persistIcal()) syncIcalBookings();
         return;
@@ -19184,7 +19193,20 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
 
     // Einrichtungs-Checkliste unter den Kacheln (kompakt), damit die Bildkacheln oben sichtbar bleiben
-    const dashboardExtrasHtml = () => demoBannerHtml() + obChecklistHtml();
+    // Hinweis auf der Startseite, solange die Daten nur auf diesem Gerät liegen (30 Tage ausblendbar)
+    function cloudNudgeHtml() {
+      if (onboardingState?.status !== 'done' || !properties.length) return '';
+      try { if (cloudSignedIn() || Number(localStorage.getItem('husora-cloud-nudge') || 0) > Date.now()) return ''; } catch (error) { return ''; }
+      return `<div class="demo-banner cloud-nudge">${icon('cloud')}<span><strong>Deine Daten liegen nur auf diesem Gerät.</strong> Mit einem kostenlosen Husora-Konto sind sie gesichert und auf Handy, Tablet und Computer da.</span><button type="button" class="primary-btn" data-cloud-nudge="open">Konto anlegen</button><button type="button" class="text-btn" data-cloud-nudge="later">Später</button></div>`;
+    }
+    document.addEventListener('click', (event) => {
+      const nudge = event.target.closest?.('[data-cloud-nudge]');
+      if (!nudge) return;
+      if (nudge.dataset.cloudNudge === 'later') { try { localStorage.setItem('husora-cloud-nudge', String(Date.now() + 30 * 86400000)); } catch (error) { /* optional */ } nudge.closest('.cloud-nudge')?.remove(); return; }
+      currentPage = 'settings'; settingsView = 'settings-data'; render();
+      setTimeout(() => document.getElementById('settings-cloud')?.scrollIntoView({ block: 'start' }), 60);
+    });
+    const dashboardExtrasHtml = () => demoBannerHtml() + cloudNudgeHtml() + obChecklistHtml();
 
     // --- Ereignisse ---
     document.addEventListener('click', (event) => {
@@ -20932,6 +20954,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       await cloudLoadSummary();
       await cloudLoadUsage().catch(() => {});
       cloudState.notice = cloudState.summary?.count ? 'Angemeldet. In der Cloud liegen bereits Daten – wähle unten, welche gelten sollen.' : 'Angemeldet. Lade jetzt deine Daten hoch.';
+      await cloudAutoFirstSync();
     }
     // Rücksprung aus Bestätigungs-/Passwort-Mail: zur App, im Partner-Portal mit ?partner.
     // Supabase nutzt die Adresse nur, wenn sie im Projekt unter Authentication → URL Configuration freigegeben ist.
@@ -20964,6 +20987,19 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       await cloudLoadSummary();
       await cloudLoadUsage().catch(() => {});
       cloudState.notice = cloudState.summary?.count ? 'Angemeldet. In der Cloud liegen bereits Daten – wähle unten, welche gelten sollen.' : 'Angemeldet. Lade jetzt deine Daten hoch.';
+      await cloudAutoFirstSync();
+    }
+    // Erster Abgleich ohne Rückfrage, wenn die Cloud des Kontos noch leer ist: Die Daten dieses Geräts
+    // werden gesichert und der automatische Abgleich läuft ab sofort. Liegen schon Daten in der Cloud,
+    // entscheidet weiterhin der Nutzer (nichts wird überschrieben).
+    async function cloudAutoFirstSync() {
+      if (cloud.lastSyncAt || cloudState.summary?.count || !cloudReady() || !cloudCanWrite() || !cloud.autoSync) return;
+      if (!cloudLocalEntries().length) return;
+      try {
+        await cloudUpload({ full: true });
+        await cloudLoadSummary();
+        cloudState.notice = 'Angemeldet – deine Daten sind jetzt in der Husora Cloud gesichert und werden automatisch abgeglichen.';
+      } catch (error) { console.warn('Erster Abgleich fehlgeschlagen:', error); }
     }
     async function cloudSignUp(email, password) {
       const data = await cloudRegister(email, password, { first_name: profileData?.name || '' });
@@ -20972,6 +21008,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         await cloudLoadOrg();
         await cloudLoadSummary();
         cloudState.notice = 'Konto erstellt. Lade jetzt deine Daten hoch.';
+        await cloudAutoFirstSync();
       } else {
         cloudState.notice = `Fast geschafft: Wir haben eine Bestätigungs-Mail an ${email.trim()} geschickt. Öffne den Link darin – danach bist du automatisch angemeldet. ${CONFIRM_HINT} Keine Mail? Auch im Spam-Ordner nachsehen.`;
       }
