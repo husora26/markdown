@@ -24702,6 +24702,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (button) commissionPartner(button.dataset.commissionPartner, button);
     });
     async function ownerRun(label, task) {
+      // Läuft gerade nur das Laden der Partnerdaten im Hintergrund, kurz warten statt den Klick zu verschlucken
+      for (let i = 0; ownerSide.busy === 'load' && i < 150; i += 1) await new Promise((resolve) => setTimeout(resolve, 100));
       if (ownerSide.busy) return;
       ownerSide.busy = label; ownerSide.error = '';
       rerenderCloud();

@@ -16,6 +16,8 @@ for t in $TESTS; do
   ok=$(grep -c '^OK' "$log" || true); bad=$(grep -c '^FEHL' "$log" || true)
   if [ $code -ne 0 ] || [ "$bad" -gt 0 ] || grep -q '^JS-Fehler:' "$log"; then
     echo "✗ $t  (OK $ok, FEHL $bad, Exit $code)"; grep -E '^FEHL|^JS-Fehler' -A2 "$log" | head -8 | sed 's/^/    /'; failed=1
+    # Abbruch außerhalb eines Schritts (z. B. SQL-Fehler): Ende des Protokolls zeigen, sonst bleibt die Ursache unsichtbar
+    if [ $code -ne 0 ] && [ "$bad" -eq 0 ]; then tail -15 "$log" | sed 's/^/    | /'; fi
   else
     echo "✓ $t  (OK $ok)"
   fi
