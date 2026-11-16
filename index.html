@@ -3176,6 +3176,32 @@
     .portal-fold > summary::-webkit-details-marker { display: none; }
     .portal-fold > summary svg { width: 18px; height: 18px; flex: none; }
     .portal-fold-body { padding: 0 10px 10px; }
+    .section-tabs { display: flex; gap: 6px; overflow-x: auto; margin: -4px 0 18px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--card, #fff); scrollbar-width: none; }
+    .section-tabs::-webkit-scrollbar { display: none; }
+    .section-tabs button { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 6px 12px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+    .section-tabs button.active { background: var(--green, #24493d); color: #fff; }
+    .section-tab-plan { font-style: normal; font-size: 10px; letter-spacing: .04em; padding: 1px 5px; border-radius: 5px; background: rgba(0,0,0,.08); }
+    .nav-group-sub { display: none !important; }
+    .agenda-card { margin: 0 0 16px; padding: 14px 16px; }
+    .agenda-card .card-title { margin: 0 0 8px; font-size: 16px; }
+    .agenda-list { display: grid; gap: 6px; }
+    .agenda-item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 10px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+    .agenda-item.urgent { border-left-color: var(--red, #b3402f); }
+    .agenda-item.soon { border-left-color: #d9a21b; }
+    .agenda-icon svg { width: 18px; height: 18px; }
+    .agenda-text { display: grid; gap: 2px; min-width: 0; }
+    .agenda-text small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .agenda-go { color: var(--muted); font-size: 20px; }
+    .agenda-more { margin-top: 8px; }
+    .agenda-ok { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--muted); }
+    .agenda-ok svg { width: 18px; height: 18px; color: var(--green, #24493d); }
+    .tcard-more { grid-column: 1 / -1; }
+    .tcard-more > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0 0; border-top: 1px dashed var(--line); color: var(--muted); font-size: 12.5px; font-weight: 600; cursor: pointer; list-style: none; }
+    .tcard-more > summary::-webkit-details-marker { display: none; }
+    .tcard-more > summary svg { width: 14px; height: 14px; transition: transform .15s; }
+    .tcard-more[open] > summary svg { transform: rotate(180deg); }
+    .tcard-more > .tcard-controls { padding-top: 10px; border-top: 0; }
+    @media (min-width: 1051px) { .tcard-more > summary { display: none; } .tcard-more { grid-column: auto; } }
     .welcome-compact { margin-bottom: 12px; }
     .dash-hello { font-size: 22px; margin: 0; }
     .beta-auto { margin: 0; color: var(--muted); font-size: 12px; }
@@ -6438,6 +6464,20 @@ Startseite gestalten|Customise home screen|Anpassa startsidan
 Darstellung & Erinnerungen|Appearance & reminders|Utseende & påminnelser
 Cloud-Speicher (Supabase)|Cloud storage (Supabase)|Molnlagring (Supabase)
 Husora-Konto|Husora account|Husora-konto
+Was steht an?|What's next?|Vad är på gång?
+Alles im grünen Bereich – gerade steht nichts an.|All good – nothing needs your attention right now.|Allt ser bra ut – just nu behöver inget göras.
+Aufgaben & Kontrollen|Tasks & inspections|Uppgifter & tillsyn
+Instandhaltung|Maintenance|Underhåll
+Kalender & Buchungen|Calendar & bookings|Kalender & bokningar
+Mängel & Wartung|Defects & maintenance|Brister & underhåll
+Meine Partner|My partners|Mina partner
+Partner finden|Find partners|Hitta partner
+Überblick|Overview|Översikt
+Verträge|Contracts|Avtal
+Zähler|Meters|Mätare
+Konto anlegen|Create account|Skapa konto
+Willkommen|Welcome|Välkommen
+Deine Daten liegen nur auf diesem Gerät.|Your data is only stored on this device.|Dina data finns bara på den här enheten.
 Sichert deine Daten und gleicht sie zwischen Handy, Tablet und Computer ab.|Backs up your data and keeps it in sync across phone, tablet and computer.|Säkerhetskopierar dina data och synkar dem mellan mobil, surfplatta och dator.
 Wiederkehrende Aufgaben (z. B. Rasen mähen, monatliche Kontrolle) zum festen Jahrespreis – einmal im Jahr abrechnen statt jeden Einsatz einzeln.|Recurring tasks (e.g. mowing, monthly inspection) at a fixed annual price – invoice once a year instead of every visit.|Återkommande uppgifter (t.ex. gräsklippning, månatlig tillsyn) till fast årspris – fakturera en gång per år istället för varje besök.
 Offene Mängel aus deinen Kontrollen – tippe einen Mangel an, um die Kontrolle zu öffnen.|Open defects from your inspections – tap a defect to open the inspection.|Öppna brister från dina tillsyner – tryck på en brist för att öppna tillsynen.
@@ -6869,6 +6909,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         inspection: '<path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6z"/><path d="m8.5 12 2.2 2.2 4.8-5"/>',
         document: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/>',
         cost: '<path d="M12 2v20m5-15H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+        chevron: '<path d="m6 9 6 6 6-6"/>',
         search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
         plus: '<path d="M12 5v14M5 12h14"/>',
         users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M18 14.4c1.9.8 3 2.6 3 5.6"/>',
@@ -9120,6 +9161,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const formattedCost = formatCost(plannedAnnualCost);
       const firstName = profileData.name.trim().split(/\s+/)[0] || 'Willkommen';
       return `<div class="welcome welcome-compact"><div><h1 class="dash-hello">${firstName === 'Willkommen' ? 'Willkommen' : `Hallo ${escapeHtml(firstName)}`}</h1></div></div>
+        ${agendaHtml()}
         <section class="stats" aria-label="Kennzahlen">${(() => {
         const weekEnd = shiftDateKey(today, 7);
         const weekItems = tasks.filter((task) => !task.done && task.date && task.date >= today && task.date <= weekEnd).length + (bookingsEnabled() ? bookings.filter((booking) => booking.startDate >= today && booking.startDate <= weekEnd).length : 0);
@@ -9913,12 +9955,13 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             ${task.description ? `<p class="tcard-desc">${escapeHtml(task.description)}</p>` : ''}
             ${issueNote}
           </div>
+          <details class="tcard-more" data-task-more="${task.id}" ${taskMoreOpen.has(String(task.id)) || window.innerWidth > 1050 ? 'open' : ''}><summary><span>${task.selfService ? 'Eigenleistung' : task.partnerId && providerById(task.partnerId) ? escapeHtml(providerById(task.partnerId).name) : 'Partner, Status & Aktionen'}</span>${icon('chevron')}</summary>
           <div class="tcard-controls">
             <label class="switch self-toggle" title="Aufgabe selbst erledigen statt Servicepartner"><input type="checkbox" data-self-task="${task.id}" ${task.selfService ? 'checked' : ''}><span class="switch-track"></span><span>Selbst</span></label>
             ${task.selfService ? `<div class="tcard-field"><span>Umsetzung</span><span class="self-badge">${icon('users')} Eigenleistung</span></div>` : !task.partnerId && !assignedPartnerCount(propertyIdByName(task.property)) ? `<div class="tcard-field"><span>Servicepartner</span>${noPartnerLinkHtml(propertyIdByName(task.property))}</div>` : `<label class="tcard-field"><span>Servicepartner${providerById(task.partnerId) ? ` <i class="tcard-ptype cat-${escapeHtml(providerById(task.partnerId).category)}">${partnerCategoryLabel(providerById(task.partnerId))}</i>` : ''}</span><select class="filter-select partner-select ${task.partnerId ? 'has-partner' : ''}" data-partner-task="${task.id}" aria-label="Servicepartner für ${escapeHtml(task.title)}">${partnerOptionsHtml(task.property, task.partnerId || '')}</select></label>`}
             <label class="tcard-field"><span>Status</span><select class="filter-select status-select st-${status === 'Erledigt' ? 'done' : status === 'In Bearbeitung' ? 'progress' : 'open'}" data-status-task="${task.id}" aria-label="Status für ${escapeHtml(task.title)} ändern">${taskStatuses.map((value) => `<option ${status === value ? 'selected' : ''}>${value}</option>`).join('')}</select></label>
             <div class="tcard-actions"><button type="button" class="tcard-action" data-edit-task="${task.id}" aria-label="Aufgabe bearbeiten">${icon('note')}<span>Bearbeiten</span></button><button type="button" class="tcard-action warn ${taskIssues.some((issue) => issueActive(issue)) ? 'active' : ''}" data-report-issue="${task.id}" aria-label="Auffälligkeit zu ${escapeHtml(task.title)} melden${taskIssues.length ? ` (${taskIssues.length} gemeldet)` : ''}" title="${taskIssues.length ? `${taskIssues.length} ${taskIssues.length === 1 ? 'Auffälligkeit' : 'Auffälligkeiten'} gemeldet` : 'Auffälligkeit melden'}">${icon('alert')}<span>Auffälligkeit</span></button><button type="button" class="tcard-action danger" data-delete-task="${task.id}" aria-label="Aufgabe löschen">✕<span>Löschen</span></button></div>
-          </div>
+          </div></details>
         </article>`;
       }).join('');
       const openCount = tasks.filter((task) => taskStatus(task) !== 'Erledigt').length;
@@ -13333,6 +13376,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       document.querySelectorAll('.nav [data-page] > span').forEach((span) => { const page = span.parentElement.dataset.page; if (labels[page] && page !== 'dashboard') span.textContent = labels[page]; });
       document.getElementById('nav-count').textContent = tasks.filter((task) => !task.done).length;
       document.querySelectorAll('.nav [data-page]').forEach((button) => button.classList.toggle('active', button.dataset.page === currentPage || (currentPage === 'propertyDetail' && button.dataset.page === 'properties')));
+      applyNavSections();
       updateProfileSummary();
       updateNotifyBadge();
       renderTabbar();
@@ -16464,6 +16508,28 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       badge.hidden = !unread.length;
       badge.classList.toggle('urgent', unread.some((reminder) => reminder.level === 'urgent'));
     }
+    // Startseite „Was steht an?“: die wichtigsten offenen Punkte aus den Erinnerungen, dringende zuerst
+    let agendaShowAll = false;
+    const taskMoreOpen = new Set();
+    document.addEventListener('toggle', (event) => { const id = event.target.dataset?.taskMore; if (!id || window.innerWidth > 1050) return; if (event.target.open) taskMoreOpen.add(id); else taskMoreOpen.delete(id); }, true);
+    function agendaHtml() {
+      let items = [];
+      try { items = collectReminders().filter((item) => item.level !== 'info' || item.category === 'inspections'); } catch (error) { items = []; }
+      const shown = agendaShowAll ? items : items.slice(0, 4);
+      const body = items.length
+        ? `<div class="agenda-list">${shown.map((item) => `<button type="button" class="agenda-item ${escapeHtml(item.level)}" data-agenda-open="${escapeHtml(item.id)}"><span class="agenda-icon">${icon(item.icon || 'alert')}</span><span class="agenda-text"><strong>${escapeHtml(item.title)}</strong>${item.detail ? `<small>${escapeHtml(item.detail)}</small>` : ''}</span><span class="agenda-go" aria-hidden="true">›</span></button>`).join('')}</div>${items.length > 4 ? `<button type="button" class="text-btn agenda-more" data-agenda-all>${agendaShowAll ? 'Weniger anzeigen' : `Alle ${items.length} anzeigen`}</button>` : ''}`
+        : `<p class="agenda-ok">${icon('check')}<span>Alles im grünen Bereich – gerade steht nichts an.</span></p>`;
+      return `<section class="card agenda-card" aria-label="Was steht an?"><h2 class="card-title">Was steht an?</h2>${body}</section>`;
+    }
+    document.addEventListener('click', (event) => {
+      if (event.target.closest?.('[data-agenda-all]')) { agendaShowAll = !agendaShowAll; render(); return; }
+      const open = event.target.closest?.('[data-agenda-open]');
+      if (!open) return;
+      const reminder = collectReminders().find((item) => item.id === open.dataset.agendaOpen);
+      if (!reminder) return;
+      if (reminder.propertyId) { sectionPropertyId = reminder.propertyId; inspectionProperty = reminder.propertyId; }
+      currentPage = reminder.page || 'dashboard'; render(); window.scrollTo(0, 0);
+    });
     function renderNotifyPanel() {
       const panel = document.getElementById('notify-panel');
       const reminders = collectReminders();
@@ -19348,14 +19414,58 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (event.key === 'Enter' && event.target.closest('#onboarding-body') && event.target.matches('input:not([type=radio])')) { event.preventDefault(); document.querySelector('#onboarding-body .ob-actions-main .primary-btn')?.click(); }
     });
     // ===== Schritt 2: gegliedertes Menü, Leiste unten am Handy, einklappbare Bereiche der Startseite =====
-    const NAV_GROUPS = [
-      { label: '', pages: ['dashboard'] },
-      { label: 'Mein Ferienhaus', pages: ['properties', 'house3d', 'documents', 'costs', 'contracts', 'meters', 'emergency'] },
-      { label: 'Pflege & Service', pages: ['tasks', 'inspections', 'seasons', 'repairs', 'renovations', 'automation'] },
-      { label: 'Belegung', pages: ['calendar', 'bookings'] },
-      { label: 'Servicepartner', pages: ['partnerHub', 'assignedProviders', 'providers'] },
-      { label: 'Konto & App', pages: ['profile', 'plans', 'settings', 'help', 'legal'] }
+    // Menü verdichtet: je Bereich ein Eintrag, die Unterseiten erreicht man über die Reiter oben auf der Seite.
+    // Die Knöpfe der Unterseiten bleiben (unsichtbar) im Menü, damit Verweise und Zähler weiter funktionieren.
+    const NAV_SECTIONS = [
+      { page: 'properties', label: 'Mein Ferienhaus', pages: [['properties', 'Überblick'], ['documents', 'Dokumente'], ['costs', 'Kosten'], ['contracts', 'Verträge'], ['meters', 'Zähler'], ['emergency', 'Notfall & Zugang'], ['house3d', 'Hausmodell']] },
+      { page: 'tasks', label: 'Aufgaben & Kontrollen', pages: [['tasks'], ['inspections'], ['seasons'], ['automation']] },
+      { page: 'repairs', label: 'Instandhaltung', pages: [['repairs', 'Mängel & Wartung'], ['renovations', 'Sanierung']] },
+      { page: 'calendar', label: 'Kalender & Buchungen', pages: [['calendar', 'Kalender'], ['bookings', 'Buchungen']] },
+      { page: 'assignedProviders', label: 'Servicepartner', pages: [['assignedProviders', 'Meine Partner'], ['providers', 'Partner finden'], ['partnerHub', 'Partner-Portal']] }
     ];
+    const navSectionOf = (page) => NAV_SECTIONS.find((section) => section.pages.some(([id]) => id === (page === 'propertyDetail' ? 'properties' : page))) || null;
+    const NAV_GROUPS = [
+      { label: '', pages: ['dashboard', 'properties', 'tasks', 'repairs', 'calendar', 'assignedProviders', 'portfolio'] },
+      { label: 'Konto & App', pages: ['plans', 'profile', 'settings', 'help', 'legal'] },
+      { label: '', pages: ['house3d', 'documents', 'costs', 'contracts', 'meters', 'emergency', 'inspections', 'seasons', 'automation', 'renovations', 'bookings', 'providers', 'partnerHub'], hidden: true }
+    ];
+    function applyNavSections() {
+      try {
+        const nav = document.querySelector('#main-menu .nav');
+        if (!nav) return;
+        const section = navSectionOf(currentPage);
+        NAV_SECTIONS.forEach((entry) => {
+          const button = nav.querySelector(`[data-page="${entry.page}"]`);
+          if (!button) return;
+          const span = button.querySelector(':scope > span');
+          if (span) span.textContent = entry.label;
+          button.classList.toggle('active', section === entry);
+        });
+        // Portfolio erst ab zwei Häusern
+        const portfolio = nav.querySelector('[data-page="portfolio"]');
+        if (portfolio) portfolio.style.display = properties.length < 2 ? 'none' : '';
+        // Ungelesene Partner-Nachrichten auch am Eintrag „Servicepartner“
+        const unread = nav.querySelector('[data-page="partnerHub"] .hub-nav-count')?.textContent || '';
+        const partners = nav.querySelector('[data-page="assignedProviders"]');
+        if (partners) {
+          let badge = partners.querySelector('.hub-nav-count');
+          if (!unread) badge?.remove();
+          else { if (!badge) { badge = document.createElement('b'); badge.className = 'hub-nav-count'; partners.appendChild(badge); } badge.textContent = unread; }
+        }
+      } catch (error) { /* Menü noch nicht aufgebaut */ }
+    }
+    // Reiter der Unterseiten eines Bereichs (Mein Ferienhaus, Instandhaltung, Kalender & Buchungen, Servicepartner)
+    function sectionTabsHtml() {
+      const section = navSectionOf(currentPage);
+      if (!section || section.page === 'tasks') return '';
+      const active = currentPage === 'propertyDetail' ? 'properties' : currentPage;
+      const items = section.pages.filter(([id]) => (id !== 'bookings' || bookingsEnabled()));
+      if (items.length < 2) return '';
+      return `<nav class="section-tabs" aria-label="${escapeHtml(section.label)}">${items.map(([id, label]) => {
+        const locked = PAGE_GATES[id] && !entitlements.can(PAGE_GATES[id]);
+        return `<button type="button" class="${active === id ? 'active' : ''}" data-page="${id}" ${active === id ? 'aria-current="page"' : ''}>${escapeHtml(label)}${locked ? `<i class="section-tab-plan">${escapeHtml(entitlements.minPlanFor(PAGE_GATES[id]).name)}</i>` : ''}</button>`;
+      }).join('')}</nav>`;
+    }
     function buildGroupedNav() {
       const nav = document.querySelector('#main-menu .nav');
       if (!nav || nav.dataset.grouped) return;
@@ -19365,11 +19475,13 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const wrap = document.createElement('div');
         wrap.className = `nav-group${group.label ? '' : ' nav-group-home'}`;
         if (group.label) wrap.innerHTML = `<div class="nav-group-label">${group.label}</div>`;
+        if (group.hidden) { wrap.hidden = true; wrap.classList.add('nav-group-sub'); }
         group.pages.forEach((page) => { if (buttons.has(page)) { wrap.appendChild(buttons.get(page)); buttons.delete(page); } });
         nav.appendChild(wrap);
       });
       buttons.forEach((button) => nav.lastElementChild.appendChild(button));
       nav.dataset.grouped = '1';
+      applyNavSections();
       const label = document.querySelector('#main-menu .nav-menu-label');
       if (label) label.textContent = 'Menü';
     }
@@ -19436,7 +19548,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (!sub) { bar.innerHTML = ''; return; }
       const navPage = currentPage === 'propertyDetail' ? 'properties' : currentPage;
       const svg = document.querySelector(`#main-menu .nav [data-page="${navPage}"] svg`)?.outerHTML || '';
-      const group = NAV_GROUPS.find((entry) => entry.pages.includes(navPage))?.label || '';
+      const group = navSectionOf(navPage)?.label || NAV_GROUPS.find((entry) => entry.pages.includes(navPage))?.label || '';
       const name = currentPage === 'propertyDetail' ? (properties.find((property) => property.id === selectedPropertyId)?.name || title) : title;
       bar.innerHTML = `<button type="button" class="page-bar-back" data-action="go-back" aria-label="Zurück zur vorherigen Seite">${icon('arrow')}<span>Zurück</span></button><div class="page-bar-title">${svg ? `<span class="page-bar-icon" aria-hidden="true">${svg}</span>` : ''}<div>${group ? `<small>${escapeHtml(group)}</small>` : ''}<strong>${escapeHtml(name || '')}</strong></div></div>`;
       document.title = `${name ? `${name} – ` : ''}Husora`;
@@ -19874,7 +19986,17 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
 
     // --- Seiten-Erweiterungen nach dem Rendern ---
     function enhanceWorkPages() {
-      if (!['tasks', 'inspections', 'seasons', 'automation'].includes(currentPage)) return;
+      if (!['tasks', 'inspections', 'seasons', 'automation'].includes(currentPage)) {
+        const tabs = sectionTabsHtml();
+        const welcome = pageContent.querySelector('.welcome');
+        if (tabs && welcome) {
+          welcome.insertAdjacentHTML('afterend', tabs);
+          const strip = pageContent.querySelector('.section-tabs');
+          const on = strip?.querySelector('.active');
+          if (strip && on && strip.scrollWidth > strip.clientWidth) strip.scrollLeft = Math.max(0, on.offsetLeft - 16);
+        }
+        return;
+      }
       const welcome = pageContent.querySelector('.welcome');
       welcome?.insertAdjacentHTML('afterend', workAreaNavHtml());
       const areaNav = pageContent.querySelector('.work-areas');
@@ -25704,9 +25826,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (!button) return;
       let badge = button.querySelector('.hub-nav-count');
       const unread = cloudReady() && ownerSide.partners ? hubTotalUnread() : 0;
-      if (!unread) { badge?.remove(); return; }
+      if (!unread) { badge?.remove(); applyNavSections(); return; }
       if (!badge) { badge = document.createElement('b'); badge.className = 'hub-nav-count'; button.appendChild(badge); }
       badge.textContent = unread;
+      applyNavSections();
     }
     async function hubRefresh({ quiet = false } = {}) {
       if (!cloudReady() || (ownerSide.busy && !quiet)) return;
