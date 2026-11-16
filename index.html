@@ -5191,6 +5191,23 @@ html.dark .work-area:hover { background: #1c1c1c; }
 html.dark .work-area.active { background: #1c1c1c; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2); }
 html.dark .work-area-icon { color: #b1b7b3; background: #2c2b26; }
 html.dark .work-area.active .work-area-icon { background: var(--green-solid); }
+/* Menübänder der Unterseiten dunkel wie Kopfzeile und Partner-Portal */
+.section-tabs, .work-areas, html.dark .work-areas { border-color: transparent; background: var(--green-dark); }
+.section-tabs button { color: rgba(255, 253, 248, .78); }
+.section-tabs button:hover { color: #fff; }
+.section-tabs button.active, html.dark .section-tabs button.active { background: var(--paper); color: var(--green-dark); }
+html.dark .section-tabs button.active { color: var(--ink); }
+.section-tab-plan { background: rgba(255, 255, 255, .16); }
+.section-tabs button.active .section-tab-plan { background: rgba(0, 0, 0, .08); }
+.work-areas .work-area { color: rgba(255, 253, 248, .9); }
+.work-areas .work-area-text small { color: rgba(255, 253, 248, .66); }
+.work-areas .work-area-status { color: #b9d3c2; }
+.work-areas .work-area-icon, html.dark .work-areas .work-area-icon { color: #fff; background: rgba(255, 255, 255, .12); }
+.work-areas .work-area:hover, html.dark .work-areas .work-area:hover { background: rgba(255, 255, 255, .08); }
+.work-areas .work-area.active, html.dark .work-areas .work-area.active { border-color: transparent; color: var(--ink); background: var(--paper); }
+.work-areas .work-area.active .work-area-text small { color: var(--muted); }
+.work-areas .work-area.active .work-area-status { color: var(--green); }
+.work-areas .work-area.active .work-area-icon, html.dark .work-areas .work-area.active .work-area-icon { color: #fff; background: var(--green-solid, var(--green)); }
 html.dark .editor-step > span { background: var(--green-solid); }
 html.dark .editor-actions { background: #1c1c1c; }
 html.dark .season-switch { background: #1c1c1c; }
