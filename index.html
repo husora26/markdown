@@ -453,6 +453,7 @@
     .pro-hint { margin: 4px 18px 0; padding: 10px 13px; border-radius: 9px; color: #745a35; background: #fff8e9; font-size: 12.5px; line-height: 1.55; }
     .pro-hint[hidden], .house-settings-actions [hidden] { display: none !important; }
     [data-pro-only][hidden] { display: none !important; }
+    .plan-hidden { display: none !important; }
     .plan-matrix .card-head { padding-bottom: 8px; }
     .pm-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 0 6px; }
     .pm-table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 13px; }
@@ -9535,16 +9536,19 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <div class="settings-actions"><button type="button" class="primary-btn" data-page="plans">Tarife vergleichen</button></div></div></section>
         ${!cloudReady() ? `<p class="settings-hint" style="margin:14px 0 8px"><strong>Du hast bereits einen größeren Tarif?</strong> Melde dich mit deinem Husora-Konto an – dein Tarif wird automatisch erkannt.</p>${cloudCardHtml()}` : ''}`;
     }
+    // Bereiche und Funktionen, die der Tarif nicht enthält, werden ausgeblendet (nicht mit Upgrade-Hinweis gezeigt).
+    // Was ein höherer Tarif bietet, steht unter „Tarife“. Ruft man eine gesperrte Seite direkt auf, erklärt lockedPageHtml() sie.
+    const pageLocked = (page) => Boolean(PAGE_GATES[page]) && !entitlements.can(PAGE_GATES[page]);
+    const PLAN_FEATURE_ELEMENTS = [['[data-auto-assign]', 'partner_auto_assign'], ['[data-invoice-read]', 'invoice_ai'], ['[data-add-choice="import"]', 'listing_import'], ['[data-ob-import]', 'listing_import'], ['[data-commission-partner]', 'service_portal'], ['.auto-task-bar', 'automation_basic'], ['[data-feature]', '']];
     function markLockedNav() {
       document.querySelectorAll('.nav [data-page], .top-tabs [data-page], .tab-bar [data-page]').forEach((button) => {
-        const feature = PAGE_GATES[button.dataset.page];
-        const locked = Boolean(feature) && !entitlements.can(feature);
-        button.classList.toggle('plan-locked-nav', locked);
-        let tag = button.querySelector('.plan-tag');
-        if (!locked) { tag?.remove(); return; }
-        if (!tag) { tag = document.createElement('i'); tag.className = 'plan-tag'; button.appendChild(tag); }
-        tag.textContent = entitlements.minPlanFor(feature).name;
+        button.classList.toggle('plan-hidden', pageLocked(button.dataset.page));
+        button.querySelector('.plan-tag')?.remove();
       });
+    }
+    function hidePlanLocked(root = document) {
+      root.querySelectorAll('[data-dash-section]').forEach((section) => section.classList.toggle('plan-hidden', pageLocked(section.dataset.dashSection)));
+      PLAN_FEATURE_ELEMENTS.forEach(([selector, feature]) => root.querySelectorAll(selector).forEach((el) => el.classList.toggle('plan-hidden', !entitlements.can(feature || el.dataset.feature))));
     }
     // ----- ULTIMATE: Hauszustands-Score, Kostenprognose, Budgetwarnungen, Eskalationen, Portfolio, Aktivitätsprotokoll -----
     // Score 0–100 aus überfälligen Aufgaben, offenen Mängeln, Kontrollalter, fälligen Bauteilen, Vertragsfristen und Zustand.
@@ -9613,7 +9617,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function activityHtml() {
       const head = `<div class="card-head"><div><h2 class="card-title">Aktivitätsprotokoll</h2><p class="card-caption">Wer hat wann was geändert – serverseitig protokolliert, nur für Admins sichtbar.</p></div></div>`;
       let body;
-      if (!entitlements.can('activity_log')) body = `<p class="settings-hint">Ab ${escapeHtml(entitlements.minPlanFor('activity_log').name)} verfügbar.</p>`;
+      if (!entitlements.can('activity_log')) return '';
       else if (!cloudReady()) body = '<p class="settings-hint">Melde dich unter Einstellungen → Cloud an, um das Protokoll zu sehen.</p>';
       else if (cloud.org.role !== 'admin') body = '<p class="settings-hint">Nur Admins deiner Organisation sehen das Protokoll.</p>';
       else if (!activity.rows) { setTimeout(activityLoad, 0); body = '<p class="settings-hint">Wird geladen …</p>'; }
@@ -9800,7 +9804,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const dashboardTileSelection = () => (Array.isArray(profileData.dashboardTiles) ? profileData.dashboardTiles : DEFAULT_DASHBOARD_TILES).filter((id) => DASHBOARD_TILES.some(([key]) => key === id));
     const dashboardTileIds = () => {
       const chosen = dashboardTileSelection();
-      return DASHBOARD_TILES.filter(([id, , available]) => chosen.includes(id) && (!available || available())).map(([id]) => id).slice(0, DASHBOARD_TILE_LIMIT);
+      return DASHBOARD_TILES.filter(([id, , available]) => chosen.includes(id) && (!available || available()) && !pageLocked(id)).map(([id]) => id).slice(0, DASHBOARD_TILE_LIMIT);
     };
     // ===== Kacheln der Startseite: Bild, eigene Farbe oder bunt (Hausbesitzer und Servicepartner) =====
     const TILE_SWATCHES = ['#2f6b4f', '#1f6f8b', '#3b5bdb', '#7048e8', '#c2255c', '#e8590c', '#f08c00', '#2b8a3e', '#0c8599', '#495057'];
@@ -9873,7 +9877,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const chosen = dashboardTileSelection();
       const full = chosen.length >= DASHBOARD_TILE_LIMIT;
       return `<section class="card profile-form"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Kacheln auf der Startseite</h2><p class="card-caption">Wähle bis zu ${DASHBOARD_TILE_LIMIT} Kacheln, die auf der Übersicht erscheinen.</p></div><span class="tile-count ${full ? 'full' : ''}" id="tile-count">${chosen.length} von ${DASHBOARD_TILE_LIMIT}</span></div>
-        ${[...new Set(DASHBOARD_TILES.map((t) => t[4]))].map((group) => `<p class="tile-group-title">${escapeHtml(group)}</p><div class="tile-choices">${DASHBOARD_TILES.filter((t) => t[4] === group).map(([id, label, available, hint]) => { const on = chosen.includes(id); const off = available && !available(); return `<label class="tile-choice ${on ? 'on' : ''} ${off ? 'unavailable' : ''}"><input type="checkbox" data-dashboard-tile="${id}" ${on ? 'checked' : ''} ${!on && full ? 'disabled' : ''}><span class="tile-check">${icon('check')}</span><span>${escapeHtml(label)}${off ? `<small>${escapeHtml(hint)}</small>` : ''}</span></label>`; }).join('')}</div>`).join('')}
+        ${[...new Set(DASHBOARD_TILES.filter((t) => !pageLocked(t[0])).map((t) => t[4]))].map((group) => `<p class="tile-group-title">${escapeHtml(group)}</p><div class="tile-choices">${DASHBOARD_TILES.filter((t) => t[4] === group && !pageLocked(t[0])).map(([id, label, available, hint]) => { const on = chosen.includes(id); const off = available && !available(); return `<label class="tile-choice ${on ? 'on' : ''} ${off ? 'unavailable' : ''}"><input type="checkbox" data-dashboard-tile="${id}" ${on ? 'checked' : ''} ${!on && full ? 'disabled' : ''}><span class="tile-check">${icon('check')}</span><span>${escapeHtml(label)}${off ? `<small>${escapeHtml(hint)}</small>` : ''}</span></label>`; }).join('')}</div>`).join('')}
         <div class="form-actions" style="justify-content:space-between;margin-top:12px"><span class="card-caption">${full ? 'Maximum erreicht – entferne eine Kachel, um eine andere zu wählen.' : 'Die Reihenfolge auf der Startseite folgt dem Menü.'}</span><button type="button" class="text-btn" data-action="reset-dashboard-tiles">Standard wiederherstellen</button></div>
       </section>`;
     }
@@ -13443,6 +13447,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       updateNotifyBadge();
       renderTabbar();
       pageContent.innerHTML = (currentPage === 'dashboard' ? betaBannerHtml('owner') : '') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
+      hidePlanLocked();
       if (currentPage === 'providers') trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `page:${localDateKey(new Date())}` });
       ensureBackButton();
       if (uiState) { uiRestore(pageContent, uiState); if (Math.abs(window.scrollY - uiScrollY) > 2) window.scrollTo(0, uiScrollY); }
@@ -19164,7 +19169,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             ${nav('<button type="button" class="primary-btn" data-ob-house-save>Haus speichern</button>', { secondary: '<button type="button" class="secondary-btn" data-ob-import>Inserat importieren</button>' })}`;
         },
         task: () => {
-          if ((obDraft.taskMode || 'package') === 'package') {
+          // Aufgabenpakete nur, wenn der Tarif sie enthält – sonst direkt die einzelne Aufgabe
+          if (entitlements.can('automation_basic') && (obDraft.taskMode || 'package') === 'package') {
             const canAuto = entitlements.can('automation_basic');
             const pick = SERVICE_PACKAGES.find((x) => x.id === obDraft.pkg) || SERVICE_PACKAGES.find((x) => x.id === autoTasks.packageId) || SERVICE_PACKAGES.find((x) => x.id === (profileData.usage === 'self' ? 'komfort' : 'vermietung')) || SERVICE_PACKAGES[0];
             const info = obPackageInfo(pick);
@@ -19178,7 +19184,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           const repeat = document.querySelector('#task-form [name="repeat"]')?.innerHTML || '<option>Einmalig</option>';
           const due = obDraft.date || localDateKey(new Date(Date.now() + 14 * 86400000));
           return `<h2 id="onboarding-title">Deine Aufgaben</h2>${doneBadge}<p class="ob-lead">Lege eine Wartungsaufgabe an oder nutze eine passende Vorlage.</p>
-            <div class="ob-seg" role="tablist" aria-label="Art der Aufgaben"><button type="button" role="tab" aria-selected="false" data-ob-task-mode="package">Aufgabenpaket</button><button type="button" role="tab" aria-selected="true" class="on" data-ob-task-mode="single">Einzelne Aufgabe</button></div>
+            ${entitlements.can('automation_basic') ? '<div class="ob-seg" role="tablist" aria-label="Art der Aufgaben"><button type="button" role="tab" aria-selected="false" data-ob-task-mode="package">Aufgabenpaket</button><button type="button" role="tab" aria-selected="true" class="on" data-ob-task-mode="single">Einzelne Aufgabe</button></div>' : ''}
             <div class="ob-chips" role="group" aria-label="Vorlagen">${OB_TASK_TEMPLATES.map((t) => `<button type="button" class="${obDraft.title === t ? 'on' : ''}" data-ob-template="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}</div>
             <form class="ob-form" data-ob-form="task">
               <label><span class="form-label">Aufgabe *</span><input class="form-control" name="title" maxlength="120" required value="${escapeHtml(obDraft.title || '')}" placeholder="z. B. Rauchmelder prüfen"></label>
@@ -19199,7 +19205,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             <div class="ob-actions"><button type="button" class="primary-btn" data-ob-close>Zur Übersicht</button></div>`;
         }
       };
-      body.innerHTML = head + R[step.key]();
+      body.innerHTML = head + R[step.key](); hidePlanLocked(body);
       body.querySelectorAll('select[data-ob-value]').forEach((sel) => { sel.value = sel.dataset.obValue; });
       setTimeout(() => body.querySelector('.ob-form input:not([type=radio]), .ob-form select')?.focus({ preventScroll: true }), 60);
     }
@@ -19689,12 +19695,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const section = navSectionOf(currentPage);
       if (!section || section.page === 'tasks') return '';
       const active = currentPage === 'propertyDetail' ? 'properties' : currentPage;
-      const items = section.pages.filter(([id]) => (id !== 'bookings' || bookingsEnabled()));
+      const items = section.pages.filter(([id]) => (id !== 'bookings' || bookingsEnabled()) && (!pageLocked(id) || id === active));
       if (items.length < 2) return '';
-      return `<nav class="section-tabs" aria-label="${escapeHtml(section.label)}">${items.map(([id, label]) => {
-        const locked = PAGE_GATES[id] && !entitlements.can(PAGE_GATES[id]);
-        return `<button type="button" class="${active === id ? 'active' : ''}" data-page="${id}" ${active === id ? 'aria-current="page"' : ''}>${escapeHtml(label)}${locked ? `<i class="section-tab-plan">${escapeHtml(entitlements.minPlanFor(PAGE_GATES[id]).name)}</i>` : ''}</button>`;
-      }).join('')}</nav>`;
+      return `<nav class="section-tabs" aria-label="${escapeHtml(section.label)}">${items.map(([id, label]) => `<button type="button" class="${active === id ? 'active' : ''}" data-page="${id}" ${active === id ? 'aria-current="page"' : ''}>${escapeHtml(label)}</button>`).join('')}</nav>`;
     }
     // Unterzeilen der Menüeinträge unter „Mehr“
     const NAV_CAPTIONS = { dashboard: 'Startseite mit allem, was ansteht', portfolio: 'Alle Häuser im Vergleich', plans: 'FREE, PLUS, PRO und ULTIMATE', profile: 'Name, Kontakt und Husora-Konto', settings: 'Startseite, Darstellung, Daten & App', help: 'Fragen, Anleitungen und Kontakt', legal: 'Datenschutz, AGB und Impressum' };
@@ -19707,12 +19710,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         button.classList.toggle('in-bar', inBar.has(page));
         const cap = button.querySelector('.nav-cap');
         if (!cap) return;
-        const rest = section ? section.pages.filter(([id]) => id !== page && !inBar.has(id) && (id !== 'bookings' || bookingsEnabled()))
+        const rest = section ? section.pages.filter(([id]) => id !== page && !inBar.has(id) && !pageLocked(id) && (id !== 'bookings' || bookingsEnabled()))
           .map(([id, label]) => label || TAB_OPTIONS.find(([key]) => key === id)?.[1] || id) : [];
         cap.textContent = section ? rest.join(' · ') : (NAV_CAPTIONS[page] || '');
       });
       nav.querySelectorAll('.nav-group:not(.nav-group-sub)').forEach((group) => {
-        group.classList.toggle('all-in-bar', ![...group.querySelectorAll(':scope > button[data-page]')].some((button) => !button.classList.contains('in-bar') && button.style.display !== 'none'));
+        group.classList.toggle('all-in-bar', ![...group.querySelectorAll(':scope > button[data-page]')].some((button) => !button.classList.contains('in-bar') && !button.classList.contains('plan-hidden') && button.style.display !== 'none'));
       });
     }
     function buildGroupedNav() {
@@ -19756,7 +19759,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     let tabSlotPick = 0;
     function tabbarSettingsHtml() {
       const current = TABBAR_ITEMS.map(([id]) => id);
-      const options = TAB_OPTIONS.filter(([id]) => id !== 'bookings' || bookingsEnabled());
+      const options = TAB_OPTIONS.filter(([id]) => (id !== 'bookings' || bookingsEnabled()) && !pageLocked(id));
       const pick = Math.min(Math.max(tabSlotPick, 0), 3);
       return `<section class="card profile-form" id="tabbar-settings"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Untere Leiste</h2><p class="card-caption">Tippe oben auf einen Platz und darunter auf den Bereich, der dort erscheinen soll. „Mehr“ bleibt immer rechts. Am Computer gelten dieselben vier Bereiche für die Buttons im Kopf.</p></div></div>
         <div class="tab-preview tab-picker" role="radiogroup" aria-label="Platz wählen">${TABBAR_ITEMS.map(([, label, iconName], index) => `<button type="button" role="radio" aria-checked="${index === pick}" class="${index === pick ? 'active' : ''}" data-tab-pick="${index}">${icon(iconName)}<small>${escapeHtml(label)}</small><i>Platz ${index + 1}</i></button>`).join('')}<span class="tab-more">${icon('menu')}<small>Mehr</small></span></div>
@@ -19849,6 +19852,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         + `<button type="button" class="tab ${!active || menuOpen ? 'active-more' : ''}" data-tab-more aria-haspopup="true" aria-expanded="${menuOpen ? 'true' : 'false'}" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
       bars.forEach((bar) => { bar.innerHTML = html; });
       const nav = document.querySelector('#main-menu .nav');
+      markLockedNav();
       if (nav?.dataset.grouped) applyMoreMenu(nav);
     }
 

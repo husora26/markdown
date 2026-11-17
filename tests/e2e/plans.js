@@ -16,12 +16,19 @@ const ANON = ENV_ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now
     const r = await p.evaluate(() => { const t = document.querySelector('.pm-table'); const rows = [...t.querySelectorAll('tbody tr:not(.pm-group)')]; const portal = rows.find((x) => x.textContent.includes('Servicepartner-Portal')); return `${rows.length} Zeilen · Portal: ${[...portal.querySelectorAll('td')].map((td) => (td.querySelector('.pm-yes') ? '✓' : '–')).join(' ')} · Häuser: ${[...rows[0].querySelectorAll('td')].map((td) => td.textContent).join('/')}`; });
     await p.evaluate(() => document.querySelector('.plan-matrix').scrollIntoView()); await p.screenshot({ path: OUT + '/2-vergleich.png' });
     if (!/Portal: – – ✓ ✓/.test(r)) throw new Error(r); return r; });
-  await step('FREE: gesperrte Bereiche zeigen Hinweis, Menü markiert', async () => {
+  await step('FREE: gesperrte Bereiche erklären sich bei Direktaufruf, im Menü/Kacheln/Reitern ausgeblendet', async () => {
     const r = []; for (const page of ['renovations', 'automation', 'house3d', 'partnerHub', 'contracts']) { await p.evaluate((page) => { currentPage = page; render(); }, page); await p.waitForTimeout(150); r.push(`${page}:${await p.evaluate(() => !!document.querySelector('.plan-locked'))}`); }
     await p.evaluate(() => { currentPage = 'renovations'; render(); }); await p.screenshot({ path: OUT + '/3-gesperrt.png' });
     await p.evaluate(() => { currentPage = 'repairs'; render(); }); await p.waitForTimeout(150);
     if (await p.evaluate(() => !!document.querySelector('.plan-locked'))) throw new Error('Reparatur & Instandhaltung ist in FREE gesperrt');
-    const tags = await p.$$eval('.nav .plan-tag', (e) => e.length); if (r.some((x) => x.endsWith('false'))) throw new Error(r.join(' ')); return `${r.join(' ')} · Menü-Markierungen: ${tags}`; });
+    if (r.some((x) => x.endsWith('false'))) throw new Error(r.join(' '));
+    const hidden = await p.evaluate(() => { currentPage = 'dashboard'; render(); const navShown = (page) => { const el = document.querySelector(`.nav [data-page="${page}"]`); return el && getComputedStyle(el).display !== 'none'; };
+      const locked = ['renovations', 'automation', 'house3d', 'partnerHub', 'contracts'];
+      const tiles = [...document.querySelectorAll('#page-content .stat[data-page]')].map((el) => el.dataset.page);
+      currentPage = 'repairs'; render(); const tabs = [...document.querySelectorAll('.section-tabs [data-page]')].map((el) => el.dataset.page);
+      return { nav: locked.filter(navShown), tiles: tiles.filter((t) => locked.includes(t)), tabs: tabs.filter((t) => locked.includes(t)), repairsNav: navShown('repairs'), tags: document.querySelectorAll('.plan-tag, .section-tab-plan').length }; });
+    if (hidden.nav.length || hidden.tiles.length || hidden.tabs.length || !hidden.repairsNav || hidden.tags) throw new Error(JSON.stringify(hidden));
+    return `${r.join(' ')} · ausgeblendet in Menü, Kacheln und Reitern`; });
   await step('FREE: 6. aktive Aufgabe wird blockiert', async () => {
     await p.evaluate(() => { const prop = properties[0].name; tasks = tasks.filter((t) => t.done); for (let n = 0; n < 5; n++) tasks.push({ id: Date.now() + n, title: 'T' + n, property: prop, date: localDateKey(new Date()), priority: 'normal', status: 'Offen', done: false, repeat: 'Einmalig' }); persistTasks(); currentPage = 'tasks'; render(); openTaskModal(); });
     await p.waitForTimeout(200); await p.fill('#task-form [name=title]', 'Sechste Aufgabe'); await p.$eval('#task-form button[type=submit]', (e) => e.click()); await p.waitForTimeout(200);
