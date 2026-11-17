@@ -24928,11 +24928,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (button) commissionPartner(button.dataset.commissionPartner, button);
     });
     async function ownerRun(label, task) {
-      // Läuft gerade nur das Laden der Partnerdaten im Hintergrund, kurz warten statt den Klick zu verschlucken
-      for (let i = 0; ownerSide.busy === 'load' && i < 150; i += 1) await new Promise((resolve) => setTimeout(resolve, 100));
-      if (ownerSide.busy) return;
+      // Läuft gerade nur das Laden der Partnerdaten, den Klick sofort übernehmen (busy bleibt durchgehend gesetzt)
+      // und erst nach dem Laden ausführen – sonst ging er verloren oder es entstand eine Lücke ohne busy.
+      if (ownerSide.busy && ownerSide.busy !== 'load') return;
       ownerSide.busy = label; ownerSide.error = '';
       rerenderCloud();
+      for (let i = 0; ownerSide.loading && i < 150; i += 1) await new Promise((resolve) => setTimeout(resolve, 100));
       try { await task(); await ownerLoadPartners(); } catch (error) { ownerSide.error = error instanceof TypeError ? 'Keine Verbindung.' : planServerHint(error.message); }
       finally { ownerSide.busy = ''; rerenderCloud(); }
     }
@@ -25900,7 +25901,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     }
     async function hubRefresh({ quiet = false } = {}) {
       if (!cloudReady() || (ownerSide.busy && !quiet)) return;
-      if (!quiet) ownerSide.busy = 'load';
+      if (!quiet) { ownerSide.busy = 'load'; ownerSide.loading = true; }
       try {
         await ownerLoadPartners();
         await ownerDispatchOrders();
@@ -25909,7 +25910,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ownerSide.error = error instanceof TypeError ? 'Offline – Partnerdaten derzeit nicht erreichbar.' : error.message;
         if (ownerSide.partners === null) ownerSide.partners = [];
       } finally {
-        if (!quiet) ownerSide.busy = '';
+        if (!quiet) { ownerSide.loading = false; if (ownerSide.busy === 'load') ownerSide.busy = ''; }
         await hubMarkRead();
         hubRerender();
       }
