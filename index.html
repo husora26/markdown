@@ -1229,6 +1229,17 @@
     .booking-row-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
     .booking-overview-card > .booking-row-actions, .booking-overview-card > .care-box { grid-column: 1 / -1; }
     .booking-row-actions button { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: white; font-size: 11.5px; }
+    .booking-row-actions .guide-send-btn { color: var(--green); border-color: #b8c8ba; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+    .booking-row-actions .guide-send-btn.sent { color: var(--muted); font-weight: 500; }
+    .booking-row-actions .guide-send-btn svg { width: 14px; height: 14px; }
+    .guide-card summary { display: flex; align-items: center; gap: 12px; cursor: pointer; list-style: none; }
+    .guide-card summary::-webkit-details-marker { display: none; }
+    .guide-summary { display: grid; gap: 2px; }
+    .guide-summary small { color: var(--muted); font-size: 12.5px; }
+    .guide-form { display: grid; gap: 12px; margin-top: 14px; }
+    .guide-card { padding: 16px; }
+    .guide-field textarea { resize: vertical; min-height: 54px; font-family: inherit; }
+    .guide-preview { white-space: pre-wrap; font: 13px/1.5 inherit; font-family: inherit; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin: 0; max-height: 420px; overflow: auto; }
     .booking-row-actions button:hover { border-color: #b8c8ba; color: var(--green); }
     .booking-row-actions .booking-edit-btn, .booking-row-actions .booking-delete-btn { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 0 11px; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .15s, box-shadow .15s; }
     .booking-row-actions .booking-edit-btn svg, .booking-row-actions .booking-delete-btn svg { width: 12px; height: 12px; }
@@ -6932,6 +6943,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const paths = {
         check: '<path d="m5 12 4 4L19 6"/>',
         arrow: '<path d="m9 6 6 6-6 6"/>',
+        send: '<path d="m21 3-11 11"/><path d="M21 3 14 21l-4-7-7-4z"/>',
         lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v2.5"/>',
         menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
         bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/>',
@@ -9415,6 +9427,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const nightCount = (startDate, endDate) => Math.round((new Date(`${endDate}T12:00:00`) - new Date(`${startDate}T12:00:00`)) / 86400000);
         return `<div class="welcome"><div><p class="eyebrow">Belegungsplanung · Schweden</p><h1>${bookingsEnabled() ? 'Buchungen & Eigennutzung' : 'Eigennutzung'}</h1><p class="subtitle">${bookingsEnabled() ? 'Gästebuchungen und eigene Aufenthalte im Ferienhaus mit An- und Abreise. Eigennutzung blockiert den Zeitraum für Buchungen.' : 'Trage ein, wann du selbst im Ferienhaus bist. Husora berücksichtigt die Zeiträume bei Hauskontrolle und Aufgaben.'}</p></div><div class="welcome-actions">${bookingsEnabled() ? `<button class="primary-btn" data-action="new-booking">${icon('plus')} Neue Buchung</button>` : ''}<button class="${bookingsEnabled() ? 'secondary-btn' : 'primary-btn'} owner-btn" data-action="new-owner-stay">${icon('home')} Eigennutzung eintragen</button></div></div>
           ${portalHintHtml()}
+          ${guestGuideCardHtml()}
           ${allStays.length ? bookingKpis : ''}
           <section class="card booking-overview"><div class="card-head"><div><h2 class="card-title">${bookingsEnabled() ? 'Belegungsplan' : 'Deine Aufenthalte'}</h2><p class="card-caption">${allStays.filter((booking) => !isOwnerStay(booking)).length} ${bookingsEnabled() ? 'Gästebuchungen · ' : ''}${allStays.filter(isOwnerStay).length}× Eigennutzung</p></div>${bookingsEnabled() ? '<div class="stay-legend"><span><i class="guest"></i>Gäste</span><span><i class="owner"></i>Eigennutzung</span></div>' : ''}</div>
             ${allStays.length ? `${upcomingBookings.length ? '' : '<div class="empty">Keine kommenden Aufenthalte.</div>'}<div class="booking-overview-list">${[...upcomingBookings, ...pastBookingList].map((booking, position) => {
@@ -9438,7 +9451,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
                   const fact = (name, label, value) => `<div class="booking-fact"><span class="booking-fact-icon">${icon(name)}</span><div><small>${label}</small><strong>${escapeHtml(value)}</strong></div></div>`;
                   return `<div class="booking-facts">${fact('users', 'Gäste', booking.guestsUnknown ? 'nicht angegeben' : `${guests} ${guests === 1 ? 'Person' : 'Personen'}`)}${fact('moon', 'Aufenthalt', `${nights} ${nights === 1 ? 'Nacht' : 'Nächte'}`)}${fact('clock', 'Ankunft', booking.arrivalTime ? `${booking.arrivalTime} Uhr` : '—')}${codeMatch ? fact('ticket', 'Buchungscode', codeMatch[1]) : ''}</div>${noteText ? `<div class="booking-note"><span class="booking-fact-icon">${icon('note')}</span><div><small>${booking.guestsUnknown ? 'Weitere Angaben aus dem Kalender' : booking.source ? 'Nachricht des Gasts' : 'Hinweise zur Buchung'}</small><p>${escapeHtml(noteText).replace(/\n/g, '<br>')}</p></div></div>` : ''}`;
                 })()}
-                ${booking.source ? `<div class="booking-row-actions"><span class="booking-managed">Wird automatisch über ${escapeHtml(portalSourceName(booking.source))} synchronisiert</span></div>` : `<div class="booking-row-actions"><button type="button" data-edit-booking="${escapeHtml(booking.id)}" aria-label="Buchung von ${escapeHtml(booking.guestName)} bearbeiten" class="booking-edit-btn">${icon('edit')}Bearbeiten</button><button type="button" data-delete-booking="${escapeHtml(booking.id)}" aria-label="Buchung von ${escapeHtml(booking.guestName)} löschen" class="booking-delete-btn">${icon('trash')}Löschen</button></div>`}
+                ${booking.source ? `<div class="booking-row-actions">${guideSendButtonHtml(booking)}<span class="booking-managed">Wird automatisch über ${escapeHtml(portalSourceName(booking.source))} synchronisiert</span></div>` : `<div class="booking-row-actions">${guideSendButtonHtml(booking)}<button type="button" data-edit-booking="${escapeHtml(booking.id)}" aria-label="Buchung von ${escapeHtml(booking.guestName)} bearbeiten" class="booking-edit-btn">${icon('edit')}Bearbeiten</button><button type="button" data-delete-booking="${escapeHtml(booking.id)}" aria-label="Buchung von ${escapeHtml(booking.guestName)} löschen" class="booking-delete-btn">${icon('trash')}Löschen</button></div>`}
                 ${checkedOut && !bookingTasks(booking.id).length ? '' : careControlHtml({ enabled: bookingAutomationOn(booking), plan: carePlanId(booking.care?.plan), bookingId: booking.id, owner })}
               </article>`;
             }).join('')}</div>` : `<div class="empty">${bookingsEnabled() ? 'Noch keine Buchungen oder Eigennutzung eingetragen.' : 'Noch keine Eigennutzung eingetragen. Über „Eigennutzung eintragen“ legst du fest, wann du im Haus bist.'}</div>`}
@@ -16514,6 +16527,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         });
         const unordered = openIssues(property.id).filter((issue) => !issue.orderedAt && issue.date && issue.date <= shiftDateKey(today, -3));
         if (unordered.length) add('repairs', { id: `issues-${property.id}-${unordered.length}`, level: unordered.some((issue) => issue.priority === 'urgent') ? 'urgent' : 'soon', icon: 'alert', title: `${name}${unordered.length} ${unordered.length === 1 ? 'Mangel' : 'Mängel'} noch nicht beauftragt`, detail: unordered.slice(0, 2).map((issue) => issue.text).join(' · '), page: 'repairs' });
+        bookings.filter((booking) => booking.propertyId === property.id && booking.startDate >= today && booking.startDate <= shiftDateKey(today, 3) && guideNeedsSending(booking)).forEach((booking) => add('bookings', { id: `guide-${booking.id}`, level: 'soon', icon: 'send', title: `${name}Gästemappe an ${booking.guestName} senden`, detail: `Anreise ${fmtDate(booking.startDate)} – Anreise, Schlüssel, WLAN und Hausregeln`, page: 'bookings' }));
         if (bookingsEnabled()) bookings.filter((booking) => booking.propertyId === property.id && booking.startDate >= today && booking.startDate <= shiftDateKey(today, 2)).forEach((booking) => add('bookings', { id: `arrival-${booking.id}`, level: 'info', icon: 'calendar', title: `${name}Anreise ${booking.startDate === today ? 'heute' : booking.startDate === tomorrow ? 'morgen' : `am ${fmtDate(booking.startDate)}`}`, detail: `${booking.guestName || (isOwnerStay(booking) ? 'Eigennutzung' : 'Gast')} · Haus vorbereiten und Schlüssel bereitlegen`, page: 'bookings' }));
         contractsFor(property.id).forEach((contract) => {
           const state = contractState(contract);
@@ -16685,7 +16699,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }
       if (unlocked) return `<div class="card settings-card code-pin-card unlocked"><div class="settings-card-head"><span class="settings-icon">${icon('lock')}</span><div><h2 class="card-title">Codes entsperrt</h2><p class="card-caption">Sperrt sich nach 2 Minuten oder beim Verlassen der Seite wieder.</p></div><div class="code-pin-actions"><button type="button" class="small-action" data-code-lock>Jetzt sperren</button><button type="button" class="small-action" data-code-pin-remove>PIN entfernen</button></div></div></div>`;
       const blocked = Date.now() < codePinState.blockedUntil;
-      return `<form class="card settings-card code-pin-card" id="code-pin-form" data-mode="unlock" autocomplete="off"><div class="settings-card-head"><span class="settings-icon">${icon('lock')}</span><div><h2 class="card-title">Codes gesperrt</h2><p class="card-caption">${codePinState.ask === 'share' ? 'PIN eingeben, um das Notfallblatt mit Codes zu teilen.' : 'PIN eingeben, um Schlüsselbox, Alarm und WLAN zu sehen oder zu ändern.'}</p></div></div>
+      return `<form class="card settings-card code-pin-card" id="code-pin-form" data-mode="unlock" autocomplete="off"><div class="settings-card-head"><span class="settings-icon">${icon('lock')}</span><div><h2 class="card-title">Codes gesperrt</h2><p class="card-caption">${codePinState.ask === 'share' ? 'PIN eingeben, um das Notfallblatt mit Codes zu teilen.' : codePinState.ask.startsWith('guide:') ? 'PIN eingeben, um die Gästemappe mit Schlüsselcode und WLAN zu senden.' : 'PIN eingeben, um Schlüsselbox, Alarm und WLAN zu sehen oder zu ändern.'}</p></div></div>
         <div class="code-pin-row"><input class="form-control" name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" required aria-label="PIN" autocomplete="off" ${blocked ? 'disabled' : ''}><button type="submit" class="primary-btn" ${blocked ? 'disabled' : ''}>Entsperren</button></div>
         ${blocked ? '<p class="settings-hint">Zu viele Fehlversuche – bitte kurz warten.</p>' : ''}
         <button type="button" class="link-btn" data-code-pin-forgot>PIN vergessen?</button></form>`;
@@ -16731,6 +16745,141 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         else { await navigator.clipboard.writeText(text); showToast('Notfallblatt in die Zwischenablage kopiert.'); }
       } catch (error) { if (error?.name !== 'AbortError') showToast('Teilen nicht möglich.'); }
     }
+
+    // --- Gästemappe für Vermieter: Anreise, Schlüssel, WLAN, Hausregeln, Müll, Abreise und Notfallnummern je Buchung senden ---
+    let guestGuides = loadStore('stugliv-guestguide', {});
+    let guideSent = loadStore('stugliv-guide-sent', {});
+    let guideEditProperty = '';
+    let guideOpen = false;
+    let guidePreview = false;
+    const GUIDE_FIELDS = [
+      ['arrival', 'Anreise & Parken', 'z. B. Wegbeschreibung ab der Hauptstraße, Parkplatz direkt am Haus'],
+      ['rules', 'Hausregeln', 'z. B. Nichtraucherhaus, Haustiere nach Absprache, Ruhe ab 22 Uhr, Sauna nur unter Aufsicht'],
+      ['waste', 'Müll & Recycling', 'z. B. Tonnen hinter dem Schuppen, Glas und Papier zur Återvinningsstation am Supermarkt'],
+      ['departure', 'Vor der Abreise', 'z. B. Geschirr spülen, Betten abziehen, Fenster schließen, Schlüssel zurück in die Box'],
+      ['tips', 'Tipps in der Umgebung', 'z. B. Badestelle, Supermarkt, Restaurant, Wanderweg']
+    ];
+    const GUIDE_LANGS = {
+      de: { name: 'Deutsch', locale: 'de-DE', hello: 'Hallo', welcome: 'Willkommen in', stay: 'Dein Aufenthalt', arrive: 'Anreise', from: 'ab', depart: 'Abreise', until: 'bis', address: 'Adresse', arrival: 'Anreise & Parken', key: 'Schlüssel', keyCode: 'Code Schlüsselbox', wifi: 'WLAN', rules: 'Hausregeln', waste: 'Müll & Recycling', departure: 'Vor der Abreise', tips: 'Tipps in der Umgebung', emergency: 'Notfall', emergencyLine: 'Notruf (Feuer, Rettung, Polizei): 112 · Medizinische Beratung: 1177', host: 'Gastgeber', bye: 'Wir wünschen dir einen schönen Aufenthalt!' },
+      en: { name: 'English', locale: 'en-GB', hello: 'Hi', welcome: 'Welcome to', stay: 'Your stay', arrive: 'Arrival', from: 'from', depart: 'Departure', until: 'by', address: 'Address', arrival: 'Getting here & parking', key: 'Key', keyCode: 'Key box code', wifi: 'Wi-Fi', rules: 'House rules', waste: 'Rubbish & recycling', departure: 'Before you leave', tips: 'Local tips', emergency: 'Emergency', emergencyLine: 'Emergency (fire, ambulance, police): 112 · Medical advice: 1177', host: 'Your host', bye: 'Have a wonderful stay!' },
+      sv: { name: 'Svenska', locale: 'sv-SE', hello: 'Hej', welcome: 'Välkommen till', stay: 'Din vistelse', arrive: 'Ankomst', from: 'från', depart: 'Avresa', until: 'senast', address: 'Adress', arrival: 'Vägbeskrivning & parkering', key: 'Nyckel', keyCode: 'Kod nyckelbox', wifi: 'Wifi', rules: 'Husregler', waste: 'Sopor & återvinning', departure: 'Innan du åker', tips: 'Tips i närheten', emergency: 'Nödläge', emergencyLine: 'Nödnummer (brand, ambulans, polis): 112 · Sjukvårdsrådgivning: 1177', host: 'Värd', bye: 'Vi önskar dig en trevlig vistelse!' }
+    };
+    const guideFor = (propertyId) => ({ checkin: '15:00', checkout: '11:00', host: '', hostPhone: '', lang: 'de', withCodes: true, ...(guestGuides[propertyId] || {}) });
+    const guideFilled = (propertyId) => { const guide = guideFor(propertyId); return GUIDE_FIELDS.filter(([key]) => guide[key]).length; };
+    const guideNeedsSending = (booking) => bookingsEnabled() && !isOwnerStay(booking) && !guideSent[booking.id];
+    // withSecrets: true = Codes einsetzen, 'mask' = Platzhalter (Vorschau), false = ohne Codes
+    function guestGuideText(booking, withSecrets) {
+      const property = properties.find((item) => item.id === booking.propertyId);
+      if (!property) return '';
+      const guide = guideFor(property.id);
+      const L = GUIDE_LANGS[guide.lang] || GUIDE_LANGS.de;
+      const data = emergencyFor(property.id);
+      const secret = (value) => (withSecrets === 'mask' ? '••••' : value);
+      const day = (key) => new Intl.DateTimeFormat(L.locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(`${key}T12:00:00`));
+      const name = String(booking.guestName || '').trim();
+      const first = booking.guestsUnknown || /-Gast$|^Gast$/i.test(name) ? '' : name.split(/\s+/)[0];
+      const lines = [`${L.hello}${first ? ` ${first}` : ''},`, `${L.welcome} ${property.name}!`, '', L.stay.toUpperCase(),
+        `${L.arrive}: ${day(booking.startDate)}${guide.checkin ? `, ${L.from} ${guide.checkin}` : ''}`,
+        `${L.depart}: ${day(booking.endDate)}${guide.checkout ? `, ${L.until} ${guide.checkout}` : ''}`];
+      if (property.address) lines.push(`${L.address}: ${property.address}`);
+      lines.push('');
+      const block = (title, text) => { if (String(text || '').trim()) lines.push(title.toUpperCase(), String(text).trim(), ''); };
+      block(L.arrival, guide.arrival);
+      block(L.key, [data.keyLocation, withSecrets && data.keyCode ? `${L.keyCode}: ${secret(data.keyCode)}` : ''].filter(Boolean).join('\n'));
+      if (withSecrets && data.wifi) block(L.wifi, secret(data.wifi));
+      block(L.rules, guide.rules);
+      block(L.waste, guide.waste);
+      block(L.departure, guide.departure);
+      block(L.tips, guide.tips);
+      lines.push(L.emergency.toUpperCase(), L.emergencyLine);
+      if (guide.host || guide.hostPhone) lines.push(`${L.host}: ${[guide.host, guide.hostPhone].filter(Boolean).join(' · ')}`);
+      lines.push('', L.bye);
+      return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+    }
+    function guestGuideCardHtml() {
+      if (!bookingsEnabled() || !properties.length) return '';
+      const propertyId = properties.some((item) => item.id === guideEditProperty) ? guideEditProperty : properties[0].id;
+      const guide = guideFor(propertyId);
+      const data = emergencyFor(propertyId);
+      const filled = guideFilled(propertyId);
+      const todayKey = localDateKey(new Date());
+      const sample = bookings.filter((booking) => booking.propertyId === propertyId && !isOwnerStay(booking) && booking.endDate >= todayKey).sort((a, b) => a.startDate.localeCompare(b.startDate))[0]
+        || { propertyId, guestName: 'Anna', startDate: shiftDateKey(todayKey, 7), endDate: shiftDateKey(todayKey, 14) };
+      const input = (key, label, type = 'text', extra = '') => `<label><span class="form-label">${label}</span><input class="form-control" name="${key}" type="${type}" maxlength="120" value="${escapeHtml(guide[key] || '')}" ${extra}></label>`;
+      return `<details class="card guide-card" data-guide-details ${guideOpen ? 'open' : ''}><summary><span class="settings-icon">${icon('note')}</span><span class="guide-summary"><strong>Gästemappe</strong><small>${filled ? `${filled} von ${GUIDE_FIELDS.length} Abschnitten ausgefüllt` : 'Anreise, WLAN, Hausregeln und Notfallnummern für deine Gäste'} · bei jeder Buchung über „Gästemappe senden“ verschicken</small></span></summary>
+        <form id="guide-form" class="guide-form" autocomplete="off">
+          ${properties.length > 1 ? `<label><span class="form-label">Ferienhaus</span><select class="form-control" name="property" data-guide-property>${properties.map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === propertyId ? 'selected' : ''}>${escapeHtml(item.name)}</option>`).join('')}</select></label>` : `<input type="hidden" name="property" value="${escapeHtml(propertyId)}">`}
+          <div class="profile-grid">${input('checkin', 'Check-in ab', 'time')}${input('checkout', 'Check-out bis', 'time')}${input('host', 'Gastgeber (Name)', 'text', 'placeholder="z. B. Familie Berg"')}${input('hostPhone', 'Telefon Gastgeber', 'tel', 'placeholder="+46 …"')}
+            <label><span class="form-label">Sprache der Mappe</span><select class="form-control" name="lang">${Object.entries(GUIDE_LANGS).map(([id, entry]) => `<option value="${id}" ${guide.lang === id ? 'selected' : ''}>${entry.name}</option>`).join('')}</select></label></div>
+          ${GUIDE_FIELDS.map(([key, label, placeholder]) => `<label class="guide-field"><span class="form-label">${label}</span><textarea class="form-control" name="${key}" rows="2" maxlength="1500" placeholder="${escapeHtml(placeholder)}">${escapeHtml(guide[key] || '')}</textarea></label>`).join('')}
+          <label class="settings-switch simple-switch"><span><strong>Schlüsselcode und WLAN mitschicken</strong><small>${data.keyCode || data.wifi ? 'Kommt aus „Notfall & Zugang“.' : 'Noch nicht unter „Notfall & Zugang“ eingetragen.'}${codePin() ? ' Beim Senden fragt die App nach deiner PIN.' : ''}</small></span><span class="switch"><input type="checkbox" name="withCodes" ${guide.withCodes ? 'checked' : ''}><span class="switch-track"></span></span></label>
+          <p class="settings-hint">Schlüssel-Ort und Notrufnummern kommen automatisch aus „Notfall & Zugang“. Deine Texte werden nicht übersetzt – schreib sie in der Sprache der Mappe.</p>
+          <div class="settings-actions"><button type="submit" class="primary-btn">Gästemappe speichern</button><button type="button" class="secondary-btn" data-guide-preview>${guidePreview ? 'Vorschau schließen' : 'Vorschau'}</button></div>
+          ${guidePreview ? `<pre class="guide-preview" aria-label="Vorschau der Gästemappe">${escapeHtml(guestGuideText(sample, guide.withCodes ? 'mask' : false))}</pre>` : ''}
+        </form></details>`;
+    }
+    function guideSendButtonHtml(booking) {
+      if (!bookingsEnabled() || isOwnerStay(booking) || booking.endDate < localDateKey(new Date())) return '';
+      const sent = guideSent[booking.id];
+      return `<button type="button" class="guide-send-btn ${sent ? 'sent' : ''}" data-guide-send="${escapeHtml(booking.id)}" aria-label="Gästemappe an ${escapeHtml(booking.guestName)} senden">${icon('send')}${sent ? `Gästemappe gesendet ${escapeHtml(fmtDate(sent.slice(0, 10)))} · erneut` : 'Gästemappe senden'}</button>`;
+    }
+    function saveGuideForm(notify = true) {
+      const form = document.getElementById('guide-form');
+      if (!form) return;
+      const propertyId = form.elements.property?.value;
+      if (!properties.some((item) => item.id === propertyId)) return;
+      const next = { ...guideFor(propertyId) };
+      ['checkin', 'checkout', 'host', 'hostPhone', 'lang', ...GUIDE_FIELDS.map(([key]) => key)].forEach((key) => { if (form.elements[key]) next[key] = String(form.elements[key].value || '').trim(); });
+      next.withCodes = Boolean(form.elements.withCodes?.checked);
+      guestGuides = { ...guestGuides, [propertyId]: next };
+      if (saveStore('stugliv-guestguide', guestGuides) && notify) { render(); showToast('Gästemappe gespeichert.'); }
+    }
+    async function shareGuestGuide(bookingId, unlocked = false) {
+      const booking = bookings.find((item) => item.id === bookingId);
+      if (!booking) return;
+      const guide = guideFor(booking.propertyId);
+      const data = emergencyFor(booking.propertyId);
+      const withCodes = guide.withCodes && Boolean(data.keyCode || data.wifi);
+      if (withCodes && !unlocked && !codesUnlocked()) {
+        if (window.confirm('Schlüsselcode und WLAN sind mit deiner PIN gesperrt.\n\nOK = PIN eingeben · Abbrechen = Gästemappe ohne Codes senden')) {
+          sectionPropertyId = booking.propertyId; codePinState.ask = `guide:${booking.id}`; currentPage = 'emergency'; render(); window.scrollTo(0, 0);
+          return;
+        }
+        return sendGuestGuide(booking, false);
+      }
+      return sendGuestGuide(booking, withCodes);
+    }
+    async function sendGuestGuide(booking, withSecrets) {
+      const property = properties.find((item) => item.id === booking.propertyId);
+      const text = guestGuideText(booking, withSecrets);
+      let sent = false;
+      try {
+        if (navigator.share) { await navigator.share({ title: `Gästemappe – ${property?.name || ''}`, text }); sent = true; }
+        else { await navigator.clipboard.writeText(text); sent = true; showToast('Gästemappe kopiert – jetzt in die Nachricht an den Gast einfügen.'); }
+      } catch (error) { if (error?.name !== 'AbortError') showToast('Teilen nicht möglich.'); }
+      if (!sent) return;
+      guideSent = { ...guideSent, [booking.id]: new Date().toISOString() };
+      saveStore('stugliv-guide-sent', guideSent);
+      // automatisch geplante Aufgabe „Gast informieren“ gilt damit als erledigt
+      const welcome = tasks.find((task) => task.bookingId === booking.id && task.step === 'welcome' && !task.done);
+      if (welcome) { setTaskStatus(welcome, 'Erledigt'); persistTasks(); }
+      if (currentPage === 'bookings' || currentPage === 'dashboard') render();
+      updateNotifyBadge();
+    }
+    document.addEventListener('click', (event) => {
+      const send = event.target.closest?.('[data-guide-send]');
+      if (send) { shareGuestGuide(send.dataset.guideSend); return; }
+      if (event.target.closest?.('[data-guide-preview]')) { saveGuideForm(false); guidePreview = !guidePreview; guideOpen = true; render(); }
+    });
+    document.addEventListener('toggle', (event) => { if (event.target.matches?.('[data-guide-details]')) guideOpen = event.target.open; }, true);
+    document.addEventListener('change', (event) => {
+      const select = event.target.closest?.('[data-guide-property]');
+      if (select) { saveGuideForm(false); guideEditProperty = select.value; guideOpen = true; render(); }
+    });
+    document.addEventListener('submit', (event) => {
+      if (event.target.id !== 'guide-form') return;
+      event.preventDefault(); guideOpen = true; saveGuideForm(true);
+    });
 
     // --- Verträge & Fristen ---
     let contractsData = loadStore('stugliv-contracts', {});
@@ -19512,6 +19661,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const after = codePinState.ask;
       Object.assign(codePinState, { until: Date.now() + CODE_UNLOCK_MS, fails: 0, ask: '' }); emergencyReveal = true; codeLockSoon(); render();
       if (after === 'share') shareEmergencySheet(true);
+      if (after.startsWith('guide:')) { currentPage = 'bookings'; render(); window.scrollTo(0, 0); shareGuestGuide(after.slice(6), true); }
     }
     function saveEmergencyForm(notify = true) {
       const form = document.getElementById('emergency-form');
