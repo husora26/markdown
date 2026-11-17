@@ -24970,7 +24970,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     let ownerReportsImporting = false;
     async function ownerImportInspectionReports(org) {
       if (ownerReportsImporting) return;
-      const rows = await cloudFetch(`/rest/v1/documents?organization_id=eq.${org}&document_type=eq.inspection_report&inspection_id=not.is.null&select=id,property_id,inspection_id,file_name,file_size,storage_bucket,storage_path,created_at&order=created_at.desc&limit=100`);
+      const rows = await cloudFetch(`/rest/v1/documents?organization_id=eq.${org}&document_type=eq.inspection_report&inspection_id=not.is.null&select=id,property_id,inspection_id,file_name,file_size,storage_bucket,storage_path,created_at&order=created_at.desc&limit=20`);
       // einmal übernommene Berichte nicht erneut holen, auch wenn sie lokal gelöscht wurden
       let known = [];
       try { known = JSON.parse(localStorage.getItem('husora-report-imports') || '[]'); } catch (error) { known = []; }
@@ -24999,7 +24999,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           const first = added[0];
           const verdict = { ok: 'alles in Ordnung', warning: 'mit Hinweisen', critical: 'mit Mängeln' }[first.reportStatus];
           showToast(added.length === 1 ? `Prüfbericht für ${first.houseName}${first.partnerName ? ` von ${first.partnerName}` : ''} erhalten${verdict ? ` (${verdict})` : ''} – unter Dokumente → Protokolle abgelegt.` : `${added.length} Prüfberichte erhalten – unter Dokumente → Protokolle bei den Ferienhäusern abgelegt.`);
-          if (currentPage === 'partnerHub') hubRerender(); else if (['documents', 'propertyDetail', 'dashboard'].includes(currentPage)) render();
+          // nicht neu zeichnen, während jemand tippt (z. B. im Partner-Formular); der Hinweis reicht
+          const typing = document.activeElement && /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+          if (!typing && ['documents', 'propertyDetail', 'dashboard'].includes(currentPage)) render();
         }
       } finally { ownerReportsImporting = false; }
     }
