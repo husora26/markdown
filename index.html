@@ -3787,6 +3787,13 @@
     .demo-banner > span { flex: 1 1 240px; }
     .demo-banner .primary-btn { min-height: 42px; }
     .emergency-form textarea { font-family: inherit; min-height: 90px; font-size: 14px; }
+    .code-pin-card { margin-bottom: 14px; }
+    .code-pin-card.unlocked { border-color: var(--amber); }
+    .code-pin-row { display: flex; gap: 8px; margin-top: 10px; }
+    .code-pin-row .form-control { flex: 1 1 auto; max-width: 220px; letter-spacing: .3em; }
+    .code-pin-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+    .code-pin-card .link-btn { margin-top: 8px; padding: 0; border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; }
+    .code-locked::placeholder { color: var(--muted); font-style: italic; }
     /* Gegliedertes Menü */
     .nav-menu { width: min(600px, calc(100vw - 26px)); }
     .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 14px; align-items: start; }
@@ -6925,6 +6932,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const paths = {
         check: '<path d="m5 12 4 4L19 6"/>',
         arrow: '<path d="m9 6 6 6-6 6"/>',
+        lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v2.5"/>',
         menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
         bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/>',
         camera: '<path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.2" r="3.4"/>',
@@ -13380,6 +13388,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       }
     }
     function render() {
+      // Entsperrte Zugangscodes beim Verlassen von „Notfall & Zugang“ wieder sperren
+      try { if (currentPage !== 'emergency' && codePinState.until) { codePinState.until = 0; emergencyReveal = false; } } catch (error) { /* noch nicht initialisiert */ }
       const uiSamePage = currentPage === lastRenderedPage;
       const uiState = uiSamePage ? uiCapture(pageContent) : null;
       const uiScrollY = window.scrollY;
@@ -16637,6 +16647,38 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const SWEDISH_EMERGENCY_NUMBERS = [['112', 'Notruf – Feuer, Rettung, Polizei (akut)'], ['114 14', 'Polizei – nicht dringend'], ['1177', 'Vårdguiden – medizinische Beratung'], ['113 13', 'Informationsnummer bei Krisen und Großereignissen'], ['010-456 67 00', 'Giftinformation (nicht akut)']];
     const emergencyFor = (propertyId) => ({ contacts: [], ...(emergencyData[propertyId] || {}) });
     let emergencyReveal = false;
+    // PIN für Zugangscodes: nur auf diesem Gerät (nicht in der Cloud), gespeichert als gesalzener SHA-256-Hash.
+    // Schützt vor neugierigen Blicken und Geräteweitergabe; die Codes selbst liegen weiter im Gerätespeicher.
+    const CODE_PIN_KEY = 'husora-code-pin';
+    const CODE_UNLOCK_MS = 2 * 60 * 1000;
+    const codePinState = { until: 0, ask: '', fails: 0, blockedUntil: 0, setup: false, timer: null };
+    const codePin = () => { try { const v = JSON.parse(localStorage.getItem(CODE_PIN_KEY) || 'null'); return v && v.salt && v.hash ? v : null; } catch (error) { return null; } };
+    const codesUnlocked = () => !codePin() || Date.now() < codePinState.until;
+    async function codePinHash(pin, salt) {
+      const bytes = new TextEncoder().encode(`${salt}:${pin}`);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+    }
+    function codeLockSoon() {
+      clearTimeout(codePinState.timer);
+      codePinState.timer = setTimeout(() => { codePinState.until = 0; emergencyReveal = false; if (currentPage === 'emergency') { saveEmergencyForm(false); render(); } }, CODE_UNLOCK_MS + 50);
+    }
+    function codePinCardHtml() {
+      const pin = codePin();
+      const unlocked = codesUnlocked();
+      if (!pin) {
+        if (!codePinState.setup) return `<div class="card settings-card code-pin-card"><div class="settings-card-head"><span class="settings-icon">${icon('lock')}</span><div><h2 class="card-title">Codes mit PIN schützen</h2><p class="card-caption">Schlüsselbox, Alarm und WLAN erst nach Eingabe einer PIN zeigen – praktisch, wenn andere dein Handy in der Hand haben.</p></div><button type="button" class="small-action" data-code-pin-setup>PIN festlegen</button></div></div>`;
+        return `<form class="card settings-card code-pin-card" id="code-pin-form" data-mode="set" autocomplete="off"><div class="settings-card-head"><span class="settings-icon">${icon('lock')}</span><div><h2 class="card-title">PIN festlegen</h2><p class="card-caption">4 bis 8 Ziffern. Die PIN gilt nur auf diesem Gerät und wird nicht in die Cloud übertragen.</p></div></div>
+          <div class="profile-grid"><label><span class="form-label">Neue PIN</span><input class="form-control" name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" required autocomplete="new-password"></label><label><span class="form-label">PIN wiederholen</span><input class="form-control" name="pin2" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" required autocomplete="new-password"></label></div>
+          <div class="settings-actions"><button type="submit" class="primary-btn">PIN speichern</button><button type="button" class="secondary-btn" data-code-pin-cancel>Abbrechen</button></div></form>`;
+      }
+      if (unlocked) return `<div class="card settings-card code-pin-card unlocked"><div class="settings-card-head"><span class="settings-icon">${icon('lock')}</span><div><h2 class="card-title">Codes entsperrt</h2><p class="card-caption">Sperrt sich nach 2 Minuten oder beim Verlassen der Seite wieder.</p></div><div class="code-pin-actions"><button type="button" class="small-action" data-code-lock>Jetzt sperren</button><button type="button" class="small-action" data-code-pin-remove>PIN entfernen</button></div></div></div>`;
+      const blocked = Date.now() < codePinState.blockedUntil;
+      return `<form class="card settings-card code-pin-card" id="code-pin-form" data-mode="unlock" autocomplete="off"><div class="settings-card-head"><span class="settings-icon">${icon('lock')}</span><div><h2 class="card-title">Codes gesperrt</h2><p class="card-caption">${codePinState.ask === 'share' ? 'PIN eingeben, um das Notfallblatt mit Codes zu teilen.' : 'PIN eingeben, um Schlüsselbox, Alarm und WLAN zu sehen oder zu ändern.'}</p></div></div>
+        <div class="code-pin-row"><input class="form-control" name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" minlength="4" maxlength="8" required aria-label="PIN" autocomplete="off" ${blocked ? 'disabled' : ''}><button type="submit" class="primary-btn" ${blocked ? 'disabled' : ''}>Entsperren</button></div>
+        ${blocked ? '<p class="settings-hint">Zu viele Fehlversuche – bitte kurz warten.</p>' : ''}
+        <button type="button" class="link-btn" data-code-pin-forgot>PIN vergessen?</button></form>`;
+    }
     function emergencyPage() {
       const property = sectionProperty();
       const data = emergencyFor(property.id);
@@ -16646,9 +16688,10 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         ${sectionPropertySelect()}
         ${emergencyRequestHtml(property)}
         <div class="emergency-numbers">${SWEDISH_EMERGENCY_NUMBERS.map(([number, label]) => `<a href="tel:${number.replace(/[^0-9+]/g, '')}" class="emergency-number ${number === '112' ? 'main' : ''}"><strong>${number}</strong><span>${label}</span></a>`).join('')}</div>
+        ${codePinCardHtml()}
         <form class="card settings-card emergency-form" id="emergency-form" autocomplete="off">
-          <div class="settings-card-head"><span class="settings-icon">${icon('key')}</span><div><h2 class="card-title">Angaben zum Haus</h2><p class="card-caption">${filled} von ${EMERGENCY_FIELDS.flatMap(([, fields]) => fields).length} Angaben eingetragen · Codes und Passwörter werden unverschlüsselt auf diesem Gerät gespeichert.</p></div><button type="button" class="small-action" data-emergency-reveal>${emergencyReveal ? 'Codes verbergen' : 'Codes zeigen'}</button></div>
-          ${EMERGENCY_FIELDS.map(([group, fields]) => `<fieldset class="emergency-group"><legend>${group}</legend><div class="profile-grid">${fields.map(([key, label, placeholder, kind]) => `<label class="${kind === 'secret' ? '' : key === 'keyLocation' || key === 'heating' || key === 'gridOperator' ? 'full' : ''}"><span class="form-label">${label}</span><input class="form-control" name="${key}" maxlength="200" ${kind === 'secret' && !emergencyReveal ? 'type="password"' : 'type="text"'} value="${escapeHtml(data[key] || '')}" placeholder="${escapeHtml(placeholder || '')}"></label>`).join('')}</div></fieldset>`).join('')}
+          <div class="settings-card-head"><span class="settings-icon">${icon('key')}</span><div><h2 class="card-title">Angaben zum Haus</h2><p class="card-caption">${filled} von ${EMERGENCY_FIELDS.flatMap(([, fields]) => fields).length} Angaben eingetragen · Codes und Passwörter werden unverschlüsselt auf diesem Gerät gespeichert.</p></div>${codesUnlocked() ? `<button type="button" class="small-action" data-emergency-reveal>${emergencyReveal ? 'Codes verbergen' : 'Codes zeigen'}</button>` : ''}</div>
+          ${EMERGENCY_FIELDS.map(([group, fields]) => `<fieldset class="emergency-group"><legend>${group}</legend><div class="profile-grid">${fields.map(([key, label, placeholder, kind]) => `<label class="${kind === 'secret' ? '' : key === 'keyLocation' || key === 'heating' || key === 'gridOperator' ? 'full' : ''}"><span class="form-label">${label}</span>${kind === 'secret' && !codesUnlocked() ? `<input class="form-control code-locked" type="text" disabled value="" placeholder="${data[key] ? '•••• mit PIN anzeigen' : 'leer – mit PIN bearbeiten'}" aria-label="${escapeHtml(label)} (gesperrt)">` : `<input class="form-control" name="${key}" maxlength="200" ${kind === 'secret' && !emergencyReveal ? 'type="password"' : 'type="text"'} value="${escapeHtml(data[key] || '')}" placeholder="${escapeHtml(placeholder || '')}">`}</label>`).join('')}</div></fieldset>`).join('')}
           <fieldset class="emergency-group"><legend>Notfallkontakte vor Ort</legend>
             <div class="emergency-contacts">${data.contacts.length ? data.contacts.map((contact) => `<div class="emergency-contact"><span class="settings-icon small">${icon('phone')}</span><div><strong>${escapeHtml(contact.name)}</strong><small>${escapeHtml(contact.role || 'Kontakt')}</small></div>${contact.phone ? `<a class="small-action" href="tel:${escapeHtml(contact.phone.replace(/[^0-9+]/g, ''))}">${escapeHtml(contact.phone)}</a>` : ''}<button type="button" class="small-action danger" data-emergency-contact-delete="${escapeHtml(contact.id)}" aria-label="${escapeHtml(contact.name)} entfernen">Entfernen</button></div>`).join('') : '<p class="settings-hint" style="margin:0 0 8px">Noch keine Kontakte – z. B. Nachbar, Hausmeister oder dein Servicepartner für Notfälle.</p>'}</div>
             <div class="emergency-contact-new"><input class="form-control" id="emergency-contact-name" maxlength="80" placeholder="Name" aria-label="Name des Kontakts"><input class="form-control" id="emergency-contact-role" maxlength="60" placeholder="Rolle, z. B. Nachbar" aria-label="Rolle"><input class="form-control" id="emergency-contact-phone" type="tel" maxlength="30" placeholder="Telefon" aria-label="Telefon"><button type="button" class="secondary-btn" data-emergency-contact-add>${icon('plus')} Hinzufügen</button></div>
@@ -16668,9 +16711,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (data.notes) lines.push('HINWEISE', data.notes);
       return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
     }
-    async function shareEmergencySheet() {
+    async function shareEmergencySheet(preset = null) {
       const property = sectionProperty();
-      const withSecrets = window.confirm('Sollen Codes und Passwörter (Schlüsselbox, Alarm, WLAN) mit geteilt werden?\n\nOK = mit Codes · Abbrechen = ohne Codes');
+      const withSecrets = preset !== null ? preset : window.confirm('Sollen Codes und Passwörter (Schlüsselbox, Alarm, WLAN) mit geteilt werden?\n\nOK = mit Codes · Abbrechen = ohne Codes');
       const text = emergencySheetText(property, withSecrets);
       try {
         if (navigator.share) await navigator.share({ title: `Notfall & Zugang – ${property.name}`, text });
@@ -19342,7 +19385,27 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         return;
       }
       if (target.closest('[data-emergency-reveal]')) { emergencyReveal = !emergencyReveal; saveEmergencyForm(false); render(); return; }
-      if (target.closest('[data-emergency-share]')) { saveEmergencyForm(false); shareEmergencySheet(); return; }
+      if (target.closest('[data-emergency-share]')) {
+        saveEmergencyForm(false);
+        if (!codesUnlocked() && window.confirm('Sollen Codes und Passwörter (Schlüsselbox, Alarm, WLAN) mit geteilt werden? Dafür brauchst du deine PIN.\n\nOK = PIN eingeben · Abbrechen = ohne Codes teilen')) { codePinState.ask = 'share'; render(); document.querySelector('#code-pin-form [name=pin]')?.focus(); return; }
+        shareEmergencySheet(codesUnlocked() ? null : false); return;
+      }
+      if (target.closest('[data-code-pin-setup]')) { codePinState.setup = true; render(); document.querySelector('#code-pin-form [name=pin]')?.focus(); return; }
+      if (target.closest('[data-code-pin-cancel]')) { codePinState.setup = false; render(); return; }
+      if (target.closest('[data-code-lock]')) { saveEmergencyForm(false); codePinState.until = 0; emergencyReveal = false; clearTimeout(codePinState.timer); render(); return; }
+      if (target.closest('[data-code-pin-remove]')) {
+        if (!codesUnlocked() || !window.confirm('PIN entfernen? Die Codes sind danach wieder ohne PIN sichtbar.')) return;
+        saveEmergencyForm(false); try { localStorage.removeItem(CODE_PIN_KEY); } catch (error) { /* optional */ }
+        codePinState.until = 0; render(); showToast('PIN entfernt.'); return;
+      }
+      if (target.closest('[data-code-pin-forgot]')) {
+        if (!window.confirm('PIN vergessen?\n\nZum Zurücksetzen werden alle gespeicherten Codes (Schlüsselbox, Alarm, WLAN) aller Häuser auf diesem Gerät gelöscht. Andere Angaben bleiben erhalten.')) return;
+        const secretKeys = EMERGENCY_FIELDS.flatMap(([, fields]) => fields).filter(([, , , kind]) => kind === 'secret').map(([key]) => key);
+        emergencyData = Object.fromEntries(Object.entries(emergencyData).map(([id, data]) => [id, { ...data, ...Object.fromEntries(secretKeys.map((key) => [key, ''])) }]));
+        saveStore('stugliv-emergency', emergencyData);
+        try { localStorage.removeItem(CODE_PIN_KEY); } catch (error) { /* optional */ }
+        Object.assign(codePinState, { until: 0, ask: '', fails: 0, blockedUntil: 0 }); render(); showToast('Codes gelöscht und PIN zurückgesetzt.'); return;
+      }
       if (target.closest('[data-emergency-contact-add]')) {
         const name = document.getElementById('emergency-contact-name').value.trim();
         const phone = document.getElementById('emergency-contact-phone').value.trim();
@@ -19417,18 +19480,40 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const anchor = target.closest('[data-settings-anchor]');
       if (anchor) { if (/^settings-(home|look|data|legal)$/.test(anchor.dataset.settingsAnchor)) settingsView = anchor.dataset.settingsAnchor; else if (anchor.dataset.settingsAnchor === 'settings-notify') settingsView = 'settings-look'; setTimeout(() => { if (currentPage === 'settings') render(); document.getElementById(anchor.dataset.settingsAnchor)?.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
     });
+    async function codePinSubmit(form) {
+      const pin = String(form.elements.pin?.value || '');
+      if (!/^[0-9]{4,8}$/.test(pin)) { showToast('Die PIN hat 4 bis 8 Ziffern.'); return; }
+      if (form.dataset.mode === 'set') {
+        if (pin !== String(form.elements.pin2?.value || '')) { showToast('Die beiden PINs stimmen nicht überein.'); return; }
+        const salt = [...crypto.getRandomValues(new Uint8Array(16))].map((b) => b.toString(16).padStart(2, '0')).join('');
+        try { localStorage.setItem(CODE_PIN_KEY, JSON.stringify({ salt, hash: await codePinHash(pin, salt) })); } catch (error) { showToast('PIN konnte nicht gespeichert werden.'); return; }
+        saveEmergencyForm(false);
+        Object.assign(codePinState, { setup: false, until: 0, fails: 0 }); emergencyReveal = false; render(); showToast('PIN gespeichert – Codes sind jetzt gesperrt.'); return;
+      }
+      const stored = codePin();
+      if (!stored || Date.now() < codePinState.blockedUntil) return;
+      if (await codePinHash(pin, stored.salt) !== stored.hash) {
+        codePinState.fails += 1;
+        if (codePinState.fails >= 5) { codePinState.blockedUntil = Date.now() + 30000; codePinState.fails = 0; setTimeout(() => { if (currentPage === 'emergency') render(); }, 30100); }
+        render(); showToast('PIN falsch.'); return;
+      }
+      const after = codePinState.ask;
+      Object.assign(codePinState, { until: Date.now() + CODE_UNLOCK_MS, fails: 0, ask: '' }); emergencyReveal = true; codeLockSoon(); render();
+      if (after === 'share') shareEmergencySheet(true);
+    }
     function saveEmergencyForm(notify = true) {
       const form = document.getElementById('emergency-form');
       if (!form) return;
       const property = sectionProperty();
       const data = emergencyFor(property.id);
-      EMERGENCY_FIELDS.flatMap(([, fields]) => fields).forEach(([key]) => { data[key] = String(form.elements[key]?.value || '').trim(); });
+      EMERGENCY_FIELDS.flatMap(([, fields]) => fields).forEach(([key]) => { if (form.elements[key]) data[key] = String(form.elements[key].value || '').trim(); });
       data.notes = String(form.elements.notes?.value || '').trim();
       emergencyData = { ...emergencyData, [property.id]: data };
       if (saveStore('stugliv-emergency', emergencyData) && notify) { render(); showToast('Notfall & Zugang gespeichert.'); }
     }
     document.addEventListener('submit', (event) => {
       if (event.target.id === 'emergency-form') { event.preventDefault(); saveEmergencyForm(true); }
+      if (event.target.id === 'code-pin-form') { event.preventDefault(); codePinSubmit(event.target); }
       if (event.target.id === 'contract-form') {
         event.preventDefault();
         const form = event.target;
@@ -25387,7 +25472,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function hubAccessDefaultText(o) {
       const local = properties.find((pr) => pr.id === o.property?.app_ref) || properties.find((pr) => pr.name === o.property?.name);
       const data = local ? emergencyFor(local.id) : {};
-      return [data.keyLocation && `Schlüssel: ${data.keyLocation}`, data.keyCode && `Code Schlüsselbox: ${data.keyCode}`, data.alarm && `Alarmanlage: ${data.alarm}`].filter(Boolean).join('\n');
+      const open = codesUnlocked();
+      return [data.keyLocation && `Schlüssel: ${data.keyLocation}`, open && data.keyCode && `Code Schlüsselbox: ${data.keyCode}`, open && data.alarm && `Alarmanlage: ${data.alarm}`].filter(Boolean).join('\n');
     }
     function hubAccessHtml(o) {
       const share = (ownerSide.shares || []).find((sh) => sh.service_order_id === o.id);
