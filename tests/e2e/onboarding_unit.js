@@ -24,8 +24,11 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   await step('Schritt-Reihenfolge entspricht der Spezifikation und dem Server', async () => {
     const r = await ev(() => [OB_FLOWS.homeowner.steps.map((x) => x.key).join(','), OB_FLOWS.service_partner.steps.map((x) => x.key).join(',')]);
     const srv = sql("select private.onboarding_flow_steps('homeowner_v1')::text || '|' || private.onboarding_flow_steps('service_partner_v1')::text");
-    if (r[0] !== 'welcome,property,profile,task,inspection,automation,partners,organize,done' || r[1] !== 'welcome,profile,area,services,orders,workflow,documentation,finance,team,done') throw new Error(r.join(' | '));
-    if (srv.replace(/[{}]/g, '').replace('|', ' | ') !== r.join(' | ')) throw new Error(`Server: ${srv}`); return 'Client = Server';
+    if (r[0] !== 'welcome,property,task,done' || r[1] !== 'welcome,profile,area,services,orders,workflow,documentation,finance,team,done') throw new Error(r.join(' | '));
+    // Hausbesitzer: kurze Einrichtung = Teilfolge der am Server erlaubten Schritte (alte Schritte bleiben gültig); Partner: identisch
+    const [srvH, srvP] = srv.replace(/[{}]/g, '').split('|').map((x) => x.split(','));
+    const sub = (a, b) => { let i = 0; for (const k of b) if (k === a[i]) i += 1; return i === a.length; };
+    if (!sub(r[0].split(','), srvH) || srvP.join(',') !== r[1]) throw new Error(`Server: ${srv}`); return 'Client ⊆ Server, gleiche Reihenfolge';
   });
   await step('Nicht überspringbar: nur Willkommen und Abschluss', async () => {
     const r = await ev(() => Object.values(OB_FLOWS).flatMap((f) => f.steps.filter((x) => !x.skippable).map((x) => x.key)));
@@ -44,7 +47,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   });
   await step('Fortschritt zählt nur erledigte Schritte ohne Willkommen/Abschluss', async () => {
     const r = await ev(() => { obMark('homeowner', 'welcome', 'completed'); obMark('homeowner', 'task', 'skipped'); return obProgress('homeowner'); });
-    if (r.done !== 1 || r.total !== 7) throw new Error(JSON.stringify(r)); return '1 von 7';
+    if (r.done !== 1 || r.total !== 2) throw new Error(JSON.stringify(r)); return '1 von 2';
   });
   await step('Wiederaufnahme: aktueller Schritt und Pause bleiben erhalten', async () => {
     const r = await ev(() => { obMark('homeowner', null, null, { current: 'inspection', refs: { paused: true } }); const s1 = obStart('homeowner'); return { c: s1.current, paused: s1.paused, status: s1.status }; });
@@ -61,12 +64,16 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   await step('Checkliste aus echten Daten: Demo-Haus zählt nicht, echtes Haus und Aufgabe schon', async () => {
     const r = await ev(() => {
       const before = obOwnerChecklist().map((x) => x[2]);
-      properties = [...properties.filter((x) => !obIsDemoHouse(x)), propertyWithDefaults({ id: 'h-unit', name: 'Unit-Haus', address: '', region: '', yearBuilt: '1990', livingArea: '80', rooms: '3' })];
+      properties = [...properties.filter((x) => !obIsDemoHouse(x)), propertyWithDefaults({ id: 'h-unit', name: 'Unit-Haus', address: 'Byvägen 1', region: '', yearBuilt: '1990', livingArea: '80', rooms: '3' })];
       tasks = [...tasks, { id: 991, title: 'Unit-Aufgabe', property: 'Unit-Haus', date: '2026-12-01', priority: 'normal', repeat: 'Einmalig', status: 'Offen', done: false }];
       const after = obOwnerChecklist().map((x) => x[2]);
       return { before, after, demoOnly: properties.length };
     });
     if (r.before.slice(0, 3).some(Boolean) || r.after.slice(0, 3).join() !== 'true,true,true') throw new Error(JSON.stringify(r)); return `${r.before.slice(0, 3)} → ${r.after.slice(0, 3)}`;
+  });
+  await step('Alter gespeicherter Schritt führt zum passenden neuen (Hausprofil → Aufgaben, Hauskontrolle → Abschluss)', async () => {
+    const r = await ev(() => ['profile', 'inspection', 'organize'].map((k) => OB_FLOWS.homeowner.steps[obStepIndex('homeowner', k)].key).join());
+    if (r !== 'task,done,done') throw new Error(r); return r;
   });
   await step('Unbekannter Schritt fällt auf Schritt 1 zurück', async () => {
     const i = await ev(() => obStepIndex('homeowner', 'gibt-es-nicht')); if (i !== 0) throw new Error(String(i)); return 'Index 0';

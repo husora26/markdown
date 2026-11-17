@@ -5950,7 +5950,7 @@ Weiter mit der Einrichtung|Continue with setup|Fortsätt med konfigurationen
 Was kann ich hier tun?|What can I do here?|Vad kan jag göra här?
 Nicht mehr anzeigen|Don't show again|Visa inte igen
 Ersteinrichtung starten|Start initial setup|Starta första konfigurationen
-Erstes Haus, Hausprofil, erste Aufgabe und wichtige Funktionen|First house, house profile, first task and key features|Första huset, husprofil, första uppgiften och viktiga funktioner
+Haus mit Adresse und Pflegepaket – in drei kurzen Schritten|House with address and care package – in three short steps|Hus med adress och skötselpaket – i tre korta steg
 Hilfe-Tipps ausschalten|Turn off help tips|Stäng av hjälptips
 Hilfe-Tipps einschalten|Turn on help tips|Slå på hjälptips
 Willkommen bei Husora für Servicepartner|Welcome to Husora for service partners|Välkommen till Husora för servicepartner
@@ -17003,7 +17003,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function helpPage() {
       return `<div class="welcome"><div><p class="eyebrow">App</p><h1>Hilfe & Support</h1><p class="subtitle">Antworten auf häufige Fragen, Erste Schritte und Kontakt.</p></div></div>
         <div class="help-actions">
-          <button type="button" class="help-action" data-onboarding-start>${icon('home')}<span><strong>${obState('homeowner')?.status === 'in_progress' ? 'Einrichtung fortsetzen' : 'Ersteinrichtung starten'}</strong><small>Erstes Haus, Hausprofil, erste Aufgabe und wichtige Funktionen</small></span></button>
+          <button type="button" class="help-action" data-onboarding-start>${icon('home')}<span><strong>${obState('homeowner')?.status === 'in_progress' ? 'Einrichtung fortsetzen' : 'Ersteinrichtung starten'}</strong><small>Haus mit Adresse und Pflegepaket – in drei kurzen Schritten</small></span></button>
           <button type="button" class="help-action" data-ob-tips>${icon('help')}<span><strong>Hilfe-Tipps ${obPrefs().help_tips_enabled === false ? 'einschalten' : 'ausschalten'}</strong><small>„Was kann ich hier tun?“ auf Aufgaben, Kontrolle, Partnern, Dokumenten und Kalender</small></span></button>
           <button type="button" class="help-action" data-support-mail="question">${icon('help')}<span><strong>Frage stellen</strong><small>E-Mail an den Husora-Support</small></span></button>
           <button type="button" class="help-action" data-support-mail="bug">${icon('alert')}<span><strong>Fehler melden</strong><small>mit Geräteinfos für eine schnelle Lösung</small></span></button>
@@ -18899,12 +18899,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       homeowner: { version: 'homeowner_v1', steps: [
         { key: 'welcome', skippable: false, priority: 'high', rule: 'manual' },
         { key: 'property', skippable: true, priority: 'critical', rule: 'entity_exists' },
-        { key: 'profile', skippable: true, priority: 'high', rule: 'entity_exists' },
         { key: 'task', skippable: true, priority: 'critical', rule: 'entity_exists' },
-        { key: 'inspection', skippable: true, priority: 'high', rule: 'feature_viewed', page: 'inspections' },
-        { key: 'automation', skippable: true, priority: 'medium', rule: 'feature_viewed', page: 'automation' },
-        { key: 'partners', skippable: true, priority: 'high', rule: 'feature_viewed', page: 'providers' },
-        { key: 'organize', skippable: true, priority: 'medium', rule: 'feature_viewed' },
         { key: 'done', skippable: false, priority: 'high', rule: 'manual' }
       ] },
       service_partner: { version: 'service_partner_v1', steps: [
@@ -18930,7 +18925,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       return s;
     }
     function obWrite(role, s) { try { localStorage.setItem(obKey(role), JSON.stringify({ ...s, updatedAt: new Date().toISOString() })); } catch (error) { /* Fortschritt bleibt im Speicher */ } }
-    function obStepIndex(role, key) { return Math.max(0, OB_FLOWS[role].steps.findIndex((st) => st.key === key)); }
+    // Kurze Einrichtung (Haus mit Adresse, Pflegepaket): frühere Schritte wie Hausprofil oder Hauskontrolle stehen nur noch
+    // in der Checkliste „Dein Husora-Start“. Ein gespeicherter alter Schritt führt zum passenden neuen.
+    const OB_LEGACY_STEPS = { profile: 'task', inspection: 'done', automation: 'done', partners: 'done', organize: 'done' };
+    const obNormStep = (role, key) => (role === 'homeowner' && OB_LEGACY_STEPS[key] ? OB_LEGACY_STEPS[key] : key);
+    function obStepIndex(role, key) { const k = obNormStep(role, key); return Math.max(0, OB_FLOWS[role].steps.findIndex((st) => st.key === k)); }
     function obTrack(name, role, step, extra = {}) {
       const flow = OB_FLOWS[role].version;
       try { trackEvent(name, { entity_type: 'onboarding', entity_ref: step ? `${flow}:${step}:${name}` : `${flow}:${name}:${extra.n || 1}`, app_role: role === 'service_partner' ? 'partner' : 'owner', metadata: { flow, step: step || '', ...extra } }); } catch (error) { /* Analytics optional */ }
@@ -19038,12 +19037,14 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     // Checkliste aus echten Daten (nicht aus angeklickten Häkchen)
     function obOwnerChecklist() {
       const house = obPrimaryHouse();
+      // [Schlüssel, Text, erledigt, wichtig, Seite statt Einrichtungsschritt]
       return [
         ['property', 'Erstes Haus angelegt', Boolean(house), true],
-        ['profile', 'Hausprofil ergänzt', Boolean(house) && obProfileCount(house) >= 3, true],
-        ['task', 'Erste Aufgabe erstellt', obUserTasks().length > 0, true],
-        ['inspection', 'Hauskontrolle eingerichtet', obHasInspection(), false],
-        ['partners', 'Servicepartner gefunden/zugeordnet', obHasPartner(), false]
+        ['address', 'Adresse eingetragen', Boolean(String(house?.address || '').trim()), true, 'propertyDetail'],
+        ['task', 'Pflegepaket oder erste Aufgabe', obUserTasks().length > 0, true],
+        ['profile', 'Hausprofil ergänzt', Boolean(house) && obProfileCount(house) >= 3, false, 'propertyDetail'],
+        ['inspection', 'Hauskontrolle eingerichtet', obHasInspection(), false, 'inspections'],
+        ['partners', 'Servicepartner gefunden/zugeordnet', obHasPartner(), false, 'providers']
       ];
     }
     const OB_TASK_TEMPLATES = ['Dach und Dachrinnen kontrollieren', 'Heizung prüfen', 'Wasserleitungen vor dem Winter kontrollieren', 'Rauchmelder prüfen', 'Fenster und Türen kontrollieren', 'Außenwasser abstellen'];
@@ -19097,7 +19098,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function openOnboarding(step = 0) {
       // Kompatibel zu bestehenden Einstiegen (Hilfe „Ersteinrichtung starten“, Demo-Banner, Erststart)
       const s = obState('homeowner');
-      const key = typeof step === 'string' ? step : step === 1 ? 'property' : (s?.status === 'in_progress' ? s.current : 'welcome');
+      const key = obNormStep('homeowner', typeof step === 'string' ? step : step === 1 ? 'property' : (s?.status === 'in_progress' ? s.current : 'welcome'));
       if (!s || s.status !== 'in_progress') obStart('homeowner', { restart: Boolean(s) });
       if (onboardingState?.status !== 'demo') { onboardingState = { ...(onboardingState || {}), status: onboardingState?.status === 'done' ? 'done' : 'active', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); }
       obDraft = {};
@@ -19162,27 +19163,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             </form>
             ${nav('<button type="button" class="primary-btn" data-ob-house-save>Haus speichern</button>', { secondary: '<button type="button" class="secondary-btn" data-ob-import>Inserat importieren</button>' })}`;
         },
-        profile: () => {
-          if (!house) return `<h2 id="onboarding-title">Lerne dein Haus kennen</h2><p class="ob-lead">Lege zuerst ein Haus an – danach kannst du hier die wichtigsten Angaben ergänzen.</p>${nav('<button type="button" class="primary-btn" data-ob-goto-step="property">Haus anlegen</button>')}`;
-          const sel = (name) => document.querySelector(`#property-form [name="${name}"]`)?.innerHTML || '<option value="">–</option>';
-          const filled = obProfileCount(house);
-          return `<h2 id="onboarding-title">Lerne dein Haus kennen</h2>${doneBadge}<p class="ob-lead">Mit den wichtigsten Angaben kann Husora passende Aufgaben und Kontrollen vorschlagen. Alles ist freiwillig und später änderbar.</p>
-            <div class="ob-meter" aria-live="polite"><span><b>${filled}</b> von ${OB_PROFILE_FIELDS.length} Angaben ergänzt</span><i style="width:${Math.round(filled / OB_PROFILE_FIELDS.length * 100)}%"></i></div>
-            <form class="ob-form ob-grid" data-ob-form="profile">
-              <label><span class="form-label">Baujahr</span><input class="form-control" name="yearBuilt" inputmode="numeric" maxlength="4" value="${escapeHtml(house.yearBuilt || '')}"></label>
-              <label><span class="form-label">Wohnfläche (m²)</span><input class="form-control" name="livingArea" inputmode="decimal" maxlength="8" value="${escapeHtml(house.livingArea || '')}"></label>
-              <label><span class="form-label">Grundstück (m²)</span><input class="form-control" name="plotSize" inputmode="decimal" maxlength="10" value="${escapeHtml(house.plotSize || '')}"></label>
-              <label><span class="form-label">Zimmer</span><input class="form-control" name="rooms" inputmode="numeric" maxlength="3" value="${escapeHtml(house.rooms || '')}"></label>
-              <label><span class="form-label">Heizung</span><select class="form-control" name="heatingSystem" data-ob-value="${escapeHtml(house.heatingSystem || '')}">${sel('heatingSystem')}</select></label>
-              <label><span class="form-label">Kamin / Feuerstätte</span><select class="form-control" name="fireplace" data-ob-value="${escapeHtml(house.fireplace || '')}">${sel('fireplace')}</select></label>
-              <label class="full"><span class="form-label">Zustand des Gebäudes</span><select class="form-control" name="condition" data-ob-value="${escapeHtml(house.condition || '')}">${sel('condition')}</select></label>
-              <details class="full ob-more" ${house.lastRenovations || house.plannedRenovations ? 'open' : ''}><summary>Reparaturen und Sanierungen (optional)</summary>
-                <label><span class="form-label">Bekannte Reparaturen / letzte Sanierungen</span><textarea class="form-control" name="lastRenovations" rows="2" maxlength="600">${escapeHtml(house.lastRenovations || '')}</textarea></label>
-                <label><span class="form-label">Geplante Sanierungen</span><textarea class="form-control" name="plannedRenovations" rows="2" maxlength="600">${escapeHtml(house.plannedRenovations || '')}</textarea></label></details>
-            </form>
-            <p class="settings-hint">Fotos, Sanierungen und Dokumente ergänzt du später im Hausprofil.</p>
-            ${nav('<button type="button" class="primary-btn" data-ob-profile-save>Speichern & weiter</button>')}`;
-        },
         task: () => {
           if ((obDraft.taskMode || 'package') === 'package') {
             const canAuto = entitlements.can('automation_basic');
@@ -19210,30 +19190,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             </form>
             ${nav('<button type="button" class="primary-btn" data-ob-task-save>Aufgabe erstellen</button>', { secondary: '<button type="button" class="secondary-btn" data-ob-task-form>Ausführliches Formular</button>' })}`;
         },
-        inspection: () => `<h2 id="onboarding-title">Behalte den Zustand deines Hauses im Blick</h2>${doneBadge}<p class="ob-lead">Mit einer Hauskontrolle prüfst du wichtige Bereiche regelmäßig und dokumentierst Auffälligkeiten.</p>
-          <ol class="ob-steps-list"><li><strong>Kontrollplan</strong> mit Prüfpositionen je Bereich (Dach, Wasser, Heizung …)</li><li><strong>Fotos und Notizen</strong> je Position, Mängel markieren</li><li><strong>Intervall</strong> festlegen – selbst oder durch einen Servicepartner</li><li><strong>Mangel → Reparatur:</strong> aus einem Mangel wird mit einem Klick eine Aufgabe</li></ol>
-          <p class="ob-note">Eine Hauskontrolle ersetzt keine fachliche Prüfung und ist keine Garantie für die technische Sicherheit des Gebäudes.</p>
-          ${nav('<button type="button" class="primary-btn" data-ob-open-page="inspections">Hauskontrolle öffnen</button>')}`,
-        automation: () => {
-          const locked = PAGE_GATES.automation && !entitlements.can(PAGE_GATES.automation);
-          return `<h2 id="onboarding-title">Wiederkehrende Aufgaben automatisch planen</h2>${doneBadge}<p class="ob-lead">Husora unterstützt dich bei wiederkehrenden Wartungs- und Saisonaufgaben.</p>
-            <ul class="ob-points small"><li>${icon('calendar')}<span><strong>Einmalig oder wiederkehrend</strong> – mit Startdatum und Intervall</span></li><li>${icon('snow')}<span><strong>Beispiel:</strong> jedes Jahr im Oktober „Ferienhaus winterfest machen“</span></li><li>${icon('bell')}<span><strong>Erinnerungen</strong> – erst wenn du sie einschaltest</span></li></ul>
-            <p class="ob-note">Nichts wird automatisch eingeschaltet: Intervall, Start und Wirkung siehst du, bevor du eine Automatik aktivierst.${locked ? ' Automatisierungen sind in deinem Tarif nicht enthalten – auf der Seite siehst du, ab welchem Tarif sie verfügbar sind.' : ''}</p>
-            ${nav(`<button type="button" class="primary-btn" data-ob-open-page="automation">${locked ? 'Mehr erfahren' : 'Automatik ansehen'}</button>`)}`;
-        },
-        partners: () => `<h2 id="onboarding-title">Unterstützung vor Ort finden</h2>${doneBadge}<p class="ob-lead">Finde passende Betriebe für Kontrollen, Wartung, Reparaturen und Sanierungen.</p>
-          <ul class="ob-points small"><li>${icon('search')}<span><strong>Suche nach Leistung und Entfernung</strong> zu deinem Haus</span></li><li>${icon('users')}<span><strong>Zuordnen</strong> und Aufgaben direkt an den Partner senden</span></li><li>${icon('note')}<span><strong>Anfragen und Nachrichten</strong> im Partner-Portal (ab PRO)</span></li></ul>
-          <p class="ob-note">Die Liste stammt aus öffentlichen Quellen und ist keine Empfehlung; Preise und Verfügbarkeit erfragst du beim Betrieb.</p>
-          ${nav('<button type="button" class="primary-btn" data-ob-open-page="providers">Servicepartner finden</button>')}`,
-        organize: () => `<h2 id="onboarding-title">Alles Wichtige an einem Ort</h2>${doneBadge}<p class="ob-lead">Behalte Termine, Unterlagen, Fristen und Kosten deines Hauses im Blick.</p>
-          <div class="ob-next">${[['calendar', 'calendar', 'Kalender', 'Termine, Buchungen und Fälligkeiten'], ['documents', 'document', 'Dokumente', 'Rechnungen, Verträge und Unterlagen je Haus'], ['costs', 'cost', 'Kosten', 'Jahreskosten und Ausgaben']].map(([page, ic, t, d]) => `<button type="button" data-ob-open-page="${page}">${icon(ic)}<span><strong>${t}</strong><small>${d}</small></span>${icon('arrow')}</button>`).join('')}</div>
-          ${nav('<button type="button" class="primary-btn" data-ob-continue>Weiter</button>', { skip: false })}`,
         done: () => {
           const list = obOwnerChecklist();
           const core = list.filter((x) => x[3]); const coreDone = core.filter((x) => x[2]).length;
           return `<div class="ob-hero done">${icon('check')}</div><h2 id="onboarding-title">Dein Husora-Start ist geschafft</h2><p class="ob-lead">${house ? `„${escapeHtml(house.name)}“ ist angelegt. ` : ''}Jetzt kannst du Aufgaben planen, Kontrollen organisieren und dein Ferienhaus Schritt für Schritt verwalten.</p>
             <p class="ob-meter-text"><b>${coreDone} von ${core.length}</b> wichtige Aufgaben erledigt</p>
-            <ul class="ob-check">${list.map(([k, t, ok]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span>${escapeHtml(t)}${ok ? '' : ` <button type="button" class="text-btn" data-ob-goto-step="${k}">Jetzt erledigen</button>`}</li>`).join('')}</ul>
+            <ul class="ob-check">${list.map(([k, t, ok, crit, page]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span>${escapeHtml(t)}${crit ? '' : ' <small>(optional)</small>'}${ok ? '' : ` <button type="button" class="text-btn" ${page ? `data-ob-check-page="${page}"` : `data-ob-goto-step="${k}"`}>Jetzt erledigen</button>`}</li>`).join('')}</ul>
             <div class="ob-actions"><button type="button" class="primary-btn" data-ob-close>Zur Übersicht</button></div>`;
         }
       };
@@ -19277,19 +19239,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       obNext('property');
       showToast(`„${name}“ ist angelegt.`);
     }
-    function obSaveProfile() {
-      const house = obPrimaryHouse();
-      const form = document.querySelector('[data-ob-form="profile"]');
-      if (!house || !form) return;
-      const v = Object.fromEntries(new FormData(form));
-      OB_PROFILE_FIELDS.forEach(([k]) => { house[k] = String(v[k] ?? '').trim(); });
-      saveProperties();
-      const filled = obProfileCount(house);
-      obMark('homeowner', 'profile', filled >= 3 ? 'completed' : 'in_progress', { metadata: { fields: filled } });
-      render();
-      obNext('profile');
-      if (filled) showToast(`${filled} von ${OB_PROFILE_FIELDS.length} Angaben gespeichert.`);
-    }
     function obSaveTask() {
       const form = document.querySelector('[data-ob-form="task"]');
       const v = Object.fromEntries(new FormData(form));
@@ -19309,17 +19258,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       obNext('task');
       showToast('Aufgabe gespeichert.');
     }
-    // Aus dem Flow in eine echte Funktion springen; danach führt ein Hinweis zurück in die Einrichtung
+    // Nach „Weiteres Haus“ oder dem ausführlichen Aufgabenformular führt ein Hinweis zurück in die Einrichtung
     let obReturnPending = null;
-    function obOpenFeature(page, stepKey) {
-      if (stepKey) obMark('homeowner', stepKey, 'completed', { metadata: { page } });
-      if (stepKey === 'inspection') obTrack('activation_inspection_started', 'homeowner', 'inspection');
-      const steps = OB_FLOWS.homeowner.steps; const next = steps[Math.min(steps.length - 1, obStepIndex('homeowner', stepKey || 'organize') + 1)].key;
-      obMark('homeowner', null, null, { current: stepKey === 'organize' || !stepKey ? 'organize' : next });
-      obReturnPending = { role: 'homeowner' };
-      closeOnboarding();
-      currentPage = page; render(); window.scrollTo(0, 0);
-    }
     function obResumeHtml() {
       const s = obState('homeowner');
       if (!obReturnPending || !s || s.status !== 'in_progress' || document.getElementById('onboarding-modal')?.classList.contains('open')) return '';
@@ -19337,7 +19277,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <span class="ob-check-sum-text"><strong>Dein Husora-Start</strong><small>${coreDone} von ${core.length} wichtigen Aufgaben erledigt</small></span>
           <span class="ob-ring" style="--p:${pct}" aria-hidden="true"></span>
           ${s.status === 'in_progress' ? '<button type="button" class="primary-btn ob-sum-btn" data-ob-resume>Fortsetzen</button>' : ''}<span class="ob-sum-chev" aria-hidden="true">▾</span></summary>
-        <ul class="ob-check">${list.map(([k, t, ok, crit]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span><span class="ob-check-text">${escapeHtml(t)}${crit ? '' : ' <small>(optional)</small>'}</span>${ok ? '' : `<button type="button" class="text-btn" data-ob-goto-step="${k}">Erledigen</button>`}</li>`).join('')}</ul>
+        <ul class="ob-check">${list.map(([k, t, ok, crit, page]) => `<li class="${ok ? 'ok' : ''}"><span aria-hidden="true">${ok ? '✓' : '○'}</span><span class="ob-check-text">${escapeHtml(t)}${crit ? '' : ' <small>(optional)</small>'}</span>${ok ? '' : `<button type="button" class="text-btn" ${page ? `data-ob-check-page="${page}"` : `data-ob-goto-step="${k}"`}>Erledigen</button>`}</li>`).join('')}</ul>
         <div class="ob-check-foot"><button type="button" class="text-btn" data-ob-dismiss>Checkliste ausblenden</button></div></details>`;
     }
     let obChecklistOpen = false;
@@ -19348,7 +19288,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (target.closest('[data-ob-pause]')) { obMark('homeowner', null, null, { refs: { paused: true } }); closeOnboarding(); render(); showToast('Du kannst die Einrichtung jederzeit über die Übersicht fortsetzen.'); return true; }
       if (target.closest('[data-ob-prev]')) { obGo(OB_FLOWS.homeowner.steps[Math.max(0, onboardingStep - 1)].key); return true; }
       if (target.closest('[data-ob-skip]')) { const st = OB_FLOWS.homeowner.steps[onboardingStep]; obMark('homeowner', st.key, 'skipped'); obNext(st.key); return true; }
-      if (target.closest('[data-ob-continue]')) { const st = OB_FLOWS.homeowner.steps[onboardingStep]; if (obState('homeowner')?.steps?.[st.key] !== 'completed') obMark('homeowner', st.key, 'skipped'); obNext(st.key); return true; }
       if (target.closest('[data-ob-house-save]')) { obSaveHouse(); return true; }
       if (target.closest('[data-ob-house-use]')) { const id = document.querySelector('[name="ob-house"]:checked')?.value; if (id) { obMark('homeowner', 'property', 'completed', { refs: { primary_property_ref: id } }); obNext('property'); } return true; }
       if (target.closest('[data-ob-house-add]') || target.closest('[data-ob-import]')) {
@@ -19358,7 +19297,6 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (fromImport) setTimeout(() => document.querySelector('#add-choice-modal [data-add-choice="import"]')?.click(), 50);
         return true;
       }
-      if (target.closest('[data-ob-profile-save]')) { obSaveProfile(); return true; }
       const tpl = target.closest('[data-ob-template]');
       if (tpl) { obDraft.title = tpl.dataset.obTemplate; const input = document.querySelector('[data-ob-form="task"] [name="title"]'); if (input) input.value = obDraft.title; document.querySelectorAll('[data-ob-template]').forEach((b) => b.classList.toggle('on', b === tpl)); return true; }
       if (target.closest('[data-ob-task-save]')) { obSaveTask(); return true; }
@@ -19391,8 +19329,14 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         return true;
       }
       if (target.closest('[data-ob-task-form]')) { obMark('homeowner', null, null, { current: 'task' }); obReturnPending = { role: 'homeowner', watch: 'task', tasks: obUserTasks().length }; closeOnboarding(); openTaskModal(); return true; }
-      const page = target.closest('[data-ob-open-page]');
-      if (page) { const st = OB_FLOWS.homeowner.steps[onboardingStep]; obOpenFeature(page.dataset.obOpenPage, st?.key); return true; }
+      const checkPage = target.closest('[data-ob-check-page]');
+      if (checkPage) {
+        // Punkt aus der Checkliste: direkt zur passenden Seite (vom Abschluss-Schritt aus gilt die Einrichtung als erledigt)
+        if (document.getElementById('onboarding-modal')?.classList.contains('open')) { if (OB_FLOWS.homeowner.steps[onboardingStep]?.key === 'done') { obFinish('homeowner', 'completed'); onboardingState = { status: 'done', at: new Date().toISOString() }; saveStore('stugliv-onboarding', onboardingState); } closeOnboarding(); }
+        const house = obPrimaryHouse(); if (house) sectionPropertyId = house.id;
+        currentPage = checkPage.dataset.obCheckPage; render(); window.scrollTo(0, 0);
+        return true;
+      }
       const go = target.closest('[data-ob-goto-step]');
       if (go) { const open = document.getElementById('onboarding-modal')?.classList.contains('open'); if (open) obGo(go.dataset.obGotoStep); else openOnboarding(go.dataset.obGotoStep); return true; }
       if (target.closest('[data-ob-resume]')) { const s = obState('homeowner'); openOnboarding(s?.status === 'in_progress' ? s.current : 'welcome'); return true; }
@@ -19461,11 +19405,11 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         if (demo && ['active', 'demo'].includes(onboardingState?.status)) { properties = properties.filter((p) => p !== demo); tasks = tasks.filter((t) => t.property !== demo.name || !initialTasks.some((d) => d.id === t.id)); saveProperties(); persistTasks(); }
         obMark('homeowner', 'property', 'completed', { refs: { primary_property_ref: house.id } });
         obTrack('activation_property_created', 'homeowner', 'property');
-        obReturnPending = null; setTimeout(() => openOnboarding('profile'), 300); return;
+        obReturnPending = null; setTimeout(() => openOnboarding('task'), 300); return;
       }
       if (w.watch === 'task' && obUserTasks().length > w.tasks) {
         obMark('homeowner', 'task', 'completed'); obTrack('activation_first_task_created', 'homeowner', 'task');
-        obReturnPending = null; setTimeout(() => openOnboarding('inspection'), 300); return;
+        obReturnPending = null; setTimeout(() => openOnboarding('done'), 300); return;
       }
       obPaintResume();
     }
