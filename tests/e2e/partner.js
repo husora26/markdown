@@ -200,6 +200,17 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const local = await H.evaluate((TID) => taskStatus(tasks.find((t) => t.id === TID)), TID);
     return `Auftrag: ${await H.evaluate((TASK) => ownerSide.orders.find((o) => o.title === TASK)?.status, TASK)} · lokale Aufgabe: ${local}`;
   });
+  await step('Hausbesitzer: Prüfbericht des Partners kommt automatisch unter Dokumente → Protokolle an', async () => {
+    await H.waitForFunction((INSP) => documents.some((d) => d.inspectionId === INSP), INSP, { timeout: 20000 });
+    const info = await H.evaluate((INSP) => { const d = documents.find((x) => x.inspectionId === INSP); return { id: d.id, cat: d.category, pdf: /^data:application\/pdf/.test(d.dataUrl), status: d.reportStatus, reminder: collectReminders().some((r) => r.docId === d.id) }; }, INSP);
+    if (info.cat !== 'protocol' || !info.pdf || !info.reminder) throw new Error(JSON.stringify(info));
+    const after = await H.evaluate((ID) => { const r = collectReminders().find((x) => x.docId === ID); openReportReminder(r); const viewer = document.getElementById('pdf-viewer-modal').classList.contains('open'); closePdfViewer(); return { page: currentPage, filter: docFilter, viewer, still: collectReminders().some((x) => x.docId === ID) }; }, info.id);
+    if (after.page !== 'documents' || after.filter !== 'protocol' || !after.viewer || after.still) throw new Error(JSON.stringify(after));
+    await H.evaluate(() => hubRefresh()); await ownerIdle(H); await H.waitForTimeout(500);
+    const count = await H.evaluate((INSP) => documents.filter((x) => x.inspectionId === INSP).length, INSP);
+    if (count !== 1) throw new Error(`doppelt übernommen: ${count}`);
+    return `Kategorie ${info.cat}, Ergebnis ${info.status}, Erinnerung erst da, nach dem Öffnen weg`;
+  });
   await step('Hausbesitzer: nächster Upload überschreibt den Partner-Fortschritt nicht', async () => {
     await H.evaluate(() => { currentPage = 'settings'; render(); }); await H.$eval('[data-cloud-action=upload]', (e) => e.click()); await H.waitForFunction(() => !cloudState.busy, null, { timeout: 30000 });
     return sql(`select t.status from service_tasks t join service_orders o on o.service_task_id=t.id where o.id='${ORDER}'`);

@@ -11246,6 +11246,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const docDate = (document) => document.createdIso || (/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.test(document.createdAt || '') ? document.createdAt.replace(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/, (m, d, mo, y) => `${y}-${mo.padStart(2, '0')}-${d.padStart(2, '0')}`) : '');
     const dataUrlBytes = (dataUrl) => Uint8Array.from(atob(String(dataUrl).split(',')[1] || ''), (ch) => ch.charCodeAt(0));
     function openDocument(doc) {
+      if (String(doc.id).startsWith('cloud-report-') && !doc.reportSeen) { persistDocuments(documents.map((d) => (d.id === doc.id ? { ...d, reportSeen: true } : d))); updateNotifyBadge(); }
       if (doc.type === 'application/pdf' || /^data:application\/pdf/.test(doc.dataUrl)) { showPdf(dataUrlBytes(doc.dataUrl), doc.name, docCategory(doc.category).single); return; }
       const url = URL.createObjectURL(new Blob([dataUrlBytes(doc.dataUrl)], { type: doc.type || 'image/jpeg' }));
       const opened = window.open(url, '_blank', 'noopener');
@@ -16522,6 +16523,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           const last = meter.readings.slice().sort((a, b) => a.date.localeCompare(b.date)).pop();
           if (!last || last.date <= shiftDateKey(today, -35)) add('meters', { id: `meter-${meter.id}-${today.slice(0, 7)}`, level: 'info', icon: 'meter', title: `${name}Zählerstand ${meterLabel(meter)} ablesen`, detail: last ? `Letzte Ablesung am ${fmtDate(last.date)}` : 'Noch keine Ablesung eingetragen', page: 'meters', propertyId: property.id });
         });
+        documents.filter((doc) => doc.propertyId === property.id && String(doc.id).startsWith('cloud-report-') && !doc.reportSeen && (doc.createdIso || '') >= shiftDateKey(today, -14)).forEach((doc) => add('inspections', { id: `report-${doc.id}`, level: doc.reportStatus === 'critical' ? 'soon' : 'info', icon: 'inspection', title: `${name}Neuer Prüfbericht${doc.partnerName ? ` von ${doc.partnerName}` : ''}`, detail: `${{ ok: 'Alles in Ordnung', warning: 'Mit Hinweisen', critical: 'Mit Mängeln – Reparaturen stehen unter Mängel' }[doc.reportStatus] || 'Kontrolle abgeschlossen'} · ${fmtDate(doc.createdIso)} – tippen zum Öffnen`, page: 'documents', propertyId: property.id, docId: doc.id }));
         weatherWarnings(property.id).forEach((warning) => add('weather', { ...warning, id: `weather-${property.id}-${warning.id}`, icon: 'cloud', title: `${name}${warning.title}`, page: 'dashboard' }));
       });
       let lastBackup = '';
@@ -16576,8 +16578,17 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const reminder = collectReminders().find((item) => item.id === open.dataset.agendaOpen);
       if (!reminder) return;
       if (reminder.propertyId) { sectionPropertyId = reminder.propertyId; inspectionProperty = reminder.propertyId; }
+      if (reminder.docId) { openReportReminder(reminder); return; }
       currentPage = reminder.page || 'dashboard'; render(); window.scrollTo(0, 0);
     });
+    // Neuer Prüfbericht: Dokumente → Protokolle zeigen, PDF öffnen und als gesehen merken
+    function openReportReminder(reminder) {
+      const doc = documents.find((d) => d.id === reminder.docId);
+      docFilter = 'protocol'; currentPage = 'documents'; if (doc) documentsProperty = doc.propertyId;
+      if (doc) persistDocuments(documents.map((d) => (d.id === doc.id ? { ...d, reportSeen: true } : d)));
+      render(); window.scrollTo(0, 0); updateNotifyBadge();
+      if (doc) openDocument(doc);
+    }
     function renderNotifyPanel() {
       const panel = document.getElementById('notify-panel');
       const reminders = collectReminders();
@@ -19364,6 +19375,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         const reminder = collectReminders().find((item) => item.id === notifyOpen.dataset.notifyOpen);
         markRemindersRead([notifyOpen.dataset.notifyOpen]);
         toggleNotifyPanel(false);
+        if (reminder?.docId) { if (reminder.propertyId) sectionPropertyId = reminder.propertyId; openReportReminder(reminder); return; }
         if (reminder) { if (reminder.propertyId) { sectionPropertyId = reminder.propertyId; inspectionProperty = reminder.propertyId; } currentPage = reminder.page || 'dashboard'; render(); window.scrollTo(0, 0); }
         return;
       }
@@ -24723,6 +24735,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       await mtLoad(org).catch((error) => console.warn('Wartungspläne nicht geladen:', error));
       ownerSide.shares = await cloudFetch(`/rest/v1/order_access_shares?organization_id=eq.${org}&revoked_at=is.null&valid_until=gt.${encodeURIComponent(new Date().toISOString())}&select=id,service_order_id,valid_until,view_count,last_viewed_at&order=created_at.desc`).catch(() => []);
       ownerImportInvoices().catch((error) => console.warn('Rechnungen nicht übernommen:', error));
+      ownerImportInspectionReports(org).catch((error) => console.warn('Prüfberichte nicht übernommen:', error));
       // Fortschritt der Partner in die lokalen Aufgaben übernehmen
       let changed = 0;
       const completedNow = new Set();
@@ -24952,6 +24965,43 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           if (currentPage === 'partnerHub') hubRerender(); else if (['documents', 'propertyDetail'].includes(currentPage)) render();
         }
       } finally { ownerImporting = false; }
+    }
+    // Prüfberichte der Partner (PDF nach abgeschlossener Kontrolle) automatisch beim Ferienhaus unter Dokumente → Protokolle ablegen
+    let ownerReportsImporting = false;
+    async function ownerImportInspectionReports(org) {
+      if (ownerReportsImporting) return;
+      const rows = await cloudFetch(`/rest/v1/documents?organization_id=eq.${org}&document_type=eq.inspection_report&inspection_id=not.is.null&select=id,property_id,inspection_id,file_name,file_size,storage_bucket,storage_path,created_at&order=created_at.desc&limit=100`);
+      // einmal übernommene Berichte nicht erneut holen, auch wenn sie lokal gelöscht wurden
+      let known = [];
+      try { known = JSON.parse(localStorage.getItem('husora-report-imports') || '[]'); } catch (error) { known = []; }
+      const fresh = (rows || []).filter((doc) => !known.includes(doc.id) && !documents.some((d) => d.id === `cloud-report-${doc.id}`));
+      if (!fresh.length) return;
+      ownerReportsImporting = true;
+      const added = [];
+      try {
+        const inspections = await cloudFetch(`/rest/v1/inspections?organization_id=eq.${org}&id=in.(${[...new Set(fresh.map((d) => d.inspection_id))].join(',')})&select=id,overall_status,completed_at,service_partner_id`).catch(() => []);
+        const cloudProps = ownerSide.cloudProperties || [];
+        for (const doc of fresh) {
+          const cp = cloudProps.find((x) => x.id === doc.property_id);
+          const house = cp && (properties.find((pr) => pr.id === cp.app_ref) || properties.find((pr) => pr.name.trim().toLowerCase() === String(cp.name || '').trim().toLowerCase()));
+          if (!house) continue;
+          const insp = (inspections || []).find((x) => x.id === doc.inspection_id) || {};
+          const partner = (ownerSide.partners || []).find((x) => x.id === insp.service_partner_id);
+          try {
+            let dataUrl = await cloudGetFile(`${CLOUD_FILE_PREFIX}${doc.storage_bucket}/${doc.storage_path}`);
+            dataUrl = String(dataUrl).replace(/^data:[^;,]*/, 'data:application/pdf');
+            const day = (insp.completed_at || doc.created_at || new Date().toISOString()).slice(0, 10);
+            added.push({ id: `cloud-report-${doc.id}`, propertyId: house.id, name: doc.file_name, type: 'application/pdf', size: doc.file_size || Math.round((dataUrl.length - dataUrl.indexOf(',') - 1) * 0.75), dataUrl, category: 'protocol', createdIso: day, createdAt: new Intl.DateTimeFormat('de-DE').format(new Date(`${day}T12:00:00`)), partnerName: partner?.company_name || '', inspectionId: doc.inspection_id, reportStatus: insp.overall_status || '', houseName: house.name });
+          } catch (error) { console.warn('Prüfbericht-PDF nicht geladen:', error); }
+        }
+        if (added.length && persistDocuments([...documents, ...added])) {
+          try { localStorage.setItem('husora-report-imports', JSON.stringify([...known, ...added.map((d) => d.id.slice(13))].slice(-500))); } catch (error) { /* egal */ }
+          const first = added[0];
+          const verdict = { ok: 'alles in Ordnung', warning: 'mit Hinweisen', critical: 'mit Mängeln' }[first.reportStatus];
+          showToast(added.length === 1 ? `Prüfbericht für ${first.houseName}${first.partnerName ? ` von ${first.partnerName}` : ''} erhalten${verdict ? ` (${verdict})` : ''} – unter Dokumente → Protokolle abgelegt.` : `${added.length} Prüfberichte erhalten – unter Dokumente → Protokolle bei den Ferienhäusern abgelegt.`);
+          if (currentPage === 'partnerHub') hubRerender(); else if (['documents', 'propertyDetail', 'dashboard'].includes(currentPage)) render();
+        }
+      } finally { ownerReportsImporting = false; }
     }
     // Beauftragte Aufgabe: lokal auf „In Bearbeitung“ (lehnt der Partner ab, geht sie wieder auf „Offen“)
     function markTaskCommissioned(task) {
