@@ -38,6 +38,19 @@ const ANON = ENV_ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now
     const free = await p.evaluate(() => !document.querySelector('.plan-locked'));
     await p.evaluate(() => { currentPage = 'tasks'; render(); openTaskModal(); }); await p.waitForTimeout(150); await p.fill('#task-form [name=title]', 'Sechste Aufgabe'); await p.$eval('#task-form button[type=submit]', (e) => e.click()); await p.waitForTimeout(200);
     return `Reparaturen frei: ${free} · Aufgabe: ${await p.evaluate(() => tasks.some((t) => t.title === 'Sechste Aufgabe'))}`; });
+  await step('Startseite gestalten: FREE nur Kacheln, ab PLUS Aussehen, Bereiche und untere Leiste; Standard einfarbig', async () => {
+    const cards = (plan) => p.evaluate((plan) => { planOverride = plan; settingsView = 'settings-home'; currentPage = 'settings'; render(); return [...document.querySelectorAll('#settings-home .card-title')].map((e) => e.textContent.trim()); }, plan);
+    const free = await cards('free'); const plus = await cards('plus');
+    if (free.join('|') !== 'Kacheln auf der Startseite|Mehr Gestaltung ab PLUS') throw new Error('FREE: ' + free.join('|'));
+    if (!plus.includes('Aussehen der Kacheln') || plus.length < 4) throw new Error('PLUS: ' + plus.join('|'));
+    const look = await p.evaluate(() => { displaySettings = { ...displaySettings, tileStyle: undefined }; planOverride = 'plus'; applyDisplaySettings(); const plusPlain = document.documentElement.classList.contains('owner-tiles-plain'); displaySettings = { ...displaySettings, tileStyle: 'photo' }; planOverride = 'free'; applyDisplaySettings(); const freePlain = document.documentElement.classList.contains('owner-tiles-plain'); planOverride = 'plus'; applyDisplaySettings(); const plusPhoto = !document.documentElement.classList.contains('owner-tiles-plain'); return { plusPlain, freePlain, plusPhoto }; });
+    if (!look.plusPlain || !look.freePlain || !look.plusPhoto) throw new Error(JSON.stringify(look));
+    return `FREE ${free.length} Karten, PLUS ${plus.length} · Standard einfarbig, FREE immer einfarbig`;
+  });
+  await step('3D-Hausmodell erst ab PRO', async () => {
+    const r = await p.evaluate(() => ['plus', 'pro'].map((plan) => { planOverride = plan; return `${plan}:${entitlements.can('house_model') && !pageLocked('house3d')}`; }));
+    if (r.join(' ') !== 'plus:false pro:true') throw new Error(r.join(' ')); return r.join(' ');
+  });
   await step('Angemeldet: Tarif kommt vom Server (Testorganisation = ULTIMATE)', async () => {
     await p.evaluate(() => { planOverride = null; currentPage = 'settings'; settingsView = 'settings-data'; render(); });
     await p.fill('[data-cloud-form=signin] [name=email]', 'admin@husora.test'); await p.fill('[data-cloud-form=signin] [name=password]', 'Husora!2026');
