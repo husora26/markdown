@@ -38,10 +38,10 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   let CODE = '';
   await step('Hausbesitzer: Servicepartner einladen → Code', async () => {
     await H.evaluate(() => { currentPage = 'partnerHub'; hub.tab = 'partners'; render(); }); await H.waitForFunction(() => ownerSide.partners !== null && !ownerSide.busy, null, { timeout: 20000 }); await H.waitForTimeout(300);
-    await H.fill('[data-owner-form=partner] [name=company_name]', FIRM); await H.fill('[data-owner-form=partner] [name=email]', P_EMAIL);
+    await H.evaluate(() => { window.__plog = []; const L = (m) => window.__plog.push(Math.round(performance.now()) + ' ' + m); const oR = ownerRun; ownerRun = function (l) { L('run ' + l + ' busy=' + ownerSide.busy + ' loading=' + ownerSide.loading); return oR.apply(this, arguments); }; document.addEventListener('submit', (e) => L('submit ' + (e.target.dataset.ownerForm || '?') + ' busy=' + ownerSide.busy), true); document.addEventListener('click', (e) => { if (e.target.closest?.('[data-owner-form=partner]')) L('click ' + e.target.tagName + ' prevented=' + e.defaultPrevented); }); let c = ownerSide.code; Object.defineProperty(ownerSide, 'code', { configurable: true, get: () => c, set: (v) => { L('code ' + JSON.stringify(v)); c = v; } }); }); await H.fill('[data-owner-form=partner] [name=company_name]', FIRM); await H.fill('[data-owner-form=partner] [name=email]', P_EMAIL);
     await H.$eval('[data-owner-form=partner] button[type=submit]', (e) => e.click()); await ownerIdle(H); await H.waitForTimeout(300);
     CODE = await H.evaluate(() => ownerSide.code?.code || ownerSide.error);
-    if (!/^HUS-/.test(CODE)) throw new Error(CODE);
+    if (!/^HUS-/.test(CODE)) throw new Error(CODE || await H.evaluate(() => JSON.stringify({ busy: ownerSide.busy, err: ownerSide.error, page: currentPage, tab: hub.tab, name: document.querySelector('[data-owner-form=partner] [name=company_name]')?.value, disabled: document.querySelector('[data-owner-form=partner] button[type=submit]')?.disabled, docs: documents.length, imp: ownerReportsImporting, toast: document.getElementById('toast')?.textContent?.slice(0, 60), partners: (ownerSide.partners || []).length, log: window.__plog })));
     return CODE;
   });
 
@@ -199,6 +199,17 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await H.evaluate(() => { currentPage = 'partnerHub'; hub.tab = 'orders'; render(); hubRefresh(); }); await ownerIdle(H); await H.waitForTimeout(300);
     const local = await H.evaluate((TID) => taskStatus(tasks.find((t) => t.id === TID)), TID);
     return `Auftrag: ${await H.evaluate((TASK) => ownerSide.orders.find((o) => o.title === TASK)?.status, TASK)} · lokale Aufgabe: ${local}`;
+  });
+  await step('Hausbesitzer: Prüfbericht des Partners kommt automatisch unter Dokumente → Protokolle an', async () => {
+    await H.waitForFunction((INSP) => documents.some((d) => d.inspectionId === INSP), INSP, { timeout: 20000 });
+    const info = await H.evaluate((INSP) => { const d = documents.find((x) => x.inspectionId === INSP); return { id: d.id, cat: d.category, pdf: /^data:application\/pdf/.test(d.dataUrl), status: d.reportStatus, reminder: collectReminders().some((r) => r.docId === d.id) }; }, INSP);
+    if (info.cat !== 'protocol' || !info.pdf || !info.reminder) throw new Error(JSON.stringify(info));
+    const after = await H.evaluate((ID) => { const r = collectReminders().find((x) => x.docId === ID); openReportReminder(r); const viewer = document.getElementById('pdf-viewer-modal').classList.contains('open'); closePdfViewer(); return { page: currentPage, filter: docFilter, viewer, still: collectReminders().some((x) => x.docId === ID) }; }, info.id);
+    if (after.page !== 'documents' || after.filter !== 'protocol' || !after.viewer || after.still) throw new Error(JSON.stringify(after));
+    await H.evaluate(() => hubRefresh()); await ownerIdle(H); await H.waitForTimeout(500);
+    const count = await H.evaluate((INSP) => documents.filter((x) => x.inspectionId === INSP).length, INSP);
+    if (count !== 1) throw new Error(`doppelt übernommen: ${count}`);
+    return `Kategorie ${info.cat}, Ergebnis ${info.status}, Erinnerung erst da, nach dem Öffnen weg`;
   });
   await step('Hausbesitzer: nächster Upload überschreibt den Partner-Fortschritt nicht', async () => {
     await H.evaluate(() => { currentPage = 'settings'; render(); }); await H.$eval('[data-cloud-action=upload]', (e) => e.click()); await H.waitForFunction(() => !cloudState.busy, null, { timeout: 30000 });
