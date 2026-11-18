@@ -686,6 +686,8 @@
     .tab-picker button.active { border-color: var(--green); background: var(--green-soft); color: var(--green); }
     .tab-picker button i { position: absolute; bottom: 2px; font-style: normal; font-size: 9.5px; color: var(--muted); }
     .tab-picker .tab-more { opacity: .55; cursor: default; }
+    .tab-picker button.empty { border: 1px dashed var(--line); color: var(--muted); }
+    .tab-picker button.empty.active { border-color: var(--green); color: var(--green); }
     .tab-pick-title { margin: 4px 0 8px; font-size: 13px; font-weight: 700; }
     .tab-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
     .tab-option { position: relative; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 11px; background: white; color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; text-align: left; cursor: pointer; }
@@ -19760,25 +19762,28 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     buildGroupedNav();
     // Symbole der unteren Leiste: unter Einstellungen → Startseite gestalten wählbar (vier Plätze plus „Mehr“).
     const TAB_OPTIONS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar'], ['seasons', 'Saison', 'snow'], ['bookings', 'Buchungen', 'calendar'], ['repairs', 'Reparatur', 'alert'], ['renovations', 'Sanierung', 'cube'], ['properties', 'Mein Haus', 'property'], ['documents', 'Dokumente', 'document'], ['costs', 'Kosten', 'cost'], ['assignedProviders', 'Partner', 'users'], ['providers', 'Partner finden', 'search'], ['contracts', 'Verträge', 'contract'], ['meters', 'Zähler', 'meter'], ['emergency', 'Notfall', 'key'], ['automation', 'Automatik', 'bolt'], ['partnerHub', 'Partner-Portal', 'note'], ['house3d', 'Hausmodell', 'cube'], ['portfolio', 'Portfolio', 'cost'], ['settings', 'Einstellungen', 'gear'], ['help', 'Hilfe', 'help']];
-    const DEFAULT_TABS = ['dashboard', 'tasks', 'inspections', 'calendar'];
+    // Standard: nur „Mehr“ – darüber ist alles erreichbar. Ab PLUS lassen sich bis zu vier Plätze belegen (leere Plätze erlaubt).
+    const DEFAULT_TABS = [];
     const TABBAR_ITEMS = [];
+    let tabChoice = [null, null, null, null];
     function applyTabChoice(ids) {
-      const valid = (Array.isArray(ids) ? ids : []).filter((id, index, list) => TAB_OPTIONS.some(([key]) => key === id) && list.indexOf(id) === index && (id !== 'bookings' || bookingsEnabled())).slice(0, 4);
-      const chosen = valid.length === 4 ? valid : [...valid, ...DEFAULT_TABS.filter((id) => !valid.includes(id))].slice(0, 4);
-      TABBAR_ITEMS.splice(0, TABBAR_ITEMS.length, ...chosen.map((id) => TAB_OPTIONS.find(([key]) => key === id)));
+      const list = Array.isArray(ids) ? ids.slice(0, 4) : [];
+      tabChoice = [0, 1, 2, 3].map((i) => { const id = list[i]; return id && TAB_OPTIONS.some(([key]) => key === id) && list.indexOf(id) === i && (id !== 'bookings' || bookingsEnabled()) && !pageLocked(id) ? id : null; });
+      const shown = homeDesignFull() ? tabChoice.filter(Boolean) : [];
+      TABBAR_ITEMS.splice(0, TABBAR_ITEMS.length, ...shown.map((id) => TAB_OPTIONS.find(([key]) => key === id)));
     }
     applyTabChoice(loadStore('stugliv-tabbar', DEFAULT_TABS));
     // Untere Leiste: Platz antippen, dann Bereich antippen (keine Auswahlfelder, die sich beim Neuzeichnen schließen)
     let tabSlotPick = 0;
     function tabbarSettingsHtml() {
-      const current = TABBAR_ITEMS.map(([id]) => id);
+      const current = tabChoice.slice();
       const options = TAB_OPTIONS.filter(([id]) => (id !== 'bookings' || bookingsEnabled()) && !pageLocked(id));
       const pick = Math.min(Math.max(tabSlotPick, 0), 3);
       return `<section class="card profile-form" id="tabbar-settings"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Untere Leiste</h2><p class="card-caption">Tippe oben auf einen Platz und darunter auf den Bereich, der dort erscheinen soll. „Mehr“ bleibt immer rechts. Am Computer gelten dieselben vier Bereiche für die Buttons im Kopf.</p></div></div>
-        <div class="tab-preview tab-picker" role="radiogroup" aria-label="Platz wählen">${TABBAR_ITEMS.map(([, label, iconName], index) => `<button type="button" role="radio" aria-checked="${index === pick}" class="${index === pick ? 'active' : ''}" data-tab-pick="${index}">${icon(iconName)}<small>${escapeHtml(label)}</small><i>Platz ${index + 1}</i></button>`).join('')}<span class="tab-more">${icon('menu')}<small>Mehr</small></span></div>
+        <div class="tab-preview tab-picker" role="radiogroup" aria-label="Platz wählen">${tabChoice.map((id, index) => { const [, label, iconName] = TAB_OPTIONS.find(([key]) => key === id) || [null, 'Leer', 'plus']; return `<button type="button" role="radio" aria-checked="${index === pick}" class="${index === pick ? 'active' : ''} ${id ? '' : 'empty'}" data-tab-pick="${index}">${icon(iconName)}<small>${escapeHtml(label)}</small><i>Platz ${index + 1}</i></button>`; }).join('')}<span class="tab-more">${icon('menu')}<small>Mehr</small></span></div>
         <p class="tab-pick-title">Platz ${pick + 1}: Bereich wählen</p>
-        <div class="tab-options">${options.map(([key, label, iconName]) => { const at = current.indexOf(key); return `<button type="button" class="tab-option ${at === pick ? 'on' : ''}" data-tab-assign="${key}" aria-pressed="${at === pick}">${icon(iconName)}<span>${escapeHtml(label)}</span>${at >= 0 && at !== pick ? `<small>Platz ${at + 1}</small>` : ''}</button>`; }).join('')}</div>
-        <p class="settings-hint" style="margin-top:8px">Ist ein Bereich schon auf einem anderen Platz, tauschen die beiden Plätze.</p>
+        <div class="tab-options">${options.map(([key, label, iconName]) => { const at = current.indexOf(key); return `<button type="button" class="tab-option ${at === pick ? 'on' : ''}" data-tab-assign="${key}" aria-pressed="${at === pick}">${icon(iconName)}<span>${escapeHtml(label)}</span>${at >= 0 && at !== pick ? `<small>Platz ${at + 1}</small>` : ''}</button>`; }).join('')}${current[pick] ? `<button type="button" class="tab-option" data-tab-assign="">${icon('trash')}<span>Platz leeren</span></button>` : ''}</div>
+        <p class="settings-hint" style="margin-top:8px">Ist ein Bereich schon auf einem anderen Platz, tauschen die beiden Plätze. Leere Plätze bleiben frei, „Mehr“ ist immer da.</p>
         <div class="form-actions" style="justify-content:flex-end;margin-top:8px"><button type="button" class="text-btn" data-tab-reset>Standard wiederherstellen</button></div>
       </section>`;
     }
@@ -19792,18 +19797,18 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (pickBtn) { tabSlotPick = Number(pickBtn.dataset.tabPick); refreshTabbarSettings(); return; }
       const assign = event.target.closest('[data-tab-assign]');
       if (!assign) return;
-      const ids = TABBAR_ITEMS.map(([id]) => id);
+      const ids = tabChoice.slice();
       const index = Math.min(Math.max(tabSlotPick, 0), 3);
-      const value = assign.dataset.tabAssign;
+      const value = assign.dataset.tabAssign || null;
       if (ids[index] === value) return;
-      const other = ids.indexOf(value);
+      const other = value ? ids.indexOf(value) : -1;
       if (other >= 0) ids[other] = ids[index];
       ids[index] = value;
       saveStore('stugliv-tabbar', ids);
       applyTabChoice(ids);
       if (tabSlotPick < 3) tabSlotPick += 1; // nächster Platz vorausgewählt
       refreshTabbarSettings();
-      showToast(`Platz ${index + 1}: ${TAB_OPTIONS.find(([key]) => key === value)?.[1] || value}`);
+      showToast(`Platz ${index + 1}: ${value ? TAB_OPTIONS.find(([key]) => key === value)?.[1] || value : 'leer'}`);
     });
     document.addEventListener('click', (event) => {
       if (!event.target.closest('[data-tab-reset]')) return;
@@ -19860,7 +19865,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         document.getElementById('tabbar')?.style.setProperty('grid-template-columns', `repeat(${groups.length}, 1fr)`);
         return;
       }
-      document.getElementById('tabbar')?.style.removeProperty('grid-template-columns');
+      applyTabChoice(tabChoice); // Tarif kann sich nach dem Anmelden ändern
+      document.getElementById('tabbar')?.style.setProperty('grid-template-columns', `repeat(${TABBAR_ITEMS.length + 1}, 1fr)`);
       const html = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab ${active === page ? 'active' : ''}" data-page="${page}" ${active === page ? 'aria-current="page"' : ''}>${icon(iconName)}<span>${label}</span>${page === 'tasks' && openCount ? `<i class="tab-badge">${openCount > 99 ? '99+' : openCount}</i>` : ''}</button>`).join('')
         + `<button type="button" class="tab ${!active || menuOpen ? 'active-more' : ''}" data-tab-more aria-haspopup="true" aria-expanded="${menuOpen ? 'true' : 'false'}" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
       bars.forEach((bar) => { bar.innerHTML = html; });

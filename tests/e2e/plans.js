@@ -47,6 +47,23 @@ const ANON = ENV_ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now
     if (!look.plusPlain || !look.freePlain || !look.plusPhoto) throw new Error(JSON.stringify(look));
     return `FREE ${free.length} Karten, PLUS ${plus.length} · Standard einfarbig, FREE immer einfarbig`;
   });
+  await step('Untere Leiste: Standard nur „Mehr“, ab PLUS bis zu vier Plätze', async () => {
+    const bar = () => p.evaluate(() => { currentPage = 'dashboard'; render(); return [...document.querySelectorAll('#tabbar .tab')].map((e) => e.dataset.page || 'mehr').join(','); });
+    await p.evaluate(() => { saveStore('stugliv-tabbar', []); applyTabChoice([]); planOverride = 'plus'; });
+    const plusEmpty = await bar();
+    await p.evaluate(() => { planOverride = 'plus'; settingsView = 'settings-home'; currentPage = 'settings'; render(); tabSlotPick = 0; });
+    for (const page of ['tasks', 'calendar', 'repairs', 'documents']) { await p.$eval(`#tabbar-settings [data-tab-assign="${page}"]`, (e) => e.click()); await p.waitForTimeout(80); }
+    const plusFour = await bar();
+    await p.evaluate(() => { planOverride = 'free'; }); const free = await bar();
+    const freeCard = await p.evaluate(() => { settingsView = 'settings-home'; currentPage = 'settings'; render(); return !!document.getElementById('tabbar-settings'); });
+    await p.evaluate(() => { planOverride = 'plus'; settingsView = 'settings-home'; currentPage = 'settings'; render(); tabSlotPick = 1; refreshTabbarSettings(); });
+    await p.$eval('#tabbar-settings [data-tab-assign=""]', (e) => e.click()); await p.waitForTimeout(80);
+    const cleared = await bar();
+    const r = `PLUS leer: ${plusEmpty} · PLUS vier: ${plusFour} · FREE: ${free} (Karte ${freeCard}) · Platz 2 geleert: ${cleared}`;
+    if (plusEmpty !== 'mehr' || plusFour !== 'tasks,calendar,repairs,documents,mehr' || free !== 'mehr' || freeCard || cleared !== 'tasks,repairs,documents,mehr') throw new Error(r);
+    await p.evaluate(() => { saveStore('stugliv-tabbar', []); applyTabChoice([]); });
+    return r;
+  });
   await step('3D-Hausmodell erst ab PRO', async () => {
     const r = await p.evaluate(() => ['plus', 'pro'].map((plan) => { planOverride = plan; return `${plan}:${entitlements.can('house_model') && !pageLocked('house3d')}`; }));
     if (r.join(' ') !== 'plus:false pro:true') throw new Error(r.join(' ')); return r.join(' ');
