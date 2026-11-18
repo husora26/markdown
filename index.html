@@ -453,6 +453,7 @@
     .pro-hint { margin: 4px 18px 0; padding: 10px 13px; border-radius: 9px; color: #745a35; background: #fff8e9; font-size: 12.5px; line-height: 1.55; }
     .pro-hint[hidden], .house-settings-actions [hidden] { display: none !important; }
     [data-pro-only][hidden] { display: none !important; }
+    .plan-hidden { display: none !important; }
     .plan-matrix .card-head { padding-bottom: 8px; }
     .pm-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 0 6px; }
     .pm-table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 13px; }
@@ -685,6 +686,8 @@
     .tab-picker button.active { border-color: var(--green); background: var(--green-soft); color: var(--green); }
     .tab-picker button i { position: absolute; bottom: 2px; font-style: normal; font-size: 9.5px; color: var(--muted); }
     .tab-picker .tab-more { opacity: .55; cursor: default; }
+    .tab-picker button.empty { border: 1px dashed var(--line); color: var(--muted); }
+    .tab-picker button.empty.active { border-color: var(--green); color: var(--green); }
     .tab-pick-title { margin: 4px 0 8px; font-size: 13px; font-weight: 700; }
     .tab-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
     .tab-option { position: relative; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 11px; background: white; color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; text-align: left; cursor: pointer; }
@@ -3281,6 +3284,10 @@
     .tchip.progress svg { width: 12px; height: 12px; }
     .tcard.is-progress { border-left: 4px solid #3b7bbf; }
     /* Kacheln: Farbe statt Bild */
+    html.owner-tiles-plain .stat { border: 1px solid var(--line); background: var(--paper); box-shadow: none; }
+    html.owner-tiles-plain .stat-art, html.owner-tiles-plain .stat::after { display: none; }
+    html.owner-tiles-plain .stat-head, html.owner-tiles-plain .stat-value, html.owner-tiles-plain .stat-progress { color: var(--ink); text-shadow: none; }
+    html.owner-tiles-plain .stat-note { color: var(--muted); text-shadow: none; }
     html.owner-tiles-color .stat { border-color: transparent; background: linear-gradient(145deg, var(--owner-tile-bg), var(--owner-tile-bg2)); }
     html.owner-tiles-color .stat-art, html.owner-tiles-color .stat::after { display: none; }
     html.owner-tiles-color .stat-head, html.owner-tiles-color .stat-value { color: var(--owner-tile-fg); text-shadow: none; }
@@ -8506,8 +8513,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     // Freischaltungen werden ausschließlich über entitlements.can()/limit() geprüft.
     const PLAN_ORDER = ['free', 'plus', 'pro', 'ultimate'];
     const PLAN_BASE_FEATURES = ['calendar', 'tasks', 'inspection', 'seasons', 'costs_basic', 'emergency', 'bookings', 'repairs'];
-    const PLAN_PLUS_FEATURES = [...PLAN_BASE_FEATURES, 'renovations', 'contracts', 'meters', 'costs_annual', 'automation_basic', 'house_model', 'listing_import', 'invoice_ai', 'pdf_reports', 'ai_basic'];
-    const PLAN_PRO_FEATURES = [...PLAN_PLUS_FEATURES, 'service_portal', 'service_orders', 'repair_orders_auto', 'renovations_full', 'budget', 'automation_advanced', 'ai_advanced', 'cost_trends', 'annual_report', 'priority_support'];
+    const PLAN_PLUS_FEATURES = [...PLAN_BASE_FEATURES, 'renovations', 'contracts', 'meters', 'costs_annual', 'automation_basic', 'listing_import', 'invoice_ai', 'pdf_reports', 'ai_basic'];
+    const PLAN_PRO_FEATURES = [...PLAN_PLUS_FEATURES, 'house_model', 'service_portal', 'service_orders', 'repair_orders_auto', 'renovations_full', 'budget', 'automation_advanced', 'ai_advanced', 'cost_trends', 'annual_report', 'priority_support'];
     const PLAN_FALLBACK = [
       { id: 'free', name: 'FREE', limits: { properties: 1, users: 1, tasks_active: 5, service_partners: 2, documents: 25 }, features: PLAN_BASE_FEATURES },
       { id: 'plus', name: 'PLUS', limits: { properties: 2, users: 2, tasks_active: 25, service_partners: 10, documents: 250 }, features: PLAN_PLUS_FEATURES },
@@ -9234,7 +9241,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           partners: (() => { const assignedCount = new Set(properties.flatMap((property) => servicePartnerAssignments[property.id] || []).filter((id) => providerById(id))).size; const missing = [['house', 'Hausservice'], ['inspection', 'Hauskontrolle'], ['renovation', 'Sanierung']].filter(([category]) => !properties.some((property) => (servicePartnerAssignments[property.id] || []).some((id) => providerById(id)?.category === category))).map(([, label]) => label); return `<button class="stat" data-page="assignedProviders"><img class="stat-art" src="assets/schweden-landschaft.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Servicepartner</span><span class="stat-icon">${icon('users')}</span></div><div class="stat-value">${assignedCount} <span class="stat-open-word">zugeordnet</span></div><div class="stat-note">${assignedCount ? (missing.length ? `<em>Es fehlt:</em> ${escapeHtml(missing.join(', '))}` : '<em>Alle Bereiche</em> abgedeckt') : '<em>Jetzt</em> Partner in der Nähe finden'}</div></button>`; })(),
           costs: `<button class="stat" data-page="costs"><img class="stat-art" src="assets/kosten.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Kosten</span><span class="stat-icon">${icon('cost')}</span></div><div class="stat-value">${formattedCost}</div><div class="stat-note"><em>Planwerte</em> pro Jahr${singleHouse() ? '' : ' · alle Häuser'}</div></button>`,
           automation: `<button class="stat" data-page="automation"><img class="stat-art" src="assets/gaestewechsel.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Automatisierung</span><span class="stat-icon">${icon('bolt')}</span></div><div class="stat-value">${automationActiveCount()} <span class="stat-open-word">aktiv</span></div><div class="stat-note"><em>${tasks.filter((task) => task.auto && !task.done).length}</em> geplante Schritte</div></button>`,
-          house3d: isPro() ? `<button class="stat" data-page="house3d"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hausmodell</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">3D</div><div class="stat-note"><em>${properties.reduce((sum, property) => sum + activeHouseParts(property).filter((part) => housePartInfo(property.id, part).status === 'due').length, 0)}</em> Bauteile mit fälliger Kontrolle</div></button>` : '',
+          house3d: entitlements.can('house_model') ? `<button class="stat" data-page="house3d"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hausmodell</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">3D</div><div class="stat-note"><em>${properties.reduce((sum, property) => sum + activeHouseParts(property).filter((part) => housePartInfo(property.id, part).status === 'due').length, 0)}</em> Bauteile mit fälliger Kontrolle</div></button>` : '',
           calendar: `<button class="stat" data-page="calendar"><img class="stat-art" src="assets/booking-planer.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Kalender</span><span class="stat-icon">${icon('calendar')}</span></div><div class="stat-value">${weekItems} <span class="stat-open-word">${weekItems === 1 ? 'Termin' : 'Termine'}</span></div><div class="stat-note"><em>nächste 7 Tage</em> · Buchungen & Aufgaben</div></button>`,
           repairs: `<button class="stat" data-page="repairs"><img class="stat-art" src="assets/hausservice.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Reparatur & Instandhaltung</span><span class="stat-icon ${urgentIssues ? 'red' : ''}">${icon('alert')}</span></div><div class="stat-value">${activeIssueCount} <span class="stat-open-word">${activeIssueCount === 1 ? 'Mangel' : 'Mängel'}</span></div><div class="stat-note">${urgentIssues ? `<em class="stat-alert">${urgentIssues} dringend</em>` : activeIssueCount ? '<em>Reparatur</em> wird geplant' : '<em>Alles</em> in Ordnung'}</div></button>`,
           renovations: `<button class="stat" data-page="renovations"><img class="stat-art" src="assets/ferienhaus.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Sanierung & Renovierung</span><span class="stat-icon">${icon('cube')}</span></div><div class="stat-value">${openProjects.length} <span class="stat-open-word">${openProjects.length === 1 ? 'Projekt' : 'Projekte'}</span></div><div class="stat-note">${openProjects.length ? `<em>Budget</em> ${escapeHtml(formatCost(openProjects.reduce((sum, project) => sum + (Number(project.budget) || 0), 0)))}` : '<em>Kein Projekt</em> geplant'}</div></button>`,
@@ -9535,16 +9542,19 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         <div class="settings-actions"><button type="button" class="primary-btn" data-page="plans">Tarife vergleichen</button></div></div></section>
         ${!cloudReady() ? `<p class="settings-hint" style="margin:14px 0 8px"><strong>Du hast bereits einen größeren Tarif?</strong> Melde dich mit deinem Husora-Konto an – dein Tarif wird automatisch erkannt.</p>${cloudCardHtml()}` : ''}`;
     }
+    // Bereiche und Funktionen, die der Tarif nicht enthält, werden ausgeblendet (nicht mit Upgrade-Hinweis gezeigt).
+    // Was ein höherer Tarif bietet, steht unter „Tarife“. Ruft man eine gesperrte Seite direkt auf, erklärt lockedPageHtml() sie.
+    const pageLocked = (page) => Boolean(PAGE_GATES[page]) && !entitlements.can(PAGE_GATES[page]);
+    const PLAN_FEATURE_ELEMENTS = [['[data-auto-assign]', 'partner_auto_assign'], ['[data-invoice-read]', 'invoice_ai'], ['[data-add-choice="import"]', 'listing_import'], ['[data-ob-import]', 'listing_import'], ['[data-commission-partner]', 'service_portal'], ['.auto-task-bar', 'automation_basic'], ['[data-feature]', '']];
     function markLockedNav() {
       document.querySelectorAll('.nav [data-page], .top-tabs [data-page], .tab-bar [data-page]').forEach((button) => {
-        const feature = PAGE_GATES[button.dataset.page];
-        const locked = Boolean(feature) && !entitlements.can(feature);
-        button.classList.toggle('plan-locked-nav', locked);
-        let tag = button.querySelector('.plan-tag');
-        if (!locked) { tag?.remove(); return; }
-        if (!tag) { tag = document.createElement('i'); tag.className = 'plan-tag'; button.appendChild(tag); }
-        tag.textContent = entitlements.minPlanFor(feature).name;
+        button.classList.toggle('plan-hidden', pageLocked(button.dataset.page));
+        button.querySelector('.plan-tag')?.remove();
       });
+    }
+    function hidePlanLocked(root = document) {
+      root.querySelectorAll('[data-dash-section]').forEach((section) => section.classList.toggle('plan-hidden', pageLocked(section.dataset.dashSection)));
+      PLAN_FEATURE_ELEMENTS.forEach(([selector, feature]) => root.querySelectorAll(selector).forEach((el) => el.classList.toggle('plan-hidden', !entitlements.can(feature || el.dataset.feature))));
     }
     // ----- ULTIMATE: Hauszustands-Score, Kostenprognose, Budgetwarnungen, Eskalationen, Portfolio, Aktivitätsprotokoll -----
     // Score 0–100 aus überfälligen Aufgaben, offenen Mängeln, Kontrollalter, fälligen Bauteilen, Vertragsfristen und Zustand.
@@ -9613,7 +9623,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     function activityHtml() {
       const head = `<div class="card-head"><div><h2 class="card-title">Aktivitätsprotokoll</h2><p class="card-caption">Wer hat wann was geändert – serverseitig protokolliert, nur für Admins sichtbar.</p></div></div>`;
       let body;
-      if (!entitlements.can('activity_log')) body = `<p class="settings-hint">Ab ${escapeHtml(entitlements.minPlanFor('activity_log').name)} verfügbar.</p>`;
+      if (!entitlements.can('activity_log')) return '';
       else if (!cloudReady()) body = '<p class="settings-hint">Melde dich unter Einstellungen → Cloud an, um das Protokoll zu sehen.</p>';
       else if (cloud.org.role !== 'admin') body = '<p class="settings-hint">Nur Admins deiner Organisation sehen das Protokoll.</p>';
       else if (!activity.rows) { setTimeout(activityLoad, 0); body = '<p class="settings-hint">Wird geladen …</p>'; }
@@ -9790,7 +9800,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     // Reihenfolge wie im Menü; [id, Name, verfügbar?, Hinweis, Gruppe]
     const DASHBOARD_TILES = [
       ['properties', 'Mein Haus / Ferienhäuser', null, '', 'Haus & Planung'], ['calendar', 'Kalender', null, '', 'Haus & Planung'], ['bookings', 'Buchungen', () => bookingsEnabled(), 'nur bei Vermietung', 'Haus & Planung'], ['tasks', 'Serviceaufgaben', null, '', 'Haus & Planung'], ['automation', 'Automatisierung', null, '', 'Haus & Planung'],
-      ['inspections', 'Hauskontrolle', null, '', 'Kontrolle & Pflege'], ['seasons', 'Saison-Checklisten', null, '', 'Kontrolle & Pflege'], ['repairs', 'Reparatur & Instandhaltung', null, '', 'Kontrolle & Pflege'], ['renovations', 'Sanierung & Renovierung', null, '', 'Kontrolle & Pflege'], ['house3d', 'Hausmodell (3D)', () => entitlements.can('house_model'), 'ab PLUS', 'Kontrolle & Pflege'],
+      ['inspections', 'Hauskontrolle', null, '', 'Kontrolle & Pflege'], ['seasons', 'Saison-Checklisten', null, '', 'Kontrolle & Pflege'], ['repairs', 'Reparatur & Instandhaltung', null, '', 'Kontrolle & Pflege'], ['renovations', 'Sanierung & Renovierung', null, '', 'Kontrolle & Pflege'], ['house3d', 'Hausmodell (3D)', () => entitlements.can('house_model'), 'ab PRO', 'Kontrolle & Pflege'],
       ['partnerHub', 'Partner-Portal & Messenger', () => entitlements.can('service_portal'), 'ab PRO', 'Servicepartner'], ['partners', 'Zugeordnete Servicepartner', null, '', 'Servicepartner'], ['providers', 'Servicepartner finden', null, '', 'Servicepartner'],
       ['documents', 'Dokumente', null, '', 'Verwaltung & Kosten'], ['emergency', 'Notfall & Zugang', null, '', 'Verwaltung & Kosten'], ['contracts', 'Verträge & Fristen', null, '', 'Verwaltung & Kosten'], ['meters', 'Zählerstände', null, '', 'Verwaltung & Kosten'], ['costs', 'Kosten', null, '', 'Verwaltung & Kosten'], ['portfolio', 'Portfolio', () => entitlements.can('portfolio'), 'ab ULTIMATE', 'Verwaltung & Kosten'],
       ['plans', 'Tarife', null, '', 'Konto & App'], ['profile', 'Benutzerprofil', null, '', 'Konto & App'], ['settings', 'Einstellungen', null, '', 'Konto & App'], ['help', 'Hilfe & Support', null, '', 'Konto & App']
@@ -9800,7 +9810,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     const dashboardTileSelection = () => (Array.isArray(profileData.dashboardTiles) ? profileData.dashboardTiles : DEFAULT_DASHBOARD_TILES).filter((id) => DASHBOARD_TILES.some(([key]) => key === id));
     const dashboardTileIds = () => {
       const chosen = dashboardTileSelection();
-      return DASHBOARD_TILES.filter(([id, , available]) => chosen.includes(id) && (!available || available())).map(([id]) => id).slice(0, DASHBOARD_TILE_LIMIT);
+      return DASHBOARD_TILES.filter(([id, , available]) => chosen.includes(id) && (!available || available()) && !pageLocked(id)).map(([id]) => id).slice(0, DASHBOARD_TILE_LIMIT);
     };
     // ===== Kacheln der Startseite: Bild, eigene Farbe oder bunt (Hausbesitzer und Servicepartner) =====
     const TILE_SWATCHES = ['#2f6b4f', '#1f6f8b', '#3b5bdb', '#7048e8', '#c2255c', '#e8590c', '#f08c00', '#2b8a3e', '#0c8599', '#495057'];
@@ -9819,18 +9829,19 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (!el) return;
       el.classList.toggle(`${prefix}-tiles-color`, style === 'color' || style === 'rainbow');
       el.classList.toggle(`${prefix}-tiles-rainbow`, style === 'rainbow');
+      el.classList.toggle(`${prefix}-tiles-plain`, style === 'plain');
       const v = tileColorVars(color);
       el.style.setProperty(`--${prefix}-tile-bg`, v.bg); el.style.setProperty(`--${prefix}-tile-bg2`, v.bg2);
       el.style.setProperty(`--${prefix}-tile-fg`, v.fg); el.style.setProperty(`--${prefix}-tile-muted`, v.muted);
     }
     function tileLookControlsHtml(attr, style, color) {
       const c = tileHex(color);
-      const opts = [['photo', 'Bild', 'Fotos hinter den Kacheln'], ['color', 'Farbe', 'eine frei wählbare Farbe'], ['rainbow', 'Bunt', 'jede Kachel in eigener Farbe']];
+      const opts = [...(attr === 'owner-tile' ? [['plain', 'Einfach', 'einfarbig wie die Karten unter „Mehr“']] : []), ['photo', 'Bild', 'Fotos hinter den Kacheln'], ['color', 'Farbe', 'eine frei wählbare Farbe'], ['rainbow', 'Bunt', 'jede Kachel in eigener Farbe']];
       return `<div class="tile-look">
         <div class="segmented" role="radiogroup" aria-label="Aussehen der Kacheln">${opts.map(([id, label, title]) => `<button type="button" role="radio" aria-checked="${style === id}" class="${style === id ? 'active' : ''}" data-${attr}-look="${id}" title="${title}">${label}</button>`).join('')}</div>
         ${style === 'color' ? `<div class="tile-look-colors"><label class="tile-look-picker" title="Eigene Farbe wählen"><input type="color" value="${c}" data-${attr}-color aria-label="Eigene Farbe wählen"><span style="background:${c}"></span><small>Eigene Farbe</small></label>
           ${TILE_SWATCHES.map((hex) => `<button type="button" class="tile-swatch ${hex === c ? 'on' : ''}" style="background:${hex}" data-${attr}-swatch="${hex}" aria-label="Farbe ${hex}"></button>`).join('')}</div>` : ''}
-        <div class="tile-look-preview ${style}" aria-hidden="true">${[0, 1, 2].map((i) => { const v = tileColorVars(style === 'rainbow' ? TILE_RAINBOW[i] : c); return `<span style="${style === 'photo' ? '' : `background:linear-gradient(145deg, ${v.bg}, ${v.bg2});color:${v.fg}`}">${['Aufgaben', 'Kontrolle', 'Kalender'][i]}</span>`; }).join('')}</div>
+        <div class="tile-look-preview ${style}" aria-hidden="true">${[0, 1, 2].map((i) => { const v = tileColorVars(style === 'rainbow' ? TILE_RAINBOW[i] : c); return `<span style="${style === 'photo' ? '' : style === 'plain' ? 'background:var(--paper);color:var(--ink);border:1px solid var(--line)' : `background:linear-gradient(145deg, ${v.bg}, ${v.bg2});color:${v.fg}`}">${['Aufgaben', 'Kontrolle', 'Kalender'][i]}</span>`; }).join('')}</div>
       </div>`;
     }
     document.addEventListener('click', (event) => {
@@ -9865,15 +9876,23 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       applyDisplaySettings();
       if (rerender) render();
     }
+    // Startseite gestalten: FREE wählt nur die Kacheln; Aussehen, Bereiche und untere Leiste ab PLUS
+    const homeDesignFull = () => PLAN_ORDER.indexOf(currentPlanId()) >= PLAN_ORDER.indexOf('plus');
+    const homeDesignCards = () => (homeDesignFull() ? [dashboardTilesSettingsHtml, tileLookSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml] : [dashboardTilesSettingsHtml, homeDesignUpsellHtml]);
+    function homeDesignUpsellHtml() {
+      return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('home')}</span><div><h2 class="card-title">Mehr Gestaltung ab PLUS</h2><p class="card-caption">Aussehen der Kacheln, Bereiche auf der Startseite und die untere Leiste stellst du ab dem Tarif PLUS ein.</p></div></div><div style="padding:0 18px 18px"><button type="button" class="secondary-btn" data-page="plans">Tarife ansehen</button></div></section>`;
+    }
+    // Standard: einfarbige Kacheln wie die Karten unter „Mehr“
+    const ownerTileStyle = () => (homeDesignFull() ? displaySettings.tileStyle || 'plain' : 'plain');
     function tileLookSettingsHtml() {
       return `<section class="card settings-card"><div class="settings-card-head"><span class="settings-icon">${icon('home')}</span><div><h2 class="card-title">Aussehen der Kacheln</h2><p class="card-caption">Bilder oder farbige Kacheln auf der Startseite – die Farbe wählst du frei.</p></div></div>
-        <div style="padding:0 18px 18px">${tileLookControlsHtml('owner-tile', displaySettings.tileStyle || 'photo', displaySettings.tileColor)}</div></section>`;
+        <div style="padding:0 18px 18px">${tileLookControlsHtml('owner-tile', ownerTileStyle(), displaySettings.tileColor)}</div></section>`;
     }
     function dashboardTilesSettingsHtml() {
       const chosen = dashboardTileSelection();
       const full = chosen.length >= DASHBOARD_TILE_LIMIT;
       return `<section class="card profile-form"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Kacheln auf der Startseite</h2><p class="card-caption">Wähle bis zu ${DASHBOARD_TILE_LIMIT} Kacheln, die auf der Übersicht erscheinen.</p></div><span class="tile-count ${full ? 'full' : ''}" id="tile-count">${chosen.length} von ${DASHBOARD_TILE_LIMIT}</span></div>
-        ${[...new Set(DASHBOARD_TILES.map((t) => t[4]))].map((group) => `<p class="tile-group-title">${escapeHtml(group)}</p><div class="tile-choices">${DASHBOARD_TILES.filter((t) => t[4] === group).map(([id, label, available, hint]) => { const on = chosen.includes(id); const off = available && !available(); return `<label class="tile-choice ${on ? 'on' : ''} ${off ? 'unavailable' : ''}"><input type="checkbox" data-dashboard-tile="${id}" ${on ? 'checked' : ''} ${!on && full ? 'disabled' : ''}><span class="tile-check">${icon('check')}</span><span>${escapeHtml(label)}${off ? `<small>${escapeHtml(hint)}</small>` : ''}</span></label>`; }).join('')}</div>`).join('')}
+        ${[...new Set(DASHBOARD_TILES.filter((t) => !pageLocked(t[0])).map((t) => t[4]))].map((group) => `<p class="tile-group-title">${escapeHtml(group)}</p><div class="tile-choices">${DASHBOARD_TILES.filter((t) => t[4] === group && !pageLocked(t[0])).map(([id, label, available, hint]) => { const on = chosen.includes(id); const off = available && !available(); return `<label class="tile-choice ${on ? 'on' : ''} ${off ? 'unavailable' : ''}"><input type="checkbox" data-dashboard-tile="${id}" ${on ? 'checked' : ''} ${!on && full ? 'disabled' : ''}><span class="tile-check">${icon('check')}</span><span>${escapeHtml(label)}${off ? `<small>${escapeHtml(hint)}</small>` : ''}</span></label>`; }).join('')}</div>`).join('')}
         <div class="form-actions" style="justify-content:space-between;margin-top:12px"><span class="card-caption">${full ? 'Maximum erreicht – entferne eine Kachel, um eine andere zu wählen.' : 'Die Reihenfolge auf der Startseite folgt dem Menü.'}</span><button type="button" class="text-btn" data-action="reset-dashboard-tiles">Standard wiederherstellen</button></div>
       </section>`;
     }
@@ -10356,7 +10375,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
                 <div><span>Sanierung</span><strong title="${escapeHtml(renoText)}"><button type="button" class="text-btn inline meta-link" data-house-goto="renovations" data-property="${escapeHtml(property.id)}">${escapeHtml(renoText.length > 52 ? `${renoText.slice(0, 50).trim()}…` : renoText)}</button></strong></div>
                 <div><span>Servicepartner</span><strong>${assignedProviders.length ? escapeHtml(assignedProviders.map((provider) => provider.name).join(', ')) : `<button type="button" class="text-btn inline" data-action="manage-assigned-providers" data-property="${escapeHtml(property.id)}">Partner zuordnen →</button>`}</strong></div>
               </div>
-              <div class="house-card-actions"><button type="button" class="primary-btn" data-action="view-property" data-property="${escapeHtml(property.id)}">Objektübersicht</button>${isPro() ? `<button type="button" class="secondary-btn" data-house-goto="house3d" data-property="${escapeHtml(property.id)}">${icon('cube')} 3D</button>` : ''}<button type="button" class="secondary-btn" data-house-goto="documents" data-property="${escapeHtml(property.id)}">${icon('document')} Dokumente</button><button type="button" class="secondary-btn" data-action="edit-property" data-property="${escapeHtml(property.id)}">${icon('edit')} Bearbeiten</button></div>
+              <div class="house-card-actions"><button type="button" class="primary-btn" data-action="view-property" data-property="${escapeHtml(property.id)}">Objektübersicht</button>${entitlements.can('house_model') ? `<button type="button" class="secondary-btn" data-house-goto="house3d" data-property="${escapeHtml(property.id)}">${icon('cube')} 3D</button>` : ''}<button type="button" class="secondary-btn" data-house-goto="documents" data-property="${escapeHtml(property.id)}">${icon('document')} Dokumente</button><button type="button" class="secondary-btn" data-action="edit-property" data-property="${escapeHtml(property.id)}">${icon('edit')} Bearbeiten</button></div>
             </div>
           </article>`;
         }).join('')}</div>
@@ -10565,7 +10584,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const assignedProviders = providers.filter((provider) => (servicePartnerAssignments[property.id] || []).includes(provider.id));
       const partnerSummary = assignedProviders.length ? assignedProviders.map((provider) => provider.name).join(', ') : 'Keine Servicepartner zugeordnet';
       return `<div class="welcome"><div><p class="eyebrow">Objektverwaltung · ${escapeHtml(property.region || 'Schweden')}</p><h1>${escapeHtml(property.name)}</h1><p class="subtitle">${escapeHtml(property.address)}</p>${inspectionStatusBadge(property.id)}</div></div>
-        <section class="card house-glance"><div class="card-head"><div><h2 class="card-title">Auf einen Blick</h2><p class="card-caption">Aktueller Stand – antippen für Details</p></div><div class="house-card-actions">${isPro() ? `<button type="button" class="secondary-btn" data-house-goto="house3d" data-property="${escapeHtml(property.id)}">${icon('cube')} 3D-Modell</button>` : ''}<button type="button" class="secondary-btn" data-house-goto="documents" data-property="${escapeHtml(property.id)}">${icon('document')} Dokumente</button></div></div><div class="house-glance-body">${houseTilesHtml(property)}</div></section>
+        <section class="card house-glance"><div class="card-head"><div><h2 class="card-title">Auf einen Blick</h2><p class="card-caption">Aktueller Stand – antippen für Details</p></div><div class="house-card-actions">${entitlements.can('house_model') ? `<button type="button" class="secondary-btn" data-house-goto="house3d" data-property="${escapeHtml(property.id)}">${icon('cube')} 3D-Modell</button>` : ''}<button type="button" class="secondary-btn" data-house-goto="documents" data-property="${escapeHtml(property.id)}">${icon('document')} Dokumente</button></div></div><div class="house-glance-body">${houseTilesHtml(property)}</div></section>
         ${(() => {
           const photos = propertyPhotos(property);
           const gallery = photos.length ? `<div class="detail-gallery ${photos.length > 1 ? 'multi' : ''}"><button type="button" class="detail-photo-main" data-lightbox-open="photos" data-index="0" aria-label="Foto groß anzeigen"><img src="${escapeHtml(photos[0])}" alt="Hausfoto: ${escapeHtml(property.name)}"><span class="photo-zoom">${icon('search')} Vergrößern</span></button>${photos.length > 1 ? `<div class="detail-photo-thumbs count-${Math.min(4, photos.length - 1)}">${photos.slice(1, 5).map((src, index) => `<button type="button" data-lightbox-open="photos" data-index="${index + 1}" aria-label="Foto ${index + 2} groß anzeigen"><img src="${escapeHtml(src)}" alt="">${index === 3 && photos.length > 5 ? `<span>+${photos.length - 5}</span>` : ''}</button>`).join('')}</div>` : ''}</div>` : '<p class="property-notes" style="margin:0 0 12px">Noch kein Foto – über „Bearbeiten“ hinzufügen.</p>';
@@ -13443,6 +13462,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       updateNotifyBadge();
       renderTabbar();
       pageContent.innerHTML = (currentPage === 'dashboard' ? betaBannerHtml('owner') : '') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
+      hidePlanLocked();
       if (currentPage === 'providers') trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `page:${localDateKey(new Date())}` });
       ensureBackButton();
       if (uiState) { uiRestore(pageContent, uiState); if (Math.abs(window.scrollY - uiScrollY) > 2) window.scrollTo(0, uiScrollY); }
@@ -16218,7 +16238,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     });
     function settingsPage() {
       const groups = [
-        ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', [dashboardTilesSettingsHtml, tileLookSettingsHtml, dashSectionsSettingsHtml, tabbarSettingsHtml]],
+        ['settings-home', 'Startseite gestalten', 'Lege fest, welche Kacheln, Bereiche und Symbole der unteren Leiste deine Übersicht zeigt – so gestaltest du die Hauptansicht ganz nach deinem Bedarf.', homeDesignCards()],
         ['settings-look', 'Darstellung & Erinnerungen', 'Hell oder dunkel, Schriftgröße, Sprache der Aufträge und was dir die Glocke meldet.', settingsCardBuilders.filter((build) => build !== backupCardHtml && build !== appInfoCardHtml)],
         ['settings-data', 'Daten & App', 'Cloud-Speicher, Servicepartner, Datensicherung und Informationen zur App.', [cloudCardHtml, ownerMembersCardHtml, ownerPartnerCardHtml, backupCardHtml, obSettingsCardHtml, appInfoCardHtml]],
         ['settings-legal', 'Rechtliches', 'Impressum, Datenschutz, Nutzungs- und Beta-Bedingungen, Datenschutz-Einstellungen, Datenexport und Konto löschen.', [() => `${legalHubHtml()}${betaS().admin?.is_super_admin || (admS().status?.roles || []).length ? `<section class="card"><h2 class="card-title">Husora-Team</h2><div class="settings-actions"><button type="button" class="primary-btn" data-page="adminCompliance">${icon('shield')} Husora Admin (Compliance)</button><button type="button" class="secondary-btn" data-page="betaAdmin">Beta Dashboard</button></div></section>` : ''}`]]
@@ -16359,7 +16379,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#111513' : '#f4efe4');
       document.documentElement.classList.toggle('ts-large', displaySettings.textSize === 'large');
       document.documentElement.classList.toggle('ts-xlarge', displaySettings.textSize === 'xlarge');
-      try { applyTileLook(document.documentElement, 'owner', displaySettings.tileStyle || 'photo', displaySettings.tileColor); } catch (error) { /* Kacheln optional */ }
+      try { applyTileLook(document.documentElement, 'owner', ownerTileStyle(), displaySettings.tileColor); } catch (error) { /* Kacheln optional */ }
     }
     applyDisplaySettings();
     darkQuery?.addEventListener?.('change', () => { if (displaySettings.theme === 'system') applyDisplaySettings(); });
@@ -19164,7 +19184,8 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             ${nav('<button type="button" class="primary-btn" data-ob-house-save>Haus speichern</button>', { secondary: '<button type="button" class="secondary-btn" data-ob-import>Inserat importieren</button>' })}`;
         },
         task: () => {
-          if ((obDraft.taskMode || 'package') === 'package') {
+          // Aufgabenpakete nur, wenn der Tarif sie enthält – sonst direkt die einzelne Aufgabe
+          if (entitlements.can('automation_basic') && (obDraft.taskMode || 'package') === 'package') {
             const canAuto = entitlements.can('automation_basic');
             const pick = SERVICE_PACKAGES.find((x) => x.id === obDraft.pkg) || SERVICE_PACKAGES.find((x) => x.id === autoTasks.packageId) || SERVICE_PACKAGES.find((x) => x.id === (profileData.usage === 'self' ? 'komfort' : 'vermietung')) || SERVICE_PACKAGES[0];
             const info = obPackageInfo(pick);
@@ -19178,7 +19199,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           const repeat = document.querySelector('#task-form [name="repeat"]')?.innerHTML || '<option>Einmalig</option>';
           const due = obDraft.date || localDateKey(new Date(Date.now() + 14 * 86400000));
           return `<h2 id="onboarding-title">Deine Aufgaben</h2>${doneBadge}<p class="ob-lead">Lege eine Wartungsaufgabe an oder nutze eine passende Vorlage.</p>
-            <div class="ob-seg" role="tablist" aria-label="Art der Aufgaben"><button type="button" role="tab" aria-selected="false" data-ob-task-mode="package">Aufgabenpaket</button><button type="button" role="tab" aria-selected="true" class="on" data-ob-task-mode="single">Einzelne Aufgabe</button></div>
+            ${entitlements.can('automation_basic') ? '<div class="ob-seg" role="tablist" aria-label="Art der Aufgaben"><button type="button" role="tab" aria-selected="false" data-ob-task-mode="package">Aufgabenpaket</button><button type="button" role="tab" aria-selected="true" class="on" data-ob-task-mode="single">Einzelne Aufgabe</button></div>' : ''}
             <div class="ob-chips" role="group" aria-label="Vorlagen">${OB_TASK_TEMPLATES.map((t) => `<button type="button" class="${obDraft.title === t ? 'on' : ''}" data-ob-template="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}</div>
             <form class="ob-form" data-ob-form="task">
               <label><span class="form-label">Aufgabe *</span><input class="form-control" name="title" maxlength="120" required value="${escapeHtml(obDraft.title || '')}" placeholder="z. B. Rauchmelder prüfen"></label>
@@ -19199,7 +19220,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
             <div class="ob-actions"><button type="button" class="primary-btn" data-ob-close>Zur Übersicht</button></div>`;
         }
       };
-      body.innerHTML = head + R[step.key]();
+      body.innerHTML = head + R[step.key](); hidePlanLocked(body);
       body.querySelectorAll('select[data-ob-value]').forEach((sel) => { sel.value = sel.dataset.obValue; });
       setTimeout(() => body.querySelector('.ob-form input:not([type=radio]), .ob-form select')?.focus({ preventScroll: true }), 60);
     }
@@ -19689,12 +19710,9 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       const section = navSectionOf(currentPage);
       if (!section || section.page === 'tasks') return '';
       const active = currentPage === 'propertyDetail' ? 'properties' : currentPage;
-      const items = section.pages.filter(([id]) => (id !== 'bookings' || bookingsEnabled()));
+      const items = section.pages.filter(([id]) => (id !== 'bookings' || bookingsEnabled()) && (!pageLocked(id) || id === active));
       if (items.length < 2) return '';
-      return `<nav class="section-tabs" aria-label="${escapeHtml(section.label)}">${items.map(([id, label]) => {
-        const locked = PAGE_GATES[id] && !entitlements.can(PAGE_GATES[id]);
-        return `<button type="button" class="${active === id ? 'active' : ''}" data-page="${id}" ${active === id ? 'aria-current="page"' : ''}>${escapeHtml(label)}${locked ? `<i class="section-tab-plan">${escapeHtml(entitlements.minPlanFor(PAGE_GATES[id]).name)}</i>` : ''}</button>`;
-      }).join('')}</nav>`;
+      return `<nav class="section-tabs" aria-label="${escapeHtml(section.label)}">${items.map(([id, label]) => `<button type="button" class="${active === id ? 'active' : ''}" data-page="${id}" ${active === id ? 'aria-current="page"' : ''}>${escapeHtml(label)}</button>`).join('')}</nav>`;
     }
     // Unterzeilen der Menüeinträge unter „Mehr“
     const NAV_CAPTIONS = { dashboard: 'Startseite mit allem, was ansteht', portfolio: 'Alle Häuser im Vergleich', plans: 'FREE, PLUS, PRO und ULTIMATE', profile: 'Name, Kontakt und Husora-Konto', settings: 'Startseite, Darstellung, Daten & App', help: 'Fragen, Anleitungen und Kontakt', legal: 'Datenschutz, AGB und Impressum' };
@@ -19707,12 +19725,12 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         button.classList.toggle('in-bar', inBar.has(page));
         const cap = button.querySelector('.nav-cap');
         if (!cap) return;
-        const rest = section ? section.pages.filter(([id]) => id !== page && !inBar.has(id) && (id !== 'bookings' || bookingsEnabled()))
+        const rest = section ? section.pages.filter(([id]) => id !== page && !inBar.has(id) && !pageLocked(id) && (id !== 'bookings' || bookingsEnabled()))
           .map(([id, label]) => label || TAB_OPTIONS.find(([key]) => key === id)?.[1] || id) : [];
         cap.textContent = section ? rest.join(' · ') : (NAV_CAPTIONS[page] || '');
       });
       nav.querySelectorAll('.nav-group:not(.nav-group-sub)').forEach((group) => {
-        group.classList.toggle('all-in-bar', ![...group.querySelectorAll(':scope > button[data-page]')].some((button) => !button.classList.contains('in-bar') && button.style.display !== 'none'));
+        group.classList.toggle('all-in-bar', ![...group.querySelectorAll(':scope > button[data-page]')].some((button) => !button.classList.contains('in-bar') && !button.classList.contains('plan-hidden') && button.style.display !== 'none'));
       });
     }
     function buildGroupedNav() {
@@ -19744,25 +19762,28 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
     buildGroupedNav();
     // Symbole der unteren Leiste: unter Einstellungen → Startseite gestalten wählbar (vier Plätze plus „Mehr“).
     const TAB_OPTIONS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar'], ['seasons', 'Saison', 'snow'], ['bookings', 'Buchungen', 'calendar'], ['repairs', 'Reparatur', 'alert'], ['renovations', 'Sanierung', 'cube'], ['properties', 'Mein Haus', 'property'], ['documents', 'Dokumente', 'document'], ['costs', 'Kosten', 'cost'], ['assignedProviders', 'Partner', 'users'], ['providers', 'Partner finden', 'search'], ['contracts', 'Verträge', 'contract'], ['meters', 'Zähler', 'meter'], ['emergency', 'Notfall', 'key'], ['automation', 'Automatik', 'bolt'], ['partnerHub', 'Partner-Portal', 'note'], ['house3d', 'Hausmodell', 'cube'], ['portfolio', 'Portfolio', 'cost'], ['settings', 'Einstellungen', 'gear'], ['help', 'Hilfe', 'help']];
-    const DEFAULT_TABS = ['dashboard', 'tasks', 'inspections', 'calendar'];
+    // Standard: nur „Mehr“ – darüber ist alles erreichbar. Ab PLUS lassen sich bis zu vier Plätze belegen (leere Plätze erlaubt).
+    const DEFAULT_TABS = [];
     const TABBAR_ITEMS = [];
+    let tabChoice = [null, null, null, null];
     function applyTabChoice(ids) {
-      const valid = (Array.isArray(ids) ? ids : []).filter((id, index, list) => TAB_OPTIONS.some(([key]) => key === id) && list.indexOf(id) === index && (id !== 'bookings' || bookingsEnabled())).slice(0, 4);
-      const chosen = valid.length === 4 ? valid : [...valid, ...DEFAULT_TABS.filter((id) => !valid.includes(id))].slice(0, 4);
-      TABBAR_ITEMS.splice(0, TABBAR_ITEMS.length, ...chosen.map((id) => TAB_OPTIONS.find(([key]) => key === id)));
+      const list = Array.isArray(ids) ? ids.slice(0, 4) : [];
+      tabChoice = [0, 1, 2, 3].map((i) => { const id = list[i]; return id && TAB_OPTIONS.some(([key]) => key === id) && list.indexOf(id) === i && (id !== 'bookings' || bookingsEnabled()) && !pageLocked(id) ? id : null; });
+      const shown = homeDesignFull() ? tabChoice.filter(Boolean) : [];
+      TABBAR_ITEMS.splice(0, TABBAR_ITEMS.length, ...shown.map((id) => TAB_OPTIONS.find(([key]) => key === id)));
     }
     applyTabChoice(loadStore('stugliv-tabbar', DEFAULT_TABS));
     // Untere Leiste: Platz antippen, dann Bereich antippen (keine Auswahlfelder, die sich beim Neuzeichnen schließen)
     let tabSlotPick = 0;
     function tabbarSettingsHtml() {
-      const current = TABBAR_ITEMS.map(([id]) => id);
-      const options = TAB_OPTIONS.filter(([id]) => id !== 'bookings' || bookingsEnabled());
+      const current = tabChoice.slice();
+      const options = TAB_OPTIONS.filter(([id]) => (id !== 'bookings' || bookingsEnabled()) && !pageLocked(id));
       const pick = Math.min(Math.max(tabSlotPick, 0), 3);
       return `<section class="card profile-form" id="tabbar-settings"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">Untere Leiste</h2><p class="card-caption">Tippe oben auf einen Platz und darunter auf den Bereich, der dort erscheinen soll. „Mehr“ bleibt immer rechts. Am Computer gelten dieselben vier Bereiche für die Buttons im Kopf.</p></div></div>
-        <div class="tab-preview tab-picker" role="radiogroup" aria-label="Platz wählen">${TABBAR_ITEMS.map(([, label, iconName], index) => `<button type="button" role="radio" aria-checked="${index === pick}" class="${index === pick ? 'active' : ''}" data-tab-pick="${index}">${icon(iconName)}<small>${escapeHtml(label)}</small><i>Platz ${index + 1}</i></button>`).join('')}<span class="tab-more">${icon('menu')}<small>Mehr</small></span></div>
+        <div class="tab-preview tab-picker" role="radiogroup" aria-label="Platz wählen">${tabChoice.map((id, index) => { const [, label, iconName] = TAB_OPTIONS.find(([key]) => key === id) || [null, 'Leer', 'plus']; return `<button type="button" role="radio" aria-checked="${index === pick}" class="${index === pick ? 'active' : ''} ${id ? '' : 'empty'}" data-tab-pick="${index}">${icon(iconName)}<small>${escapeHtml(label)}</small><i>Platz ${index + 1}</i></button>`; }).join('')}<span class="tab-more">${icon('menu')}<small>Mehr</small></span></div>
         <p class="tab-pick-title">Platz ${pick + 1}: Bereich wählen</p>
-        <div class="tab-options">${options.map(([key, label, iconName]) => { const at = current.indexOf(key); return `<button type="button" class="tab-option ${at === pick ? 'on' : ''}" data-tab-assign="${key}" aria-pressed="${at === pick}">${icon(iconName)}<span>${escapeHtml(label)}</span>${at >= 0 && at !== pick ? `<small>Platz ${at + 1}</small>` : ''}</button>`; }).join('')}</div>
-        <p class="settings-hint" style="margin-top:8px">Ist ein Bereich schon auf einem anderen Platz, tauschen die beiden Plätze.</p>
+        <div class="tab-options">${options.map(([key, label, iconName]) => { const at = current.indexOf(key); return `<button type="button" class="tab-option ${at === pick ? 'on' : ''}" data-tab-assign="${key}" aria-pressed="${at === pick}">${icon(iconName)}<span>${escapeHtml(label)}</span>${at >= 0 && at !== pick ? `<small>Platz ${at + 1}</small>` : ''}</button>`; }).join('')}${current[pick] ? `<button type="button" class="tab-option" data-tab-assign="">${icon('trash')}<span>Platz leeren</span></button>` : ''}</div>
+        <p class="settings-hint" style="margin-top:8px">Ist ein Bereich schon auf einem anderen Platz, tauschen die beiden Plätze. Leere Plätze bleiben frei, „Mehr“ ist immer da.</p>
         <div class="form-actions" style="justify-content:flex-end;margin-top:8px"><button type="button" class="text-btn" data-tab-reset>Standard wiederherstellen</button></div>
       </section>`;
     }
@@ -19776,18 +19797,18 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
       if (pickBtn) { tabSlotPick = Number(pickBtn.dataset.tabPick); refreshTabbarSettings(); return; }
       const assign = event.target.closest('[data-tab-assign]');
       if (!assign) return;
-      const ids = TABBAR_ITEMS.map(([id]) => id);
+      const ids = tabChoice.slice();
       const index = Math.min(Math.max(tabSlotPick, 0), 3);
-      const value = assign.dataset.tabAssign;
+      const value = assign.dataset.tabAssign || null;
       if (ids[index] === value) return;
-      const other = ids.indexOf(value);
+      const other = value ? ids.indexOf(value) : -1;
       if (other >= 0) ids[other] = ids[index];
       ids[index] = value;
       saveStore('stugliv-tabbar', ids);
       applyTabChoice(ids);
       if (tabSlotPick < 3) tabSlotPick += 1; // nächster Platz vorausgewählt
       refreshTabbarSettings();
-      showToast(`Platz ${index + 1}: ${TAB_OPTIONS.find(([key]) => key === value)?.[1] || value}`);
+      showToast(`Platz ${index + 1}: ${value ? TAB_OPTIONS.find(([key]) => key === value)?.[1] || value : 'leer'}`);
     });
     document.addEventListener('click', (event) => {
       if (!event.target.closest('[data-tab-reset]')) return;
@@ -19844,11 +19865,13 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
         document.getElementById('tabbar')?.style.setProperty('grid-template-columns', `repeat(${groups.length}, 1fr)`);
         return;
       }
-      document.getElementById('tabbar')?.style.removeProperty('grid-template-columns');
+      applyTabChoice(tabChoice); // Tarif kann sich nach dem Anmelden ändern
+      document.getElementById('tabbar')?.style.setProperty('grid-template-columns', `repeat(${TABBAR_ITEMS.length + 1}, 1fr)`);
       const html = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab ${active === page ? 'active' : ''}" data-page="${page}" ${active === page ? 'aria-current="page"' : ''}>${icon(iconName)}<span>${label}</span>${page === 'tasks' && openCount ? `<i class="tab-badge">${openCount > 99 ? '99+' : openCount}</i>` : ''}</button>`).join('')
         + `<button type="button" class="tab ${!active || menuOpen ? 'active-more' : ''}" data-tab-more aria-haspopup="true" aria-expanded="${menuOpen ? 'true' : 'false'}" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
       bars.forEach((bar) => { bar.innerHTML = html; });
       const nav = document.querySelector('#main-menu .nav');
+      markLockedNav();
       if (nav?.dataset.grouped) applyMoreMenu(nav);
     }
 

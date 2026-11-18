@@ -16,12 +16,19 @@ const ANON = ENV_ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now
     const r = await p.evaluate(() => { const t = document.querySelector('.pm-table'); const rows = [...t.querySelectorAll('tbody tr:not(.pm-group)')]; const portal = rows.find((x) => x.textContent.includes('Servicepartner-Portal')); return `${rows.length} Zeilen · Portal: ${[...portal.querySelectorAll('td')].map((td) => (td.querySelector('.pm-yes') ? '✓' : '–')).join(' ')} · Häuser: ${[...rows[0].querySelectorAll('td')].map((td) => td.textContent).join('/')}`; });
     await p.evaluate(() => document.querySelector('.plan-matrix').scrollIntoView()); await p.screenshot({ path: OUT + '/2-vergleich.png' });
     if (!/Portal: – – ✓ ✓/.test(r)) throw new Error(r); return r; });
-  await step('FREE: gesperrte Bereiche zeigen Hinweis, Menü markiert', async () => {
+  await step('FREE: gesperrte Bereiche erklären sich bei Direktaufruf, im Menü/Kacheln/Reitern ausgeblendet', async () => {
     const r = []; for (const page of ['renovations', 'automation', 'house3d', 'partnerHub', 'contracts']) { await p.evaluate((page) => { currentPage = page; render(); }, page); await p.waitForTimeout(150); r.push(`${page}:${await p.evaluate(() => !!document.querySelector('.plan-locked'))}`); }
     await p.evaluate(() => { currentPage = 'renovations'; render(); }); await p.screenshot({ path: OUT + '/3-gesperrt.png' });
     await p.evaluate(() => { currentPage = 'repairs'; render(); }); await p.waitForTimeout(150);
     if (await p.evaluate(() => !!document.querySelector('.plan-locked'))) throw new Error('Reparatur & Instandhaltung ist in FREE gesperrt');
-    const tags = await p.$$eval('.nav .plan-tag', (e) => e.length); if (r.some((x) => x.endsWith('false'))) throw new Error(r.join(' ')); return `${r.join(' ')} · Menü-Markierungen: ${tags}`; });
+    if (r.some((x) => x.endsWith('false'))) throw new Error(r.join(' '));
+    const hidden = await p.evaluate(() => { currentPage = 'dashboard'; render(); const navShown = (page) => { const el = document.querySelector(`.nav [data-page="${page}"]`); return el && getComputedStyle(el).display !== 'none'; };
+      const locked = ['renovations', 'automation', 'house3d', 'partnerHub', 'contracts'];
+      const tiles = [...document.querySelectorAll('#page-content .stat[data-page]')].map((el) => el.dataset.page);
+      currentPage = 'repairs'; render(); const tabs = [...document.querySelectorAll('.section-tabs [data-page]')].map((el) => el.dataset.page);
+      return { nav: locked.filter(navShown), tiles: tiles.filter((t) => locked.includes(t)), tabs: tabs.filter((t) => locked.includes(t)), repairsNav: navShown('repairs'), tags: document.querySelectorAll('.plan-tag, .section-tab-plan').length }; });
+    if (hidden.nav.length || hidden.tiles.length || hidden.tabs.length || !hidden.repairsNav || hidden.tags) throw new Error(JSON.stringify(hidden));
+    return `${r.join(' ')} · ausgeblendet in Menü, Kacheln und Reitern`; });
   await step('FREE: 6. aktive Aufgabe wird blockiert', async () => {
     await p.evaluate(() => { const prop = properties[0].name; tasks = tasks.filter((t) => t.done); for (let n = 0; n < 5; n++) tasks.push({ id: Date.now() + n, title: 'T' + n, property: prop, date: localDateKey(new Date()), priority: 'normal', status: 'Offen', done: false, repeat: 'Einmalig' }); persistTasks(); currentPage = 'tasks'; render(); openTaskModal(); });
     await p.waitForTimeout(200); await p.fill('#task-form [name=title]', 'Sechste Aufgabe'); await p.$eval('#task-form button[type=submit]', (e) => e.click()); await p.waitForTimeout(200);
@@ -31,6 +38,36 @@ const ANON = ENV_ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now
     const free = await p.evaluate(() => !document.querySelector('.plan-locked'));
     await p.evaluate(() => { currentPage = 'tasks'; render(); openTaskModal(); }); await p.waitForTimeout(150); await p.fill('#task-form [name=title]', 'Sechste Aufgabe'); await p.$eval('#task-form button[type=submit]', (e) => e.click()); await p.waitForTimeout(200);
     return `Reparaturen frei: ${free} · Aufgabe: ${await p.evaluate(() => tasks.some((t) => t.title === 'Sechste Aufgabe'))}`; });
+  await step('Startseite gestalten: FREE nur Kacheln, ab PLUS Aussehen, Bereiche und untere Leiste; Standard einfarbig', async () => {
+    const cards = (plan) => p.evaluate((plan) => { planOverride = plan; settingsView = 'settings-home'; currentPage = 'settings'; render(); return [...document.querySelectorAll('#settings-home .card-title')].map((e) => e.textContent.trim()); }, plan);
+    const free = await cards('free'); const plus = await cards('plus');
+    if (free.join('|') !== 'Kacheln auf der Startseite|Mehr Gestaltung ab PLUS') throw new Error('FREE: ' + free.join('|'));
+    if (!plus.includes('Aussehen der Kacheln') || plus.length < 4) throw new Error('PLUS: ' + plus.join('|'));
+    const look = await p.evaluate(() => { displaySettings = { ...displaySettings, tileStyle: undefined }; planOverride = 'plus'; applyDisplaySettings(); const plusPlain = document.documentElement.classList.contains('owner-tiles-plain'); displaySettings = { ...displaySettings, tileStyle: 'photo' }; planOverride = 'free'; applyDisplaySettings(); const freePlain = document.documentElement.classList.contains('owner-tiles-plain'); planOverride = 'plus'; applyDisplaySettings(); const plusPhoto = !document.documentElement.classList.contains('owner-tiles-plain'); return { plusPlain, freePlain, plusPhoto }; });
+    if (!look.plusPlain || !look.freePlain || !look.plusPhoto) throw new Error(JSON.stringify(look));
+    return `FREE ${free.length} Karten, PLUS ${plus.length} · Standard einfarbig, FREE immer einfarbig`;
+  });
+  await step('Untere Leiste: Standard nur „Mehr“, ab PLUS bis zu vier Plätze', async () => {
+    const bar = () => p.evaluate(() => { currentPage = 'dashboard'; render(); return [...document.querySelectorAll('#tabbar .tab')].map((e) => e.dataset.page || 'mehr').join(','); });
+    await p.evaluate(() => { saveStore('stugliv-tabbar', []); applyTabChoice([]); planOverride = 'plus'; });
+    const plusEmpty = await bar();
+    await p.evaluate(() => { planOverride = 'plus'; settingsView = 'settings-home'; currentPage = 'settings'; render(); tabSlotPick = 0; });
+    for (const page of ['tasks', 'calendar', 'repairs', 'documents']) { await p.$eval(`#tabbar-settings [data-tab-assign="${page}"]`, (e) => e.click()); await p.waitForTimeout(80); }
+    const plusFour = await bar();
+    await p.evaluate(() => { planOverride = 'free'; }); const free = await bar();
+    const freeCard = await p.evaluate(() => { settingsView = 'settings-home'; currentPage = 'settings'; render(); return !!document.getElementById('tabbar-settings'); });
+    await p.evaluate(() => { planOverride = 'plus'; settingsView = 'settings-home'; currentPage = 'settings'; render(); tabSlotPick = 1; refreshTabbarSettings(); });
+    await p.$eval('#tabbar-settings [data-tab-assign=""]', (e) => e.click()); await p.waitForTimeout(80);
+    const cleared = await bar();
+    const r = `PLUS leer: ${plusEmpty} · PLUS vier: ${plusFour} · FREE: ${free} (Karte ${freeCard}) · Platz 2 geleert: ${cleared}`;
+    if (plusEmpty !== 'mehr' || plusFour !== 'tasks,calendar,repairs,documents,mehr' || free !== 'mehr' || freeCard || cleared !== 'tasks,repairs,documents,mehr') throw new Error(r);
+    await p.evaluate(() => { saveStore('stugliv-tabbar', []); applyTabChoice([]); });
+    return r;
+  });
+  await step('3D-Hausmodell erst ab PRO', async () => {
+    const r = await p.evaluate(() => ['plus', 'pro'].map((plan) => { planOverride = plan; return `${plan}:${entitlements.can('house_model') && !pageLocked('house3d')}`; }));
+    if (r.join(' ') !== 'plus:false pro:true') throw new Error(r.join(' ')); return r.join(' ');
+  });
   await step('Angemeldet: Tarif kommt vom Server (Testorganisation = ULTIMATE)', async () => {
     await p.evaluate(() => { planOverride = null; currentPage = 'settings'; settingsView = 'settings-data'; render(); });
     await p.fill('[data-cloud-form=signin] [name=email]', 'admin@husora.test'); await p.fill('[data-cloud-form=signin] [name=password]', 'Husora!2026');

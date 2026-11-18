@@ -66,9 +66,8 @@ const { chromium } = require('playwright');
   await step('Fortsetzen über die Checkliste → Aufgabe mit Vorlage erstellen', async () => {
     await p.click('.ob-checklist [data-ob-resume]'); await p.waitForTimeout(200);
     if ((await cur()) !== 'task') throw new Error(await cur());
-    const pk = await p.evaluate(() => ({ n: document.querySelectorAll('[data-ob-pkg]').length, apply: Boolean(document.querySelector('[data-ob-pkg-apply]')) })); // FREE: Pakete sichtbar, Übernehmen erst ab PLUS
-    if (pk.n < 4 || pk.apply) throw new Error(`Pakete ${JSON.stringify(pk)}`);
-    await p.click('[data-ob-task-mode=single]'); await p.waitForTimeout(100);
+    const pk = await p.evaluate(() => ({ n: document.querySelectorAll('[data-ob-pkg]').length, mode: document.querySelectorAll('[data-ob-task-mode]').length })); // FREE: keine Aufgabenpakete, direkt einzelne Aufgabe
+    if (pk.n || pk.mode) throw new Error(`Pakete in FREE sichtbar ${JSON.stringify(pk)}`);
     await p.click('[data-ob-template="Rauchmelder prüfen"]');
     await p.selectOption('[data-ob-form=task] [name=priority]', 'soon');
     await p.click('[data-ob-task-save]'); await p.waitForTimeout(250);
@@ -112,7 +111,6 @@ const { chromium } = require('playwright');
   });
   await step('Ausführliches Formular: angelegte Aufgabe wird erkannt', async () => {
     await p.evaluate(() => obGo('task')); await p.waitForTimeout(100);
-    await p.click('[data-ob-task-mode=single]'); await p.waitForTimeout(100);
     await p.click('[data-ob-task-form]'); await p.waitForTimeout(250);
     await p.fill('#task-form [name=title]', 'Heizung warten'); await p.click('#task-form [type=submit]'); await p.waitForTimeout(700);
     const r = await p.evaluate(() => ({ s: obState('homeowner').steps.task, open: document.getElementById('onboarding-modal').classList.contains('open'), k: OB_FLOWS.homeowner.steps[onboardingStep].key }));
@@ -171,16 +169,16 @@ const { chromium } = require('playwright');
     const open = await q.$eval('#onboarding-modal', (e) => e.classList.contains('open')); const list = await q.$('.ob-checklist');
     await q.close(); if (open || list) throw new Error(`${open}/${Boolean(list)}`); return 'ok';
   });
-  await step('Aufgabenpaket: FREE zeigt Hinweis, mit PLUS „Paket übernehmen“ legt Aufgaben an', async () => {
+  await step('Aufgabenpaket: in FREE ausgeblendet, mit PLUS „Paket übernehmen“ legt Aufgaben an', async () => {
     const q = await b.newPage({ viewport: { width: 390, height: 844 } }); q.on('pageerror', (e) => errs.push(e.message));
     await q.route(/unpkg|cdnjs|openstreetmap|nominatim|paypal|open-meteo|frankfurter|er-api|allorigins|cors\.lol|google|jsdelivr/, (r) => r.abort());
     await q.goto('http://127.0.0.1:8081/index.html'); await q.evaluate(() => localStorage.clear()); await q.reload(); await q.waitForSelector('#onboarding-modal.open', { timeout: 4000 });
     await q.click('[data-ob-role=owner]'); await q.waitForTimeout(150); await q.click('[data-ob-plan-next]'); await q.waitForTimeout(200);
     await q.fill('[data-ob-form=property] [name=house]', 'Paket-Stuga'); await q.click('[data-ob-house-save]'); await q.waitForTimeout(250);
     await q.evaluate(() => obGo('task')); await q.waitForTimeout(150);
-    const free = await q.evaluate(() => ({ plan: currentPlanId(), apply: Boolean(document.querySelector('[data-ob-pkg-apply]')), change: Boolean(document.querySelector('[data-ob-plan-change]')) }));
-    if (free.plan !== 'free' || free.apply || !free.change) throw new Error(`FREE ${JSON.stringify(free)}`);
-    await q.click('[data-ob-plan-change]'); await q.waitForTimeout(150); await q.click('[data-ob-plan=plus]'); await q.click('[data-ob-plan-next]'); await q.waitForTimeout(250);
+    const free = await q.evaluate(() => ({ plan: currentPlanId(), pkgs: document.querySelectorAll('[data-ob-pkg]').length, single: Boolean(document.querySelector('[data-ob-form=task]')) }));
+    if (free.plan !== 'free' || free.pkgs || !free.single) throw new Error(`FREE ${JSON.stringify(free)}`);
+    await q.evaluate(() => { obDraft = { phase: 'plan', back: 'task' }; obGo('welcome'); }); await q.waitForTimeout(150); await q.click('[data-ob-plan=plus]'); await q.click('[data-ob-plan-next]'); await q.waitForTimeout(250);
     const back = await q.evaluate(() => ({ k: OB_FLOWS.homeowner.steps[onboardingStep].key, plan: currentPlanId() }));
     if (back.k !== 'task' || back.plan !== 'plus') throw new Error(`zurück: ${JSON.stringify(back)}`);
     await q.click('[data-ob-pkg=basis]'); await q.waitForTimeout(100);
