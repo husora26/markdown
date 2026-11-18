@@ -32,7 +32,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await H.$eval('[data-owner-form=partner] button[type=submit]', (e) => e.click()); await H.waitForFunction(() => !ownerSide.busy, null, { timeout: 20000 }); await H.waitForTimeout(300);
     CODE = await H.evaluate(() => ownerSide.code?.code || ownerSide.error);
     const box = await H.evaluate(() => [...document.querySelectorAll('.hub-code-actions > *')].map((e) => e.textContent.trim()).join('/'));
-    if (!/^HUS-/.test(CODE)) throw new Error(CODE);
+    if (!/^HUS-/.test(CODE)) throw new Error(CODE || await H.evaluate(() => JSON.stringify({ busy: ownerSide.busy, err: ownerSide.error, page: currentPage, tab: hub.tab, name: document.querySelector('[data-owner-form=partner] [name=company_name]')?.value, disabled: document.querySelector('[data-owner-form=partner] button[type=submit]')?.disabled, docs: documents.length, imp: ownerReportsImporting, toast: document.getElementById('toast')?.textContent?.slice(0, 60), partners: (ownerSide.partners || []).length })));
     const card = await H.$$('.hub-partner'); for (const c of card) { if ((await c.textContent().catch(() => '')).includes(FIRM)) { await c.screenshot({ path: OUT + '/2-code.png' }).catch(() => {}); } }
     await H.screenshot({ path: OUT + '/2-partner-tab.png' });
     return `${CODE} · ${box} · Status: ${await H.evaluate((f) => [...document.querySelectorAll('.hub-partner')].find((c) => c.textContent.includes(f))?.querySelector('.pp-badge')?.textContent, FIRM)}`;

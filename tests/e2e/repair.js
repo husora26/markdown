@@ -28,7 +28,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   await step('Hausbesitzer: Partner einladen', async () => {
     await H.fill('[data-owner-form=partner] [name=company_name]', FIRM); await H.fill('[data-owner-form=partner] [name=email]', P_EMAIL);
     await H.$eval('[data-owner-form=partner] button[type=submit]', (e) => e.click()); await H.waitForFunction(() => !ownerSide.busy, null, { timeout: 20000 }); await H.waitForTimeout(300);
-    CODE = await H.evaluate(() => ownerSide.code?.code || ownerSide.error); if (!/^HUS-/.test(CODE)) throw new Error(CODE); return CODE;
+    CODE = await H.evaluate(() => ownerSide.code?.code || ownerSide.error); if (!/^HUS-/.test(CODE)) throw new Error(CODE || await H.evaluate(() => JSON.stringify({ busy: ownerSide.busy, err: ownerSide.error, page: currentPage, tab: hub.tab, name: document.querySelector('[data-owner-form=partner] [name=company_name]')?.value, disabled: document.querySelector('[data-owner-form=partner] button[type=submit]')?.disabled, docs: documents.length, imp: ownerReportsImporting, toast: document.getElementById('toast')?.textContent?.slice(0, 60), partners: (ownerSide.partners || []).length }))); return CODE;
   });
   const P = await device('P');
   const wait = () => P.waitForFunction(() => !pp.busy, null, { timeout: 20000 }).then(() => P.waitForTimeout(300));

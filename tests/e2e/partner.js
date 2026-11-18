@@ -41,7 +41,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     await H.fill('[data-owner-form=partner] [name=company_name]', FIRM); await H.fill('[data-owner-form=partner] [name=email]', P_EMAIL);
     await H.$eval('[data-owner-form=partner] button[type=submit]', (e) => e.click()); await ownerIdle(H); await H.waitForTimeout(300);
     CODE = await H.evaluate(() => ownerSide.code?.code || ownerSide.error);
-    if (!/^HUS-/.test(CODE)) throw new Error(CODE);
+    if (!/^HUS-/.test(CODE)) throw new Error(CODE || await H.evaluate(() => JSON.stringify({ busy: ownerSide.busy, err: ownerSide.error, page: currentPage, tab: hub.tab, name: document.querySelector('[data-owner-form=partner] [name=company_name]')?.value, disabled: document.querySelector('[data-owner-form=partner] button[type=submit]')?.disabled, docs: documents.length, imp: ownerReportsImporting, toast: document.getElementById('toast')?.textContent?.slice(0, 60), partners: (ownerSide.partners || []).length })));
     return CODE;
   });
 
