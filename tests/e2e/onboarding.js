@@ -1,4 +1,4 @@
-// Onboarding homeowner_v1: Erststart → Rolle → erstes Haus → Hausprofil → erste Aufgabe → Funktionsschritte → Abschluss,
+// Onboarding homeowner_v1 (kurz): Erststart → Rolle/Tarif → Haus mit Adresse → Pflegepaket/erste Aufgabe → Abschluss,
 // Überspringen, „Später fortsetzen“, Fortsetzen nach Neuladen, Checkliste aus echten Daten, keine Duplikate, Neustart
 const { chromium } = require('playwright');
 (async () => {
@@ -14,8 +14,8 @@ const { chromium } = require('playwright');
 
   await step('Erststart öffnet die Einrichtung mit Rollenwahl', async () => {
     await p.waitForSelector('#onboarding-modal.open', { timeout: 4000 });
-    const t = await p.textContent('#onboarding-body'); if (!/Willkommen bei Husora/.test(t) || !/Schritt 1 von 9/.test(t)) throw new Error(t.slice(0, 120));
-    return 'Schritt 1 von 9';
+    const t = await p.textContent('#onboarding-body'); if (!/Willkommen bei Husora/.test(t) || !/Schritt 1 von 4/.test(t)) throw new Error(t.slice(0, 120));
+    return 'Schritt 1 von 4';
   });
   await step('Hausbesitzer wählen → Tarifwahl mit FREE, PLUS, PRO, ULTIMATE', async () => {
     await p.click('[data-ob-role=owner]'); await p.waitForTimeout(200);
@@ -40,19 +40,12 @@ const { chromium } = require('playwright');
     await p.selectOption('[data-ob-form=property] [name=region]', { index: 1 });
     await p.click('[data-ob-house-save]'); await p.waitForTimeout(300);
     const r = await p.evaluate(() => ({ n: properties.length, name: properties[0].name, demoTasks: tasks.filter((t) => initialTasks.some((d) => d.id === t.id && d.title === t.title)).length, ref: obState('homeowner').propertyRef, step: OB_FLOWS.homeowner.steps[onboardingStep].key }));
-    if (r.n !== 1 || r.name !== 'Stuga am Fryken' || r.demoTasks || r.step !== 'profile' || !r.ref) throw new Error(JSON.stringify(r)); return `${r.name}, weiter zu ${r.step}`;
+    if (r.n !== 1 || r.name !== 'Stuga am Fryken' || r.demoTasks || r.step !== 'task' || !r.ref) throw new Error(JSON.stringify(r)); return `${r.name}, weiter zu ${r.step}`;
   });
   await step('Zurück zeigt das Haus als erledigt, kein zweites Haus', async () => {
     await p.click('[data-ob-prev]'); await p.waitForTimeout(150);
     const t = await p.textContent('#onboarding-body'); await p.click('[data-ob-house-use]'); await p.waitForTimeout(150);
-    const n = await p.evaluate(() => properties.length); if (!/Bereits erledigt/.test(t) || n !== 1 || (await cur()) !== 'profile') throw new Error(`${n}`); return 'ok';
-  });
-  await step('Hausprofil: 3 Angaben → Schritt erledigt', async () => {
-    await p.fill('[data-ob-form=profile] [name=yearBuilt]', '1974');
-    await p.fill('[data-ob-form=profile] [name=livingArea]', '86');
-    await p.fill('[data-ob-form=profile] [name=rooms]', '4');
-    await p.click('[data-ob-profile-save]'); await p.waitForTimeout(250);
-    const r = await p.evaluate(() => ({ y: properties[0].yearBuilt, s: obState('homeowner').steps.profile })); if (r.y !== '1974' || r.s !== 'completed' || (await cur()) !== 'task') throw new Error(JSON.stringify(r)); return '3/7 Angaben';
+    const n = await p.evaluate(() => properties.length); if (!/Bereits erledigt/.test(t) || n !== 1 || (await cur()) !== 'task') throw new Error(`${n}`); return 'ok';
   });
   await step('„Später fortsetzen“ schließt und merkt den Schritt', async () => {
     await p.click('[data-ob-pause]'); await p.waitForTimeout(250);
@@ -80,25 +73,15 @@ const { chromium } = require('playwright');
     await p.selectOption('[data-ob-form=task] [name=priority]', 'soon');
     await p.click('[data-ob-task-save]'); await p.waitForTimeout(250);
     const r = await p.evaluate(() => ({ n: obUserTasks().length, t: obUserTasks()[0]?.title, s: obState('homeowner').steps.task, prop: obUserTasks()[0]?.property, prio: obUserTasks()[0]?.priority }));
-    if (r.n !== 1 || r.t !== 'Rauchmelder prüfen' || r.s !== 'completed' || r.prop !== 'Stuga am Fryken' || r.prio !== 'soon' || (await cur()) !== 'inspection') throw new Error(JSON.stringify(r)); return `${r.t} (Wichtig)`;
+    if (r.n !== 1 || r.t !== 'Rauchmelder prüfen' || r.s !== 'completed' || r.prop !== 'Stuga am Fryken' || r.prio !== 'soon' || (await cur()) !== 'done') throw new Error(JSON.stringify(r)); return `${r.t} (Wichtig)`;
   });
   await step('Nicht pausiert: Neuladen setzt am aktuellen Schritt fort', async () => {
     await p.reload(); await p.waitForTimeout(800);
-    const open = await p.$eval('#onboarding-modal', (e) => e.classList.contains('open')); if (!open || (await cur()) !== 'inspection') throw new Error(`${open}/${await cur()}`); return 'inspection';
+    const open = await p.$eval('#onboarding-modal', (e) => e.classList.contains('open')); if (!open || (await cur()) !== 'done') throw new Error(`${open}/${await cur()}`); return 'done';
   });
-  await step('Funktion öffnen → Seite + Hinweis „Weiter mit der Einrichtung“', async () => {
-    await p.click('[data-ob-open-page=inspections]'); await p.waitForTimeout(300);
-    const r = await p.evaluate(() => ({ page: currentPage, pill: Boolean(document.querySelector('.ob-resume')), s: obState('homeowner').steps.inspection, c: obState('homeowner').current }));
-    if (r.page !== 'inspections' || !r.pill || r.s !== 'completed' || r.c !== 'automation') throw new Error(JSON.stringify(r));
-    await p.click('.ob-resume [data-ob-resume]'); await p.waitForTimeout(200);
-    if ((await cur()) !== 'automation') throw new Error(await cur()); return 'zurück bei automation';
-  });
-  await step('Überspringen: Automatik + Partner, Organisieren → Abschluss', async () => {
-    await p.click('[data-ob-skip]'); await p.waitForTimeout(150);
-    await p.click('[data-ob-skip]'); await p.waitForTimeout(150);
-    await p.click('[data-ob-continue]'); await p.waitForTimeout(150);
-    const s = await st(); const t = await p.textContent('#onboarding-body');
-    if ((await cur()) !== 'done' || s.steps.automation !== 'skipped' || s.steps.partners !== 'skipped' || !/3 von 3/.test(t)) throw new Error(JSON.stringify(s.steps)); return 'Schritt 9 von 9';
+  await step('Abschluss: Schritt 4 von 4, 3 von 3 wichtigen, Hausprofil & Co. nur noch optional', async () => {
+    const t = await p.textContent('#onboarding-body');
+    if (!/Schritt 4 von 4/.test(t) || !/3 von 3/.test(t) || !/Hausprofil ergänzt \(optional\)/.test(t) || !(await p.$('#onboarding-body [data-ob-check-page=propertyDetail]'))) throw new Error(t.slice(0, 300)); return 'Schritt 4 von 4';
   });
   await step('Abschluss → Übersicht, Status abgeschlossen, Checkliste bleibt für offene Punkte', async () => {
     await p.click('[data-ob-close]'); await p.waitForTimeout(300);
@@ -108,6 +91,13 @@ const { chromium } = require('playwright');
   await step('Abgeschlossen: nach Neuladen kein Einrichtungsfenster', async () => {
     await p.reload(); await p.waitForTimeout(700);
     if (await p.$eval('#onboarding-modal', (e) => e.classList.contains('open'))) throw new Error('offen'); return 'ok';
+  });
+  await step('Checkliste: „Hausprofil ergänzt“ öffnet die Hausseite', async () => {
+    await p.click('.ob-checklist > summary .ob-check-sum-text'); await p.waitForTimeout(150);
+    await p.click('.ob-checklist [data-ob-check-page=propertyDetail]'); await p.waitForTimeout(250);
+    const r = await p.evaluate(() => ({ page: currentPage, house: sectionPropertyId === obPrimaryHouse()?.id }));
+    await p.evaluate(() => { obChecklistOpen = false; currentPage = 'dashboard'; render(); }); await p.waitForTimeout(150);
+    if (r.page !== 'propertyDetail' || !r.house) throw new Error(JSON.stringify(r)); return 'Hausseite des ersten Hauses';
   });
   await step('Checkliste ausblenden bleibt ausgeblendet', async () => {
     await p.click('.ob-checklist > summary .ob-check-sum-text'); await p.waitForTimeout(150);
@@ -126,7 +116,7 @@ const { chromium } = require('playwright');
     await p.click('[data-ob-task-form]'); await p.waitForTimeout(250);
     await p.fill('#task-form [name=title]', 'Heizung warten'); await p.click('#task-form [type=submit]'); await p.waitForTimeout(700);
     const r = await p.evaluate(() => ({ s: obState('homeowner').steps.task, open: document.getElementById('onboarding-modal').classList.contains('open'), k: OB_FLOWS.homeowner.steps[onboardingStep].key }));
-    if (r.s !== 'completed' || !r.open || r.k !== 'inspection') throw new Error(JSON.stringify(r)); return 'weiter mit inspection';
+    if (r.s !== 'completed' || !r.open || r.k !== 'done') throw new Error(JSON.stringify(r)); return 'weiter zum Abschluss';
   });
   await step('Feature-Guide: „Was kann ich hier tun?“ öffnen und dauerhaft ausblenden', async () => {
     await p.evaluate(() => { closeOnboarding(); currentPage = 'tasks'; render(); }); await p.waitForTimeout(200);
@@ -197,7 +187,7 @@ const { chromium } = require('playwright');
     await q.click('[data-ob-pkg-apply=basis]'); await q.waitForTimeout(300);
     const r = await q.evaluate(() => ({ pkg: autoTasks.packageId, on: autoTasks.enabled, n: obUserTasks().length, s: obState('homeowner').steps.task, k: OB_FLOWS.homeowner.steps[onboardingStep].key }));
     await q.close();
-    if (r.pkg !== 'basis' || !r.on || !r.n || r.s !== 'completed' || r.k !== 'inspection') throw new Error(JSON.stringify(r)); return `Paket Basis, ${r.n} Aufgaben angelegt`;
+    if (r.pkg !== 'basis' || !r.on || !r.n || r.s !== 'completed' || r.k !== 'done') throw new Error(JSON.stringify(r)); return `Paket Basis, ${r.n} Aufgaben angelegt`;
   });
   console.log(res.join('\n')); if (errs.length) console.log('JS-Fehler:\n' + errs.join('\n'));
   await b.close();
