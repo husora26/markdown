@@ -44,7 +44,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
     const org = await p.evaluate(() => cloud.org.id); if (org !== orgA) throw new Error('falsche Organisation');
     await p.evaluate(() => { currentPage = 'partnerHub'; hub.tab = 'partners'; render(); }); await p.waitForFunction(() => ownerSide.partners !== null && !ownerSide.busy, null, { timeout: 20000 });
     await p.fill('[data-owner-form=partner] [name=company_name]', 'Testbetrieb'); await p.fill('[data-owner-form=partner] [name=email]', `betrieb${N}@hs.test`);
-    await p.$eval('[data-owner-form=partner] button[type=submit]', (e) => e.click()); await p.waitForFunction(() => !ownerSide.busy, null, { timeout: 20000 }); await p.waitForTimeout(300);
+    await p.evaluate(() => window.__plog?.push(Math.round(performance.now()) + " vor Klick busy=" + ownerSide.busy + " disabled=" + document.querySelector("[data-owner-form=partner] button[type=submit]")?.disabled)); await p.waitForSelector('[data-owner-form=partner] button[type=submit]:not([disabled])', { timeout: 20000 }); await p.$eval('[data-owner-form=partner] button[type=submit]', (e) => e.click()); await p.waitForFunction(() => !ownerSide.busy, null, { timeout: 20000 }); await p.waitForTimeout(300);
     const r = await p.evaluate(() => ownerSide.code?.code || ownerSide.error); if (!/^HUS-/.test(r)) throw new Error(r); return r;
   });
   await step('Alter falscher Stand im Speicher wird beim Start repariert', async () => {

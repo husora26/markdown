@@ -6,7 +6,7 @@ const FIRM = `Auftrag Service ${N}`, P_EMAIL = `auf${N}@hs.test`, PW = 'Husora!2
 const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -At -c "${q.replace(/"/g, '\\"')}"`).toString().trim();
 (async () => {
   const b = await chromium.launch(); const res = []; const errs = [];
-  const step = async (name, fn) => { try { const r = await fn(); res.push(`OK   ${name}${r ? ' – ' + r : ''}`); } catch (e) { res.push(`FEHL ${name} – ${e.message.split('\n')[0].slice(0, 220)}`); } };
+  const step = async (name, fn) => { try { const r = await fn(); res.push(`OK   ${name}${r ? ' – ' + r : ''}`); } catch (e) { res.push(`FEHL ${name} – ${e.message.split('\n')[0].slice(0, 900)}`); } };
   const device = async (label) => {
     const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
     const p = await ctx.newPage(); p.on('pageerror', (e) => errs.push(`${label}: ${e.message}`)); p.on('dialog', (d) => d.accept());
@@ -26,9 +26,9 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
   });
   let CODE = '';
   await step('Hausbesitzer: Partner einladen', async () => {
-    await H.evaluate(() => { window.__plog = []; const L = (m) => window.__plog.push(Math.round(performance.now()) + ' ' + m); const oR = ownerRun; ownerRun = function (l) { L('run ' + l + ' busy=' + ownerSide.busy + ' loading=' + ownerSide.loading); return oR.apply(this, arguments); }; document.addEventListener('submit', (e) => L('submit ' + (e.target.dataset.ownerForm || '?') + ' busy=' + ownerSide.busy), true); document.addEventListener('click', (e) => { if (e.target.closest?.('[data-owner-form=partner]')) L('click ' + e.target.tagName + ' prevented=' + e.defaultPrevented); }); let c = ownerSide.code; Object.defineProperty(ownerSide, 'code', { configurable: true, get: () => c, set: (v) => { L('code ' + JSON.stringify(v)); c = v; } }); }); await H.fill('[data-owner-form=partner] [name=company_name]', FIRM); await H.fill('[data-owner-form=partner] [name=email]', P_EMAIL);
-    await H.$eval('[data-owner-form=partner] button[type=submit]', (e) => e.click()); await H.waitForFunction(() => !ownerSide.busy, null, { timeout: 20000 }); await H.waitForTimeout(300);
-    CODE = await H.evaluate(() => ownerSide.code?.code || ownerSide.error); if (!/^HUS-/.test(CODE)) throw new Error(CODE || await H.evaluate(() => JSON.stringify({ busy: ownerSide.busy, err: ownerSide.error, page: currentPage, tab: hub.tab, name: document.querySelector('[data-owner-form=partner] [name=company_name]')?.value, disabled: document.querySelector('[data-owner-form=partner] button[type=submit]')?.disabled, docs: documents.length, imp: ownerReportsImporting, toast: document.getElementById('toast')?.textContent?.slice(0, 60), partners: (ownerSide.partners || []).length, log: window.__plog }))); return CODE;
+    await H.evaluate(() => { window.__plog = []; const L = (m) => window.__plog.push(Math.round(performance.now()) + ' ' + m); const oR = ownerRun; ownerRun = function (l) { L('run ' + l + ' busy=' + ownerSide.busy + ' loading=' + ownerSide.loading); return oR.apply(this, arguments); }; document.addEventListener('submit', (e) => L('submit ' + (e.target.dataset.ownerForm || '?') + ' busy=' + ownerSide.busy), true); document.addEventListener('click', (e) => { if (e.target.closest?.('[data-owner-form=partner]')) L('click ' + e.target.tagName + ' prevented=' + e.defaultPrevented); }); let bz = ownerSide.busy; Object.defineProperty(ownerSide, 'busy', { configurable: true, get: () => bz, set: (v) => { if (v !== bz) L('busy ' + JSON.stringify(v)); bz = v; } }); let c = ownerSide.code; Object.defineProperty(ownerSide, 'code', { configurable: true, get: () => c, set: (v) => { L('code ' + JSON.stringify(v)); c = v; } }); }); await H.fill('[data-owner-form=partner] [name=company_name]', FIRM); await H.fill('[data-owner-form=partner] [name=email]', P_EMAIL);
+    await H.evaluate(() => window.__plog?.push(Math.round(performance.now()) + " vor Klick busy=" + ownerSide.busy + " disabled=" + document.querySelector("[data-owner-form=partner] button[type=submit]")?.disabled)); await H.waitForSelector('[data-owner-form=partner] button[type=submit]:not([disabled])', { timeout: 20000 }); await H.$eval('[data-owner-form=partner] button[type=submit]', (e) => e.click()); await H.waitForFunction(() => !ownerSide.busy, null, { timeout: 20000 }); await H.waitForTimeout(300);
+    CODE = await H.evaluate(() => ownerSide.code?.code || ownerSide.error); if (!/^HUS-/.test(CODE)) throw new Error(CODE || await H.evaluate(() => JSON.stringify({ log: window.__plog, busy: ownerSide.busy, err: ownerSide.error, page: currentPage, tab: hub.tab, name: document.querySelector('[data-owner-form=partner] [name=company_name]')?.value, disabled: document.querySelector('[data-owner-form=partner] button[type=submit]')?.disabled, docs: documents.length, imp: ownerReportsImporting, toast: document.getElementById('toast')?.textContent?.slice(0, 60), partners: (ownerSide.partners || []).length }))); return CODE;
   });
   const P = await device('P');
   const wait = () => P.waitForFunction(() => !pp.busy, null, { timeout: 20000 }).then(() => P.waitForTimeout(300));
@@ -45,6 +45,7 @@ const sql = (q) => execSync(`psql postgresql://postgres:postgres@127.0.0.1:54322
 
 
   const spId = sql(`select id from service_partners where company_name='${FIRM}' and organization_id='cccccccc-0000-4000-8000-000000000001'`);
+  if (!spId) { console.log(res.join("\n")); throw new Error("Partner nicht verbunden – siehe Schritte oben"); }
   const porg = sql(`select id from organizations where name='${FIRM}'`);
     // Mitarbeiter direkt anlegen (Einladung ist in anderen Tests abgedeckt)
   const TECH = `tech${N}@hs.test`;
