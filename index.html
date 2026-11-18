@@ -25333,7 +25333,7 @@ Bitte ein Ferienhaus wählen.|Please choose a holiday home.|Välj ett fritidshus
           <form class="hub-form" data-owner-form="partner">
             ${suggestions.length ? `<label><span class="form-label">Aus deinen Servicepartnern übernehmen</span><select class="form-control" data-hub-suggest><option value="">– auswählen oder unten eintragen –</option>${suggestions.map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${p.town ? ` (${escapeHtml(p.town)})` : ''}</option>`).join('')}</select></label>` : ''}
             <div class="hub-grid"><label><span class="form-label">Firmenname *</span><input class="form-control" name="company_name" required maxlength="120"></label><label><span class="form-label">E-Mail</span><input class="form-control" name="email" type="email" maxlength="120"></label></div>
-            <div class="pp-actions"><button type="submit" class="primary-btn" ${ownerSide.busy ? 'disabled' : ''}>${icon('plus')} ${ownerSide.busy === 'invite' ? 'Erzeuge Code …' : 'Einladungscode erzeugen'}</button></div>
+            <div class="pp-actions"><button type="submit" class="primary-btn" ${ownerSide.busy && ownerSide.busy !== 'load' ? 'disabled' : ''}>${icon('plus')} ${ownerSide.busy === 'invite' ? 'Erzeuge Code …' : 'Einladungscode erzeugen'}</button></div>
           </form></section>
         ${(ownerSide.partners || []).some((p) => p.partner_organization_id) ? hubApprovalLimitHtml() : ''}
         <section class="hub-section"><h3 class="hub-section-title">Deine Servicepartner (${partners.length})</h3>
