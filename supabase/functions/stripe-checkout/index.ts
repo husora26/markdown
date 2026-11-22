@@ -3,9 +3,13 @@
 // Aufruf aus der App mit dem Nutzer-JWT:
 //   POST /functions/v1/stripe-checkout  { "plan_id": "pro", "return_url": "https://…" }
 //   POST /functions/v1/stripe-checkout  { "portal": true, "return_url": "https://…" }
+// Servicebetriebe (eigene Tarife in public.partner_plans, Abo in public.partner_subscriptions):
+//   POST /functions/v1/stripe-checkout  { "audience": "partner", "plan_id": "partner_pro", "return_url": "https://…", "consent": {…} }
+//   POST /functions/v1/stripe-checkout  { "audience": "partner", "portal": true, "return_url": "https://…" }
 // Benötigte Secrets (supabase secrets set …): STRIPE_SECRET_KEY
 // SUPABASE_URL, SUPABASE_ANON_KEY und SUPABASE_SERVICE_ROLE_KEY stellt Supabase bereit.
-// Der Preis kommt ausschließlich aus public.plans.stripe_price_id – nie aus dem Browser.
+// Der Preis kommt ausschließlich aus public.plans.stripe_price_id bzw. public.partner_plans.stripe_price_id – nie aus dem Browser.
+// Es gibt keine Vermittlungsprovision: abgerechnet wird nur das Abo.
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -35,6 +39,46 @@ async function stripe(path: string, params: Record<string, string>) {
 }
 const safeReturn = (url: unknown) => { try { const u = new URL(String(url)); return u.protocol === 'https:' || u.hostname === 'localhost' || u.hostname === '127.0.0.1' ? u.toString() : null; } catch { return null; } };
 
+// Servicebetrieb: Betrieb und Rolle aus der Anmeldung (partner_context), nie aus dem Browser
+async function partnerCheckout(jwt: string, user: any, body: any, returnUrl: string) {
+  const ctx = await rest('/rest/v1/rpc/partner_context', { method: 'POST', token: jwt, body: '{}' });
+  const orgId = ctx?.organization?.id;
+  if (!orgId || ctx.role !== 'admin') return json({ error: 'Nur Admins des Servicebetriebs können den Tarif ändern.' }, 403);
+  const [sub] = await rest(`/rest/v1/partner_subscriptions?organization_id=eq.${orgId}&select=provider_customer_id,billing_provider`);
+  let customer = sub?.provider_customer_id as string | undefined;
+  if (!customer) {
+    const created = await stripe('customers', { email: user.email || '', 'metadata[organization_id]': orgId, 'metadata[audience]': 'partner' });
+    customer = created.id;
+    if (sub) await rest(`/rest/v1/partner_subscriptions?organization_id=eq.${orgId}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ provider_customer_id: customer }) });
+    else await rest('/rest/v1/partner_subscriptions', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ organization_id: orgId, plan_id: 'partner_free', status: 'incomplete', billing_provider: 'stripe', provider_customer_id: customer }) });
+  }
+  if (body.portal) {
+    const portal = await stripe('billing_portal/sessions', { customer: customer!, return_url: returnUrl });
+    return json({ url: portal.url });
+  }
+  const consent = body.consent || {};
+  if (consent.terms !== true || consent.waiver !== true) return json({ error: 'Bitte AGB und Widerrufshinweis bestätigen.' }, 400);
+  const consentAt = new Date().toISOString();
+  const [plan] = await rest(`/rest/v1/partner_plans?id=eq.${encodeURIComponent(String(body.plan_id || ''))}&is_active=eq.true&select=id,stripe_price_id`);
+  if (!plan?.stripe_price_id) return json({ error: 'Für diesen Tarif ist noch kein Stripe-Preis hinterlegt.' }, 400);
+  const session = await stripe('checkout/sessions', {
+    mode: 'subscription',
+    customer: customer!,
+    'line_items[0][price]': plan.stripe_price_id,
+    'line_items[0][quantity]': '1',
+    success_url: `${returnUrl}${returnUrl.includes('?') ? '&' : '?'}checkout=success`,
+    cancel_url: `${returnUrl}${returnUrl.includes('?') ? '&' : '?'}checkout=cancel`,
+    client_reference_id: orgId,
+    'subscription_data[metadata][organization_id]': orgId,
+    'subscription_data[metadata][audience]': 'partner',
+    'subscription_data[metadata][plan_id]': plan.id,
+    'subscription_data[metadata][terms_accepted_at]': consentAt,
+    'subscription_data[metadata][withdrawal_waiver_at]': consentAt,
+    'subscription_data[metadata][accepted_by]': String(user.email || user.id || '')
+  });
+  return json({ url: session.url });
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   if (req.method !== 'POST') return json({ error: 'Nur POST' }, 405);
@@ -51,6 +95,8 @@ Deno.serve(async (req) => {
       const [pay] = await rest('/rest/v1/app_config?key=eq.payments&select=value');
       if (!pay?.value?.enabled) return json({ error: 'Zahlungen sind während der Beta deaktiviert.' }, 403);
     }
+
+    if (body.audience === 'partner') return await partnerCheckout(jwt, user, body, returnUrl);
 
     // Organisation des Nutzers serverseitig ermitteln (nie aus dem Browser übernehmen)
     const [org] = await rest('/rest/v1/rpc/ensure_my_organization', { method: 'POST', token: jwt, body: JSON.stringify({ p_name: 'Meine Ferienhäuser' }) }).then((r) => (Array.isArray(r) ? r : [r]));
