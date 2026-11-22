@@ -822,3 +822,27 @@ insert into public.partner_addon_catalog (code, name, description, price_monthly
   ('white_label_portal', 'White-Label-Kundenportal', 'Kundenportal mit eigenem Branding.', 1990, false, '{"features":["white_label_portal"]}', null, 70),
   ('api_plus', 'API-Erweiterung', 'Zusätzliche Integrationen über die API.', 1990, true, '{"features":["api_plus"]}', 'Preis ab 19,90 €, abhängig vom Umfang.', 80)
 on conflict (code) do nothing;
+
+-- -----------------------------------------------------------------------------
+-- 13) Adminbereich: Übersicht aller Servicebetriebe mit Tarif, Status und Nutzung
+-- -----------------------------------------------------------------------------
+create or replace function public.admin_partner_plan_overview()
+returns jsonb
+language plpgsql stable security definer set search_path = ''
+as $$
+begin
+  if not private.has_admin_role('support_admin') then
+    raise exception 'Nur für das Husora-Team' using errcode = '42501';
+  end if;
+  return coalesce((
+    select jsonb_agg(jsonb_build_object(
+      'organization_id', o.id, 'name', o.name,
+      'subscription', (select to_jsonb(s) - 'provider_customer_id' from public.partner_subscriptions s where s.organization_id = o.id),
+      'entitlements', private.partner_entitlements(o.id) - 'features'
+    ) order by o.name)
+    from public.organizations o where o.org_type in ('service_partner', 'both')
+  ), '[]'::jsonb);
+end;
+$$;
+revoke all on function public.admin_partner_plan_overview() from public, anon;
+grant execute on function public.admin_partner_plan_overview() to authenticated;
