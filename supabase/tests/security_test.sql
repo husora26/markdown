@@ -24,7 +24,7 @@ select pg_temp.ok('anon schreibt nur anonymes Feedback',
    where n.nspname = 'public' and c.relkind in ('r', 'p') and has_table_privilege('anon', c.oid, p) and not (c.relname = 'app_feedback' and p = 'INSERT')));
 select pg_temp.ok('anon liest nur Tarife, Konfiguration und (per RLS gefiltert) nichts Weiteres mit Policy',
   (select string_agg(tablename || '.' || policyname, ', ') from pg_policies where schemaname = 'public' and 'anon' = any (roles)
-   and tablename not in ('plans', 'app_config', 'app_feedback', 'legal_documents')));
+   and tablename not in ('plans', 'partner_plans', 'partner_addon_catalog', 'app_config', 'app_feedback', 'legal_documents')));
 select pg_temp.ok('Keine Sicherheits-Definer-Funktion ohne Anmeldung ausführbar',
   (select string_agg(p.proname, ', ') from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and p.prosecdef and has_function_privilege('anon', p.oid, 'EXECUTE')

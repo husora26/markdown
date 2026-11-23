@@ -1,5 +1,6 @@
 // HUSORA · Edge Function „stripe-webhook“
-// Empfängt Stripe-Ereignisse und hält public.subscriptions aktuell (Upgrade,
+// Empfängt Stripe-Ereignisse und hält public.subscriptions bzw. (Servicebetriebe,
+// metadata.audience = partner) public.partner_subscriptions aktuell (Upgrade,
 // Downgrade, Kündigung, Zahlungsfehler). Signatur wird geprüft, jedes Ereignis
 // nur einmal verarbeitet (public.stripe_events).
 // Deploy ohne JWT-Prüfung: supabase functions deploy stripe-webhook --no-verify-jwt
@@ -47,7 +48,37 @@ async function planForPrice(priceId: string | undefined) {
   return plan?.id || null;
 }
 
-async function syncSubscription(sub: any) {
+// Servicebetrieb: eigener Tarifkatalog und eigenes Abo. Bei Kündigung bleibt der Tarif bis
+// zum Periodenende gültig (die Datenbank stuft danach selbst auf Free zurück).
+async function syncPartnerSubscription(sub: any, eventId: string) {
+  const orgId = sub.metadata?.organization_id;
+  if (!orgId) throw new Error(`Partner-Abo ${sub.id} ohne organization_id`);
+  const priceId = sub.items?.data?.[0]?.price?.id;
+  const [byPrice] = priceId ? await rest(`/rest/v1/partner_plans?stripe_price_id=eq.${encodeURIComponent(priceId)}&select=id`) : [];
+  const planId = byPrice?.id || sub.metadata?.plan_id || 'partner_free';
+  // Stripe-Status auf die Partner-Status abbilden (trialing, active, past_due, canceled, incomplete)
+  const status = ({ trialing: 'trialing', active: 'active', past_due: 'past_due', unpaid: 'past_due', canceled: 'canceled', paused: 'canceled', incomplete: 'incomplete', incomplete_expired: 'incomplete' } as Record<string, string>)[sub.status] || 'incomplete';
+  const periodEnd = status === 'canceled' && sub.ended_at ? iso(sub.ended_at) : iso(sub.current_period_end ?? sub.items?.data?.[0]?.current_period_end);
+  await rest('/rest/v1/partner_subscriptions?on_conflict=organization_id', {
+    method: 'POST',
+    headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+    body: JSON.stringify({
+      organization_id: orgId,
+      plan_id: planId,
+      billing_provider: 'stripe',
+      provider_customer_id: typeof sub.customer === 'string' ? sub.customer : sub.customer?.id,
+      provider_subscription_id: sub.id,
+      status,
+      current_period_start: iso(sub.current_period_start ?? sub.items?.data?.[0]?.current_period_start),
+      current_period_end: periodEnd,
+      cancel_at_period_end: Boolean(sub.cancel_at_period_end)
+    })
+  });
+  await rest('/rest/v1/partner_subscription_events?on_conflict=provider_event_id', { method: 'POST', headers: { Prefer: 'return=minimal,resolution=ignore-duplicates' }, body: JSON.stringify({ organization_id: orgId, event_type: `stripe.${status}`, provider_event_id: eventId, payload: { subscription: sub.id, plan_id: planId }, processed_at: new Date().toISOString() }) });
+}
+
+async function syncSubscription(sub: any, eventId = '') {
+  if (sub.metadata?.audience === 'partner') return syncPartnerSubscription(sub, eventId);
   const orgId = sub.metadata?.organization_id;
   if (!orgId) throw new Error(`Abo ${sub.id} ohne organization_id`);
   const planId = (await planForPrice(sub.items?.data?.[0]?.price?.id)) || sub.metadata?.plan_id || 'free';
@@ -81,15 +112,15 @@ Deno.serve(async (req) => {
     const obj = event.data?.object || {};
     switch (event.type) {
       case 'checkout.session.completed':
-        if (obj.subscription) await syncSubscription(await stripeGet(`subscriptions/${obj.subscription}`));
+        if (obj.subscription) await syncSubscription(await stripeGet(`subscriptions/${obj.subscription}`), event.id);
         break;
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted':
-        await syncSubscription(obj);
+        await syncSubscription(obj, event.id);
         break;
       case 'invoice.payment_failed':
-        if (obj.subscription) await syncSubscription(await stripeGet(`subscriptions/${obj.subscription}`));
+        if (obj.subscription) await syncSubscription(await stripeGet(`subscriptions/${obj.subscription}`), event.id);
         break;
       default:
         break; // andere Ereignisse ignorieren

@@ -2862,6 +2862,48 @@
     .pp-empty svg { width: 30px; height: 30px; }
     .pp-empty strong { display: block; margin: 6px 0 4px; color: var(--ink); font-size: 15px; }
     .pp-empty p { margin: 0; font-size: 13px; line-height: 1.5; }
+    /* Mein Tarif, Nutzung, gesperrte Bereiche */
+    .pp-lock { display: inline-flex; align-items: center; gap: 3px; margin-left: 8px; padding: 2px 7px; border-radius: 10px; background: var(--amber-soft); color: #87622b; font-size: 11px; font-weight: 700; vertical-align: middle; }
+    .pp-lock svg { width: 11px; height: 11px; }
+    .pp-item.is-locked .pp-item-icon { opacity: .55; }
+    .pp-locked { text-align: center; padding: 26px 18px; }
+    .pp-locked > svg { width: 30px; height: 30px; color: #87622b; }
+    .pp-locked h2 { margin: 8px 0 6px; font-size: 18px; }
+    .pp-locked p { margin: 0 auto 12px; max-width: 460px; color: var(--muted); line-height: 1.5; }
+    .pp-locked .pp-actions { justify-content: center; }
+    .pp-plan-now-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+    .pp-plan-now small { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+    .pp-plan-now h2 { margin: 2px 0; font-size: 22px; }
+    .pp-plan-now p { margin: 0; color: var(--muted); }
+    .pp-usage { padding: 9px 0; border-bottom: 1px solid var(--line); }
+    .pp-usage:last-of-type { border-bottom: 0; }
+    .pp-usage-head { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
+    .pp-usage-bar { height: 8px; margin-top: 6px; border-radius: 8px; background: #eef1ec; overflow: hidden; }
+    .pp-usage-bar i { display: block; height: 100%; border-radius: 8px; background: var(--green); }
+    .pp-usage-bar.unlimited i { width: 100%; opacity: .25; }
+    .pp-usage.amber .pp-usage-bar i { background: #d9a45b; }
+    .pp-usage.red .pp-usage-bar i { background: var(--red); }
+    .pp-usage small { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .pp-usage.red small { color: var(--red); }
+    .pp-plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+    .pp-plan { display: flex; flex-direction: column; gap: 4px; margin: 0; }
+    .pp-plan h3 { margin: 0; font-size: 17px; }
+    .pp-plan.current { border-color: var(--green); box-shadow: 0 0 0 1px var(--green) inset; }
+    .pp-plan.highlight:not(.current) { border-color: #d9a45b; }
+    .pp-plan-price { margin: 0; font-weight: 700; }
+    .pp-plan small { color: var(--muted); }
+    .pp-plan ul { margin: 6px 0 10px; padding-left: 18px; color: var(--muted); font-size: 13px; line-height: 1.45; flex: 1; }
+    .pp-plan > button, .pp-plan > .pp-badge { align-self: flex-start; }
+    .pp-plan-confirm { margin-top: 10px; border-color: var(--green); }
+    .pp-plan-confirm h3 { margin: 0 0 6px; font-size: 16px; }
+    .pp-plan-confirm ul { margin: 4px 0 8px; padding-left: 18px; line-height: 1.5; }
+    .pp-check { display: flex; gap: 8px; align-items: flex-start; margin: 6px 0; font-size: 14px; }
+    .pp-addon { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0; }
+    .pp-addon small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+    .pp-usage-hint { align-items: center; }
+    .pp-usage-hint .text-btn, .pp-msg .secondary-btn { margin-left: auto; flex: 0 0 auto; }
+    html.dark .pp-usage-bar { background: #252823; }
+    html.dark .pp-lock { color: #e2c08a; }
     .pp-tip { display: flex; gap: 12px; align-items: flex-start; }
     .pp-tip > svg { flex: 0 0 auto; width: 22px; height: 22px; color: var(--green); }
     .pp-tip p { margin: 3px 0 8px; color: var(--muted); font-size: 13px; line-height: 1.5; }
@@ -19061,7 +19103,7 @@ ab PRO|from PRO|från PRO
       if (!st.roles?.length) return '<section class="card"><h2 class="card-title">Husora Admin</h2><p class="card-caption">Dieser Bereich ist nur für das Husora-Team freigegeben.</p></section>';
       if (gate) return gate;
       const s = admS();
-      const tabs = [['gate', 'Release-Gate', true], ['imprint', 'Impressum', hasRole('content_admin')], ['reviews', 'Bewertungen', hasRole('content_admin')], ['partners', 'Partner-Nachweise', hasRole('content_admin')], ['requests', 'Datenschutz-Anfragen', hasRole('support_admin')], ['incidents', 'Vorfälle', hasRole('security_admin')], ['audit', 'Audit-Log', hasRole('security_admin')], ['providers', 'Drittanbieter', true]].filter(([, , ok]) => ok);
+      const tabs = [['gate', 'Release-Gate', true], ['imprint', 'Impressum', hasRole('content_admin')], ['reviews', 'Bewertungen', hasRole('content_admin')], ['partners', 'Partner-Nachweise', hasRole('content_admin')], ['requests', 'Datenschutz-Anfragen', hasRole('support_admin')], ['incidents', 'Vorfälle', hasRole('security_admin')], ['audit', 'Audit-Log', hasRole('security_admin')], ['providers', 'Drittanbieter', true], ['partnerplans', 'Partner-Tarife', hasRole('support_admin')]].filter(([, , ok]) => ok);
       if (!tabs.some(([id]) => id === s.tab)) s.tab = tabs[0][0];
       const d = s.data[s.tab];
       if (d === undefined) { admLoadTab(s.tab); }
@@ -19079,6 +19121,12 @@ ab PRO|from PRO|från PRO
         requests: () => cloudFetch('/rest/v1/privacy_requests?select=id,request_type,message,status,due_at,created_at,handler_note&order=created_at.desc&limit=200'),
         incidents: () => cloudFetch('/rest/v1/security_incidents?select=*&order=detected_at.desc&limit=100'),
         audit: () => cloudFetch('/rest/v1/security_audit_log?select=event_type,entity_type,metadata,created_at,actor_user_id&order=created_at.desc&limit=200'),
+        partnerplans: () => Promise.all([
+          cloudFetch('/rest/v1/partner_plans?select=*&order=sort_order.asc'),
+          cloudFetch('/rest/v1/partner_addon_catalog?select=*&order=sort_order.asc'),
+          cloudFetch('/rest/v1/rpc/admin_partner_plan_overview', { method: 'POST', body: {} }),
+          cloudFetch('/rest/v1/app_config?key=eq.partner_plans&select=value').then((r) => r?.[0]?.value || {})
+        ]).then(([plans, addons, orgs, config]) => ({ plans, addons, orgs, config })),
         providers: () => cloudFetch('/rest/v1/third_party_providers?select=key,provider_name,service,country,consent_category,processor_status,dpa_status,status,notes&order=consent_category,key')
       }[tab];
       try { s.data[tab] = await q(); } catch (error) { s.data[tab] = { error: /42501|Husora-Team|permission/.test(error.message) ? 'Keine Berechtigung für diesen Bereich.' : error.message }; }
@@ -19102,6 +19150,25 @@ ab PRO|from PRO|från PRO
         <form class="hub-form" data-incident-new><div class="pp-grid"><label class="full"><span class="form-label">Titel *</span><input class="form-control" name="title" required maxlength="200"></label><label><span class="form-label">Betroffenes System</span><input class="form-control" name="affected_system" maxlength="200"></label><label><span class="form-label">Schwere</span><select class="form-control" name="severity">${opt([['low', 'gering'], ['medium', 'mittel'], ['high', 'hoch'], ['critical', 'kritisch']], 'medium')}</select></label><label class="full"><span class="form-label">Betroffene Daten</span><input class="form-control" name="affected_data" maxlength="1000"></label></div><div class="settings-actions"><button type="submit" class="primary-btn">Vorfall erfassen</button></div></form>
         ${(d || []).map((i) => `<div class="beta-report"><div class="beta-report-head"><strong>${escapeHtml(i.title)}</strong><em class="beta-sev ${i.severity}">${escapeHtml(i.severity)}</em><select class="form-control" data-incident="${i.id}" data-field="notification_required">${opt([['to_assess', 'Meldepflicht: zu bewerten'], ['yes', 'Meldepflicht: ja'], ['no', 'Meldepflicht: nein']], i.notification_required)}</select>${i.resolved_at ? '<small>gelöst</small>' : `<button type="button" class="secondary-btn" data-incident-resolve="${i.id}">Als gelöst markieren</button>`}</div><small>erkannt ${escapeHtml(fmtDateTime(i.detected_at))}${i.affected_system ? ` · ${escapeHtml(i.affected_system)}` : ''}${i.affected_data ? ` · ${escapeHtml(i.affected_data)}` : ''}</small></div>`).join('')}`;
       if (tab === 'audit') return `<h2 class="card-title">Sicherheits-Audit-Log</h2><div class="legal-scroll"><table class="legal-table small"><tr><th>Zeit</th><th>Ereignis</th><th>Objekt</th><th>Details</th></tr>${(d || []).map((e) => `<tr><td>${escapeHtml(fmtDateTime(e.created_at))}</td><td>${escapeHtml(e.event_type)}</td><td>${escapeHtml(e.entity_type || '')}</td><td><code>${escapeHtml(JSON.stringify(e.metadata || {}))}</code></td></tr>`).join('')}</table></div>`;
+      if (tab === 'partnerplans') {
+        const gb = (n) => (n === null || n === undefined ? '' : Math.round(n / 1073741824 * 10) / 10);
+        const num = (v) => (v === null || v === undefined ? '' : v);
+        const limitCols = [['customers', 'Kunden'], ['properties', 'Objekte'], ['orders_month', 'Aufträge/Monat'], ['users', 'Benutzer']];
+        const planOpts = (cur) => d.plans.map((p) => `<option value="${escapeHtml(p.id)}" ${cur === p.id ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('');
+        return `<h2 class="card-title">Tarife für Servicepartner</h2>
+          <p class="card-caption">Keine Vermittlungsprovision. Leeres Limit = unbegrenzt. Preisänderungen gelten für neue Abschlüsse; bestehende Stripe-Abos ändern sich dadurch nicht automatisch.</p>
+          <label class="pp-check"><input type="checkbox" data-adm-pp-enforce ${d.config.enforce ? 'checked' : ''}> <span><strong>Limits und Funktionssperren aktiv</strong> – ausgeschaltet zeigt die App nur Tarif und Nutzung an.</span></label>
+          <div class="legal-scroll"><table class="legal-table small"><tr><th>Tarif</th><th>Aktiv</th><th>Preis €/Monat</th>${limitCols.map(([, l]) => `<th>${l}</th>`).join('')}<th>Speicher GB</th><th></th></tr>
+          ${d.plans.map((p) => `<tr data-adm-pp-plan="${escapeHtml(p.id)}"><td>${escapeHtml(p.name)}</td><td><input type="checkbox" name="is_active" ${p.is_active ? 'checked' : ''}></td><td><input class="form-control" name="price" type="number" min="0" step="0.01" value="${(p.price_monthly_cents / 100).toFixed(2)}"></td>${limitCols.map(([k]) => `<td><input class="form-control" name="${k}" type="number" min="0" value="${num(p.limits?.[k])}"></td>`).join('')}<td><input class="form-control" name="storage" type="number" min="0" step="0.1" value="${gb(p.limits?.storage_bytes)}"></td><td><button type="button" class="secondary-btn" data-adm-pp-save="${escapeHtml(p.id)}">Speichern</button></td></tr>`).join('')}</table></div>
+          <h3 class="beta-sub">Zusatzmodule</h3><div class="legal-scroll"><table class="legal-table small"><tr><th>Modul</th><th>Aktiv</th><th>Preis €/Monat</th><th></th></tr>
+          ${d.addons.map((a) => `<tr data-adm-pp-addon="${escapeHtml(a.code)}"><td>${escapeHtml(a.name)}</td><td><input type="checkbox" name="is_active" ${a.is_active ? 'checked' : ''}></td><td><input class="form-control" name="price" type="number" min="0" step="0.01" value="${(a.price_monthly_cents / 100).toFixed(2)}"></td><td><button type="button" class="secondary-btn" data-adm-pp-addon-save="${escapeHtml(a.code)}">Speichern</button></td></tr>`).join('')}</table></div>
+          <h3 class="beta-sub">Servicebetriebe</h3>
+          ${(d.orgs || []).map((o) => { const e = o.entitlements || {}; const sub = o.subscription; return `<div class="beta-report"><div class="beta-report-head"><strong>${escapeHtml(o.name)}</strong><small>${escapeHtml(e.plan_name || 'Free')} · ${escapeHtml(sub?.status || 'ohne Abo')}${sub?.current_period_end ? ` · bis ${escapeHtml(fmtDate(sub.current_period_end))}` : ''}${sub?.billing_provider ? ` · ${escapeHtml(sub.billing_provider)}` : ''}</small></div>
+            <p class="settings-hint">${limitCols.map(([k, l]) => `${l}: ${e.usage?.[k] ?? 0}${e.limits?.[k] === null || e.limits?.[k] === undefined ? '' : `/${e.limits[k]}`}`).join(' · ')}${(e.addons || []).length ? ` · Module: ${e.addons.map((a) => `${escapeHtml(a.name)} (${a.status === 'active' ? 'aktiv' : 'angefragt'})`).join(', ')}` : ''}</p>
+            <form class="rel-form" data-adm-pp-sub="${o.organization_id}"><label><span class="form-label">Tarif</span><select class="form-control" name="plan_id">${planOpts(sub?.plan_id || e.plan_id)}</select></label><label><span class="form-label">Status</span><select class="form-control" name="status">${['active', 'trialing', 'past_due', 'canceled', 'incomplete'].map((v) => `<option ${(sub?.status || 'active') === v ? 'selected' : ''}>${v}</option>`).join('')}</select></label><label><span class="form-label">Gültig bis (leer = offen)</span><input class="form-control" type="date" name="end" value="${sub?.current_period_end ? escapeHtml(sub.current_period_end.slice(0, 10)) : ''}"></label><label><span class="form-label">Notiz</span><input class="form-control" name="note" maxlength="200" value="${escapeHtml(sub?.note || '')}"></label><button class="secondary-btn" type="submit">Tarif setzen (manuell)</button></form>
+            ${(e.addons || []).filter((a) => a.status === 'requested').map((a) => `<button type="button" class="secondary-btn" data-adm-pp-addon-activate="${o.organization_id}|${escapeHtml(a.code)}">${escapeHtml(a.name)} freigeben</button>`).join('')}
+            <form class="rel-form" data-adm-pp-ent="${o.organization_id}"><label><span class="form-label">Freischaltung</span><input class="form-control" name="feature_key" required placeholder="z. B. customers, api_access" pattern="[a-z][a-z0-9_]*"></label><label><span class="form-label">Limit (leer = Funktion an)</span><input class="form-control" name="limit" type="number" min="0"></label><label><span class="form-label">Gültig bis</span><input class="form-control" type="date" name="until"></label><label><span class="form-label">Grund *</span><input class="form-control" name="reason" required maxlength="200"></label><button class="secondary-btn" type="submit">Freischalten</button></form></div>`; }).join('') || '<p class="settings-hint">Noch keine Servicebetriebe.</p>'}`;
+      }
       if (tab === 'providers') return `<h2 class="card-title">Drittanbieter-Register</h2><p class="card-caption">Kein Anbieter gilt als „freigegeben“, bevor Vertrag und Einstellungen geprüft sind. Gesperrte Anbieter lädt die App nicht.</p><div class="legal-scroll"><table class="legal-table small"><tr><th>Anbieter</th><th>Dienst</th><th>Land</th><th>Kategorie</th><th>AVV</th><th>Status</th></tr>${(d || []).map((p) => `<tr><td>${escapeHtml(p.provider_name)}</td><td>${escapeHtml(p.service)}</td><td>${escapeHtml(p.country)}</td><td>${escapeHtml(p.consent_category)}</td><td>${escapeHtml(p.dpa_status)}</td><td>${hasRole('super_admin') ? `<select class="form-control" data-provider-status="${p.key}">${opt([['unknown', 'unbekannt'], ['under_review', 'in Prüfung'], ['approved', 'freigegeben'], ['blocked', 'gesperrt']], p.status)}</select>` : escapeHtml(p.status)}</td></tr>`).join('')}</table></div>`;
       return '';
     }
@@ -19166,6 +19233,52 @@ ab PRO|from PRO|från PRO
     // Einladungscode, Wartung, Fehlerbehandlung, Deep Links, native App (Capacitor), Admin-Übersicht =====
     // Laufzeit-Konfiguration aus dem Build (tools/build-app.mjs). Fehlt sie (GitHub-Pages-Web-App), gilt das bisherige Verhalten.
     function hzRuntime() { try { return window.HUSORA_RUNTIME || null; } catch (error) { return null; } }
+    // Adminbereich „Partner-Tarife“ (Schreiben nur Super-Admin mit zweitem Faktor; RLS prüft serverseitig)
+    function admPpDone(msg = 'Gespeichert.') { showToast(msg); delete admS().data.partnerplans; render(); }
+    const admPpCents = (v) => Math.round(Number(String(v).replace(',', '.')) * 100);
+    const admPpWrite = async (path, method, body) => { const rows = await cloudFetch(path, { method, body, headers: { Prefer: 'return=representation' } }); if (!Array.isArray(rows) || !rows.length) throw new Error('Keine Berechtigung (Super-Admin mit zweitem Faktor erforderlich).'); return rows; };
+    document.addEventListener('change', (event) => {
+      if (!event.target.matches?.('[data-adm-pp-enforce]')) return;
+      relSaveConfig('partner_plans', { enforce: event.target.checked }).then(() => admPpDone(event.target.checked ? 'Limits für Servicepartner sind jetzt aktiv.' : 'Limits für Servicepartner ausgeschaltet.')).catch((e) => { showToast(e.message); admPpDone(''); });
+    });
+    document.addEventListener('click', (event) => {
+      const save = event.target.closest('[data-adm-pp-save]');
+      if (save) {
+        const row = save.closest('tr'); const plan = admS().data.partnerplans?.plans?.find((p) => p.id === save.dataset.admPpSave); if (!plan || !row) return;
+        const val = (n) => row.querySelector(`[name=${n}]`).value;
+        const limits = { ...plan.limits };
+        ['customers', 'properties', 'orders_month', 'users'].forEach((k) => { limits[k] = val(k) === '' ? null : Number(val(k)); });
+        limits.storage_bytes = val('storage') === '' ? null : Math.round(Number(val('storage')) * 1073741824);
+        admPpWrite(`/rest/v1/partner_plans?id=eq.${encodeURIComponent(plan.id)}`, 'PATCH', { price_monthly_cents: admPpCents(val('price')), is_active: row.querySelector('[name=is_active]').checked, limits }).then(() => admPpDone(`${plan.name} gespeichert – gilt sofort.`)).catch((e) => showToast(e.message));
+        return;
+      }
+      const addon = event.target.closest('[data-adm-pp-addon-save]');
+      if (addon) {
+        const row = addon.closest('tr');
+        admPpWrite(`/rest/v1/partner_addon_catalog?code=eq.${encodeURIComponent(addon.dataset.admPpAddonSave)}`, 'PATCH', { price_monthly_cents: admPpCents(row.querySelector('[name=price]').value), is_active: row.querySelector('[name=is_active]').checked }).then(() => admPpDone()).catch((e) => showToast(e.message));
+        return;
+      }
+      const act = event.target.closest('[data-adm-pp-addon-activate]');
+      if (act) {
+        const [org, code] = act.dataset.admPpAddonActivate.split('|');
+        admPpWrite(`/rest/v1/partner_addons?organization_id=eq.${org}&addon_code=eq.${encodeURIComponent(code)}&status=eq.requested`, 'PATCH', { status: 'active' }).then(() => admPpDone('Zusatzmodul freigegeben.')).catch((e) => showToast(e.message));
+      }
+    });
+    document.addEventListener('submit', (event) => {
+      const sub = event.target.closest('[data-adm-pp-sub]');
+      const ent = event.target.closest('[data-adm-pp-ent]');
+      if (!sub && !ent) return;
+      event.preventDefault();
+      const v = Object.fromEntries(new FormData(sub || ent));
+      if (sub) {
+        const body = { organization_id: sub.dataset.admPpSub, plan_id: v.plan_id, status: v.status, billing_provider: 'manual', current_period_end: v.end ? new Date(`${v.end}T23:59:59`).toISOString() : null, note: v.note || null };
+        admPpWrite('/rest/v1/partner_subscriptions?on_conflict=organization_id', 'POST', body).catch(async (e) => { if (!/duplicate|conflict|409/i.test(e.message)) throw e; return admPpWrite(`/rest/v1/partner_subscriptions?organization_id=eq.${body.organization_id}`, 'PATCH', body); })
+          .then(() => admPpDone('Tarif gesetzt.')).catch((e) => showToast(e.message));
+      } else {
+        admPpWrite('/rest/v1/partner_entitlements', 'POST', { organization_id: ent.dataset.admPpEnt, feature_key: v.feature_key.trim(), limit_override: v.limit === '' ? null : Number(v.limit), enabled: true, valid_until: v.until ? new Date(`${v.until}T23:59:59`).toISOString() : null, reason: v.reason.trim() })
+          .then(() => admPpDone('Freischaltung gespeichert.')).catch((e) => showToast(e.message));
+      }
+    });
     function hzNative() { try { return Boolean(window.Capacitor?.isNativePlatform?.()); } catch (error) { return false; } }
     function hzNativePlatform() { try { return hzNative() ? String(window.Capacitor.getPlatform() || '') : ''; } catch (error) { return ''; } }
     function hzPlugin(name) { try { return window.Capacitor?.Plugins?.[name] || null; } catch (error) { return null; } }
@@ -22027,6 +22140,8 @@ ab PRO|from PRO|från PRO
       if (/password/i.test(message) && /(characters|weak|short|length)/i.test(message)) return 'Das Passwort ist zu kurz oder zu einfach (mindestens 8 Zeichen).';
       if (/signups? not allowed|signup.*disabled/i.test(message)) return 'Neue Konten sind in diesem Supabase-Projekt deaktiviert.';
       if (/rate limit/i.test(message)) return 'Zu viele Versuche – bitte kurz warten und erneut versuchen.';
+      // Tariflimits (Servicepartner): verständliche Meldung des Servers unverändert zeigen
+      if (data && typeof data === 'object' && data.hint === 'husora_plan_limit' && message) return message;
       if (status === 404 || /could not find|does not exist|schema cache/i.test(message)) return 'Husora-Tabellen nicht gefunden – bitte zuerst die Husora-Datenbank in das Supabase-Projekt einspielen (siehe Hinweis unten).';
       if (status === 401 || status === 403 || /row-level security|permission denied|JWT/i.test(message)) return 'Keine Berechtigung – bitte abmelden und erneut anmelden.';
       if (status === 413) return 'Die Daten sind zu groß für eine einzelne Übertragung.';
@@ -22926,7 +23041,7 @@ ab PRO|from PRO|från PRO
       return PP_NAV_DEFAULT.slice();
     }
     function ppNavItems() { return [...ppNavSlots().map((id) => PP_NAV_CHOICES.find(([c]) => c === id)), PP_NAV[PP_NAV.length - 1]]; }
-    const PP_MORE_VIEWS = ['customers', 'inspections', 'defects', 'documents', 'finance', 'agreements', 'services', 'team', 'company', 'settings'];
+    const PP_MORE_VIEWS = ['customers', 'inspections', 'defects', 'documents', 'finance', 'agreements', 'services', 'team', 'company', 'plan', 'settings'];
     const pp = { open: false, view: 'dashboard', detail: null, filter: 'active', busy: '', error: '', notice: '', ctx: null, data: null, loadedAt: '', thumbs: {}, form: null };
     try { const cached = JSON.parse(localStorage.getItem(PP_CACHE_KEY) || 'null'); if (cached?.ctx) Object.assign(pp, { ctx: cached.ctx, data: cached.data, loadedAt: cached.loadedAt }); } catch (error) { /* kein Cache */ }
     const ppMode = () => { try { return localStorage.getItem(PP_MODE_KEY) || ''; } catch (error) { return ''; } };
@@ -23020,7 +23135,7 @@ ab PRO|from PRO|från PRO
         if (org) {
           const self = pp.ctx.self_partner_id;
           const propSel = 'id,name,description,street,house_number,postal_code,city,region,country,latitude,longitude,organization_id,owner_customer_id,property_type,living_area_m2,land_area_m2,bedrooms,bathrooms,max_guests,year_built';
-          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items] = await Promise.all([
+          const [orders, inspections, quotes, invoices, messages, customers, props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items, ent, planCatalog, addonCatalog] = await Promise.all([
             ppQ(`service_orders?select=*,property:properties(${propSel})&order=scheduled_at.asc.nullslast&limit=500`),
             ppQ(`inspections?select=*,property:properties(${propSel}),items:inspection_items(id,category,name,status,notes,estimated_cost,checked_at)&order=scheduled_at.desc.nullslast&limit=200`),
             ppQ('quotes?select=*&order=created_at.desc&limit=200'),
@@ -23046,9 +23161,12 @@ ab PRO|from PRO|från PRO
             ppQ(`service_order_cost_items?organization_id=eq.${org.id}&select=*&order=created_at.asc&limit=3000`).catch(() => []),
             ppQ('approval_requests?select=id,organization_id,service_order_id,service_partner_id,title,description,amount,currency,status,auto_approved,response_note,created_at,decided_at&order=created_at.desc&limit=500').catch(() => []),
             ppQ('service_partner_reviews?select=id,organization_id,service_order_id,rating,comment,partner_reply,replied_at,created_at&order=created_at.desc&limit=200').catch(() => []),
-            ppQ('service_order_items?select=*&order=sort_order.asc&limit=3000').catch(() => [])
+            ppQ('service_order_items?select=*&order=sort_order.asc&limit=3000').catch(() => []),
+            ppRpc('partner_entitlements', { p_organization_id: org.id }).catch(() => null),
+            ppQ('partner_plans?select=id,code,name,tagline,price_monthly_cents,currency,sort_order,highlight,is_active,limits,features,highlights&order=sort_order.asc').catch(() => []),
+            ppQ('partner_addon_catalog?select=code,name,description,price_monthly_cents,price_is_from,currency,usage_based_note,sort_order&order=sort_order.asc').catch(() => [])
           ]);
-          pp.data = { orders, inspections, quotes, invoices, messages: ppWithoutHidden(messages), customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items };
+          pp.data = { orders, inspections, quotes, invoices, messages: ppWithoutHidden(messages), customers, properties: props, members, services, types, templates, photos, documents, invites, agreements, invoiceLines, docArchive, assignments, propNotes, areas, absences, repairs, costItems, approvals, reviews, items, ent, planCatalog, addonCatalog };
           pp.access = {};
           if (!pp.obPulled) { pp.obPulled = true; obPull('service_partner').then(() => { obPartnerSync(); if (pp.view === 'setup' || pp.view === 'dashboard') ppRender(); }); }
         } else {
@@ -23145,7 +23263,7 @@ ab PRO|from PRO|från PRO
     const PP_VIEW_TITLES = { orders: ['Arbeit', 'Aufträge'], calendar: ['Arbeit', 'Kalender'], messages: ['Kunden', 'Nachrichten'], more: ['Servicepartner', 'Mehr'],
       customers: ['Kunden', 'Kunden & Objekte'], inspections: ['Arbeit', 'Kontrollen'], defects: ['Arbeit', 'Mängel'], documents: ['Kunden', 'Dokumente'],
       agreements: ['Finanzen', 'Jahresverträge'], finance: ['Finanzen', 'Angebote & Rechnungen'], services: ['Betrieb', 'Leistungen'], team: ['Betrieb', 'Mitarbeiter'],
-      company: ['Betrieb', 'Firma'], settings: ['App', 'Einstellungen'], setup: ['Servicepartner', 'Einrichtung'] };
+      company: ['Betrieb', 'Firma'], plan: ['Betrieb', 'Mein Tarif'], settings: ['App', 'Einstellungen'], setup: ['Servicepartner', 'Einrichtung'] };
     function ppTopTitle() {
       const d = pp.detail;
       if (d?.type === 'order') { const o = ppD('orders').find((x) => x.id === d.id); return ['Auftrag', o?.title || 'Auftrag']; }
@@ -23178,7 +23296,9 @@ ab PRO|from PRO|från PRO
       else if (!pp.ctx && pp.busy === 'load') body = ppSkeleton();
       else if (!org) body = ppOnboardingHtml();
       else body = relSafeHtml(() => ppViewHtml(), `partner:${pp.view}`, true);
-      const messages = `${pp.error ? `<p class="pp-msg error" role="alert">${icon('alert')}<span>${escapeHtml(pp.error)}</span></p>` : ''}`;
+      // Tariflimit erreicht (Meldung vom Server): direkt zur Tarifseite anbieten
+      const planLimitHit = /limit von .+ erreicht/i.test(pp.error || '');
+      const messages = `${pp.error ? `<p class="pp-msg error" role="alert">${icon('alert')}<span>${escapeHtml(pp.error)}</span>${planLimitHit && pp.view !== 'plan' ? '<button type="button" class="secondary-btn" data-pp-view="plan">Tarife ansehen</button>' : ''}</p>` : ''}`;
       const navItems = ppNavItems();
       const navActive = (id) => pp.view === id || (id === 'more' && !navItems.some(([v]) => v === pp.view));
       const navBadge = (id) => { const n = id === 'orders' ? ppD('orders').filter((o) => o.status === 'offered').length : id === 'messages' ? ppD('messages').filter((m) => !m.read_at && m.sender_user_id !== ppMe()).length : id === 'more' ? ppD('inspections').filter((i) => i.status === 'in_progress').length : 0; return n ? `<b class="pp-dot">${n > 9 ? '9+' : n}</b>` : ''; };
@@ -23441,7 +23561,8 @@ ab PRO|from PRO|från PRO
       if (pp.detail?.type === 'inspection') return ppInspectionDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'customer') return ppCustomerDetailHtml(pp.detail.id);
       if (pp.detail?.type === 'chat') return ppChatHtml(pp.detail.id);
-      return ({ dashboard: ppDashboardHtml, setup: ppSetupHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, agreements: ppAgreementsHtml, defects: ppDefectsHtml, settings: ppSettingsHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
+      if (ppLockFeature(pp.view)) return ppLockedHtml(pp.view);
+      return ({ plan: ppPlanHtml, dashboard: ppDashboardHtml, setup: ppSetupHtml, orders: ppOrdersHtml, customers: ppCustomersHtml, calendar: ppCalendarHtml, inspections: ppInspectionsHtml, messages: ppMessagesHtml, documents: ppDocumentsHtml, more: ppMoreHtml, finance: ppFinanceHtml, agreements: ppAgreementsHtml, defects: ppDefectsHtml, settings: ppSettingsHtml, services: ppServicesHtml, team: ppTeamHtml, company: ppCompanyHtml }[pp.view] || ppDashboardHtml)();
     }
     function ppOrderCard(o) {
       const prio = PP_PRIORITY[o.priority] && o.priority !== 'normal' ? `<em class="pp-prio ${o.priority}">${escapeHtml(PP_PRIORITY[o.priority])}</em>` : '';
@@ -23990,7 +24111,7 @@ ab PRO|from PRO|från PRO
       const own = customers.filter((c) => !c.linked_organization_id);
       const propsOf = (c) => ppD('properties').filter((p) => (c.linked_organization_id ? p.organization_id === c.linked_organization_id : p.owner_customer_id === c.id));
       const card = (c) => `<button type="button" class="pp-item" data-pp-open="customer:${c.id}"><span class="pp-item-main"><strong>${escapeHtml(ppCustomerLabel(c))}</strong><small>${c.linked_organization_id ? 'Husora-Kunde · verbunden' : escapeHtml([c.city, c.email].filter(Boolean).join(' · ') || 'Eigener Kunde')}</small><small>${propsOf(c).length} Objekt${propsOf(c).length === 1 ? '' : 'e'} · ${ppD('orders').filter((o) => propsOf(c).some((p) => p.id === o.property_id)).length} Aufträge</small></span>${icon('arrow')}</button>`;
-      return `${ppBack()}<div class="pp-page-head"><h1>Kunden & Objekte</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-customer">${icon('plus')} Kunde</button>` : ''}</div>
+      return `${ppBack()}<div class="pp-page-head"><h1>Kunden & Objekte</h1>${ppIsLead() ? `<button type="button" class="primary-btn" data-pp-action="new-customer">${icon('plus')} Kunde</button>` : ''}</div>${ppUsageHint(['customers', 'properties'])}
         ${ppIsLead() ? `<form class="pp-card pp-form pp-compact" data-pp-form="invite-code"><h3>Einladung eines Hausbesitzers</h3><div class="pp-inline"><input class="form-control pp-code" name="code" placeholder="HUS-XXXX-XXXX" autocapitalize="characters" required><button class="primary-btn" type="submit" ${ppDisabled()}>Verbinden</button></div><p class="pp-hint">Den Code erzeugt dein Kunde in seiner Husora-App. Danach siehst du seine Aufträge und die betroffenen Häuser.</p></form>` : ''}
         ${pp.form === 'new-customer' ? ppCustomerFormHtml() : ''}
         ${ppSection(`Husora-Kunden (${linked.length})`, `<div class="pp-list">${linked.map(card).join('') || '<p class="pp-muted">Noch kein Hausbesitzer verbunden.</p>'}</div>`)}
@@ -24807,7 +24928,7 @@ ab PRO|from PRO|från PRO
       if (event.target.closest('#partner-portal .pp-embed button')) setTimeout(() => { if (pp.view === 'settings') { pp.keepScroll = true; ppRender(); } }, 400);
     });
     function ppMoreHtml() {
-      const item = (view, label, caption, ic) => `<button type="button" class="pp-item" data-pp-view="${view}"><span class="pp-item-icon">${icon(ic)}</span><span class="pp-item-main"><strong>${label}</strong><small>${caption}</small></span>${icon('arrow')}</button>`;
+      const item = (view, label, caption, ic) => `<button type="button" class="pp-item ${ppLockFeature(view) ? 'is-locked' : ''}" data-pp-view="${view}"><span class="pp-item-icon">${icon(ic)}</span><span class="pp-item-main"><strong>${label}${ppLockTag(view)}</strong><small>${caption}</small></span>${icon('arrow')}</button>`;
       const custCount = ppD('customers').length;
       const openInsp = ppD('inspections').filter((i) => ['scheduled', 'in_progress'].includes(i.status)).length;
       return `<div class="pp-page-head"><h1>Mehr</h1></div><div class="pp-list">
@@ -24821,12 +24942,139 @@ ab PRO|from PRO|från PRO
         ${item('services', 'Leistungen', ppD('services').filter((s) => s.active && PP_SERVICE_GROUPS.some(([code]) => ppD('types').find((t) => t.id === s.service_type_id)?.code === code)).map((s) => ppD('types').find((t) => t.id === s.service_type_id)?.name).join(' · ') || 'Hauskontrolle, Servicearbeiten, Sanierungen', 'check')}
         ${item('team', 'Mitarbeiter', `${ppD('members').length} im Team`, 'users')}
         ${item('company', 'Firma', 'Firmendaten, Bank, Öffnungszeiten', 'gear')}
+        ${item('plan', 'Mein Tarif', ((e) => (e ? `${escapeHtml(e.plan_name)} · ${e.usage?.customers ?? 0}${e.limits?.customers ? `/${e.limits.customers}` : ''} Kunden` : 'Tarif, Nutzung, Zusatzmodule'))(ppEnt()), 'cost')}
         </div><div class="pp-list" style="margin-top:12px">
         ${item('settings', 'Einstellungen', 'Startseite, Darstellung, Sprache, Daten & App, Über Husora', 'gear')}
         </div>
         <div class="pp-card pp-tip">${icon('home')}<div><strong>Auch Hausbesitzer?</strong><p>Mit demselben Konto verwaltest du in der Hausbesitzer-Ansicht deine eigenen Ferienhäuser.</p><button type="button" class="secondary-btn" data-pp-action="close">Zur Hausbesitzer-Ansicht</button></div></div>
         <div class="pp-actions"><button type="button" class="secondary-btn danger" data-pp-action="signout">Abmelden</button></div>`;
     }
+    // ----- Tarif des Servicebetriebs („Mein Tarif“) -----
+    // Rechte, Limits und Nutzung kommen vom Server (partner_entitlements); hier wird nichts fest codiert.
+    // Gesperrte Bereiche bleiben sichtbar, sind gekennzeichnet und erklären, ab welchem Tarif sie gehen.
+    const PP_PLAN_GATES = { calendar: ['calendar', 'Kalender und Terminverwaltung'], defects: ['repairs', 'Reparatur- und Mängelmeldungen'], finance: ['quotes_basic', 'Angebote und Rechnungsdokumentation'], agreements: ['recurring_basic', 'Wiederkehrende Aufgaben und Jahresverträge'], team: ['employee_management', 'Mitarbeiterverwaltung mit Rollen und Rechten'] };
+    const PP_LIMIT_ROWS = [['customers', 'Kunden'], ['properties', 'Objekte'], ['orders_month', 'Eigene Aufträge im Monat'], ['users', 'Benutzer'], ['storage_bytes', 'Speicher']];
+    const PP_SUB_STATUS = { trialing: ['Testphase', 'blue'], active: ['Aktiv', 'green'], past_due: ['Zahlung offen', 'amber'], canceled: ['Gekündigt', 'muted'], incomplete: ['Zahlung nicht bestätigt', 'amber'], none: ['Aktiv', 'green'] };
+    const ppEnt = () => pp.data?.ent || null;
+    const ppPlans = () => (pp.data?.planCatalog || []).filter((p) => p.is_active !== false);
+    const ppPlanFor = (feature) => ppPlans().find((p) => (p.features || []).includes(feature)) || null;
+    function ppLockFeature(view) {
+      const gate = PP_PLAN_GATES[view];
+      const ent = ppEnt();
+      if (!gate || !ent || !ent.enforced) return null;
+      return (ent.features || []).includes(gate[0]) ? null : gate;
+    }
+    const ppLockTag = (view) => { const gate = ppLockFeature(view); if (!gate) return ''; const plan = ppPlanFor(gate[0]); return `<span class="pp-lock" title="Im aktuellen Tarif nicht enthalten">${icon('lock')}${plan ? `ab ${escapeHtml(plan.name)}` : 'Tarif'}</span>`; };
+    function ppLockedHtml(view) {
+      const gate = ppLockFeature(view);
+      const plan = ppPlanFor(gate[0]);
+      return `${ppBack()}<div class="pp-card pp-locked">${icon('lock')}<h2>${escapeHtml(gate[1])}</h2>
+        <p>Diese Funktion ist in deinem Tarif <strong>${escapeHtml(ppEnt()?.plan_name || 'Free')}</strong> nicht enthalten${plan ? ` und ab <strong>${escapeHtml(plan.name)}</strong> (${ppPriceText(plan)}) verfügbar` : ''}. Deine vorhandenen Daten bleiben erhalten.</p>
+        <div class="pp-actions"><button type="button" class="primary-btn" data-pp-view="plan">Tarife vergleichen</button></div></div>`;
+    }
+    const ppPriceText = (plan) => (Number(plan?.price_monthly_cents || 0) ? `${(plan.price_monthly_cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2 })} € netto/Monat` : 'kostenlos');
+    const ppFmtLimit = (key, n) => (n === null || n === undefined ? 'Unbegrenzt' : key === 'storage_bytes' ? (n >= 1073741824 ? `${(n / 1073741824).toLocaleString('de-DE', { maximumFractionDigits: 1 })} GB` : `${Math.round(n / 1048576)} MB`) : Number(n).toLocaleString('de-DE'));
+    function ppUsageRow(key, label) {
+      const ent = ppEnt();
+      const used = Number(ent?.usage?.[key] || 0);
+      const limit = ent?.limits?.[key];
+      const share = limit ? Math.min(used / limit, 1) : 0;
+      // Benutzer: alle Plätze belegt ist normal (Free/Plus = 1 Benutzer) – nur neutral kennzeichnen
+      const full = limit && used >= limit;
+      const tone = full ? (key === 'users' ? 'amber' : 'red') : limit && share >= 0.8 ? 'amber' : '';
+      const note = !limit ? '' : full ? (key === 'users' ? 'Alle Benutzerplätze belegt' : ent.enforced ? 'Limit erreicht – neue Einträge sind gesperrt' : 'Limit erreicht') : share >= 0.8 ? 'Bald erreicht' : '';
+      return `<div class="pp-usage ${tone}" data-pp-usage="${key}"><div class="pp-usage-head"><span>${escapeHtml(label)}</span><b>${ppFmtLimit(key, used)}${limit === null || limit === undefined ? '' : ` / ${ppFmtLimit(key, limit)}`}</b></div>${limit ? `<div class="pp-usage-bar"><i style="width:${Math.round(share * 100)}%"></i></div>` : '<div class="pp-usage-bar unlimited"><i></i></div>'}${note ? `<small>${escapeHtml(note)}</small>` : ''}</div>`;
+    }
+    // Kurzer Hinweis über Listen (ab 80 % Nutzung), z. B. bei Kunden & Objekten
+    function ppUsageHint(keys) {
+      const ent = ppEnt();
+      if (!ent) return '';
+      const hits = keys.map((key) => { const limit = ent.limits?.[key]; const used = Number(ent.usage?.[key] || 0); return limit && used / limit >= 0.8 ? { key, used, limit } : null; }).filter(Boolean);
+      if (!hits.length) return '';
+      const full = hits.some((h) => h.used >= h.limit);
+      const label = { customers: 'Kunden', properties: 'Objekte', orders_month: 'eigene Aufträge in diesem Monat', users: 'Benutzer' };
+      return `<div class="pp-msg ${full && ent.enforced ? 'error' : ''} pp-usage-hint" role="status">${icon('alert')}<span>${hits.map((h) => `${h.used} von ${h.limit} ${label[h.key] || h.key}`).join(' · ')} im Tarif ${escapeHtml(ent.plan_name)}.${full && ent.enforced ? ' Neue Einträge sind gesperrt, bis du den Tarif wechselst.' : ''}</span><button type="button" class="text-btn" data-pp-view="plan">Mein Tarif</button></div>`;
+    }
+    function ppPlanHtml() {
+      const ent = ppEnt();
+      if (!ent) return `${ppBack()}<div class="pp-page-head"><h1>Mein Tarif</h1></div>${ppEmpty('Tarif wird geladen', 'Bitte kurz warten oder oben auf Aktualisieren tippen.')}`;
+      const st = PP_SUB_STATUS[ent.status] || PP_SUB_STATUS.active;
+      const current = ppPlans().find((p) => p.id === ent.plan_id);
+      const endText = ent.current_period_end ? fmtDate(ent.current_period_end) : '';
+      const canceled = ent.cancel_at_period_end || (ent.status === 'canceled' && ent.current_period_end);
+      const order = ppPlans();
+      const idx = (id) => order.findIndex((p) => p.id === id);
+      const sel = pp.planPick ? order.find((p) => p.id === pp.planPick) : null;
+      const preview = pp.planPreview && pp.planPreview.plan_id === pp.planPick ? pp.planPreview : null;
+      const limitLabel = Object.fromEntries(PP_LIMIT_ROWS);
+      const pick = sel ? `<div class="pp-card pp-plan-confirm" data-pp-plan-confirm>
+          <h3>${idx(sel.id) > idx(ent.plan_id) ? 'Upgrade' : 'Wechsel'} auf ${escapeHtml(sel.name)} · ${ppPriceText(sel)}</h3>
+          ${!preview ? '<p class="pp-hint">Prüfe, was sich ändert …</p>' : preview.over_limit.length || preview.features_lost.length ? `<p><strong>Das ändert sich nach dem Wechsel:</strong></p><ul>${preview.over_limit.map((o) => `<li>${escapeHtml(limitLabel[o.key] || o.key)}: du nutzt ${ppFmtLimit(o.key, o.used)}, ${escapeHtml(sel.name)} erlaubt ${ppFmtLimit(o.key, o.limit)}. Vorhandene Einträge bleiben erhalten, neue werden gesperrt.</li>`).join('')}${preview.features_lost.length ? `<li>${preview.features_lost.length} Funktion${preview.features_lost.length === 1 ? '' : 'en'} sind danach gesperrt (sichtbar, aber nicht nutzbar).</li>` : ''}</ul><p class="pp-hint">Es werden keine Daten gelöscht.</p>` : '<p class="pp-hint">Alle deine Daten passen in diesen Tarif. Es wird nichts gelöscht.</p>'}
+          ${ppPaymentsOn() && Number(sel.price_monthly_cents) > 0 ? `<label class="pp-check"><input type="checkbox" name="terms"> <span>Ich akzeptiere die AGB.</span></label><label class="pp-check"><input type="checkbox" name="waiver"> <span>Ich habe den Widerrufshinweis gelesen.</span></label>` : ''}
+          <div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="plan-cancel-pick">Abbrechen</button>${ppPaymentsOn() ? `<button type="button" class="primary-btn" data-pp-action="plan-checkout" data-plan="${escapeHtml(sel.id)}" ${ppDisabled()}>${Number(sel.price_monthly_cents) > 0 ? 'Weiter zur Zahlung' : 'Zum Kundenportal (Kündigung)'}</button>` : `<a class="primary-btn" href="${ppPlanMail(sel)}">Wechsel per E-Mail anfragen</a>`}</div>
+          ${ppPaymentsOn() ? '' : '<p class="pp-hint">Während der Beta werden Tarife noch nicht online bezahlt. Das Husora-Team stellt den Tarif für dich um.</p>'}
+        </div>` : '';
+      const addonPick = pp.addonPick ? (pp.data?.addonCatalog || []).find((a) => a.code === pp.addonPick) : null;
+      const myAddon = (code) => (ent.addons || []).find((a) => a.code === code);
+      return `${ppBack()}<div class="pp-page-head"><h1>Mein Tarif</h1></div>
+        ${ent.enforced ? '' : '<p class="pp-msg">' + icon('help') + '<span>Beta: Die Tariflimits sind noch nicht aktiv. Du siehst hier schon, was dein Tarif enthält und wie viel du nutzt.</span></p>'}
+        <div class="pp-card pp-plan-now"><div class="pp-plan-now-head"><div><small>Aktueller Tarif</small><h2>${escapeHtml(ent.plan_name)}</h2><p>${ppPriceText(current || ent)}</p></div><span class="pp-badge ${st[1]}">${escapeHtml(canceled ? 'Gekündigt' : st[0])}</span></div>
+          ${canceled && endText ? `<p class="pp-hint">Gekündigt zum ${escapeHtml(endText)}. Bis dahin bleibt ${escapeHtml(ent.plan_name)} aktiv, danach gilt Free. Deine Daten bleiben erhalten.</p>` : endText && Number(ent.price_monthly_cents) > 0 ? `<p class="pp-hint">Nächste Abrechnung am ${escapeHtml(endText)}.</p>` : ''}
+          ${ent.status === 'past_due' ? '<p class="pp-msg error">' + icon('alert') + '<span>Die letzte Zahlung ist fehlgeschlagen. Bitte die Zahlungsart prüfen, sonst gilt nach kurzer Frist wieder Free.</span></p>' : ''}
+          ${ent.billing_provider === 'stripe' && ppIsAdmin() ? `<div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="plan-portal" ${ppDisabled()}>Rechnungen, Zahlungsart, Kündigung</button></div>` : ''}
+        </div>
+        ${ppSection('Nutzung', `<div class="pp-card">${PP_LIMIT_ROWS.map(([k, l]) => ppUsageRow(k, l)).join('')}<p class="pp-hint">Eigene Aufträge zählen je Kalendermonat (${escapeHtml(fmtDate(ent.order_period_start))} bis ${escapeHtml(fmtDate(new Date(new Date(ent.order_period_end).getTime() - 86400000).toISOString()))}). Aufträge, die dir Hausbesitzer schicken, zählen nicht.</p></div>`)}
+        ${ppSection('Tarife vergleichen', `<div class="pp-plan-grid">${order.map((p) => `<div class="pp-card pp-plan ${p.id === ent.plan_id ? 'current' : ''} ${p.highlight ? 'highlight' : ''}" data-pp-plan="${escapeHtml(p.id)}"><h3>${escapeHtml(p.name)}</h3><p class="pp-plan-price">${ppPriceText(p)}</p>${p.tagline ? `<small>${escapeHtml(p.tagline)}</small>` : ''}<ul>${(p.highlights || []).map((h) => `<li>${escapeHtml(h)}</li>`).join('')}</ul>${p.id === ent.plan_id ? '<span class="pp-badge done">Dein Tarif</span>' : ppIsAdmin() ? `<button type="button" class="${idx(p.id) > idx(ent.plan_id) ? 'primary-btn' : 'secondary-btn'}" data-pp-action="plan-pick" data-plan="${escapeHtml(p.id)}">${idx(p.id) > idx(ent.plan_id) ? 'Upgrade' : 'Wechseln'}</button>` : ''}</div>`).join('')}</div>${pick}${ppIsAdmin() ? '' : '<p class="pp-hint">Den Tarif ändert die Inhaberin oder der Inhaber des Betriebs (Rolle Admin).</p>'}`)}
+        ${ppSection('Zusatzmodule', `<div class="pp-list">${(pp.data?.addonCatalog || []).map((a) => { const mine = myAddon(a.code); return `<div class="pp-card pp-addon"><div><strong>${escapeHtml(a.name)}</strong><small>${a.price_is_from ? 'ab ' : ''}${ppPriceText(a)}${a.usage_based_note ? ` · ${escapeHtml(a.usage_based_note)}` : ''}</small></div>${mine ? `<span class="pp-badge ${mine.status === 'active' ? 'green' : 'amber'}">${mine.status === 'active' ? `Aktiv${mine.quantity > 1 ? ` × ${mine.quantity}` : ''}` : 'Angefragt'}</span>${ppIsAdmin() ? `<button type="button" class="text-btn" data-pp-action="addon-cancel" data-code="${escapeHtml(a.code)}">Kündigen</button>` : ''}` : ppIsAdmin() ? `<button type="button" class="secondary-btn" data-pp-action="addon-pick" data-code="${escapeHtml(a.code)}">Hinzufügen</button>` : ''}</div>${addonPick?.code === a.code ? `<div class="pp-card pp-plan-confirm"><p>${escapeHtml(a.description || '')}</p><label class="pp-check"><input type="checkbox" data-pp-addon-ok> <span>Ich bestätige den Preis von ${a.price_is_from ? 'ab ' : ''}${ppPriceText(a)}. Das Modul wird erst nach Freigabe aktiv und berechnet.</span></label><div class="pp-actions"><button type="button" class="secondary-btn" data-pp-action="addon-unpick">Abbrechen</button><button type="button" class="primary-btn" data-pp-action="addon-request" data-code="${escapeHtml(a.code)}" ${ppDisabled()}>Verbindlich anfragen</button></div></div>` : ''}`; }).join('')}</div>`)}
+        <div class="pp-card pp-tip">${icon('check')}<div><strong>Keine Vermittlungsprovision</strong><p>Husora berechnet keine Prozente auf deine Aufträge. Du zahlst nur deinen Tarif und Zusatzmodule, die du selbst bestätigst.</p></div></div>`;
+    }
+    function ppPaymentsOn() { try { return !paymentsDisabled() && !hzNative(); } catch (error) { return false; } }
+    function ppPlanMail(plan) {
+      const ent = ppEnt();
+      return `mailto:${encodeURIComponent(LEGAL_INFO.supportEmail || 'info@husora.de')}?subject=${encodeURIComponent(`Servicepartner-Tarif: Wechsel zu ${plan.name}`)}&body=${encodeURIComponent(`Hallo Husora-Team,\n\nunser Servicebetrieb möchte zum Tarif ${plan.name} (${ppPriceText(plan)}) wechseln.\n\nBetrieb: ${ppOrg()?.name || ''} (${ppOrg()?.id || ''})\nAktueller Tarif: ${ent?.plan_name || 'Free'}\nE-Mail: ${cloud.session?.email || ''}\n\nViele Grüße`)}`;
+    }
+    async function ppPartnerCheckout(body) {
+      const base = (cloud.url || CLOUD_DEFAULT.url).replace(/\/$/, '');
+      const response = await fetch(`${base}/functions/v1/stripe-checkout`, { method: 'POST', headers: { apikey: cloud.key || CLOUD_DEFAULT.key, Authorization: `Bearer ${cloud.session.access_token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ audience: 'partner', return_url: location.href.split('#')[0], ...body }) });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.url) throw new Error(data.error || `HTTP ${response.status}`);
+      location.href = data.url;
+    }
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('#partner-portal [data-pp-action^="plan-"], #partner-portal [data-pp-action^="addon-"]');
+      if (!btn) return;
+      const a = btn.dataset.ppAction;
+      const org = ppOrg();
+      if (!org) return;
+      event.stopPropagation();
+      if (a === 'plan-pick') {
+        pp.planPick = btn.dataset.plan; pp.planPreview = null; pp.keepScroll = true; ppRender();
+        ppRpc('partner_plan_change_preview', { p_organization_id: org.id, p_plan_id: pp.planPick }).then((r) => { pp.planPreview = r; }).catch((e) => { pp.planPreview = { plan_id: pp.planPick, over_limit: [], features_lost: [], error: e.message }; }).finally(() => { pp.keepScroll = true; ppRender(); document.querySelector('#partner-portal [data-pp-plan-confirm]')?.scrollIntoView({ block: 'nearest' }); });
+        return;
+      }
+      if (a === 'plan-cancel-pick') { pp.planPick = null; pp.planPreview = null; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'plan-checkout') {
+        const box = btn.closest('[data-pp-plan-confirm]');
+        const plan = ppPlans().find((p) => p.id === btn.dataset.plan);
+        if (!plan) return;
+        if (Number(plan.price_monthly_cents) <= 0) { ppRun('plan', () => ppPartnerCheckout({ portal: true }), { reload: false }); return; }
+        const terms = box?.querySelector('[name=terms]')?.checked; const waiver = box?.querySelector('[name=waiver]')?.checked;
+        if (!terms || !waiver) { showToast('Bitte AGB und Widerrufshinweis bestätigen.'); return; }
+        ppRun('plan', () => ppPartnerCheckout({ plan_id: plan.id, consent: { terms: true, waiver: true, at: new Date().toISOString() } }), { reload: false });
+        return;
+      }
+      if (a === 'plan-portal') { ppRun('plan', () => ppPartnerCheckout({ portal: true }), { reload: false }); return; }
+      if (a === 'addon-pick') { pp.addonPick = btn.dataset.code; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'addon-unpick') { pp.addonPick = null; pp.keepScroll = true; ppRender(); return; }
+      if (a === 'addon-request') {
+        const addon = (pp.data?.addonCatalog || []).find((x) => x.code === btn.dataset.code);
+        if (!addon) return;
+        if (!btn.closest('.pp-plan-confirm')?.querySelector('[data-pp-addon-ok]')?.checked) { showToast('Bitte den Preis bestätigen.'); return; }
+        ppRun('addon', async () => { await ppRpc('request_partner_addon', { p_organization_id: org.id, p_addon_code: addon.code, p_confirmed_price_cents: addon.price_monthly_cents, p_quantity: 1 }); pp.addonPick = null; }, { notice: `„${addon.name}“ angefragt. Das Modul wird nach Freigabe aktiv.` });
+        return;
+      }
+      if (a === 'addon-cancel') { ppRun('addon', () => ppRpc('cancel_partner_addon', { p_organization_id: org.id, p_addon_code: btn.dataset.code }), { notice: 'Zusatzmodul gekündigt.' }); }
+    }, true);
     // ----- Sortieren: Rechnungen/Angebote und Kontrollen -----
     pp.sort = pp.sort || { invoices: 'number', quotes: 'number', inspections: 'date' };
     const ppPropertyName = (propertyId, fallback = '') => ppD('properties').find((p) => p.id === propertyId)?.name || fallback;
