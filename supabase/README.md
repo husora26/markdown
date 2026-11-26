@@ -491,16 +491,24 @@ select created_at, kind, message, page, app_version, contact_email from public.a
 
 Code: `supabase/functions/notify-dispatch` (Versand) und `sw.js` (Service Worker nur für Push). Ohne Einrichtung erscheinen alle Meldungen wie bisher in der App – nichts bricht.
 
-1. VAPID-Schlüssel erzeugen (lokal): `npx web-push generate-vapid-keys`
-2. Secrets der Edge Function setzen (Supabase → Edge Functions → Secrets), **nie im Code**:
-   `NOTIFY_DISPATCH_SECRET` (langer Zufallswert), `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (z. B. `mailto:info@husora.de`), optional `RESEND_API_KEY` und `NOTIFY_FROM_EMAIL` für E-Mails, optional `HUSORA_APP_URL`.
-3. Deploy: `supabase functions deploy notify-dispatch --no-verify-jwt`
-4. Im SQL Editor die Adresse und dasselbe Geheimnis im Vault hinterlegen:
+Einrichtung ohne dass jemand einen Schlüssel sieht (so ist das Live-Projekt seit 2026-11-26 eingerichtet):
+
+1. Migrationen `20261126000200_push_keys_vault` und `20261126000201_push_store_vapid` einspielen.
+2. Deploy: `supabase functions deploy notify-dispatch --no-verify-jwt`
+3. Im SQL Editor Adresse und ein zufälliges Geheimnis im Vault anlegen und die Funktion einmal aufrufen:
    ```sql
    select vault.create_secret('https://<projekt>.supabase.co/functions/v1/notify-dispatch', 'notify_dispatch_url');
-   select vault.create_secret('<gleicher Wert wie NOTIFY_DISPATCH_SECRET>', 'notify_dispatch_secret');
-   update public.app_config set value = jsonb_build_object('vapid_public_key', '<VAPID_PUBLIC_KEY>') where key = 'push';
+   select vault.create_secret(encode(extensions.gen_random_bytes(32), 'hex'), 'notify_dispatch_secret');
+   select net.http_post(
+     url := (select decrypted_secret from vault.decrypted_secrets where name = 'notify_dispatch_url'),
+     body := '{"init": true}'::jsonb,
+     headers := jsonb_build_object('Content-Type', 'application/json',
+                'x-husora-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'notify_dispatch_secret')));
    ```
+   Die Funktion erzeugt dabei das VAPID-Schlüsselpaar, legt es im Vault ab (`vapid_public_key`, `vapid_private_key`, `vapid_subject`) und trägt den öffentlichen Schlüssel in `app_config` (`push`) ein.
+4. Optional für E-Mails: Secrets `RESEND_API_KEY` und `NOTIFY_FROM_EMAIL` der Edge Function setzen.
+
+Alternativ lassen sich alle Werte weiterhin als Edge-Function-Secrets setzen (`NOTIFY_DISPATCH_SECRET`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`); sie haben Vorrang vor dem Vault.
 Danach können Nutzer unter Einstellungen → Benachrichtigungen „Push auf diesem Gerät“ aktivieren und je Kategorie App/Push/E-Mail wählen.
 
 ## KI-Vorschläge (Phase 12)

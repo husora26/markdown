@@ -47,7 +47,7 @@ const ANON = ENV_ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now
     if (!look.plusPlain || !look.freePlain || !look.plusPhoto) throw new Error(JSON.stringify(look));
     return `FREE ${free.length} Karten, PLUS ${plus.length} · Standard einfarbig, FREE immer einfarbig`;
   });
-  await step('Untere Leiste: Standard nur „Mehr“, ab PLUS bis zu vier Plätze', async () => {
+  await step('Untere Leiste: Standard Übersicht, Aufgaben, Kalender, „Mehr“; ab PLUS frei belegbar', async () => {
     const bar = () => p.evaluate(() => { currentPage = 'dashboard'; render(); return [...document.querySelectorAll('#tabbar .tab')].map((e) => e.dataset.page || 'mehr').join(','); });
     await p.evaluate(() => { saveStore('stugliv-tabbar', []); applyTabChoice([]); planOverride = 'plus'; });
     const plusEmpty = await bar();
@@ -60,7 +60,7 @@ const ANON = ENV_ANON; const URL_ = 'http://127.0.0.1:54321'; const N = Date.now
     await p.$eval('#tabbar-settings [data-tab-assign=""]', (e) => e.click()); await p.waitForTimeout(80);
     const cleared = await bar();
     const r = `PLUS leer: ${plusEmpty} · PLUS vier: ${plusFour} · FREE: ${free} (Karte ${freeCard}) · Platz 2 geleert: ${cleared}`;
-    if (plusEmpty !== 'mehr' || plusFour !== 'tasks,calendar,repairs,documents,mehr' || free !== 'mehr' || freeCard || cleared !== 'tasks,repairs,documents,mehr') throw new Error(r);
+    if (plusEmpty !== 'mehr' || plusFour !== 'tasks,calendar,repairs,documents,mehr' || free !== 'dashboard,tasks,calendar,mehr' || freeCard || cleared !== 'tasks,repairs,documents,mehr') throw new Error(r);
     await p.evaluate(() => { saveStore('stugliv-tabbar', []); applyTabChoice([]); });
     return r;
   });
