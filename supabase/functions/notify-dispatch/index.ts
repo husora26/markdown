@@ -5,28 +5,29 @@
 //
 // Deploy ohne JWT-Prüfung (Aufruf kommt aus der Datenbank, geprüft wird das gemeinsame Geheimnis):
 //   supabase functions deploy notify-dispatch --no-verify-jwt
-// Secrets (Supabase → Edge Functions → Secrets, nie im Code):
+// Secrets (Supabase → Edge Functions → Secrets, nie im Code) – oder gleichnamig klein geschrieben im Vault
+// (notify_dispatch_secret, vapid_public_key, vapid_private_key, vapid_subject), siehe Migration 20261126000200:
 //   NOTIFY_DISPATCH_SECRET   gleicher Wert wie im Vault 'notify_dispatch_secret'
 //   VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT (z. B. mailto:info@husora.de)
 //   RESEND_API_KEY, NOTIFY_FROM_EMAIL (optional, für E-Mails)
-// Vault (SQL Editor):
+// Vault (SQL Editor), ohne dass jemand das Geheimnis sieht:
 //   select vault.create_secret('https://<projekt>.supabase.co/functions/v1/notify-dispatch', 'notify_dispatch_url');
-//   select vault.create_secret('<zufälliger langer Wert>', 'notify_dispatch_secret');
-// Öffentlichen VAPID-Schlüssel für die App eintragen:
-//   update public.app_config set value = jsonb_build_object('vapid_public_key', '<VAPID_PUBLIC_KEY>') where key = 'push';
+//   select vault.create_secret(encode(extensions.gen_random_bytes(32), 'hex'), 'notify_dispatch_secret');
+// VAPID-Schlüssel: einmal mit {"init": true} aufrufen (siehe supabase/README.md). Die Funktion erzeugt das
+// Paar selbst, legt es im Vault ab und trägt den öffentlichen Schlüssel in app_config 'push' ein.
 import webpush from 'npm:web-push@3.6.7';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const SECRET = Deno.env.get('NOTIFY_DISPATCH_SECRET') || '';
-const VAPID_PUBLIC = Deno.env.get('VAPID_PUBLIC_KEY') || '';
-const VAPID_PRIVATE = Deno.env.get('VAPID_PRIVATE_KEY') || '';
-const VAPID_SUBJECT = Deno.env.get('VAPID_SUBJECT') || 'mailto:info@husora.de';
+// Werte aus den Secrets der Edge Function; fehlen sie, kommen sie aus dem Vault (Migration 20261126000200)
+let SECRET = Deno.env.get('NOTIFY_DISPATCH_SECRET') || '';
+let VAPID_PUBLIC = Deno.env.get('VAPID_PUBLIC_KEY') || '';
+let VAPID_PRIVATE = Deno.env.get('VAPID_PRIVATE_KEY') || '';
+let VAPID_SUBJECT = Deno.env.get('VAPID_SUBJECT') || 'mailto:info@husora.de';
 const RESEND = Deno.env.get('RESEND_API_KEY') || '';
 const FROM = Deno.env.get('NOTIFY_FROM_EMAIL') || '';
 const APP_URL = Deno.env.get('HUSORA_APP_URL') || 'https://husora26.github.io/markdown/';
 
-if (VAPID_PUBLIC && VAPID_PRIVATE) webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC, VAPID_PRIVATE);
 
 async function rest(path: string, init: RequestInit = {}) {
   const response = await fetch(`${SUPABASE_URL}${path}`, { ...init, headers: { apikey: SERVICE, Authorization: `Bearer ${SERVICE}`, 'Content-Type': 'application/json', ...(init.headers || {}) } });
@@ -41,13 +42,46 @@ function sameSecret(a: string, b: string) {
   for (let i = 0; i < a.length; i += 1) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
 }
+let keysLoaded = false;
+async function loadKeys() {
+  if (keysLoaded) return;
+  if (!SECRET || !VAPID_PUBLIC || !VAPID_PRIVATE) {
+    try {
+      const k = await rest('/rest/v1/rpc/notify_dispatch_keys', { method: 'POST', body: '{}' });
+      SECRET = SECRET || k?.secret || '';
+      VAPID_PUBLIC = VAPID_PUBLIC || k?.vapid_public || '';
+      VAPID_PRIVATE = VAPID_PRIVATE || k?.vapid_private || '';
+      if (!Deno.env.get('VAPID_SUBJECT') && k?.vapid_subject) VAPID_SUBJECT = k.vapid_subject;
+    } catch (error) { console.error('notify-dispatch: Vault nicht lesbar', error); return; }
+  }
+  if (VAPID_PUBLIC && VAPID_PRIVATE) { webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC, VAPID_PRIVATE); keysLoaded = true; }
+}
+// Noch keine Schlüssel: einmalig selbst erzeugen und im Vault ablegen (privater Schlüssel verlässt Supabase nie).
+// Läuft erst nach der Prüfung des gemeinsamen Geheimnisses.
+async function ensureVapid() {
+  if (VAPID_PUBLIC && VAPID_PRIVATE) return;
+  const fresh = webpush.generateVAPIDKeys();
+  const stored = await rest('/rest/v1/rpc/notify_dispatch_store_vapid', { method: 'POST', body: JSON.stringify({ p_public: fresh.publicKey, p_private: fresh.privateKey }) });
+  VAPID_PUBLIC = stored?.vapid_public || '';
+  VAPID_PRIVATE = stored?.vapid_private || '';
+  if (stored?.vapid_subject && !Deno.env.get('VAPID_SUBJECT')) VAPID_SUBJECT = stored.vapid_subject;
+  if (VAPID_PUBLIC && VAPID_PRIVATE) { webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC, VAPID_PRIVATE); keysLoaded = true; }
+}
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
+  await loadKeys();
   if (!sameSecret(req.headers.get('x-husora-secret') || '', SECRET)) return new Response('Forbidden', { status: 403 });
   let id = '';
-  try { id = String((await req.json())?.notification_id || ''); } catch { /* leer */ }
+  let body: Record<string, unknown> = {};
+  try { body = (await req.json()) || {}; } catch { /* leer */ }
+  // Einrichtungs-Aufruf aus der Datenbank: Schlüssel erzeugen, falls noch keine da sind
+  if (body.init === true) {
+    try { await ensureVapid(); } catch (error) { console.error('notify-dispatch: Schlüssel nicht erzeugt', error); }
+    return Response.json({ ready: Boolean(VAPID_PUBLIC && VAPID_PRIVATE) });
+  }
+  id = String(body.notification_id || '');
   if (!/^[0-9a-f-]{36}$/.test(id)) return new Response('Bad request', { status: 400 });
   try {
     const [n] = await rest(`/rest/v1/notifications?id=eq.${id}&select=id,user_id,category,title,message,entity_type,entity_id`);
