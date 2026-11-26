@@ -3263,7 +3263,7 @@
     .agenda-text { display: grid; gap: 2px; min-width: 0; }
     .agenda-text small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .agenda-go { color: var(--muted); font-size: var(--fs-xl); }
-    .agenda-more { margin-top: 8px; }
+    .agenda-more { margin-top: 0; }
     .agenda-ok { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--muted); }
     .agenda-ok svg { width: 18px; height: 18px; color: var(--green, #24493d); }
     .section-tabs.more-right, .work-areas.more-right { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); }
@@ -3282,6 +3282,10 @@
     html.dark .fchip.active { color: #0f2219; background: var(--green); }
     .agenda-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; margin-bottom: 10px; }
     .agenda-card .agenda-head .card-title { margin: 0; }
+    .agenda-head > div { display: grid; justify-items: start; gap: 6px; }
+    .agenda-report { flex: 0 0 auto; }
+    .agenda-report svg { width: 16px; height: 16px; }
+    .agenda-more { display: block; margin-top: 8px; }
     .agenda-lamp { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px 4px 9px; border-radius: 999px; font-size: var(--fs-xs); font-weight: 700; }
     .agenda-lamp i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
     .agenda-lamp.green { color: #1f6b41; background: #e2f2e8; }
@@ -3292,7 +3296,7 @@
     .agenda-done { display: grid; place-items: center; flex: none; width: 46px; border: 1px solid var(--line); border-radius: var(--r-md); color: var(--green); background: var(--paper); }
     .agenda-done:hover { background: var(--green-soft); }
     .agenda-done svg { width: 18px; height: 18px; }
-    .agenda-quick { display: flex; justify-content: flex-start; margin-top: 12px; }
+    .agenda-quick { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
     .agenda-quick .secondary-btn svg { width: 16px; height: 16px; }
     .stat-facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .stat-facts span { padding: 3px 9px; border-radius: 999px; color: inherit; background: rgba(127, 127, 127, .16); font-size: var(--fs-xs); font-weight: 600; }
@@ -17609,9 +17613,11 @@ ab PRO|from PRO|från PRO
         return `<div class="agenda-row"><button type="button" class="agenda-item ${escapeHtml(item.level)}" data-agenda-open="${escapeHtml(item.id)}"><span class="agenda-icon">${icon(item.icon || 'alert')}</span><span class="agenda-text"><strong>${escapeHtml(item.title)}</strong>${item.detail ? `<small>${escapeHtml(item.detail)}</small>` : ''}</span><span class="agenda-go" aria-hidden="true">›</span></button>${single != null ? `<button type="button" class="agenda-done" data-toggle="${escapeHtml(String(single))}" aria-label="Als erledigt markieren" title="Als erledigt markieren">${icon('check')}</button>` : ''}${item.category === 'weather' ? `<button type="button" class="agenda-done agenda-plan" data-weather-task="${escapeHtml(item.id)}" aria-label="Als Aufgabe anlegen" title="Als Aufgabe anlegen">${icon('plus')}</button>` : ''}</div>`;
       };
       const body = items.length
-        ? `<div class="agenda-list">${shown.map(row).join('')}</div>${items.length > 3 ? `<button type="button" class="text-btn agenda-more" data-agenda-all>${agendaShowAll ? 'Weniger anzeigen' : `Alle ${items.length} anzeigen`}</button>` : ''}`
+        ? `<div class="agenda-list">${shown.map(row).join('')}</div>`
         : `<p class="agenda-ok">${icon('check')}<span>Gerade steht nichts an.</span></p>`;
-      return `<section class="card agenda-card" aria-label="Was steht an?"><div class="agenda-head"><h2 class="card-title">Was steht an?</h2><span class="agenda-lamp ${lamp}"><i aria-hidden="true"></i>${escapeHtml(lampText)}</span></div>${body}<div class="agenda-quick"><button type="button" class="secondary-btn" data-action="report-issue" data-source="Startseite">${icon('alert')}<span>Mangel melden</span></button></div></section>`;
+      // Kopf: Titel mit Ampel darunter, „Mangel melden“ rechts – hält die Kacheln darunter weit oben
+      const more = items.length > 3 ? `<button type="button" class="text-btn agenda-more" data-agenda-all>${agendaShowAll ? 'Weniger anzeigen' : `Alle ${items.length} anzeigen`}</button>` : '';
+      return `<section class="card agenda-card" aria-label="Was steht an?"><div class="agenda-head"><div><h2 class="card-title">Was steht an?</h2><span class="agenda-lamp ${lamp}"><i aria-hidden="true"></i>${escapeHtml(lampText)}</span></div><button type="button" class="secondary-btn agenda-report" data-action="report-issue" data-source="Startseite">${icon('alert')}<span>Mangel melden</span></button></div>${body}${more}</section>`;
     }
     document.addEventListener('click', (event) => {
       if (event.target.closest?.('[data-agenda-all]')) { agendaShowAll = !agendaShowAll; render(); return; }
