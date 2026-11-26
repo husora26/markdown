@@ -3266,6 +3266,39 @@
     .agenda-more { margin-top: 8px; }
     .agenda-ok { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--muted); }
     .agenda-ok svg { width: 18px; height: 18px; color: var(--green, #24493d); }
+    .section-tabs.more-right, .work-areas.more-right { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); }
+    .section-tabs.more-left.more-right, .work-areas.more-left.more-right { -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 56px), transparent); }
+    .section-tabs.more-left:not(.more-right), .work-areas.more-left:not(.more-right) { -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px); mask-image: linear-gradient(90deg, transparent, #000 40px); }
+    .house-add-row { display: flex; justify-content: center; margin: 16px 0; }
+    .task-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; padding: 0 18px 14px; }
+    .task-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; flex: 1 1 100%; }
+    .fchip { min-height: 36px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); background: var(--paper); font-size: var(--fs-sm); font-weight: 600; }
+    .fchip:hover { border-color: #cfc6b4; }
+    .fchip.active { border-color: var(--green); color: #fff; background: var(--green); }
+    .fchip.prio-urgent.active { border-color: #a94e44; background: #a94e44; }
+    .fchip.prio-soon.active { border-color: #a9844f; background: #a9844f; }
+    .fchip-sep { width: 1px; height: 22px; margin: 0 4px; background: var(--line); }
+    html.dark .fchip { color: var(--ink); background: #1c1c1c; }
+    html.dark .fchip.active { color: #0f2219; background: var(--green); }
+    .agenda-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; margin-bottom: 10px; }
+    .agenda-card .agenda-head .card-title { margin: 0; }
+    .agenda-lamp { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px 4px 9px; border-radius: 999px; font-size: var(--fs-xs); font-weight: 700; }
+    .agenda-lamp i { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+    .agenda-lamp.green { color: #1f6b41; background: #e2f2e8; }
+    .agenda-lamp.amber { color: #7a5410; background: #f9eeda; }
+    .agenda-lamp.red { color: #8b2f25; background: #fbebeb; }
+    .agenda-row { display: flex; align-items: stretch; gap: 6px; }
+    .agenda-row .agenda-item { flex: 1; min-width: 0; }
+    .agenda-done { display: grid; place-items: center; flex: none; width: 46px; border: 1px solid var(--line); border-radius: var(--r-md); color: var(--green); background: var(--paper); }
+    .agenda-done:hover { background: var(--green-soft); }
+    .agenda-done svg { width: 18px; height: 18px; }
+    .agenda-quick { display: flex; justify-content: flex-start; margin-top: 12px; }
+    .agenda-quick .secondary-btn svg { width: 16px; height: 16px; }
+    .stat-facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .stat-facts span { padding: 3px 9px; border-radius: 999px; color: inherit; background: rgba(127, 127, 127, .16); font-size: var(--fs-xs); font-weight: 600; }
+    html.dark .agenda-lamp.green { color: #8fd4ab; background: #1d3327; }
+    html.dark .agenda-lamp.amber { color: #e2c08a; background: #33291a; }
+    html.dark .agenda-lamp.red { color: #ea9085; background: #3b211e; }
     .tcard-more { grid-column: 1 / -1; }
     .tcard-more > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0 0; border-top: 1px dashed var(--line); color: var(--muted); font-size: var(--fs-sm); font-weight: 600; cursor: pointer; list-style: none; }
     .tcard-more > summary::-webkit-details-marker { display: none; }
@@ -4158,7 +4191,8 @@
     .auto-groups button.active { color: var(--ink); background: white; box-shadow: 0 2px 8px rgba(35, 48, 39, .08); }
     .auto-groups button span { min-width: 20px; padding: 0 6px; border-radius: var(--r-md); color: #6b766e; background: #e8e6df; font-size: var(--fs-xs); line-height: 20px; text-align: center; }
     .automation-grid.grouped { grid-template-columns: 1fr; }
-    @media (max-width: 760px) { .auto-groups { display: none !important; } }
+    .view-tabs { display: none; }
+    @media (max-width: 760px) { .view-tabs { display: flex; } }
     @media (max-width: 760px) {
       .tabbar { transition: background-color .25s ease, border-color .25s ease; }
       .tabbar.contextual { border-top-color: #b9d3c2; background: rgba(232, 241, 234, .97); }
@@ -5322,6 +5356,16 @@ html.dark .work-area.active .work-area-icon { background: var(--green-solid); }
 html.dark .section-tabs button.active { color: var(--ink); }
 .section-tab-plan { background: rgba(255, 255, 255, .16); }
 .section-tabs button.active .section-tab-plan { background: rgba(0, 0, 0, .08); }
+/* Tarif im Kopf: ruhiger Hinweis statt goldener Knopf */
+.plan-pro { padding: 3px 10px; color: rgba(255, 253, 248, .86); background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 253, 248, .32); font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .08em; }
+.plan-pro:hover { background: rgba(255, 255, 255, .18); }
+@media (max-width: 520px) { .plan-pro { padding: 3px 9px; font-size: var(--fs-2xs); } }
+.view-tabs { border-color: var(--line); background: var(--paper); }
+.view-tabs button { color: var(--muted); }
+.view-tabs button:hover { color: var(--ink); }
+.view-tabs button.active { background: var(--green-dark); color: #fff; }
+html.dark .view-tabs { background: transparent; }
+html.dark .view-tabs button.active { background: #3b7a62; color: #fff; }
 .work-areas .work-area { color: rgba(255, 253, 248, .9); }
 .work-areas .work-area-text small { color: rgba(255, 253, 248, .66); }
 .work-areas .work-area-status { color: #b9d3c2; }
@@ -6476,6 +6520,9 @@ Auffälligkeit|Finding|Anmärkning
 Auffälligkeit melden|Report a finding|Rapportera anmärkning
 Aufgabe bearbeiten|Edit task|Redigera uppgift
 Aufgabe erstellen|Create task|Skapa uppgift
+Aufgabe anlegen|Add task|Lägg till uppgift
+Paket aus Vorlage wählen|Choose package from template|Välj paket från mall
+Ausgeschaltet – du legst Aufgaben selbst an.|Off – you add tasks yourself.|Av – du lägger till uppgifter själv.
 Aufgabe löschen|Delete task|Radera uppgift
 Aufgabe selbst erledigen statt Servicepartner|Do the task yourself instead of a service partner|Gör uppgiften själv istället för servicepartner
 Aufgabenpaket aus Vorlage wählen|Choose a task package from a template|Välj uppgiftspaket från mall
@@ -6670,6 +6717,7 @@ Bereiche|Sections|Avsnitt
 Neue Aufgabe|New task|Ny uppgift
 Aufgabe|Task|Uppgift
 Ferienhaus hinzufügen|Add holiday home|Lägg till fritidshus
+Weiteres Ferienhaus hinzufügen|Add another holiday home|Lägg till ytterligare fritidshus
 Ferienhäuser|Holiday homes|Fritidshus
 Wetter|Weather|Väder
 Notfall|Emergency|Nödfall
@@ -6839,6 +6887,24 @@ Was ist zu tun?|What needs to be done?|Vad behöver göras?
 Dringlichkeit|Urgency|Brådska
 Beim Kunden anfragen|Ask the customer|Fråga kunden
 Mangel melden|Report defect|Rapportera brist
+Gerade steht nichts an.|Nothing needs your attention right now.|Just nu behöver inget göras.
+Alles in Ordnung|All good|Allt i ordning
+Als erledigt markieren|Mark as done|Markera som klar
+Als Aufgabe anlegen|Create as task|Skapa som uppgift
+Reparaturen|Repairs|Reparationer
+Mängel mit Foto melden – auch direkt von der Startseite|Report defects with a photo – also right from the home screen|Rapportera fel med foto – även direkt från startsidan
+Einen Mangel einem Servicepartner geben oder selbst beheben|Hand a defect to a service partner or fix it yourself|Ge ett fel till en servicepartner eller åtgärda det själv
+Erledigte Reparaturen bleiben als Verlauf beim Haus|Completed repairs stay with the house as history|Utförda reparationer sparas som historik för huset
+Jahresplan je Kostenart anlegen (Plan)|Create a yearly plan per cost type (Plan)|Skapa en årsplan per kostnadstyp (Plan)
+Rechnungen und Zahlungen eintragen (Ist)|Enter invoices and payments (Actual)|Registrera fakturor och betalningar (Faktiskt)
+Die Übersicht zeigt, wie viel vom Budget noch übrig ist|The overview shows how much of the budget is left|Översikten visar hur mycket av budgeten som återstår
+Gästebuchungen und eigene Aufenthalte eintragen|Enter guest bookings and your own stays|Registrera gästbokningar och egna vistelser
+Husora plant den Gästewechsel als Aufgaben dazu|Husora plans the changeover as tasks|Husora planerar gästbytet som uppgifter
+Kalender von Buchungsportalen lassen sich verbinden|Calendars from booking portals can be connected|Kalendrar från bokningsportaler kan kopplas
+Aufgabe angelegt|Task created|Uppgift skapad
+Bereiche dieser Seite|Sections of this page|Avsnitt på denna sida
+Noch keine Kontrolle|No inspection yet|Ingen tillsyn ännu
+Husora hat sie aus deinen Vorlagen und Automatiken angelegt.|Husora created them from your templates and automations.|Husora skapade dem från dina mallar och automatiseringar.
 Festgestellte Mängel fragst du beim Kunden an. Nimmt er an, entsteht ein Auftrag: Termin festlegen, beseitigen und abrechnen wie bei jedem Auftrag.|Ask the customer about defects you found. If accepted, an order is created: set a date, fix and bill like any order.|Fråga kunden om brister du hittat. Godkänns det skapas ett uppdrag: boka tid, åtgärda och fakturera som vanligt.
 Beim Kunden angefragt|Requested from customer|Förfrågat hos kunden
 Beauftragt|Commissioned|Beställt
@@ -7619,6 +7685,12 @@ ab PRO|from PRO|från PRO
     const I18N = new Map(I18N_SOURCE.trim().split('\n').map((line) => { const [de, en, sv] = line.split('|'); return [de, { en, sv }]; }));
     // Texte mit Zahlen
     const I18N_PATTERNS = [
+      [/^Husora legt (\d+) wiederkehrende Aufgaben aus Vorlagen für dein Ferienhaus selbst an\.(?: Nächste: (.+) am (.+)\.)?$/, { en: 'Husora creates $1 recurring tasks from templates for your holiday home.', sv: 'Husora skapar $1 återkommande uppgifter från mallar för ditt fritidshus.' }],
+      [/^(\d+) (?:Punkte sind|Punkt ist) dringend$/, { en: '$1 urgent item(s)', sv: '$1 brådskande punkt(er)' }],
+      [/^(\d+) (?:Dinge brauchen|Sache braucht) dich bald$/, { en: '$1 thing(s) need you soon', sv: '$1 sak(er) behöver dig snart' }],
+      [/^Nächste Anreise (.+)$/, { en: 'Next arrival $1', sv: 'Nästa ankomst $1' }],
+      [/^Letzte Kontrolle (.+)$/, { en: 'Last inspection $1', sv: 'Senaste tillsyn $1' }],
+      [/^(\d+) Aufgaben? automatisch geplant$/, { en: '$1 task(s) planned automatically', sv: '$1 uppgift(er) planerade automatiskt' }],
       [/^Schritt (\d+) von (\d+)$/, { en: 'Step $1 of $2', sv: 'Steg $1 av $2' }],
       [/^Einrichtung: (\d+) von (\d+)(?: Schritten)?$/, { en: 'Setup: $1 of $2', sv: 'Konfiguration: $1 av $2' }],
       [/^(\d+) von (\d+) wichtigen (?:Aufgaben|Schritten) erledigt$/, { en: '$1 of $2 key steps done', sv: '$1 av $2 viktiga steg klara' }],
@@ -10123,7 +10195,13 @@ ab PRO|from PRO|från PRO
         const urgentIssues = openIssues().filter((issue) => issue.priority === 'urgent').length;
         const openProjects = renovationProjects.filter((project) => project.status !== 'done');
         const tileHtml = {
-          properties: `<button class="stat ${singleHouse() ? 'stat-wide' : ''}" data-page="properties"><img class="stat-art" src="${escapeHtml((singleHouse() && properties[0]?.photo) || properties.find((item) => item.photo)?.photo || 'assets/meine-haeuser.jpg')}" alt="" aria-hidden="true"><div class="stat-head"><span>${singleHouse() ? 'Mein Haus' : 'Meine Häuser'}</span><span class="stat-icon">${icon('property')}</span></div><div class="stat-value">${singleHouse() ? escapeHtml(properties[0]?.name || '1') : properties.length}</div><div class="stat-note"><em>${singleHouse() ? escapeHtml(properties[0]?.region || 'Schweden') : 'Värmland · Dalarna · Bohuslän'}</em></div></button>`,
+          properties: `<button class="stat ${singleHouse() ? 'stat-wide' : ''}" data-page="properties"><img class="stat-art" src="${escapeHtml((singleHouse() && properties[0]?.photo) || properties.find((item) => item.photo)?.photo || 'assets/meine-haeuser.jpg')}" alt="" aria-hidden="true"><div class="stat-head"><span>${singleHouse() ? 'Mein Haus' : 'Meine Häuser'}</span><span class="stat-icon">${icon('property')}</span></div><div class="stat-value">${singleHouse() ? escapeHtml(properties[0]?.name || '1') : properties.length}</div><div class="stat-note"><em>${singleHouse() ? escapeHtml(properties[0]?.region || 'Schweden') : 'Värmland · Dalarna · Bohuslän'}</em></div>${singleHouse() && properties[0] ? (() => {
+            const p0 = properties[0];
+            const next = bookingsEnabled() ? bookings.filter((booking) => booking.propertyId === p0.id && booking.startDate >= today).sort((a, b) => a.startDate.localeCompare(b.startDate))[0] : null;
+            const last = lastAbsenceInspection(p0.id).entry;
+            const facts = [next ? `Nächste Anreise ${fmtDate(next.startDate)}` : '', last ? `Letzte Kontrolle ${fmtDate(last.date)}` : 'Noch keine Kontrolle'].filter(Boolean);
+            return `<div class="stat-facts">${facts.map((fact) => `<span>${escapeHtml(fact)}</span>`).join('')}</div>`;
+          })() : ''}</button>`,
           tasks: `<button class="stat" data-page="tasks"><img class="stat-art" src="assets/hausservice.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Serviceaufgaben</span><span class="stat-icon amber">${icon('task')}</span></div><div class="stat-value">${open.filter((task) => taskStatus(task) !== 'In Bearbeitung').length} <span class="stat-open-word">offen</span><span class="stat-progress">${open.filter((task) => taskStatus(task) === 'In Bearbeitung').length} <span class="stat-open-word">in Bearbeitung</span></span></div><div class="stat-note"><em class="stat-urgent">${overdueCount ? `${overdueCount} überfällig` : `${open.filter((task) => task.priority === 'urgent').length} dringend`}</em></div></button>`,
           bookings: bookingsEnabled() ? `<button class="stat" data-page="bookings"><img class="stat-art" src="assets/booking-planer.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Buchungen</span><span class="stat-icon">${icon('calendar')}</span></div><div class="stat-value">${upcomingChanges.length} <span class="stat-open-word">kommend</span></div><div class="stat-note">${guestInHouseCount(today) ? `<em>${guestInHouseCount(today)} ${guestInHouseCount(today) === 1 ? 'Haus' : 'Häuser'} belegt</em>` : `${bookings.length} gesamt · <em>verwalten</em>`}</div></button>` : '',
           inspections: `<button class="stat stat-inspection" data-page="inspections"><img class="stat-art" src="assets/hauskontrolle.jpg" alt="" aria-hidden="true"><div class="stat-head"><span>Hauskontrolle</span><span class="stat-icon">${icon('inspection')}</span></div><div class="stat-value">${properties.length - currentInspections} <span class="stat-open-word">offen</span></div></button>`,
@@ -10889,7 +10967,7 @@ ab PRO|from PRO|från PRO
       const today = localDateKey(new Date());
       const visible = tasks.filter((task) => {
         if (isArchivedTask(task)) return false;
-        const matchesStatus = taskFilter === 'all' || taskStatus(task) === taskFilter;
+        const matchesStatus = taskFilter === 'all' || (taskFilter === 'overdue' ? taskStatus(task) !== 'Erledigt' && task.date && task.date < today : taskStatus(task) === taskFilter);
         const matchesProperty = taskPropertyFilter === 'all' || task.property === taskPropertyFilter;
         const matchesPriority = taskPriorityFilter === 'all' || (task.priority || 'normal') === taskPriorityFilter;
         return matchesStatus && matchesProperty && matchesPriority;
@@ -10936,10 +11014,10 @@ ab PRO|from PRO|från PRO
       const archivedCount = tasks.filter(isArchivedTask).length;
       return `<div class="welcome"><div><p class="eyebrow">Pflege & Service</p><h1>Serviceaufgaben</h1><p class="subtitle">Koordiniere Reinigung, Schlüsselübergaben und saisonale Stugapflege.</p></div><button class="secondary-btn back-btn" data-action="go-back">← Zurück</button></div>
         ${typeof mtTasksHintHtml === 'function' ? mtTasksHintHtml() : ''}
-        <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.templates.filter((template) => template.selected).length} Vorlagen ausgewählt – werden ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} automatisch angelegt.</p></div><div class="auto-task-actions"><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe erstellen</button><button class="secondary-btn" data-template-picker>${icon('task')} Aufgabenpaket aus Vorlage wählen</button></div></section>
-        <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount - workCount} offen${workCount ? ` · <span class="ptask-work-count">${workCount} in Bearbeitung</span>` : ''} · ${tasks.length - openCount - archivedCount} erledigt${archivedCount ? ` · ${archivedCount} im Archiv` : ''}</p></div></div>
-        <div class="section-toolbar" style="padding:0 18px"><div class="toolbar-right"><select id="task-filter" class="filter-select" aria-label="Nach Status filtern"><option value="all">Alle Status</option>${taskStatuses.map((value) => `<option ${taskFilter === value ? 'selected' : ''}>${value}</option>`).join('')}</select>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<select id="task-priority-filter" class="filter-select" aria-label="Nach Priorität filtern"><option value="all">Alle Prioritäten</option><option value="urgent" ${taskPriorityFilter === 'urgent' ? 'selected' : ''}>Dringend</option><option value="soon" ${taskPriorityFilter === 'soon' ? 'selected' : ''}>Wichtig</option><option value="normal" ${taskPriorityFilter === 'normal' ? 'selected' : ''}>Normal</option></select></div><div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
+        <section class="card"><div class="card-head"><div><h2 class="card-title">Alle Serviceaufgaben</h2><p class="card-caption">${openCount - workCount} offen${workCount ? ` · <span class="ptask-work-count">${workCount} in Bearbeitung</span>` : ''} · ${tasks.length - openCount - archivedCount} erledigt${archivedCount ? ` · ${archivedCount} im Archiv` : ''}</p></div><button class="primary-btn" data-action="new-task">${icon('plus')} Aufgabe anlegen</button></div>
+        <div class="task-toolbar"><div class="task-chips" role="group" aria-label="Aufgaben filtern">${[['all', 'Alle'], ['Offen', 'Offen'], ['overdue', 'Überfällig'], ['In Bearbeitung', 'In Bearbeitung'], ['Erledigt', 'Erledigt']].map(([value, label]) => `<button type="button" class="fchip ${taskFilter === value ? 'active' : ''}" data-task-chip="status:${value}" aria-pressed="${taskFilter === value}">${label}</button>`).join('')}<span class="fchip-sep" aria-hidden="true"></span>${[['urgent', 'Dringend'], ['soon', 'Wichtig']].map(([value, label]) => `<button type="button" class="fchip prio-${value} ${taskPriorityFilter === value ? 'active' : ''}" data-task-chip="prio:${value}" aria-pressed="${taskPriorityFilter === value}">${label}</button>`).join('')}</div>${singleHouse() ? '' : `<select id="task-property-filter" class="filter-select" aria-label="Nach Gebäude filtern"><option value="all">Alle Gebäude</option>${properties.map((property) => `<option value="${escapeHtml(property.name)}" ${taskPropertyFilter === property.name ? 'selected' : ''}>${escapeHtml(property.name)}</option>`).join('')}</select>`}<div class="view-toggle" role="tablist" aria-label="Ansicht"><button type="button" class="${taskView === 'list' ? 'active' : ''}" data-task-view="list">Liste</button><button type="button" class="${taskView === 'partners' ? 'active' : ''}" data-task-view="partners">Nach Servicepartner</button></div></div>
         ${taskView === 'partners' ? partnerTasksView(visible) : `<div class="tcard-list">${rows || '<div class="empty">Keine Aufgaben gefunden. Erstelle eine Aufgabe oder ändere die Filter.</div>'}</div>`}</section>
+        <section class="card auto-task-bar"><div><label class="switch"><input type="checkbox" id="auto-task-toggle" ${autoTasks.enabled ? 'checked' : ''}><span class="switch-track"></span><span>Aufgaben automatisch erstellen</span></label><p>${packageExtras().servicePackage ? `Servicepaket ${escapeHtml(packageExtras().servicePackage.name)} · ` : ''}${autoTasks.enabled ? `Husora legt ${autoTasks.templates.filter((template) => template.selected).length} wiederkehrende Aufgaben aus Vorlagen ${singleHouse() ? 'für dein Ferienhaus' : 'je Ferienhaus'} selbst an.${(() => { const next = tasks.filter((task) => task.auto && !task.done && task.date && task.date >= today).sort((a, b) => a.date.localeCompare(b.date))[0]; return next ? ` Nächste: ${escapeHtml(next.title)} am ${fmtDate(next.date)}.` : ''; })()}` : 'Ausgeschaltet – du legst Aufgaben selbst an.'}</p></div><div class="auto-task-actions"><button class="secondary-btn" data-template-picker>${icon('task')} Paket aus Vorlage wählen</button></div></section>
         ${taskArchiveHtml()}`;
     }
     // ----- Archiv erledigter Aufgaben -----
@@ -11244,7 +11322,7 @@ ab PRO|from PRO|från PRO
       const year = new Date().getFullYear();
       const yearActual = expenses.filter((expense) => expenseYear(expense) === String(year) && properties.some((property) => property.id === expense.propertyId)).reduce((sum, expense) => sum + Number(expense.amount), 0);
       const portfolio = singleHouse() ? '' : `<section class="automation-summary portfolio-kpis"><div><strong>${properties.length}</strong><span>Ferienhäuser</span></div>${bookingsEnabled() ? `<div><strong>${properties.filter((property) => statuses[property.id].busy).length}</strong><span>heute belegt</span></div>` : ''}<div><strong>${properties.reduce((sum, property) => sum + statuses[property.id].overdue, 0)}</strong><span>überfällige Aufgaben</span></div><div><strong>${properties.reduce((sum, property) => sum + statuses[property.id].issues, 0)}</strong><span>offene Mängel</span></div><div><strong>${escapeHtml(formatCost(yearActual))}</strong><span>Ist-Kosten ${year}</span></div></section>`;
-      return `<div class="welcome"><div><p class="eyebrow">${escapeHtml([...new Set(properties.map((item) => item.region).filter(Boolean))].slice(0, 3).join(' · ') || 'Schweden')}</p><h1>${singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser'}</h1><p class="subtitle">${singleHouse() ? 'Dein Ferienhaus' : 'Alle Häuser'} mit Belegung, offenen Aufgaben, Kontrollen, Mängeln und Kosten auf einen Blick.</p></div>${isPro() ? `<button class="primary-btn" data-action="add-property">${icon('plus')} Ferienhaus hinzufügen</button>` : ''}</div>
+      return `<div class="welcome"><div><p class="eyebrow">${escapeHtml([...new Set(properties.map((item) => item.region).filter(Boolean))].slice(0, 3).join(' · ') || 'Schweden')}</p><h1>${singleHouse() ? 'Mein Ferienhaus' : 'Ferienhäuser'}</h1><p class="subtitle">${singleHouse() ? 'Dein Ferienhaus' : 'Alle Häuser'} mit Belegung, offenen Aufgaben, Kontrollen, Mängeln und Kosten auf einen Blick.</p></div>${isPro() && !singleHouse() ? `<button class="secondary-btn" data-action="add-property">${icon('plus')} Ferienhaus hinzufügen</button>` : ''}</div>
         ${portfolio}
         <div class="house-grid ${singleHouse() ? 'single' : ''}">${properties.map((rawProperty) => {
           const property = propertyWithDefaults(rawProperty);
@@ -11268,6 +11346,7 @@ ab PRO|from PRO|från PRO
             </div>
           </article>`;
         }).join('')}</div>
+        ${isPro() && singleHouse() ? `<div class="house-add-row"><button class="secondary-btn" data-action="add-property">${icon('plus')} Weiteres Ferienhaus hinzufügen</button></div>` : ''}
         <details class="card house-settings-details"><summary><span><strong>Nutzung & Anzahl der Ferienhäuser</strong><small>${profileData.usage === 'self' ? 'Nur Eigennutzung' : 'Eigennutzung und Vermietung'} · ${properties.length} ${properties.length === 1 ? 'Haus' : 'Häuser'}</small></span>${icon('edit')}</summary>${houseSettingsCard()}</details>`;
     }
     // Automatische Zuordnung (ULTIMATE): je Bereich, der noch keinen Partner hat, den nächstgelegenen Servicepartner im Umkreis wählen
@@ -14322,7 +14401,9 @@ ab PRO|from PRO|från PRO
       document.querySelectorAll('[data-pro-only]').forEach((node) => { node.hidden = !entitlements.can('house_model'); });
       markLockedNav();
       const plannedCount = syncAutomation();
-      if (plannedCount) setTimeout(() => {
+      // Beim App-Start still in die Glocke statt als Hinweis über den Kacheln
+      if (plannedCount && Date.now() - APP_START_AT < 6000) { autoPlannedNote += plannedCount; try { updateNotifyBadge(); } catch (error) { /* früh */ } }
+      else if (plannedCount) setTimeout(() => {
         const toast = document.getElementById('toast');
         if (toast.classList.contains('show') && /geplant|angelegt/.test(toast.textContent)) return;
         const prefix = toast.classList.contains('show') ? `${toast.textContent} ` : '';
@@ -14362,7 +14443,19 @@ ab PRO|from PRO|från PRO
       if (currentPage === 'propertyDetail') initPropertyMap();
       try { roleSwitchRefresh(); } catch (error) { /* noch nicht bereit */ }
       try { obAfterRender(); } catch (error) { /* Einrichtung noch nicht bereit */ }
+      try { updateTabFades(); } catch (error) { /* keine Reiter */ }
     }
+    // Reiterleisten, die nicht ganz auf den Bildschirm passen: aktiven Reiter zeigen, rechts ausblenden und „›“ andeuten
+    function updateTabFades() {
+      document.querySelectorAll('.section-tabs, .work-areas').forEach((bar) => {
+        const active = bar.querySelector('.active');
+        if (active && bar.scrollWidth > bar.clientWidth && !bar.dataset.fadeInit) { bar.scrollLeft = Math.max(0, active.getBoundingClientRect().left - bar.getBoundingClientRect().left + bar.scrollLeft - 24); }
+        const sync = () => { bar.classList.toggle('more-right', bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 4); bar.classList.toggle('more-left', bar.scrollLeft > 4); };
+        if (!bar.dataset.fadeInit) { bar.dataset.fadeInit = '1'; bar.addEventListener('scroll', sync, { passive: true }); }
+        sync();
+      });
+    }
+    window.addEventListener('resize', () => { try { updateTabFades(); } catch (error) { /* */ } });
     // Jede Unterseite bekommt im Kopfbereich einen Zurück-Button, falls die Seite selbst keinen setzt.
     function ensureBackButton() {
       if (currentPage === 'dashboard') return;
@@ -14749,6 +14842,14 @@ ab PRO|from PRO|från PRO
         persistInspectionData();
         render();
         if (value === 'issue' && checks[resultButton.dataset.item]) document.querySelector(`[data-position-note="${CSS.escape(resultButton.dataset.item)}"]`)?.focus();
+        return;
+      }
+      const taskChip = event.target.closest('[data-task-chip]');
+      if (taskChip) {
+        const [kind, value] = taskChip.dataset.taskChip.split(':');
+        if (kind === 'status') taskFilter = value;
+        else taskPriorityFilter = taskPriorityFilter === value ? 'all' : value;
+        render();
         return;
       }
       const taskViewButton = event.target.closest('[data-task-view]');
@@ -17413,6 +17514,10 @@ ab PRO|from PRO|från PRO
     // --- Erinnerungen und Benachrichtigungen ---
     let notifySettings = { tasks: true, inspections: true, repairs: true, bookings: true, contracts: true, meters: true, weather: true, backup: true, system: false, ...loadStore('stugliv-notify', {}) };
     const NOTIFY_CATEGORIES = [['tasks', 'Fällige und überfällige Aufgaben'], ['inspections', 'Hauskontrolle und Saison-Checklisten'], ['repairs', 'Offene Mängel ohne Auftrag'], ['bookings', 'Anreisen der nächsten Tage'], ['contracts', 'Kündigungsfristen und Termine'], ['meters', 'Zählerstände ablesen'], ['weather', 'Frost-, Sturm- und Unwetterhinweise'], ['backup', 'Erinnerung an die Datensicherung']];
+    const APP_START_AT = Date.now();
+    let autoPlannedNote = 0;
+    // Was in der Glocke mitzählt, ist genau das, was „Was steht an?“ zeigt – eine Zahl für „offen“
+    const agendaRelevant = (item) => item.level !== 'info' || item.category === 'inspections';
     function collectReminders() {
       const today = localDateKey(new Date());
       const tomorrow = shiftDateKey(today, 1);
@@ -17420,10 +17525,15 @@ ab PRO|from PRO|från PRO
       const add = (category, reminder) => { if (notifySettings[category] !== false) list.push({ category, ...reminder }); };
       const openTasks = tasks.filter((task) => !task.done && task.date);
       const overdue = openTasks.filter((task) => task.date < today);
-      if (overdue.length) add('tasks', { id: `tasks-overdue-${overdue.length}`, level: 'urgent', icon: 'task', title: `${overdue.length} ${overdue.length === 1 ? 'Aufgabe ist' : 'Aufgaben sind'} überfällig`, detail: overdue.slice(0, 2).map((task) => task.title).join(' · '), page: 'tasks' });
-      if (entitlements.can('escalations')) { const high = escalatedTasks().filter((entry) => entry.stage >= 2); if (high.length) add('tasks', { id: `escalation-${today}-${high.length}`, level: 'urgent', icon: 'alert', title: `Eskalation: ${high.length} ${high.length === 1 ? 'Aufgabe ist' : 'Aufgaben sind'} seit über 7 Tagen überfällig`, detail: high.slice(0, 2).map((entry) => `${entry.task.title} (${entry.days} Tage)`).join(' · '), page: 'portfolio' }); }
+      // Überfällig und Eskalation sind dieselben Aufgaben: ein Eintrag, die ältesten zuerst, mit Tagen
+      if (overdue.length) {
+        const oldest = overdue.slice().sort((a, b) => a.date.localeCompare(b.date));
+        const daysLate = (task) => Math.round((toDate(today) - toDate(task.date)) / 86400000);
+        const high = entitlements.can('escalations') ? escalatedTasks().filter((entry) => entry.stage >= 2) : [];
+        add('tasks', { id: `tasks-overdue-${overdue.length}-${high.length}`, level: 'urgent', icon: high.length ? 'alert' : 'task', title: `${overdue.length} ${overdue.length === 1 ? 'Aufgabe ist' : 'Aufgaben sind'} überfällig`, detail: oldest.slice(0, 2).map((task) => `${task.title} (${daysLate(task)} Tage)`).join(' · '), page: 'tasks', escalated: high.length, taskIds: overdue.map((task) => task.id) });
+      }
       const dueSoon = openTasks.filter((task) => task.date === today || task.date === tomorrow);
-      if (dueSoon.length) add('tasks', { id: `tasks-due-${today}-${dueSoon.length}`, level: 'soon', icon: 'task', title: `${dueSoon.length} ${dueSoon.length === 1 ? 'Aufgabe' : 'Aufgaben'} heute oder morgen fällig`, detail: dueSoon.slice(0, 2).map((task) => task.title).join(' · '), page: 'tasks' });
+      if (dueSoon.length) add('tasks', { id: `tasks-due-${today}-${dueSoon.length}`, level: 'soon', icon: 'task', title: `${dueSoon.length} ${dueSoon.length === 1 ? 'Aufgabe' : 'Aufgaben'} heute oder morgen fällig`, detail: dueSoon.slice(0, 2).map((task) => task.title).join(' · '), page: 'tasks', taskIds: dueSoon.map((task) => task.id) });
       properties.forEach((property) => {
         const name = properties.length > 1 ? `${property.name}: ` : '';
         const active = activePlanReturn(property.id);
@@ -17447,12 +17557,13 @@ ab PRO|from PRO|från PRO
           if (!last || last.date <= shiftDateKey(today, -35)) add('meters', { id: `meter-${meter.id}-${today.slice(0, 7)}`, level: 'info', icon: 'meter', title: `${name}Zählerstand ${meterLabel(meter)} ablesen`, detail: last ? `Letzte Ablesung am ${fmtDate(last.date)}` : 'Noch keine Ablesung eingetragen', page: 'meters', propertyId: property.id });
         });
         documents.filter((doc) => doc.propertyId === property.id && String(doc.id).startsWith('cloud-report-') && !doc.reportSeen && (doc.createdIso || '') >= shiftDateKey(today, -14)).forEach((doc) => add('inspections', { id: `report-${doc.id}`, level: doc.reportStatus === 'critical' ? 'soon' : 'info', icon: 'inspection', title: `${name}Neuer Prüfbericht${doc.partnerName ? ` von ${doc.partnerName}` : ''}`, detail: `${{ ok: 'Alles in Ordnung', warning: 'Mit Hinweisen', critical: 'Mit Mängeln – Reparaturen stehen unter Mängel' }[doc.reportStatus] || 'Kontrolle abgeschlossen'} · ${fmtDate(doc.createdIso)} – tippen zum Öffnen`, page: 'documents', propertyId: property.id, docId: doc.id }));
-        weatherWarnings(property.id).forEach((warning) => add('weather', { ...warning, id: `weather-${property.id}-${warning.id}`, icon: 'cloud', title: `${name}${warning.title}`, page: 'dashboard' }));
+        weatherWarnings(property.id).filter((warning) => !tasks.some((task) => !task.done && task.weatherRef === `weather-${property.id}-${warning.id}`)).forEach((warning) => add('weather', { ...warning, id: `weather-${property.id}-${warning.id}`, icon: 'cloud', title: `${name}${warning.title}`, page: 'dashboard', propertyId: property.id, plainTitle: warning.title }));
       });
       let lastBackup = '';
       try { lastBackup = localStorage.getItem('stugliv-last-backup') || ''; } catch (error) { lastBackup = ''; }
       if (!lastBackup || Date.now() - new Date(lastBackup).getTime() > 30 * 24 * 60 * 60 * 1000) add('backup', { id: `backup-${today.slice(0, 7)}`, level: 'info', icon: 'document', title: lastBackup ? 'Datensicherung ist älter als 30 Tage' : 'Noch keine Datensicherung', detail: 'Sichere deine Daten als Datei.', page: 'settings' });
       const order = { urgent: 0, soon: 1, info: 2 };
+      if (autoPlannedNote) list.push({ category: 'tasks', id: `auto-planned-${today}-${autoPlannedNote}`, level: 'info', icon: 'task', title: `${autoPlannedNote} ${autoPlannedNote === 1 ? 'Aufgabe' : 'Aufgaben'} automatisch geplant`, detail: 'Husora hat sie aus deinen Vorlagen und Automatiken angelegt.', page: 'tasks' });
       cloudNotices.forEach((notice) => list.push({ category: 'cloud', id: `cloud-${notice.id}`, cloudId: notice.id, level: notice.type === 'service_order' && /abgelehnt|zurückgezogen/.test(notice.title) ? 'soon' : 'info', icon: notice.type === 'invoice' ? 'cost' : notice.type === 'message' ? 'note' : 'task', title: notice.title, detail: notice.message || '', page: 'partnerHub' }));
       return list.sort((a, b) => order[a.level] - order[b.level]);
     }
@@ -17476,7 +17587,7 @@ ab PRO|from PRO|från PRO
     function updateNotifyBadge() {
       const badge = document.getElementById('notify-count');
       if (!badge) return;
-      const unread = collectReminders().filter((reminder) => !readReminders.includes(reminder.id));
+      const unread = collectReminders().filter((reminder) => agendaRelevant(reminder) && !readReminders.includes(reminder.id));
       badge.textContent = unread.length > 9 ? '9+' : String(unread.length);
       badge.hidden = !unread.length;
       badge.classList.toggle('urgent', unread.some((reminder) => reminder.level === 'urgent'));
@@ -17487,15 +17598,33 @@ ab PRO|from PRO|från PRO
     document.addEventListener('toggle', (event) => { const id = event.target.dataset?.taskMore; if (!id || window.innerWidth > 1050) return; if (event.target.open) taskMoreOpen.add(id); else taskMoreOpen.delete(id); }, true);
     function agendaHtml() {
       let items = [];
-      try { items = collectReminders().filter((item) => item.level !== 'info' || item.category === 'inspections'); } catch (error) { items = []; }
-      const shown = agendaShowAll ? items : items.slice(0, 4);
+      try { items = collectReminders().filter(agendaRelevant); } catch (error) { items = []; }
+      const shown = agendaShowAll ? items : items.slice(0, 3);
+      // Ampel: in einem Satz, ob mit dem Haus alles in Ordnung ist
+      const urgent = items.filter((item) => item.level === 'urgent').length;
+      const lamp = urgent ? 'red' : items.length ? 'amber' : 'green';
+      const lampText = urgent ? `${urgent} ${urgent === 1 ? 'Punkt ist' : 'Punkte sind'} dringend` : items.length ? `${items.length} ${items.length === 1 ? 'Sache braucht' : 'Dinge brauchen'} dich bald` : 'Alles in Ordnung';
+      const row = (item) => {
+        const single = (item.taskIds || []).length === 1 ? item.taskIds[0] : null;
+        return `<div class="agenda-row"><button type="button" class="agenda-item ${escapeHtml(item.level)}" data-agenda-open="${escapeHtml(item.id)}"><span class="agenda-icon">${icon(item.icon || 'alert')}</span><span class="agenda-text"><strong>${escapeHtml(item.title)}</strong>${item.detail ? `<small>${escapeHtml(item.detail)}</small>` : ''}</span><span class="agenda-go" aria-hidden="true">›</span></button>${single != null ? `<button type="button" class="agenda-done" data-toggle="${escapeHtml(String(single))}" aria-label="Als erledigt markieren" title="Als erledigt markieren">${icon('check')}</button>` : ''}${item.category === 'weather' ? `<button type="button" class="agenda-done agenda-plan" data-weather-task="${escapeHtml(item.id)}" aria-label="Als Aufgabe anlegen" title="Als Aufgabe anlegen">${icon('plus')}</button>` : ''}</div>`;
+      };
       const body = items.length
-        ? `<div class="agenda-list">${shown.map((item) => `<button type="button" class="agenda-item ${escapeHtml(item.level)}" data-agenda-open="${escapeHtml(item.id)}"><span class="agenda-icon">${icon(item.icon || 'alert')}</span><span class="agenda-text"><strong>${escapeHtml(item.title)}</strong>${item.detail ? `<small>${escapeHtml(item.detail)}</small>` : ''}</span><span class="agenda-go" aria-hidden="true">›</span></button>`).join('')}</div>${items.length > 4 ? `<button type="button" class="text-btn agenda-more" data-agenda-all>${agendaShowAll ? 'Weniger anzeigen' : `Alle ${items.length} anzeigen`}</button>` : ''}`
-        : `<p class="agenda-ok">${icon('check')}<span>Alles im grünen Bereich – gerade steht nichts an.</span></p>`;
-      return `<section class="card agenda-card" aria-label="Was steht an?"><h2 class="card-title">Was steht an?</h2>${body}</section>`;
+        ? `<div class="agenda-list">${shown.map(row).join('')}</div>${items.length > 3 ? `<button type="button" class="text-btn agenda-more" data-agenda-all>${agendaShowAll ? 'Weniger anzeigen' : `Alle ${items.length} anzeigen`}</button>` : ''}`
+        : `<p class="agenda-ok">${icon('check')}<span>Gerade steht nichts an.</span></p>`;
+      return `<section class="card agenda-card" aria-label="Was steht an?"><div class="agenda-head"><h2 class="card-title">Was steht an?</h2><span class="agenda-lamp ${lamp}"><i aria-hidden="true"></i>${escapeHtml(lampText)}</span></div>${body}<div class="agenda-quick"><button type="button" class="secondary-btn" data-action="report-issue" data-source="Startseite">${icon('alert')}<span>Mangel melden</span></button></div></section>`;
     }
     document.addEventListener('click', (event) => {
       if (event.target.closest?.('[data-agenda-all]')) { agendaShowAll = !agendaShowAll; render(); return; }
+      const weatherTask = event.target.closest?.('[data-weather-task]');
+      if (weatherTask) {
+        // Wetterwarnung als Aufgabe übernehmen, damit sie jemand vor Ort erledigt
+        const warning = collectReminders().find((item) => item.id === weatherTask.dataset.weatherTask);
+        const property = warning && properties.find((entry) => entry.id === warning.propertyId);
+        if (!warning || !property) return;
+        tasks = [...tasks, { id: Date.now(), title: warning.plainTitle || warning.title, property: property.name, propertyId: property.id, date: localDateKey(new Date()), priority: warning.level === 'urgent' ? 'urgent' : 'soon', area: 'Wetter', status: 'Offen', done: false, repeat: 'Einmalig', description: warning.detail || '', weatherRef: warning.id }];
+        persistTasks(); render(); showToast('Aufgabe angelegt');
+        return;
+      }
       const open = event.target.closest?.('[data-agenda-open]');
       if (!open) return;
       const reminder = collectReminders().find((item) => item.id === open.dataset.agendaOpen);
@@ -20337,6 +20466,9 @@ ab PRO|from PRO|från PRO
       providers: ['Servicepartner', ['Betriebe nach Leistung und Entfernung zu deinem Haus suchen', 'Passende Partner deinem Haus zuordnen', 'Aufgaben direkt an zugeordnete Partner senden']],
       documents: ['Dokumente', ['Rechnungen, Verträge, Pläne und Fotos je Haus ablegen', 'Nach Art und Haus filtern', 'Dokumente bleiben auf deinem Gerät bzw. in deinem Husora-Konto']],
       calendar: ['Kalender', ['Fälligkeiten, Buchungen und Termine auf einen Blick', 'Zwischen Monat und Liste wechseln', 'Einen Termin antippen, um Details zu sehen']],
+      repairs: ['Reparaturen', ['Mängel mit Foto melden – auch direkt von der Startseite', 'Einen Mangel einem Servicepartner geben oder selbst beheben', 'Erledigte Reparaturen bleiben als Verlauf beim Haus']],
+      costs: ['Kosten', ['Jahresplan je Kostenart anlegen (Plan)', 'Rechnungen und Zahlungen eintragen (Ist)', 'Die Übersicht zeigt, wie viel vom Budget noch übrig ist']],
+      bookings: ['Buchungen', ['Gästebuchungen und eigene Aufenthalte eintragen', 'Husora plant den Gästewechsel als Aufgaben dazu', 'Kalender von Buchungsportalen lassen sich verbinden']],
       automation: ['Automatisierung', ['Wiederkehrende Wartung und Saisonaufgaben planen', 'Vor dem Aktivieren siehst du Intervall, Start und Wirkung', 'Nichts wird ohne deine Bestätigung eingeschaltet']]
     };
     function obGuidePaint() {
@@ -20725,14 +20857,15 @@ ab PRO|from PRO|från PRO
     buildGroupedNav();
     // Symbole der unteren Leiste: unter Einstellungen → Startseite gestalten wählbar (vier Plätze plus „Mehr“).
     const TAB_OPTIONS = [['dashboard', 'Übersicht', 'home'], ['tasks', 'Aufgaben', 'task'], ['inspections', 'Kontrolle', 'inspection'], ['calendar', 'Kalender', 'calendar'], ['seasons', 'Saison', 'snow'], ['bookings', 'Buchungen', 'calendar'], ['repairs', 'Reparatur', 'alert'], ['renovations', 'Sanierung', 'cube'], ['properties', 'Mein Haus', 'property'], ['documents', 'Dokumente', 'document'], ['costs', 'Kosten', 'cost'], ['assignedProviders', 'Partner', 'users'], ['providers', 'Partner finden', 'search'], ['contracts', 'Verträge', 'contract'], ['meters', 'Zähler', 'meter'], ['emergency', 'Notfall', 'key'], ['automation', 'Automatik', 'bolt'], ['partnerHub', 'Partner-Portal', 'note'], ['house3d', 'Hausmodell', 'cube'], ['portfolio', 'Portfolio', 'cost'], ['settings', 'Einstellungen', 'gear'], ['help', 'Hilfe', 'help']];
-    // Standard: nur „Mehr“ – darüber ist alles erreichbar. Ab PLUS lassen sich bis zu vier Plätze belegen (leere Plätze erlaubt).
-    const DEFAULT_TABS = [];
+    // Standard für alle Tarife: Übersicht, Aufgaben, Kalender und „Mehr“ (Alex, 2026-11-26).
+    // Ab PLUS lassen sich die vier Plätze frei belegen (leere Plätze erlaubt); FREE behält den Standard.
+    const DEFAULT_TABS = ['dashboard', 'tasks', 'calendar'];
     const TABBAR_ITEMS = [];
     let tabChoice = [null, null, null, null];
     function applyTabChoice(ids) {
       const list = Array.isArray(ids) ? ids.slice(0, 4) : [];
       tabChoice = [0, 1, 2, 3].map((i) => { const id = list[i]; return id && TAB_OPTIONS.some(([key]) => key === id) && list.indexOf(id) === i && (id !== 'bookings' || bookingsEnabled()) && !pageLocked(id) ? id : null; });
-      const shown = homeDesignFull() ? tabChoice.filter(Boolean) : [];
+      const shown = homeDesignFull() ? tabChoice.filter(Boolean) : DEFAULT_TABS.filter((id) => !pageLocked(id));
       TABBAR_ITEMS.splice(0, TABBAR_ITEMS.length, ...shown.map((id) => TAB_OPTIONS.find(([key]) => key === id)));
     }
     applyTabChoice(loadStore('stugliv-tabbar', DEFAULT_TABS));
@@ -20799,35 +20932,7 @@ ab PRO|from PRO|från PRO
       const active = TABBAR_ITEMS.some(([page]) => page === currentPage) ? currentPage : (currentPage === 'bookings' ? 'calendar' : '');
       const openCount = tasks.filter((task) => !task.done).length;
       const menuOpen = document.getElementById('main-menu')?.classList.contains('open');
-      // Trägt die Leiste Reiter der aktuellen Seite, wird sie leicht eingefärbt.
-      document.getElementById('tabbar')?.classList.toggle('contextual', ['settings', 'automation', 'costs'].includes(currentPage));
-      // Ferienhaus-Kosten: Übersicht, Ist und Plan in der Leiste unten.
-      if (currentPage === 'costs') {
-        const items = [['overview', 'Übersicht', 'cost'], ['actual', 'Ist', 'document'], ['plan', 'Plan', 'edit']];
-        const tab = document.getElementById('tabbar');
-        if (tab) { tab.innerHTML = items.map(([id, label, iconName]) => `<button type="button" class="tab ${costView === id ? 'active' : ''}" data-cost-view="${id}" ${costView === id ? 'aria-current="true"' : ''}>${icon(iconName)}<span>${label}</span></button>`).join(''); tab.style.setProperty('grid-template-columns', `repeat(${items.length}, 1fr)`); }
-        const top = document.getElementById('top-tabs');
-        if (top) top.innerHTML = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab" data-page="${page}">${icon(iconName)}<span>${label}</span></button>`).join('') + `<button type="button" class="tab active-more" data-tab-more aria-haspopup="true" aria-expanded="false" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
-        return;
-      }
-      // In den Einstellungen trägt die Leiste unten die drei Bereiche der Seite.
-      if (currentPage === 'settings') {
-        const items = [['settings-home', 'Startseite', 'home'], ['settings-look', 'Darstellung', 'text'], ['settings-data', 'Daten & App', 'document']];
-        const tab = document.getElementById('tabbar');
-        if (tab) { tab.innerHTML = items.map(([id, label, iconName]) => `<button type="button" class="tab ${settingsView === id ? 'active' : ''}" data-settings-view="${id}" ${settingsView === id ? 'aria-current="true"' : ''}>${icon(iconName)}<span>${label}</span></button>`).join(''); tab.style.setProperty('grid-template-columns', `repeat(${items.length}, 1fr)`); }
-        const top = document.getElementById('top-tabs');
-        if (top) top.innerHTML = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab" data-page="${page}">${icon(iconName)}<span>${label}</span></button>`).join('') + `<button type="button" class="tab active-more" data-tab-more aria-haspopup="true" aria-expanded="false" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`;
-        return;
-      }
-      // In der Automatisierung trägt die Leiste unten die Reiter der Automatiken.
-      if (currentPage === 'automation') {
-        const groups = [['guests', 'Gäste', 'calendar'], ['care', 'Kontrolle', 'inspection'], ['maintenance', 'Wartung', 'alert'], ['planned', 'Geplant', 'clock'], ['log', 'Protokoll', 'note']].filter(([id]) => id !== 'guests' || bookingsEnabled());
-        const current = groups.some(([id]) => id === automationView) ? automationView : groups[0][0];
-        const autoHtml = groups.map(([id, label, iconName]) => `<button type="button" class="tab ${current === id ? 'active' : ''}" data-auto-view="${id}" ${current === id ? 'aria-current="true"' : ''}>${icon(iconName)}<span>${label}</span></button>`).join('');
-        bars.forEach((bar) => { bar.innerHTML = bar.id === 'tabbar' ? autoHtml : TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab" data-page="${page}">${icon(iconName)}<span>${label}</span></button>`).join('') + `<button type="button" class="tab active-more" data-tab-more aria-haspopup="true" aria-expanded="false" aria-controls="main-menu">${icon('menu')}<span>Mehr</span></button>`; });
-        document.getElementById('tabbar')?.style.setProperty('grid-template-columns', `repeat(${groups.length}, 1fr)`);
-        return;
-      }
+      // Die untere Leiste bleibt überall gleich; Seitenreiter stehen oben (viewTabsHtml).
       applyTabChoice(tabChoice); // Tarif kann sich nach dem Anmelden ändern
       document.getElementById('tabbar')?.style.setProperty('grid-template-columns', `repeat(${TABBAR_ITEMS.length + 1}, 1fr)`);
       const html = TABBAR_ITEMS.map(([page, label, iconName]) => `<button type="button" class="tab ${active === page ? 'active' : ''}" data-page="${page}" ${active === page ? 'aria-current="page"' : ''}>${icon(iconName)}<span>${label}</span>${page === 'tasks' && openCount ? `<i class="tab-badge">${openCount > 99 ? '99+' : openCount}</i>` : ''}</button>`).join('')
@@ -21228,8 +21333,18 @@ ab PRO|from PRO|från PRO
       renderTabbar();
     }
 
+    // Seitenreiter für Kosten und Einstellungen auf dem Handy oben statt in der unteren Leiste
+    function viewTabsHtml() {
+      let items = []; let attr = ''; let current = '';
+      if (currentPage === 'costs') { items = [['overview', 'Übersicht'], ['actual', 'Ist'], ['plan', 'Plan']]; attr = 'data-cost-view'; current = costView; }
+      else if (currentPage === 'settings') { items = [['settings-home', 'Startseite'], ['settings-look', 'Darstellung'], ['settings-data', 'Daten & App']]; attr = 'data-settings-view'; current = settingsView; }
+      if (!items.length) return '';
+      return `<nav class="section-tabs view-tabs" aria-label="Bereiche dieser Seite">${items.map(([id, label]) => `<button type="button" class="${current === id ? 'active' : ''}" ${attr}="${id}" ${current === id ? 'aria-current="true"' : ''}>${escapeHtml(label)}</button>`).join('')}</nav>`;
+    }
     // --- Seiten-Erweiterungen nach dem Rendern ---
     function enhanceWorkPages() {
+      const viewTabs = viewTabsHtml();
+      if (viewTabs) pageContent.querySelector('.welcome')?.insertAdjacentHTML('afterend', viewTabs);
       if (!['tasks', 'inspections', 'seasons', 'automation'].includes(currentPage)) {
         const tabs = sectionTabsHtml();
         const welcome = pageContent.querySelector('.welcome');

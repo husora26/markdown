@@ -26,3 +26,18 @@ Regler: Kreativität = sicher · Dichte = ausgewogen · Varianz = einheitlich ·
 - Eingabefelder auf dem Handy mit **16 px**, sonst zoomt iOS beim Antippen hinein.
 - Ein Akzent pro Fläche: Grün für Handeln, Rot nur für Überfälliges/Fehler, Bernstein für „bald fällig“.
 - Gestaltungsschicht: Block `HUSORA-DESIGN-2026` direkt vor `DARK-MODE-START` in `index.html`.
+
+## Begriffe (überall gleich verwenden)
+| Begriff | Bedeutung | Nicht verwenden |
+|---|---|---|
+| Ferienhaus | das Objekt des Besitzers | Objekt, Immobilie (außer im Partner-Portal) |
+| Aufgabe | alles, was jemand erledigen soll | Serviceauftrag, To-do |
+| Hauskontrolle | Rundgang mit Prüfpunkten | Inspektion, Check |
+| Mangel | etwas, das kaputt oder auffällig ist | Schaden, Auffälligkeit (nur im Prüfbericht) |
+| Reparatur | die Behebung eines Mangels | Instandsetzung |
+| Servicepartner | Betrieb vor Ort | Dienstleister, Handwerker |
+
+## Navigation
+- Untere Leiste ist in jedem Tarif gleich aufgebaut: Übersicht, Aufgaben, Kalender, Mehr (ab PLUS frei belegbar). Sie wechselt nie ihren Inhalt.
+- Bereiche einer Seite (z. B. Kosten: Übersicht/Ist/Plan, Einstellungen) stehen als Reiter oben unter der Überschrift (`.view-tabs`).
+- Startseite „Was steht an?“ zeigt höchstens 3 Punkte mit Ampel; die Glocke zählt dieselben Punkte.
