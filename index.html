@@ -5365,6 +5365,8 @@ html.dark .section-tabs button.active { color: var(--ink); }
 .plan-pro:hover { background: rgba(255, 255, 255, .18); }
 @media (max-width: 520px) { .plan-pro { padding: 3px 9px; font-size: var(--fs-2xs); } }
 .view-tabs { border-color: var(--line); background: var(--paper); }
+.page-usage li { display: grid; grid-template-columns: minmax(0, 1fr) 30% auto; align-items: center; gap: 10px; }
+.page-usage i { display: block; height: 8px; width: var(--w); min-width: 2px; border-radius: 999px; background: var(--green); }
 .view-tabs button { color: var(--muted); }
 .view-tabs button:hover { color: var(--ink); }
 .view-tabs button.active { background: var(--green-dark); color: #fff; }
@@ -6895,6 +6897,12 @@ Gerade steht nichts an.|Nothing needs your attention right now.|Just nu behöver
 Alles in Ordnung|All good|Allt i ordning
 Als erledigt markieren|Mark as done|Markera som klar
 Als Aufgabe anlegen|Create as task|Skapa som uppgift
+Mit Familie teilen|Share with family|Dela med familjen
+Familie oder Miteigentümer einladen – sie sehen Buchungen und Aufgaben und können mithelfen.|Invite family or co-owners – they see bookings and tasks and can help out.|Bjud in familj eller delägare – de ser bokningar och uppgifter och kan hjälpa till.
+Familie, Miteigentümer oder Hausverwaltung sehen Buchungen und Aufgaben und können mithelfen.|Family, co-owners or property managers see bookings and tasks and can help out.|Familj, delägare eller förvaltare ser bokningar och uppgifter och kan hjälpa till.
+Dafür brauchst du ein Husora-Konto, damit alle dieselben Daten sehen.|You need a Husora account for this so everyone sees the same data.|Du behöver ett Husora-konto så att alla ser samma data.
+Dafür brauchst du ein Husora-Konto, damit alle dieselben Daten sehen. Ab PLUS kannst du weitere Personen einladen.|You need a Husora account for this so everyone sees the same data. From PLUS you can invite more people.|Du behöver ett Husora-konto så att alla ser samma data. Från PLUS kan du bjuda in fler personer.
+Konto einrichten|Set up account|Skapa konto
 Reparaturen|Repairs|Reparationer
 Mängel mit Foto melden – auch direkt von der Startseite|Report defects with a photo – also right from the home screen|Rapportera fel med foto – även direkt från startsidan
 Einen Mangel einem Servicepartner geben oder selbst beheben|Hand a defect to a service partner or fix it yourself|Ge ett fel till en servicepartner eller åtgärda det själv
@@ -10887,6 +10895,8 @@ ab PRO|from PRO|från PRO
 </div><div class="profile-notice">${cloudSignedIn() ? 'Deine Daten werden mit deinem Husora-Konto in der Cloud gesichert.' : 'Ohne Husora-Konto liegen deine Daten nur auf diesem Gerät. Melde dich an oder sichere sie regelmäßig unter <button type="button" class="text-btn" data-page="settings" style="padding:0">Einstellungen → Daten & App</button>.'}</div><div class="form-actions"><button type="submit" class="primary-btn">Benutzerprofil speichern</button></div></form>
         </section>
         <div style="height:16px"></div>
+        <button type="button" class="card settings-teaser" data-page="settings" data-settings-anchor="settings-members">${icon('users')}<span><strong>Mit Familie teilen</strong><small>Familie oder Miteigentümer einladen – sie sehen Buchungen und Aufgaben und können mithelfen.</small></span>${icon('arrow')}</button>
+        <div style="height:16px"></div>
         <button type="button" class="card settings-teaser" data-page="settings" data-settings-anchor="settings-home">${icon('home')}<span><strong>Startseite gestalten</strong><small>Kacheln und Bereiche der Übersicht stellst du jetzt unter Einstellungen ein.</small></span>${icon('arrow')}</button>
         <div style="height:16px"></div>
         <section class="card profile-form"><div class="card-head" style="padding:0 0 4px"><div><h2 class="card-title">E-Mail-Konto verbinden</h2><p class="card-caption">Absender für Nachrichten an deine Servicepartner</p></div><span class="mail-status ${profileData.mailAccount ? 'connected' : ''}">${profileData.mailAccount ? '● Verbunden' + (profileData.mailConnectedAt ? ' seit ' + new Date(profileData.mailConnectedAt).toLocaleDateString('de-DE') : '') : 'Nicht verbunden'}</span></div>
@@ -14437,6 +14447,7 @@ ab PRO|from PRO|från PRO
       renderTabbar();
       pageContent.innerHTML = (currentPage === 'dashboard' ? betaBannerHtml('owner') : '') + relSafeHtml(() => (PAGE_GATES[currentPage] && !entitlements.can(PAGE_GATES[currentPage]) ? lockedPageHtml(currentPage) : pages[currentPage]()), currentPage) + appFooterHtml();
       hidePlanLocked();
+      trackEvent('page_opened', { entity_type: 'page', entity_ref: `${currentPage}:${localDateKey(new Date())}`, metadata: { page: String(currentPage).slice(0, 40) } });
       if (currentPage === 'providers') trackEvent('service_search', { entity_type: 'provider_directory', entity_ref: `page:${localDateKey(new Date())}` });
       ensureBackButton();
       if (uiState) { uiRestore(pageContent, uiState); if (Math.abs(window.scrollY - uiScrollY) > 2) window.scrollTo(0, uiScrollY); }
@@ -18485,6 +18496,7 @@ ab PRO|from PRO|från PRO
       return `<div class="beta-dash"><section class="card beta-dash-head"><div><h2 class="card-title"><span class="beta-chip">Beta</span> Husora Beta Dashboard</h2><p class="card-caption">Stand ${escapeHtml(fmtDateTime(d.generated_at))} · nur für das Husora-Team sichtbar</p></div><button type="button" class="secondary-btn" data-beta-dash-reload>${icon('undo')} Aktualisieren</button></section>
         <div class="beta-kpis">${tile('Registrierte Nutzer', n(d.users.registered), `${n(d.users.beta_users)} Beta-Nutzer`)}${tile('Hausbesitzer', n(d.users.owners))}${tile('Servicepartner', n(d.users.partners))}${tile('Aktiv heute', n(d.users.active_today))}${tile('Aktiv 7 Tage', n(d.users.active_7d))}${tile('Aktiv 30 Tage', n(d.users.active_30d))}${tile('Häuser', n(d.content.houses), `${n(d.content.houses_events)} angelegt (App)`)}${tile('Aufgaben', n(d.content.tasks))}${tile('Hauskontrollen', n(d.content.inspections))}${tile('Serviceanfragen', n(d.services.requests))}${tile('Angenommen', n(d.services.accepted))}${tile('Abgeschlossen', n(d.services.completed))}${tile('Ø Bewertung', d.quality.avg_rating == null ? '–' : `${String(d.quality.avg_rating).replace('.', ',')} ★`, `${n(d.quality.ratings)} Bewertungen`)}${tile('Offene Fehler', n(d.quality.open_bugs))}${tile('Offenes Feedback', n(d.quality.open_feedback))}</div>
         <section class="card"><h2 class="card-title">KPI-Ziele</h2><p class="card-caption">Orientierungswerte für die Beta – keine harte Prüfung.</p><div class="beta-targets">${kpis}</div></section>
+        ${pageUsageHtml(s.dash.pages)}
         <div class="beta-two"><section class="card"><h2 class="card-title">Funnel Hausbesitzer</h2>${funnel(d.funnel_owner || [])}</section><section class="card"><h2 class="card-title">Funnel Servicepartner</h2>${funnel(d.funnel_partner || [])}</section></div>
         <div class="beta-two"><section class="card"><h2 class="card-title">Premium-Interesse</h2>${Object.keys(d.quality.subscription_interest || {}).length ? `<ul class="beta-list">${Object.entries(d.quality.subscription_interest).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<li><span>${escapeHtml(BETA_PREMIUM.find(([id]) => id === k)?.[1] || k)}</span><b>${n(v)}</b></li>`).join('')}</ul>` : '<p class="settings-hint">Noch keine Vormerkungen.</p>'}
           <h3 class="beta-sub">30-Tage-Umfrage</h3><ul class="beta-list">${[['yes', 'Weiter nutzen: Ja'], ['probably', 'Wahrscheinlich'], ['maybe', 'Vielleicht'], ['no', 'Nein']].map(([k, l]) => `<li><span>${l}</span><b>${n((d.quality.continue || {})[k] || 0)}</b></li>`).join('')}</ul>
@@ -18500,16 +18512,24 @@ ab PRO|from PRO|från PRO
           ${flags.map(([k, l]) => `<label class="settings-switch"><span><strong>${l}</strong></span><span class="switch"><input type="checkbox" data-beta-flag="${k}" ${cfg[k] !== false ? 'checked' : ''}><span></span></span></label>`).join('')}
           <label><span class="form-label">Beta-Gruppe für neue Beta-Nutzer</span><select class="form-control" data-beta-group>${[['alpha', 'Alpha'], ['closed_beta', 'Closed Beta'], ['open_beta', 'Open Beta'], ['pre_launch', 'Pre-Launch']].map(([v, l]) => `<option value="${v}" ${cfg.default_group === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label></section></div>`;
     }
+    // Welche Seiten werden wirklich genutzt? Grundlage, um das Menü zu kürzen (eigene Datenbank, kein Drittanbieter)
+    function pageUsageHtml(rows) {
+      if (!Array.isArray(rows)) return '';
+      const label = (id) => TAB_OPTIONS.find(([key]) => key === id)?.[1] || NAV_SECTIONS.flatMap((sec) => sec.pages).find(([key]) => key === id)?.[1] || id;
+      const top = Math.max(1, ...rows.map((r) => Number(r.users) || 0));
+      return `<section class="card"><h2 class="card-title">Seiten-Nutzung (30 Tage)</h2><p class="card-caption">Wie viele Nutzer eine Seite mindestens einmal am Tag geöffnet haben · nur mit Einwilligung, ohne Drittanbieter</p>${rows.length ? `<ul class="beta-list page-usage">${rows.map((r) => `<li><span>${escapeHtml(label(r.page))}</span><i style="--w:${Math.round(100 * (Number(r.users) || 0) / top)}%"></i><b>${Number(r.users || 0).toLocaleString('de-DE')} · ${Number(r.opens || 0).toLocaleString('de-DE')}×</b></li>`).join('')}</ul>` : '<p class="settings-hint">Noch keine Seitenaufrufe gezählt.</p>'}</section>`;
+    }
     async function betaLoadDashboard() {
       const s = betaS();
       if (s.dashLoading) return;
       s.dashLoading = true;
       try {
-        const [data, reports] = await Promise.all([
+        const [data, reports, pages] = await Promise.all([
           cloudFetch('/rest/v1/rpc/beta_dashboard', { method: 'POST', body: {} }),
-          cloudFetch('/rest/v1/app_feedback?select=id,kind,feedback_type,title,message,expected_behavior,actual_behavior,page,app_role,app_version,platform,environment,severity,status,contact_email,created_at&order=created_at.desc&limit=200')
+          cloudFetch('/rest/v1/app_feedback?select=id,kind,feedback_type,title,message,expected_behavior,actual_behavior,page,app_role,app_version,platform,environment,severity,status,contact_email,created_at&order=created_at.desc&limit=200'),
+          cloudFetch('/rest/v1/rpc/page_usage', { method: 'POST', body: { p_days: 30 } }).catch(() => null)  // ältere Datenbank ohne Seitenzählung
         ]);
-        s.dash = { ...(s.dash || {}), data, reports, error: '' };
+        s.dash = { ...(s.dash || {}), data, reports, pages, error: '' };
       } catch (error) {
         s.dash = { error: /Husora-Team|42501|Berechtigung/.test(error.message) ? 'Dieser Bereich ist nur für das Husora-Team freigegeben.' : `Kennzahlen nicht verfügbar: ${error.message}` };
       } finally {
@@ -20705,7 +20725,7 @@ ab PRO|from PRO|från PRO
       const usageLabel = target.closest('.ob-usage label');
       if (usageLabel) setTimeout(() => { document.querySelectorAll('.ob-usage label').forEach((label) => label.classList.toggle('on', label.querySelector('input').checked)); }, 0);
       const anchor = target.closest('[data-settings-anchor]');
-      if (anchor) { if (/^settings-(home|look|data|legal)$/.test(anchor.dataset.settingsAnchor)) settingsView = anchor.dataset.settingsAnchor; else if (anchor.dataset.settingsAnchor === 'settings-notify') settingsView = 'settings-look'; setTimeout(() => { if (currentPage === 'settings') render(); document.getElementById(anchor.dataset.settingsAnchor)?.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
+      if (anchor) { if (/^settings-(home|look|data|legal)$/.test(anchor.dataset.settingsAnchor)) settingsView = anchor.dataset.settingsAnchor; else if (anchor.dataset.settingsAnchor === 'settings-notify') settingsView = 'settings-look'; else if (['settings-members', 'settings-cloud'].includes(anchor.dataset.settingsAnchor)) settingsView = 'settings-data'; setTimeout(() => { if (currentPage === 'settings') render(); document.getElementById(anchor.dataset.settingsAnchor)?.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
     });
     async function codePinSubmit(form) {
       const pin = String(form.elements.pin?.value || '');
@@ -26440,7 +26460,13 @@ ab PRO|from PRO|från PRO
       finally { team.busy = ''; rerenderCloud(); }
     }
     function ownerMembersCardHtml() {
-      if (!cloudReady() || ppMode() === 'partner') return '';
+      if (ppMode() === 'partner') return '';
+      if (!cloudReady()) {
+        // Ohne Konto: erklären, wie das Teilen mit der Familie geht, statt die Karte zu verstecken
+        const head = `<div class="settings-card-head"><span class="settings-icon">${icon('users')}</span><div><h2 class="card-title">Mit Familie teilen</h2><p class="card-caption">Familie, Miteigentümer oder Hausverwaltung sehen Buchungen und Aufgaben und können mithelfen.</p></div></div>`;
+        const plusOnly = !Number.isFinite(entitlements.limit('users')) || entitlements.limit('users') > 1 ? '' : ' Ab PLUS kannst du weitere Personen einladen.';
+        return `<section class="card settings-card" id="settings-members">${head}<p class="settings-hint">Dafür brauchst du ein Husora-Konto, damit alle dieselben Daten sehen.${plusOnly}</p><div class="settings-actions"><button type="button" class="secondary-btn" data-settings-anchor="settings-cloud">Konto einrichten</button>${plusOnly ? '<button type="button" class="text-btn" data-page="plans">Tarife vergleichen</button>' : ''}</div></section>`;
+      }
       if (team.orgId !== cloud.org.id && !team.busy) { team.members = null; team.code = null; teamRun('load', async () => {}); }
       const admin = cloud.org.role === 'admin';
       const members = (team.members || []).filter((m) => m.status === 'active');
